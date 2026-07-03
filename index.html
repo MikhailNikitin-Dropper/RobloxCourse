@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roblox: Мастерская гейм-дизайнера | Материалы курса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;min-height:100vh}
+.split{display:flex;min-height:100vh}
+.half{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-decoration:none;padding:80px 32px 120px;transition:filter .2s}
+.half:hover{filter:brightness(1.12)}
+.half .eyebrow{font:700 12px/1 'Inter',sans-serif;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.half h2{font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:clamp(30px,4.2vw,52px);letter-spacing:-.01em;text-align:center;line-height:1.1}
+.half p{font-size:15px;max-width:340px;text-align:center;opacity:.8}
+.half .go{margin-top:10px;font:700 14px/1 'Inter',sans-serif;padding:14px 26px;border-radius:999px;transition:transform .2s}
+.half:hover .go{transform:translateY(-2px)}
+
+.half--eduson{background:#0B0F17;color:#F1F5F9;background-image:radial-gradient(ellipse 700px 420px at 20% 0%,rgba(124,58,237,.22),transparent),radial-gradient(ellipse 600px 380px at 85% 100%,rgba(6,182,212,.14),transparent)}
+.half--eduson .eyebrow{color:#67e8f9;opacity:1}
+.half--eduson h2{background:linear-gradient(90deg,#7C3AED,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.half--eduson p{color:#94A3B8}
+.half--eduson .go{background:linear-gradient(90deg,#7C3AED,#6d28d9);color:#fff}
+
+.half--kotokod{background:#4F59F9;color:#fff}
+.half--kotokod .eyebrow{color:#50DCFE;opacity:1}
+.half--kotokod h2{text-transform:uppercase}
+.half--kotokod p{color:rgba(255,255,255,.85)}
+.half--kotokod .go{background:#fff;color:#4F59F9}
+
+.course-title{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(0,0,0,.4);backdrop-filter:blur(12px);color:#fff;font:700 12px/1.4 'Inter',sans-serif;letter-spacing:.09em;text-transform:uppercase;padding:10px 20px;border-radius:999px;white-space:nowrap;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis}
+
+.structural{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:30}
+.structural summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:10px;background:rgba(0,0,0,.45);backdrop-filter:blur(12px);color:#fff;font:700 13px/1 'Inter',sans-serif;padding:12px 22px;border-radius:999px;user-select:none;white-space:nowrap;transition:background .2s}
+.structural summary::-webkit-details-marker{display:none}
+.structural summary::after{content:'▴';font-size:11px;transition:transform .2s}
+.structural[open] summary::after{transform:rotate(180deg)}
+.structural summary:hover{background:rgba(0,0,0,.65)}
+.structural .menu{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 24px));max-height:min(56vh,520px);overflow-y:auto;background:#fff;border-radius:18px;box-shadow:0 16px 44px rgba(0,0,0,.35);padding:10px;display:flex;flex-direction:column;gap:2px}
+.structural .menu a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:#3F3F3F;font:600 13.5px/1.45 'Inter',sans-serif;padding:8px 14px;border-radius:12px;transition:background .2s}
+.structural .menu a:hover{background:#F0F0F5}
+.structural .menu .num{font:800 11px/1.6 'Inter Tight','Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#4F59F9;white-space:nowrap}
+.structural .hint{font:500 12px/1.5 'Inter',sans-serif;color:#8a8a94;padding:6px 14px 4px}
+
+@media(max-width:720px){.split{flex-direction:column}.half{min-height:50vh;padding:70px 24px 90px}}
+</style>
+</head>
+<body>
+<div class="course-title">Roblox: Мастерская гейм-дизайнера</div>
+<div class="split">
+<a class="half half--eduson" href="Eduson/index.html">
+  <span class="eyebrow">Сайт курса</span>
+  <h2>Eduson Kids</h2>
+  <p>Тёмная тема с фиолетово-циановыми акцентами — как основной сайт Eduson.</p>
+  <span class="go">Открыть сайт →</span>
+</a>
+<a class="half half--kotokod" href="Kotokod/index.html">
+  <span class="eyebrow">Сайт курса</span>
+  <h2>Котокод</h2>
+  <p>Фирменные синий и голубой, крупные заголовки, радиус 20.</p>
+  <span class="go">Открыть сайт →</span>
+</a>
+</div>
+<details class="structural">
+<summary>🧩 Структурные рендеры</summary>
+<div class="menu">
+<div class="hint">Черновой рендер для вычитки контента — появляется после прогона урока.</div>
+<a href="structural/lesson_01.html"><span class="num">Урок 01</span><span>Блокаут мира: рождение локации</span></a><a href="structural/lesson_02.html"><span class="num">Урок 02</span><span>Природа и рельеф (Terrain)</span></a><a href="structural/lesson_03.html"><span class="num">Урок 03</span><span>Мастерская предметов: 3D-моделирование</span></a><a href="structural/lesson_04.html"><span class="num">Урок 04</span><span>ПРОЕКТ 1: охота за сокровищами</span></a><a href="structural/lesson_05.html"><span class="num">Урок 05</span><span>Свет, эффекты и звук</span></a><a href="structural/lesson_06.html"><span class="num">Урок 06</span><span>NPC и диалоги: рождение персонажей</span></a><a href="structural/lesson_07.html"><span class="num">Урок 07</span><span>Квестовый журнал и интерфейс</span></a><a href="structural/lesson_08.html"><span class="num">Урок 08</span><span>ПРОЕКТ 2 (финал): квест-лобби</span></a><a href="structural/lesson_09.html"><span class="num">Урок 09</span><span>Физика мира: игровые свойства Part</span></a><a href="structural/lesson_10.html"><span class="num">Урок 10</span><span>Ловушки и опасные зоны</span></a><a href="structural/lesson_11.html"><span class="num">Урок 11</span><span>Чекпоинты и маршрут</span></a><a href="structural/lesson_12.html"><span class="num">Урок 12</span><span>ПРОЕКТ 3: обби «Дорога героя»</span></a><a href="structural/lesson_13.html"><span class="num">Урок 13</span><span>Транспорт без кода: VehicleSeat</span></a><a href="structural/lesson_14.html"><span class="num">Урок 14</span><span>Трасса мечты</span></a><a href="structural/lesson_15.html"><span class="num">Урок 15</span><span>Оформление гонки: шоу вокруг трассы</span></a><a href="structural/lesson_16.html"><span class="num">Урок 16</span><span>ПРОЕКТ 4: Гран-при</span></a><a href="structural/lesson_17.html"><span class="num">Урок 17</span><span>Команды без кода: сервис Teams</span></a><a href="structural/lesson_18.html"><span class="num">Урок 18</span><span>Арена: дизайн честного боя</span></a><a href="structural/lesson_19.html"><span class="num">Урок 19</span><span>Снаряжение из Toolbox</span></a><a href="structural/lesson_20.html"><span class="num">Урок 20</span><span>ПРОЕКТ 5: битва двух крепостей</span></a><a href="structural/lesson_21.html"><span class="num">Урок 21</span><span>Живая физика: мир без Anchored</span></a><a href="structural/lesson_22.html"><span class="num">Урок 22</span><span>Шарниры и моторы</span></a><a href="structural/lesson_23.html"><span class="num">Урок 23</span><span>Верёвки, пружины и лифты</span></a><a href="structural/lesson_24.html"><span class="num">Урок 24</span><span>ПРОЕКТ 6: луна-парк «Механика чудес»</span></a><a href="structural/lesson_25.html"><span class="num">Урок 25</span><span>Тьма как инструмент</span></a><a href="structural/lesson_26.html"><span class="num">Урок 26</span><span>Лабиринт: дизайн запутанности</span></a><a href="structural/lesson_27.html"><span class="num">Урок 27</span><span>Монстр и его анимации (Animation Editor)</span></a><a href="structural/lesson_28.html"><span class="num">Урок 28</span><span>ПРОЕКТ 7: ночной лабиринт</span></a><a href="structural/lesson_29.html"><span class="num">Урок 29</span><span>Что такое скрипт (и почему мы его не пишем)</span></a><a href="structural/lesson_30.html"><span class="num">Урок 30</span><span>Кнопки и двери</span></a><a href="structural/lesson_31.html"><span class="num">Урок 31</span><span>Ключи и замки</span></a><a href="structural/lesson_32.html"><span class="num">Урок 32</span><span>ПРОЕКТ 8: комната побега</span></a><a href="structural/lesson_33.html"><span class="num">Урок 33</span><span>Очки и лидерборд</span></a><a href="structural/lesson_34.html"><span class="num">Урок 34</span><span>Добыча и риск</span></a><a href="structural/lesson_35.html"><span class="num">Урок 35</span><span>Сдача лута и магазин</span></a><a href="structural/lesson_36.html"><span class="num">Урок 36</span><span>ПРОЕКТ 9: лутер</span></a><a href="structural/lesson_37.html"><span class="num">Урок 37</span><span>Как устроен Tower Defense</span></a><a href="structural/lesson_38.html"><span class="num">Урок 38</span><span>Карта обороны</span></a><a href="structural/lesson_39.html"><span class="num">Урок 39</span><span>Волны и баланс</span></a><a href="structural/lesson_40.html"><span class="num">Урок 40</span><span>ПРОЕКТ 10 (финал): защита королевства</span></a>
+</div>
+</details>
+</body>
+</html>
