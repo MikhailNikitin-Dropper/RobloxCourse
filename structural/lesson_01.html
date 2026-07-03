@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 1. Блокаут мира: рождение локации</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="1">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 1. Блокаут мира: рождение локации</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Level Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="1-w-1">
+<h3 class="slide-title">Привет! Сегодня ты — Level Designer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Погнали! Начинаем курс, где каждый урок ты примеряешь новую профессию из мира игр. За 8 занятий мы вместе соберём твой собственный квест в Roblox.</p>
+<p class="content-item content-paragraph">Сегодня твоя роль — Level Designer (дизайнер уровней), архитектор игрового пространства.</p>
+<aside class="speaker-notes">Заметка ведущего: Коротко и с энергией — ровно 60 секунд. Задать настроение, что мы делаем настоящую игру, а не учебный пример.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Знакомство и оргвопросы <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="1-r-1">
+<h3 class="slide-title">Это первый урок — давай познакомимся <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Кто уже открывал Roblox Studio раньше? Что запомнилось или удивило?</p>
+<ul class="content-item content-bullets"><li>Как тебя зовут и любимая игра в Roblox</li><li>Что хочется научиться делать самому</li><li>Тема будущего квеста, которая нравится: подземелье, космос, лес, замок?</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Для урока 1 блок — тёплое знакомство и сбор ожиданий, а не повторение. Тему квеста фиксируем — она понадобится со 2 урока. С урока 2 сюда пойдут key_points предыдущего занятия.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Level Designer: как устроено пространство игры <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="1-t-1">
+<h3 class="slide-title">Интерфейс Studio: где что лежит <span class="slide-duration">(4 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Mezzanine (верхняя панель) — плейтест и вкладки Home, Model, Script</li><li>Toolbar (панель инструментов) — меняется под активную вкладку</li><li>3D viewport (окно 3D-сцены) — самое большое окно, тут строим</li><li>Toolbox (набор ассетов) — готовые модели и звуки</li><li>Explorer (обозреватель) — дерево всех объектов; перетащить = сменить родителя</li><li>Properties (свойства) — настройки выбранного объекта, без кода</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Studio с подписанными зонами: mezzanine, toolbar, viewport, Toolbox, Explorer, Properties]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать живой Studio, а не только слайд. Термины даём латиницей + перевод в скобках — дети потом видят их в реальном интерфейсе на английском. Источник — официальный Creator Hub.</aside>
+</div>
+<div class="slide" id="1-t-2">
+<h3 class="slide-title">Учимся летать камерой <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>W / A / S / D — двигать камеру вперёд/влево/назад/вправо</li><li>Q / E — вниз и вверх</li><li>F — сфокусироваться на выбранной детали</li><li>Правая кнопка мыши зажата — осмотреться, колесо — зум</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Дать 1 минуту просто «полетать» — это навык №1. Клавиши по официальной таблице Creator Hub; советуем мышь с колесом.</aside>
+</div>
+<div class="slide" id="1-t-3">
+<h3 class="slide-title">Part (деталь) и инструменты Move / Scale / Rotate <span class="slide-duration">(4 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Part (деталь) — базовый кубик: block (куб), sphere (шар), cylinder (цилиндр), wedge (клин)</li><li>Move (переместить) — стрелки по осям X/Y/Z</li><li>Scale (масштабировать) — изменение размера</li><li>Rotate (повернуть) — поворот детали</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Дать потрогать каждый инструмент на демо-Part перед практикой. Ответ на qa: Move двигает, Scale меняет размер.</aside>
+</div>
+<div class="slide" id="1-t-4">
+<h3 class="slide-title">Blockout (блокаут): черновик мира из простых форм <span class="slide-duration">(3 мин)</span></h3>
+<p class="content-item content-paragraph">Level-дизайнеры в студиях не начинают с красоты. Сначала строят blockout (блокаут, он же grey-boxing / серобокс) — черновой уровень из простых серых форм.</p>
+<ul class="content-item content-bullets"><li>Проверяем маршрут игрока и масштаб комнат</li><li>Серые блоки переставить дёшево, а готовый декор переделывать — дорого</li><li>Наш блокаут станет каркасом квест-лобби на уроке 8</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Ключевая идея урока: это реальная практика индустрии. Подчеркнуть связь с финальным проектом (урок 8).</aside>
+</div>
+<div class="slide" id="1-t-5">
+<h3 class="slide-title">Group (группировка) в Model и Anchored (закрепление) <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Group (сгруппировать) — объединить детали в один Model (модель): двигается и копируется целиком</li><li>Понятные имена: StartRoom, Corridor вместо Part, Part1</li><li>Anchored (закреплён) = true — деталь не падает под физикой при запуске</li></ul>
+<aside class="speaker-notes">Заметка ведущего: По докам Roblox большинство деталей нужно якорить. Это прямая подводка к следующему слайду про ошибки.</aside>
+</div>
+<div class="slide" id="1-t-6">
+<h3 class="slide-title">Типичные ошибки новичка <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Не включил Anchored — деталь падает, как только нажал Play (самая частая ошибка!)</li><li>Полез в цвет и декор до проверки маршрута — теряется смысл блокаута</li><li>Оставил имена Part, Part1, Part2 — потом не найти нужное в Explorer</li><li>Забыл опубликовать проект в конце</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Отдельный слайд-предупреждение (пожелание заказчика). Первую ошибку показать вживую: поставить незаякоренную деталь и нажать Play — она упадёт. Источник про Anchored — официальные доки Roblox.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="1-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Чем Move (переместить) отличается от Scale (масштабировать)?</p><ol class="content-item content-quiz-options"><li>Move меняет размер детали, а Scale двигает её</li><li data-correct="true">Move двигает деталь по осям X/Y/Z, а Scale меняет её размер ✓</li><li>Это одно и то же — просто разные кнопки</li></ol>
+<p class="content-item content-question">Зачем строить блокаут, если можно сразу украсить локацию?</p><ol class="content-item content-quiz-options"><li>Чтобы игра сразу выглядела красиво</li><li>Потому что в Studio нельзя сразу менять цвета деталей</li><li data-correct="true">Чтобы дёшево проверить маршрут и масштаб комнат до декора ✓</li></ol>
+<p class="content-item content-question">Что произойдёт с деталью при запуске, если не включить Anchored?</p><ol class="content-item content-quiz-options"><li data-correct="true">Деталь упадёт под действием физики ✓</li><li>Ничего не изменится — Anchored влияет только на цвет</li><li>Деталь станет невидимой</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Move двигает, Scale меняет размер; блокаут — чтобы дёшево проверить маршрут и масштаб до декора; без Anchored деталь упадёт под действием физики.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="1-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Встали, отошли от экрана, размяли руки и глаза. Возвращаемся через 5 минут — дальше самое интересное, начинаем строить!</p>
+<aside class="speaker-notes">Заметка ведущего: Поставить таймер на экран, если есть возможность.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Строим свой первый блокаут <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="1-p-1">
+<h3 class="slide-title">Задача практики <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Набросаем черновой план квест-лобби: 2-3 условные комнаты, соединённые проходами. Именно эта заготовка станет основой твоего финального проекта на уроке 8 — так что строим на будущее.</p>
+</div>
+<div class="slide" id="1-p-2">
+<h3 class="slide-title">Шаги 1-2: пол и стены стартовой комнаты <span class="slide-duration">(7 мин)</span></h3>
+<ol class="content-item content-steps"><li>Полетать камерой (W/A/S/D + правая кнопка мыши, F — фокус)</li><li>Вставить Part (деталь) и растянуть Scale (масштабировать) в плоский пол</li><li>Скопировать Part и инструментами Move/Scale поставить 3-4 стены по периметру</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ходить по группе, мягко возвращать тех, кто увлёкся цветом — сейчас только серые формы.</aside>
+</div>
+<div class="slide" id="1-p-3">
+<h3 class="slide-title">Шаг 3: проём, коридор и финальная комната <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>В одной стене оставить проход</li><li>Пристроить узкий коридор-переход</li><li>Достроить вторую (финальную) комнату и пройти маршрут камерой</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Здесь проверяется главная идея блокаута — по уровню реально «пройти».</aside>
+</div>
+<div class="slide" id="1-p-4">
+<h3 class="slide-title">Шаг 4: Group, имена и Anchored <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выделить детали зоны и Group (сгруппировать) в Model</li><li>Назвать модели: StartRoom, Corridor, FinalRoom</li><li>Включить Anchored (закрепить) у всех Part, чтобы блокаут не развалился</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Напомнить про ошибку с Anchored со слайда теории — тут её закрываем на практике.</aside>
+</div>
+<div class="slide" id="1-p-5">
+<h3 class="slide-title">Шаг 5: публикация <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>File → Publish to Roblox…</li><li>Придумать название, нажать Create</li><li>Убедиться, что проект появился в списке своих игр</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Повторная публикация — Alt+P. Если у кого-то не вышло — помочь точечно.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="1-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Сколько комнат получилось в твоём блокауте?</p>
+<p class="content-item content-question">Все ли детали заякорены (Anchored)? Проверь через Play.</p>
+<p class="content-item content-question">Получилось ли опубликовать проект и найти его в списке игр?</p>
+<aside class="speaker-notes">Заметка ведущего: Если у кого-то деталь падает при Play — вместе найти незаякоренную. Ожидаем: 2-3 связанные комнаты и один опубликованный проект.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание и домашнее задание <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="1-c-1">
+<h3 class="slide-title">До следующего урока <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Отличная работа! Сегодня ты был Level Designer&#x27;ом и построил черновой каркас своего мира — фундамент будущего квеста.</p>
+<ul class="content-item content-bullets"><li>ДЗ: окончательно выбрать тему своего квеста (подземелье, космос, лес, замок)</li><li>Следующий урок: роль Environment Artist — оживляем локацию рельефом и природой (Terrain)</li></ul>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/tutorials/curriculums/studio/explore-ui">Explore Studio UI — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/parts">Parts — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places">Create and publish games and places — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/setup">Roblox Studio setup — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/blockout">Blockout — The Level Design Book</a></li><li><a href="https://www.worldofleveldesign.com/categories/level_design_tutorials/guide-to-blocktober.php">Quick Start Guide to Blockouts — World of Level Design</a></li><li><a href="https://www.youtube.com/watch?v=Sv8qDhDmMCw">How to Move, Scale, and Rotate Parts in Roblox Studio</a></li></ul></section>
+</article>
+</body>
+</html>
