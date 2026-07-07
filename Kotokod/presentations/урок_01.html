@@ -78,11 +78,11 @@ html,body{height:100%;background:#15161f;overflow:hidden}
 /* интерактивные области картинки (images/<урок>-<номер>.areas.json):
    наведение/фокус подсвечивает область её цветом и показывает подпись */
 .hs{position:absolute;border:4px solid var(--hs);border-radius:14px;background:transparent;opacity:.45;cursor:pointer;outline:none;transition:opacity .15s,background-color .15s}
-.hs:hover,.hs:focus{opacity:1;background:var(--hs-bg);z-index:2}
+.hs.hs-on,.hs:focus{opacity:1;background:var(--hs-bg);z-index:2}
 .hs-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--hs);color:#fff;
   font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:24px;line-height:1.2;
   padding:9px 16px;border-radius:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;box-shadow:0 6px 20px rgba(0,0,0,.25)}
-.hs:hover .hs-label,.hs:focus .hs-label{opacity:1}
+.hs.hs-on .hs-label,.hs:focus .hs-label{opacity:1}
 
 /* вопрос — ответ */
 .s-qa .qa-strip{position:absolute;left:0;top:0;bottom:0;width:540px;
@@ -548,10 +548,70 @@ function clampHotspotLabels(sl){
       if(cx-hw+dx<pad)dx=pad-(cx-hw);
       if(cy+hh>h-pad)dy=(h-pad)-(cy+hh);
       if(cy-hh+dy<pad)dy=pad-(cy-hh);
+      lb.dataset.mx=dx;lb.dataset.my=dy;
       lb.style.marginLeft=dx+'px';lb.style.marginTop=dy+'px';
     }
   }
 }
+/* области могут перекрываться (вложенные зоны), а браузерный :hover достаётся
+   только самой верхней — поэтому подсветкой управляет JS: активны ВСЕ области
+   под курсором, их подписи раскладываются вертикальной стопкой без наложений
+   (первая — самой маленькой области, на её обычном месте) */
+function initHotspots(){
+  var wraps=document.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++)(function(wrap){
+    var hss=wrap.querySelectorAll('.hs');
+    if(!hss.length)return;
+    function baseLabel(lb){
+      lb.style.left='';lb.style.top='';lb.style.transform='';
+      lb.style.marginLeft=(lb.dataset.mx||0)+'px';
+      lb.style.marginTop=(lb.dataset.my||0)+'px';
+    }
+    function off(hs){
+      hs.classList.remove('hs-on');
+      var lb=hs.querySelector('.hs-label');
+      if(lb)baseLabel(lb);
+    }
+    function clear(){for(var j=0;j<hss.length;j++)off(hss[j]);}
+    function layout(active){
+      var pad=4,W=wrap.offsetWidth,H=wrap.offsetHeight,lbs=[],total=0;
+      for(var j=0;j<active.length;j++){
+        var lb=active[j].querySelector('.hs-label');
+        if(lb)lbs.push({hs:active[j],lb:lb,w:lb.offsetWidth,h:lb.offsetHeight}),total+=lb.offsetHeight+6;
+      }
+      if(!lbs.length)return;
+      total-=6;
+      var f=lbs[0],
+          cx=f.hs.offsetLeft+f.hs.offsetWidth/2+parseFloat(f.lb.dataset.mx||0),
+          top=f.hs.offsetTop+f.hs.offsetHeight/2-f.h/2+parseFloat(f.lb.dataset.my||0);
+      top=Math.max(pad,Math.min(top,H-pad-total));
+      for(var j=0;j<lbs.length;j++){
+        var o=lbs[j],x=Math.max(pad,Math.min(cx-o.w/2,W-pad-o.w));
+        o.lb.style.transform='none';o.lb.style.margin='0';
+        o.lb.style.left=(x-o.hs.offsetLeft)+'px';
+        o.lb.style.top=(top-o.hs.offsetTop)+'px';
+        top+=o.h+6;
+      }
+    }
+    wrap.addEventListener('mousemove',function(e){
+      /* координаты курсора → css-px обёртки (дека масштабируется zoom/scale) */
+      var r=wrap.getBoundingClientRect(),k=r.width/wrap.offsetWidth||1,
+          x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k,active=[];
+      for(var j=0;j<hss.length;j++){
+        var hs=hss[j];
+        if(x>=hs.offsetLeft&&x<=hs.offsetLeft+hs.offsetWidth&&
+           y>=hs.offsetTop&&y<=hs.offsetTop+hs.offsetHeight)active.push(hs);
+        else off(hs);
+      }
+      active.sort(function(a,b){return a.offsetWidth*a.offsetHeight-b.offsetWidth*b.offsetHeight;});
+      for(var j=0;j<active.length;j++)active[j].classList.add('hs-on');
+      if(active.length>1)layout(active);
+      else if(active.length===1){var lb=active[0].querySelector('.hs-label');if(lb)baseLabel(lb);}
+    });
+    wrap.addEventListener('mouseleave',clear);
+  })(wraps[i]);
+}
+initHotspots();
 function shrinkAll(){
   for(var i=0;i<slides.length;i++){
     var sl=slides[i],was=sl.classList.contains('on');
