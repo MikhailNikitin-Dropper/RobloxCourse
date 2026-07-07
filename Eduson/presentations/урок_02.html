@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 2. Природа и рельеф (Terrain) — Eduson Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ek-violet:#8C7FF6; --ek-violet-soft:#A79EF9; --ek-violet-deep:#6F61E8; --ek-violet-bg:#F0EEFE;
+  --ek-green:#3DF79D; --ek-green-soft:#7BF9BD; --ek-green-mint:#C9F7E3; --ek-green-pale:#E7FDF2; --ek-green-deep:#0FBF6E;
+  --ek-ink:#17171C; --ek-gray:#8F8F98; --ek-gray-light:#EFEFF2; --ek-line:#E3E3EA; --ek-white:#fff;
+  --ek-red:#FF6B6B; --ek-red-pale:#FFECEC; --ek-bg:#F7F7FB; --ek-radius:28px;
+  --ek-font-head:'Inter Tight','Inter','Segoe UI',system-ui,sans-serif;
+  --ek-font-body:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#101016;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;font-family:var(--ek-font-head);color:var(--ek-ink)}
+.slide.on{display:block}
+.fit{overflow:hidden}
+.slide--violet{background:var(--ek-violet)}
+.slide--green{background:var(--ek-green)}
+.slide--white{background:#fff}
+
+/* декор «Орбита» */
+.sl-orbit{position:absolute;inset:0;pointer-events:none}
+.slide--violet .sl-orbit{--decor:#A79EF9;--letter:#C4BEFA}
+.slide--green .sl-orbit{--decor:#7BF9BD;--letter:#C4FCE0}
+.slide--white .sl-orbit{--decor:#97F3C8;--letter:#fff}
+.sl-ring{position:absolute;left:50%;top:50%;width:1040px;height:660px;transform:translate(-50%,-50%);border:3px solid var(--decor);border-radius:50%;opacity:.9}
+.sl-ico{position:absolute;color:var(--decor)}
+.sl-letter{position:absolute;border-radius:50%;background:var(--decor);color:var(--letter);display:flex;align-items:center;justify-content:center;font:800 var(--fs,40px)/1 var(--ek-font-head);font-style:normal}
+.sl-waves{position:absolute;right:0;top:0;width:520px;height:720px;pointer-events:none}
+.sl-waves svg{width:100%;height:100%}
+
+/* базовые элементы слайда */
+.sl-card{position:relative;background:#fff;border-radius:28px;box-shadow:0 30px 80px rgba(23,23,28,.16)}
+.sl-card-top{display:flex;justify-content:space-between;align-items:center;padding:24px 30px 0}
+.sl-dots{display:flex;gap:9px}
+.sl-dots i{width:13px;height:13px;border-radius:50%;background:var(--ek-violet)}
+.sl-close{position:relative;width:22px;height:22px;opacity:.9}
+.sl-close::before,.sl-close::after{content:"";position:absolute;left:-1px;top:9px;width:24px;height:4px;border-radius:2px;background:var(--ek-violet)}
+.sl-close::before{transform:rotate(45deg)}
+.sl-close::after{transform:rotate(-45deg)}
+.sl-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 26px/1 var(--ek-font-head);padding:14px 24px;border-radius:14px;transform:rotate(-4deg);box-shadow:0 10px 24px rgba(23,23,28,.10)}
+.ek-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 14px/1 var(--ek-font-head);padding:9px 16px;border-radius:10px;transform:rotate(-3deg)}
+.ek-badge--violet{background:var(--ek-violet);color:#fff}
+.sl-h1{font:800 54px/1.12 var(--ek-font-head);letter-spacing:-.015em;margin:0}
+.sl-h2{font:800 40px/1.18 var(--ek-font-head);letter-spacing:-.01em;margin:0}
+.sl-body{font:500 1em/1.5 var(--ek-font-body)}
+.sl-pagenum{position:absolute;right:54px;bottom:38px;font:800 38px/1 var(--ek-font-head);color:#fff}
+.slide--white .sl-pagenum{color:var(--ek-ink)}
+.sl-bubble{position:relative;background:#EFEFF1;border-radius:30px;padding:58px 74px;text-align:center}
+.sl-bubble::after{content:"";position:absolute;right:56px;bottom:-24px;width:0;height:0;border-left:38px solid transparent;border-top:28px solid #EFEFF1}
+
+/* титульный */
+.title-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:860px}
+.title-badge{position:absolute;left:50%;top:-30px;transform:translateX(-50%) rotate(-4deg)}
+.title-card-in{padding:26px 70px 56px;text-align:center}
+.title-role{margin-top:18px;font:700 24px/1.3 var(--ek-font-head);color:var(--ek-violet-deep)}
+
+/* разделитель и перерыв */
+.div-bubble{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px}
+.div-bubble-text{font:800 38px/1.25 var(--ek-font-head)}
+.break-wrap{position:absolute;left:50%;top:0;transform:translateX(-50%);width:1000px;height:720px}
+.break-wrap .div-bubble{position:static;transform:none;margin:150px auto 0;width:760px}
+.break-body{margin-top:70px;text-align:center;font-size:26px;max-height:240px}
+
+/* вопросы */
+.qa-wrap{position:absolute;left:100px;top:110px;width:760px;bottom:70px;display:flex;flex-direction:column}
+.qa-head{color:var(--ek-violet-deep);font-size:30px;margin-bottom:46px;flex:0 0 auto}
+.qa-list{flex:1 1 auto;min-height:0;font-size:38px}
+.q-item{font-size:1em;margin-bottom:1.47em}
+.qa-counter{display:block;margin-top:12px;font:700 15px/1 var(--ek-font-head);letter-spacing:.09em;text-transform:uppercase;color:var(--ek-gray)}
+
+/* квиз (компонент quiz-single дизайн-бука; размеры в em — под авто-ужатие .fit) */
+.quiz-q{font:800 .9em/1.25 var(--ek-font-head);letter-spacing:-.01em;margin-bottom:.95em}
+.ek-option{display:flex;align-items:center;gap:.7em;width:100%;text-align:left;background:#fff;border:2px solid var(--ek-line);border-radius:16px;padding:.7em .9em;font:600 .55em/1.35 var(--ek-font-body);color:var(--ek-ink);cursor:pointer;transition:border-color .15s,background .15s,opacity .2s}
+.ek-option+.ek-option{margin-top:.55em}
+.ek-option:hover{border-color:var(--ek-violet-soft)}
+.ek-option:disabled{cursor:default}
+.ek-option:disabled:not(.is-correct):not(.is-wrong){opacity:.5}
+.ek-option:disabled:not(.is-correct):not(.is-wrong):hover{border-color:var(--ek-line)}
+.ek-option.is-correct{border-color:var(--ek-green-deep);background:var(--ek-green-pale);animation:quiz-pop .35s ease}
+.ek-option.is-wrong{border-color:var(--ek-red);background:var(--ek-red-pale);animation:quiz-shake .3s ease}
+.ek-chip{flex:0 0 auto;width:1.9em;height:1.9em;border-radius:50%;background:var(--ek-gray-light);display:flex;align-items:center;justify-content:center;font:800 .85em var(--ek-font-head)}
+.ek-option.is-correct .ek-chip{background:var(--ek-green)}
+.ek-option.is-wrong .ek-chip{background:var(--ek-red);color:#fff}
+/* пустой блок фидбека всегда занимает место: авто-ужатие .fit меряет слайд
+   до клика, и появившийся позже текст не должен выталкивать кнопку «Заново» */
+.ek-feedback{display:block;min-height:4.2em;margin-top:.5em;border-radius:14px;padding:.55em .75em;font:600 .47em/1.5 var(--ek-font-body)}
+.ek-feedback.is-on{animation:quiz-rise .25s ease}
+.ek-feedback--ok{background:var(--ek-green-pale);color:#0B7A48}
+.ek-feedback--err{background:var(--ek-red-pale);color:#C6403F}
+.quiz-actions{display:flex;justify-content:flex-end;margin-top:.4em}
+.ek-btn{font:700 .42em/1 var(--ek-font-head);border:0;border-radius:14px;padding:.8em 1.3em;cursor:pointer;transition:opacity .15s,border-color .15s}
+.ek-btn--ghost{background:transparent;border:2px solid var(--ek-line);color:var(--ek-ink)}
+.ek-btn--ghost:hover{border-color:var(--ek-violet-soft)}
+.ek-btn:disabled{opacity:.45;cursor:not-allowed}
+@keyframes quiz-pop{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes quiz-shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+@keyframes quiz-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.ek-option.is-correct,.ek-option.is-wrong,.ek-feedback.is-on{animation:none}}
+
+/* контентные */
+.content-wrap{position:absolute;left:80px;right:80px;top:70px;bottom:80px;display:flex;flex-direction:column}
+.content-wrap .sl-h2{flex:0 0 auto}
+.one-col,.two-col{margin-top:40px;flex:1 1 auto;min-height:0;font-size:23px}
+.two-col{display:flex;gap:44px;align-items:flex-start}
+.two-col .col{flex:1 1 50%}
+.para{margin-bottom:.87em}
+.quote{border-left:6px solid var(--ek-violet);padding:6px 0 6px 22px;margin-bottom:.87em;color:var(--ek-violet-deep)}
+.rows{display:grid;gap:.78em}
+.row{display:flex;gap:.87em;align-items:center;background:var(--ek-bg);border-radius:22px;padding:.87em 1.13em}
+.row-dot{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:var(--ek-violet)}
+.row-num{flex:0 0 auto;width:48px;height:48px;border-radius:50%;background:var(--ek-violet);color:#fff;display:flex;align-items:center;justify-content:center;font:800 22px var(--ek-font-head)}
+.row-num--green{background:var(--ek-green);color:var(--ek-ink)}
+.row-text{font-size:.91em}
+
+/* практика */
+.practice-card{position:absolute;left:64px;right:64px;top:48px;bottom:48px;border-radius:30px}
+.practice-card-in{padding:40px 56px;height:100%;font-size:23px}
+.practice-badge{font-size:20px;padding:12px 20px}
+.practice-head{margin:20px 0 24px;font-size:34px}
+
+/* картинка слайда (реальная из images/ или SVG-заглушка) */
+.ph-card{padding-bottom:22px}
+.ph-wrap{position:relative;width:calc(100% - 44px);margin:16px auto 0}
+.ph{display:block;width:100%;height:auto;max-height:440px;object-fit:contain;background:#fff;border-radius:14px;border:2px solid var(--ek-line)}
+
+/* интерактивные области картинки (images/<урок>-<номер>.areas.json):
+   наведение/фокус подсвечивает область её цветом и показывает подпись */
+.hs{position:absolute;border:3px solid var(--hs);border-radius:10px;background:transparent;opacity:.45;cursor:pointer;outline:none;transition:opacity .15s,background-color .15s}
+.hs:hover,.hs:focus{opacity:1;background:var(--hs-bg);z-index:2}
+.hs-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--hs);color:#fff;font:700 14px/1.2 var(--ek-font-head);padding:6px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;box-shadow:0 4px 14px rgba(23,23,28,.25)}
+.hs:hover .hs-label,.hs:focus .hs-label{opacity:1}
+.practice-card .ph-card{box-shadow:0 14px 36px rgba(23,23,28,.10);margin-top:10px}
+
+/* навигация (слева, чтобы не перекрывать номер страницы шаблона) */
+.nav{position:fixed;left:22px;bottom:20px;display:flex;gap:10px;z-index:10}
+.nav button{width:56px;height:56px;border:none;border-radius:14px;background:rgba(255,255,255,.55);color:var(--ek-violet-deep);font-size:26px;line-height:1;cursor:pointer;font-family:var(--ek-font-head)}
+.nav button:hover{background:rgba(255,255,255,.75)}
+.nav button:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="ek-i-trophy" viewBox="0 0 100 100"><path fill="currentColor" d="M24 16h52v12h8c6 0 10 4 10 10 0 15-11 25-23 27-3 5-8 9-14 10v8h14c4 0 7 3 7 7v4H22v-4c0-4 3-7 7-7h14v-8c-6-1-11-5-14-10C17 63 6 53 6 38c0-6 4-10 10-10h8V16zM24 36h-7c-2 0-4 2-4 4 0 8 5 15 12 18-1-5-1-10-1-16v-6zM76 36v6c0 6 0 11-1 16 7-3 12-10 12-18 0-2-2-4-4-4h-7z"/></symbol><symbol id="ek-i-heart" viewBox="0 0 100 100"><path fill="currentColor" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/></symbol><symbol id="ek-i-star" viewBox="0 0 100 100"><path fill="currentColor" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/></symbol><symbol id="ek-i-gem" viewBox="0 0 100 100"><path fill="currentColor" fill-rule="evenodd" d="M22 14H78L94 38L50 90L6 38L22 14zM49 40H51V81H49V40zM21 18L46 38L44 40L19 20zM79 18L54 38L56 40L81 20zM12 37H88V40H12z"/></symbol></defs></svg>
+<div id="stage">
+<section class="slide slide--violet"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div>
+<div class="sl-card title-card">
+  <div class="sl-badge title-badge">Урок №2</div>
+  <div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div>
+  <div class="title-card-in"><h1 class="sl-h1">Природа и рельеф (Terrain)</h1>
+  <p class="title-role">Environment Artist</p></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Привет! Сегодня ты — Environment Artist</h2>
+  <div class="one-col fit"><p class="sl-body para">С возвращением в мастерскую! На прошлом уроке ты построил каркас мира из серых кубов. Сегодня вдохнём в него жизнь.</p><p class="sl-body para">Твоя роль — Environment Artist (художник окружения): человек, который превращает коробки уровня в живой мир с холмами, водой и лесом.</p></div>
+</div>
+<div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 1?<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">В какой панели Studio живёт дерево всех объектов твоего мира?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Да! Explorer показывает дерево всех объектов — там мы переименовывали модели StartRoom и Corridor."><span class="ek-chip">А</span><span>Explorer (обозреватель)</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Properties показывает настройки одного выбранного объекта, а дерево всего мира — это Explorer."><span class="ek-chip">Б</span><span>Properties (свойства)</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Toolbox — библиотека готовых моделей, а дерево объектов твоего мира живёт в Explorer."><span class="ek-chip">В</span><span>Toolbox (набор ассетов)</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 1?<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Зачем мы включали Anchored (закрепление) у каждой детали блокаута?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Мышкой в редакторе деталь двигать всё равно можно — Anchored защищает от падения при запуске игры."><span class="ek-chip">А</span><span>Чтобы деталь нельзя было случайно сдвинуть мышкой</span></button><button type="button" class="ek-option" data-correct="false" data-expl="За блеск отвечает материал детали, а Anchored держит её на месте при запуске."><span class="ek-chip">Б</span><span>Чтобы деталь красиво блестела на солнце</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Точно! Без Anchored гравитация уронит деталь, как только запустится игра."><span class="ek-chip">В</span><span>Чтобы деталь не упала под физикой при нажатии Play</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 1?<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Почему мы строили серый блокаут, а не сразу красивую локацию?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Цвета доступны с самого начала — просто блокаут удобнее проверять без декора."><span class="ek-chip">А</span><span>Потому что цвета в Studio открываются только со второго урока</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Сначала проверяем путь игрока на простых формах: переделывать серые кубики куда проще, чем украшенную локацию."><span class="ek-chip">Б</span><span>Чтобы просто проверить маршрут и размеры комнат до украшения</span></button><button type="button" class="ek-option" data-correct="false" data-expl="На скорость загрузки серый цвет не влияет — дело в простой проверке маршрута и масштаба."><span class="ek-chip">В</span><span>Чтобы игра быстрее загружалась</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Environment Artist: рельеф, вода и настроение мира</span></div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Terrain: мир, слепленный из вокселей</h2>
+  <div class="two-col fit"><div class="col"><p class="sl-body para">Terrain (ландшафт) — это «пластилин» Roblox: мир из маленьких кубиков-вокселей 4×4×4 студа, у каждого свой материал. Из него лепят горы, пустыни, реки и целые острова.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Terrain Editor (редактор ландшафта) открывается с вкладки Home</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Вкладка Create (создать) — Generate: целый биом за секунды (горы, дюны, равнины)</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Вкладка Edit (править) — кисти для ручной лепки и покраски</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Generate хорош для черновика, но свою локацию мы слепим руками — под наш блокаут</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph" id="img-1" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzItMS5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodC60YDQuNC90YjQvtGCINC+0LrQvdCwIFRlcnJhaW4gRWRpdG9yINGBINCy0LrQu9Cw0LTQutCw0LzQuDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5DcmVhdGUg0LggRWRpdCDQuCDRgNGP0LTQvtC8INC60LjRgdGC0LXQuSAoRHJhdyw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+U2N1bHB0LCBTbW9vdGgsIEZsYXR0ZW4sIFBhaW50KTwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Скриншот окна Terrain Editor с вкладками Create и Edit и рядом кистей (Draw, Sculpt, Smooth, Flatten, Paint)" title="Скриншот окна Terrain Editor с вкладками Create и Edit и рядом кистей (Draw, Sculpt, Smooth, Flatten, Paint)"></div></div></div></div>
+</div>
+<div class="sl-pagenum">7</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Пять кистей художника окружения</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Draw (рисовать) — добавляет или убирает куски ландшафта кистью</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Sculpt (лепить) — то же, но нежнее: есть ползунок силы; тянешь — рельеф растёт, с Ctrl — убывает</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Smooth (сгладить) — убирает рваные края и ступеньки</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Flatten (выровнять) — делает площадку одной высоты</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Paint (покрасить) — наносит материал поверх готового рельефа</span></div></div></div>
+</div>
+<div class="sl-pagenum">8</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Кисть под контролем</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Форма кисти: sphere (шар), box (куб), cylinder (цилиндр)</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Size (размер) — от 1 до 64 студов: большая кисть для холмов, маленькая для деталей</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Strength (сила) у Sculpt/Smooth/Flatten — чем меньше, тем аккуратнее</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Plane Lock (замок плоскости) — кисть держится одной высоты и не роет ям</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Auto Material — кисть сама берёт материал, который уже под ней</span></div></div></div>
+</div>
+<div class="sl-pagenum">9</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">23 материала и живая вода</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Материалы: Grass (трава), Rock (камень), Sand (песок), Snow (снег), Mud (грязь), Ice (лёд), Water (вода) — всего 23</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Секрет: анимированная колышущаяся травка растёт только на материале Grass</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Sea Level (уровень моря) — ровная вода в выбранном регионе одним кликом</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">У воды есть свои настройки: цвет, прозрачность, размер и скорость волн</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Часть эффектов воды видна только в плейтесте — не пугайся, если в редакторе вода «простая»</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph" id="img-2" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzItMi5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7Qn9Cw0LvQuNGC0YDQsCDQvNCw0YLQtdGA0LjQsNC70L7QsiBUZXJyYWluINCyINGA0LXQtNCw0LrRgtC+0YDQtTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj4o0YHQtdGC0LrQsCDQuNC60L7QvdC+0Lo6INGC0YDQsNCy0LAsINC60LDQvNC10L3RjCwg0L/QtdGB0L7Quiwg0YHQvdC10LMsPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtCy0L7QtNCwINC4INGCLtC0Likg0YEg0LLRi9C00LXQu9C10L3QvdGL0Lwg0LzQsNGC0LXRgNC40LDQu9C+0LwgR3Jhc3M8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Палитра материалов Terrain в редакторе (сетка иконок: трава, камень, песок, снег, вода и т.д.) с выделенным материалом Grass" title="Палитра материалов Terrain в редакторе (сетка иконок: трава, камень, песок, снег, вода и т.д.) с выделенным материалом Grass"></div></div></div></div>
+</div>
+<div class="sl-pagenum">10</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Рельеф — это настроение</h2>
+  <div class="two-col fit"><div class="col"><p class="sl-body para">Environment Artist управляет эмоциями игрока без единого слова: формой земли и цветом материалов.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Крутой обрыв, тёмные скалы, узкое ущелье — «здесь опасно, будь осторожен»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Открытая солнечная поляна у воды — «здесь можно выдохнуть»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Красим слоями: земля → пятна камня → трава сверху; переходы там, где они естественны</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Растения из Toolbox расставляем с разным размером и поворотом — никакой «копипасты»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Terrain дружит с постройками: у стен — вытоптанная земля, тропа соединяет комнаты</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph" id="img-3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzItMy5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI4NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodGA0LDQstC90LXQvdC40LUg0LTQstGD0YUg0L3QsNGB0YLRgNC+0LXQvdC40Lkg0L7QtNC90L7QuSDQu9C+0LrQsNGG0LjQuDo8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0YHQu9C10LLQsCDQvNGA0LDRh9C90L7QtSDRg9GJ0LXQu9GM0LUg0YEg0YLRkdC80L3Ri9C80Lgg0YHQutCw0LvQsNC80LgsPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtGB0L/RgNCw0LLQsCDRgdC+0LvQvdC10YfQvdCw0Y8g0L/QvtC70Y/QvdCwINGBINC+0LfQtdGA0L7QvCDQuDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QtNC10YDQtdCy0YzRj9C80Lg8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Сравнение двух настроений одной локации: слева мрачное ущелье с тёмными скалами, справа солнечная поляна с озером и деревьями" title="Сравнение двух настроений одной локации: слева мрачное ущелье с тёмными скалами, справа солнечная поляна с озером и деревьями"></div></div></div></div>
+</div>
+<div class="sl-pagenum">11</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Типичные ошибки новичка</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Гигантская кисть на полную силу — полкарты перекопано одним движением (уменьшай Size и Strength)</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Выключенный Plane Lock — вместо ровного холма получаются ямы и бугры</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Один материал на всю карту — скучно; красим слоями и добавляем переходы</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Покрасил поляну не в Grass — и удивляешься, почему травка не колышется</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Взял модель из Toolbox не глядя — внутри может сидеть чужой скрипт: смотри рейтинг и verified creator</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Утопил блокаут в рельефе — проходы завалены, маршрут сломан; проверяй плейтестом</span></div></div></div>
+</div>
+<div class="sl-pagenum">12</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Проверяем теорию</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Каким инструментом наносят материал (траву, снег) на уже готовый рельеф?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Sculpt меняет форму рельефа — растит и размывает, а вот цветом и материалом занимается другая кисть."><span class="ek-chip">А</span><span>Sculpt (лепить)</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Точно! Paint красит готовый рельеф выбранным материалом, не меняя его форму."><span class="ek-chip">Б</span><span>Paint (покрасить)</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Flatten выравнивает землю в ровную площадку, а материал наносит Paint."><span class="ek-chip">В</span><span>Flatten (выровнять)</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Что делает Plane Lock (замок плоскости)?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Постройки тут ни при чём — Plane Lock управляет движением кисти по высоте."><span class="ek-chip">А</span><span>Запрещает удалять чужие постройки</span></button><button type="button" class="ek-option" data-correct="false" data-expl="За материал отвечает кисть Paint, а Plane Lock следит за высотой кисти."><span class="ek-chip">Б</span><span>Красит рельеф только в один материал</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! С Plane Lock кисть скользит по одной плоскости, поэтому холмы получаются ровными, а не рваными."><span class="ek-chip">В</span><span>Держит кисть на одной высоте — без случайных ям и бугров</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Почему на песчаном пляже травка не колышется?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Именно! Живая колышущаяся травка появляется только на материале Grass — на песке её и не должно быть."><span class="ek-chip">А</span><span>Анимированная травка растёт только на материале Grass</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Отдельной кнопки на каждый материал нет — травка привязана именно к материалу Grass."><span class="ek-chip">Б</span><span>Травку нужно включать отдельной кнопкой у каждого материала</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Studio тут ни при чём: так задумано — травка растёт только на Grass."><span class="ek-chip">В</span><span>Это баг Studio — надо перезапустить</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div>
+<div class="break-wrap">
+  <div class="sl-bubble div-bubble"><span class="div-bubble-text">Перерыв 5 минут</span></div>
+  <div class="break-body fit"><p class="sl-body para">Разомнись и дай глазам отдохнуть. Через 5 минут берём в руки кисти — будем лепить настоящую природу вокруг твоего мира!</p></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Оживляем мир вокруг блокаута</span></div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Задача практики</h2>
+    <p class="sl-body para">Превращаем пустоту вокруг блокаута урока 1 в живую локацию: земля, рельеф под настроение твоего квеста, вода, материалы слоями и первые растения из Toolbox. Это тот самый мир, в котором на уроке 8 развернётся твой финальный квест.</p>
+  </div>
+</div>
+<div class="sl-pagenum">19</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаги 1-2: земля под ногами</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Открыть проект урока 1 и Terrain Editor (вкладка Home)</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Кистью Draw (материал Ground или Grass, размер ~32) набросать основу земли вокруг блокаута</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Flatten — выровнять площадку возле комнат, чтобы стены не «тонули» в земле</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">20</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаги 3-4: рельеф под настроение</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Sculpt: поднять холмы по краям локации — они станут естественными «стенами» мира</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">У опасной зоны квеста слепить обрыв или скалу, у спокойной — оставить ровную поляну</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Smooth: пройтись по рваным краям и ступенькам</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Проверить Plane Lock и силу кисти, если рельеф выходит из-под контроля</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">21</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаги 5-6: вода и покраска слоями</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Слепить низину и налить озеро или реку: инструмент Sea Level (уровень моря)</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Убедиться, что вода не затопила комнаты блокаута</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Paint: трава (Grass) на поляны, камень (Rock) на склоны, песок (Sand) у воды</span></div><div class="row"><span class="row-num">4</span><span class="sl-body row-text">Протоптать тропу материалом Ground или Mud между комнатами блокаута</span></div><div class="row"><span class="row-num row-num--green">5</span><span class="sl-body row-text">Мелкой кистью (размер ~3) добавить пятна-переходы по краям материалов</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">22</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 7: растения из Toolbox и публикация</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">В Toolbox найти 2-3 модели природы: дерево, камень, куст (смотри рейтинг и значок verified)</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Расставить копии с разным размером и поворотом — никакой «копипасты»</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Проверить у вставленных моделей Anchored</span></div><div class="row"><span class="row-num">4</span><span class="sl-body row-text">Плейтест: пройти маршрут комнат пешком — проходы свободны, вода не мешает</span></div><div class="row"><span class="row-num row-num--green">5</span><span class="sl-body row-text">Опубликовать обновление: Alt+P</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">23</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Обсуждаем практику</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике</h2>
+  <div class="qa-list fit"><h3 class="sl-h2 q-item">Какое настроение у твоей локации и чем оно задано — формой рельефа или материалами?</h3><h3 class="sl-h2 q-item">Сколько разных материалов ты использовал? Где проходит самый заметный переход между ними?</h3><h3 class="sl-h2 q-item">Пройди маршрут от старта до финальной комнаты: рельеф нигде не сломал путь?</h3></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">До следующего урока</h2>
+  <div class="one-col fit"><p class="sl-body para">Сегодня ты был Environment Artist&#x27;ом: серый каркас превратился в мир с холмами, водой и лесом. Уже почти настоящая игра!</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">ДЗ: добавить в локацию ещё 2-3 модели природы из Toolbox и решить, где будет самая опасная зона квеста</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Следующий урок: роль Prop Artist — слепим уникальные предметы для квеста (сундук, ключ, кристалл) инструментами Union и Negate</span></div></div></div>
+</div>
+<div class="sl-pagenum">26</div></section>
+</div>
+<div class="nav">
+  <button id="nav-prev" type="button" aria-label="Предыдущий слайд">&#8592;</button>
+  <button id="nav-next" type="button" aria-label="Следующий слайд">&#8594;</button>
+  <button id="nav-full" type="button" aria-label="Полноэкранный режим (выход — Esc)" title="Полноэкранный режим (выход — Esc)">&#9974;</button>
+</div>
+<script>
+(function(){
+'use strict';
+var slides=document.querySelectorAll('.slide');
+var prev=document.getElementById('nav-prev'),next=document.getElementById('nav-next');
+var full=document.getElementById('nav-full');
+var quizResets=[]; /* {slide, reset} — чтобы сбрасывать выбор при уходе со слайда */
+var cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  for(var k=0;k<slides.length;k++)slides[k].classList.toggle('on',k===cur);
+  /* квизы на неактивных слайдах возвращаются в исходное состояние */
+  for(var r=0;r<quizResets.length;r++)
+    if(!quizResets[r].slide.classList.contains('on'))quizResets[r].reset();
+  prev.disabled=cur===0;next.disabled=cur===slides.length-1;
+  if(history.replaceState)history.replaceState(null,'','#'+(cur+1));
+}
+function fit(){
+  var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+  document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';
+}
+prev.addEventListener('click',function(){show(cur-1);});
+next.addEventListener('click',function(){show(cur+1);});
+/* полноэкранный режим; выход — Esc (нативное поведение браузера) */
+full.addEventListener('click',function(){
+  if(document.fullscreenElement){if(document.exitFullscreen)document.exitFullscreen();}
+  else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
+});
+document.addEventListener('keydown',function(e){
+  /* пробел на сфокусированной кнопке (вариант квиза, «Заново») — это клик,
+     а не листание */
+  if(e.key===' '&&e.target&&e.target.tagName==='BUTTON')return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+window.addEventListener('resize',fit);
+function initQuizzes(){
+  var quizzes=document.querySelectorAll('.quiz');
+  for(var i=0;i<quizzes.length;i++)(function(q){
+    var opts=q.querySelectorAll('.ek-option'),fb=q.querySelector('.ek-feedback'),
+        rst=q.querySelector('.quiz-reset'),done=false;
+    function pick(e){
+      if(done)return;done=true;
+      var right=e.currentTarget.getAttribute('data-correct')==='true';
+      for(var k=0;k<opts.length;k++){
+        opts[k].disabled=true;
+        if(opts[k].getAttribute('data-correct')==='true')opts[k].classList.add('is-correct');
+      }
+      if(!right)e.currentTarget.classList.add('is-wrong');
+      fb.className='ek-feedback is-on '+(right?'ek-feedback--ok':'ek-feedback--err');
+      var expl=e.currentTarget.getAttribute('data-expl');
+      fb.textContent=(right?'Верно! 🎉':'Пока нет — правильный ответ подсвечен зелёным.')+(expl?' '+expl:'');
+      rst.disabled=false;
+    }
+    function reset(){
+      done=false;fb.className='ek-feedback';fb.textContent='';rst.disabled=true;
+      for(var k=0;k<opts.length;k++){opts[k].disabled=false;opts[k].classList.remove('is-correct','is-wrong');}
+    }
+    for(var j=0;j<opts.length;j++)opts[j].addEventListener('click',pick);
+    rst.addEventListener('click',reset);
+    var sl=q;while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;
+    if(sl)quizResets.push({slide:sl,reset:reset});
+  })(quizzes[i]);
+}
+initQuizzes();
+function shrinkEl(el){
+  if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
+  var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
+  el.style.fontSize='';
+  while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+}
+function shrinkAll(){
+  for(var i=0;i<slides.length;i++){
+    var sl=slides[i],was=sl.classList.contains('on');
+    if(!was)sl.classList.add('on');
+    var fits=sl.querySelectorAll('.fit');
+    for(var j=0;j<fits.length;j++)shrinkEl(fits[j]);
+    if(!was)sl.classList.remove('on');
+  }
+}
+fit();shrinkAll();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(shrinkAll);
+show((parseInt(location.hash.slice(1),10)||1)-1);
+window.addEventListener('hashchange',function(){show((parseInt(location.hash.slice(1),10)||1)-1);});
+})();
+</script>
+</body>
+</html>
