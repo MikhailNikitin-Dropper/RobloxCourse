@@ -530,17 +530,41 @@ function shrinkEl(el){
   el.style.fontSize='';
   while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
 }
+/* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
+   наружу — после раскладки чип задвигается внутрь картинки (margin поверх
+   центрирующего translate; мерить можно только видимый слайд) */
+function clampHotspotLabels(sl){
+  var wraps=sl.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++){
+    var w=wraps[i].offsetWidth,h=wraps[i].offsetHeight,
+        hss=wraps[i].querySelectorAll('.hs');
+    for(var j=0;j<hss.length;j++){
+      var hs=hss[j],lb=hs.querySelector('.hs-label');
+      if(!lb)continue;
+      var pad=4,
+          cx=hs.offsetLeft+hs.offsetWidth/2,cy=hs.offsetTop+hs.offsetHeight/2,
+          hw=lb.offsetWidth/2,hh=lb.offsetHeight/2,dx=0,dy=0;
+      if(cx+hw>w-pad)dx=(w-pad)-(cx+hw);
+      if(cx-hw+dx<pad)dx=pad-(cx-hw);
+      if(cy+hh>h-pad)dy=(h-pad)-(cy+hh);
+      if(cy-hh+dy<pad)dy=pad-(cy-hh);
+      lb.style.marginLeft=dx+'px';lb.style.marginTop=dy+'px';
+    }
+  }
+}
 function shrinkAll(){
   for(var i=0;i<slides.length;i++){
     var sl=slides[i],was=sl.classList.contains('on');
     if(!was)sl.classList.add('on');
     var fits=sl.querySelectorAll('.fit');
     for(var j=0;j<fits.length;j++)shrinkEl(fits[j]);
+    clampHotspotLabels(sl);
     if(!was)sl.classList.remove('on');
   }
 }
 fit();shrinkAll();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(shrinkAll);
+window.addEventListener('load',shrinkAll);
 show((parseInt(location.hash.slice(1),10)||1)-1);
 window.addEventListener('hashchange',function(){show((parseInt(location.hash.slice(1),10)||1)-1);});
 })();
