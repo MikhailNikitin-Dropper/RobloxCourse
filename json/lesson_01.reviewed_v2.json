@@ -1,0 +1,446 @@
+{
+  "lesson_number": 1,
+  "lesson_title": "Блокаут мира: рождение локации",
+  "designer_role": "Level Designer",
+  "total_duration_minutes": 60,
+  "references_previous_lesson": null,
+  "sources": [
+    {
+      "url": "https://create.roblox.com/docs/en-us/tutorials/curriculums/studio/explore-ui",
+      "type": "web",
+      "title": "Explore Studio UI — Roblox Creator Hub",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Зоны интерфейса (mezzanine/toolbar/viewport/Toolbox/Explorer/Properties) и таблица управления камерой"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/parts",
+      "type": "web",
+      "title": "Parts — Roblox Creator Hub",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Типы Part, transform-инструменты, Model-группировка, свойство Anchored"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places",
+      "type": "web",
+      "title": "Create and publish games and places — Roblox Creator Hub",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Публикация: File → Publish to Roblox, имя+описание, Create, Alt+P"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/studio/setup",
+      "type": "web",
+      "title": "Roblox Studio setup — Roblox Creator Hub",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Studio — бесплатное приложение для Windows/Mac"
+    },
+    {
+      "url": "https://book.leveldesignbook.com/process/blockout",
+      "type": "web",
+      "title": "Blockout — The Level Design Book",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Определение блокаута и зачем он делается первым"
+    },
+    {
+      "url": "https://www.worldofleveldesign.com/categories/level_design_tutorials/guide-to-blocktober.php",
+      "type": "web",
+      "title": "Quick Start Guide to Blockouts — World of Level Design",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Блокаут = черновик из простых форм для проверки flow и масштаба"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=Sv8qDhDmMCw",
+      "type": "youtube",
+      "title": "How to Move, Scale, and Rotate Parts in Roblox Studio",
+      "accessed_date": "2026-07-01",
+      "verified": true,
+      "supports_fact": "Приёмы работы с Move/Scale/Rotate для новичков"
+    }
+  ],
+  "blocks": [
+    {
+      "block_id": "welcome",
+      "title": "Приветствие",
+      "duration_minutes": 1,
+      "slides": [
+        {
+          "slide_id": "1-w-1",
+          "slide_title": "Привет! Сегодня ты — Level Designer",
+          "duration_minutes": 1,
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "Погнали! Начинаем курс, где каждый урок ты примеряешь новую профессию из мира игр. За 8 занятий мы вместе соберём твой собственный квест в Roblox."
+            },
+            {
+              "type": "paragraph",
+              "text": "Сегодня твоя роль — Level Designer (дизайнер уровней), архитектор игрового пространства."
+            }
+          ],
+          "speaker_notes": "Коротко и с энергией — ровно 60 секунд. Задать настроение, что мы делаем настоящую игру, а не учебный пример."
+        }
+      ]
+    },
+    {
+      "block_id": "review_previous",
+      "title": "Знакомство и оргвопросы",
+      "duration_minutes": 4,
+      "slides": [
+        {
+          "slide_id": "1-r-1",
+          "slide_title": "Это первый урок — давай познакомимся",
+          "duration_minutes": 4,
+          "content": [
+            {
+              "type": "step_list",
+              "items": [
+                "Кто уже открывал Roblox Studio раньше? Что запомнилось или удивило?",
+                "Как тебя зовут и любимая игра в Roblox",
+                "Что хочется научиться делать самому",
+                "Тема будущего квеста, которая нравится: подземелье, космос, лес, замок?"
+              ]
+            }
+          ],
+          "speaker_notes": "Для урока 1 блок — тёплое знакомство и сбор ожиданий, а не повторение. Тему квеста фиксируем — она понадобится со 2 урока. С урока 2 сюда пойдут key_points предыдущего занятия."
+        }
+      ]
+    },
+    {
+      "block_id": "theory",
+      "title": "Level Designer: как устроено пространство игры",
+      "duration_minutes": 20,
+      "slides": [
+        {
+          "slide_id": "1-t-1",
+          "slide_title": "Интерфейс Studio: где что лежит",
+          "duration_minutes": 4,
+          "content": [
+            {
+              "type": "bullet_list",
+              "items": [
+                "Mezzanine (верхняя панель) — плейтест и вкладки Home, Model, Script",
+                "Toolbar (панель инструментов) — меняется под активную вкладку",
+                "3D viewport (окно 3D-сцены) — самое большое окно, тут строим",
+                "Toolbox (набор ассетов) — готовые модели и звуки",
+                "Explorer (обозреватель) — дерево всех объектов; перетащить = сменить родителя",
+                "Properties (свойства) — настройки выбранного объекта, без кода"
+              ]
+            },
+            {
+              "type": "image_prompt",
+              "text": "Скриншот Studio с подписанными зонами: mezzanine, toolbar, viewport, Toolbox, Explorer, Properties"
+            }
+          ],
+          "speaker_notes": "Показать живой Studio, а не только слайд. Термины даём латиницей + перевод в скобках — дети потом видят их в реальном интерфейсе на английском. Источник — официальный Creator Hub."
+        },
+        {
+          "slide_id": "1-t-2",
+          "slide_title": "Учимся летать камерой",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "bullet_list",
+              "items": [
+                "W / A / S / D — двигать камеру вперёд/влево/назад/вправо",
+                "Q / E — вниз и вверх",
+                "F — сфокусироваться на выбранной детали",
+                "Правая кнопка мыши зажата — осмотреться, колесо — зум"
+              ]
+            }
+          ],
+          "speaker_notes": "Дать 1 минуту просто «полетать» — это навык №1. Клавиши по официальной таблице Creator Hub; советуем мышь с колесом."
+        },
+        {
+          "slide_id": "1-t-3",
+          "slide_title": "Part (деталь) и инструменты Move / Scale / Rotate",
+          "duration_minutes": 4,
+          "content": [
+            {
+              "type": "bullet_list",
+              "items": [
+                "Part (деталь) — базовый кубик: block (куб), sphere (шар), cylinder (цилиндр), wedge (клин)",
+                "Move (переместить) — стрелки по осям X/Y/Z",
+                "Scale (масштабировать) — изменение размера",
+                "Rotate (повернуть) — поворот детали"
+              ]
+            }
+          ],
+          "speaker_notes": "Дать потрогать каждый инструмент на демо-Part перед практикой. Ответ на qa: Move двигает, Scale меняет размер."
+        },
+        {
+          "slide_id": "1-t-4",
+          "slide_title": "Blockout (блокаут): черновик мира из простых форм",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "Level-дизайнеры в студиях не начинают с красоты. Сначала строят blockout (блокаут, он же grey-boxing / серобокс) — черновой уровень из простых серых форм."
+            },
+            {
+              "type": "bullet_list",
+              "items": [
+                "Проверяем маршрут игрока и масштаб комнат",
+                "Серые блоки переставить дёшево, а готовый декор переделывать — дорого",
+                "Наш блокаут станет каркасом квест-лобби на уроке 8"
+              ]
+            }
+          ],
+          "speaker_notes": "Ключевая идея урока: это реальная практика индустрии. Подчеркнуть связь с финальным проектом (урок 8)."
+        },
+        {
+          "slide_id": "1-t-5",
+          "slide_title": "Group (группировка) в Model и Anchored (закрепление)",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "bullet_list",
+              "items": [
+                "Group (сгруппировать) — объединить детали в один Model (модель): двигается и копируется целиком",
+                "Понятные имена: StartRoom, Corridor вместо Part, Part1",
+                "Anchored (закреплён) = true — деталь не падает под физикой при запуске"
+              ]
+            }
+          ],
+          "speaker_notes": "По докам Roblox большинство деталей нужно якорить. Это прямая подводка к следующему слайду про ошибки."
+        },
+        {
+          "slide_id": "1-t-6",
+          "slide_title": "Типичные ошибки новичка",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "bullet_list",
+              "items": [
+                "Не включил Anchored — деталь падает, как только нажал Play (самая частая ошибка!)",
+                "Полез в цвет и декор до проверки маршрута — теряется смысл блокаута",
+                "Оставил имена Part, Part1, Part2 — потом не найти нужное в Explorer",
+                "Забыл опубликовать проект в конце"
+              ]
+            }
+          ],
+          "speaker_notes": "Отдельный слайд-предупреждение (пожелание заказчика). Первую ошибку показать вживую: поставить незаякоренную деталь и нажать Play — она упадёт. Источник про Anchored — официальные доки Roblox."
+        }
+      ]
+    },
+    {
+      "block_id": "qa_theory",
+      "title": "Проверяем теорию",
+      "duration_minutes": 4,
+      "slides": [
+        {
+          "slide_id": "1-qt-1",
+          "slide_title": "Вопросы по теории",
+          "duration_minutes": 4,
+          "content": [
+            {
+              "type": "question",
+              "text": "Чем Move (переместить) отличается от Scale (масштабировать)?",
+              "options": [
+                "Move меняет размер детали, а Scale двигает её",
+                "Move двигает деталь по осям X/Y/Z, а Scale меняет её размер",
+                "Это одно и то же — просто разные кнопки"
+              ],
+              "correct_option": 1,
+              "option_explanations": [
+                "Тут инструменты перепутаны местами: двигает как раз Move, а размер меняет Scale.",
+                "Move (переместить) тащит деталь по стрелкам-осям, а Scale (масштабировать) растягивает её за шарики.",
+                "Инструменты разные: у Move стрелки для перемещения, у Scale шарики для изменения размера."
+              ]
+            },
+            {
+              "type": "question",
+              "text": "Зачем строить блокаут, если можно сразу украсить локацию?",
+              "options": [
+                "Чтобы игра сразу выглядела красиво",
+                "Потому что в Studio нельзя сразу менять цвета деталей",
+                "Чтобы просто проверить маршрут и масштаб комнат до декора"
+              ],
+              "correct_option": 2,
+              "option_explanations": [
+                "Блокаут как раз не про красоту — он серый и простой, зато быстро показывает, удобно ли играть.",
+                "Цвета в Studio можно менять в любой момент — дело не в этом, а в проверке маршрута до декора.",
+                "Именно так: сначала простые формы, чтобы проверить путь игрока и размеры, — переделывать серые кубики куда проще, чем украшенную локацию."
+              ]
+            },
+            {
+              "type": "question",
+              "text": "Что произойдёт с деталью при запуске, если не включить Anchored?",
+              "options": [
+                "Деталь упадёт под действием физики",
+                "Ничего не изменится — Anchored влияет только на цвет",
+                "Деталь станет невидимой"
+              ],
+              "correct_option": 0,
+              "option_explanations": [
+                "Верно: без Anchored (закреплено) деталь свободна, и гравитация утянет её вниз при запуске игры.",
+                "Anchored не про цвет, а про физику: он закрепляет деталь на месте, чтобы она не падала.",
+                "За видимость отвечает Transparency, а Anchored решает, держится деталь на месте или падает."
+              ]
+            }
+          ],
+          "speaker_notes": "Ожидаемые ответы: Move двигает, Scale меняет размер; блокаут — чтобы просто проверить маршрут и масштаб до декора; без Anchored деталь упадёт под действием физики."
+        }
+      ]
+    },
+    {
+      "block_id": "break",
+      "title": "Перерыв",
+      "duration_minutes": 5,
+      "slides": [
+        {
+          "slide_id": "1-b-1",
+          "slide_title": "Перерыв 5 минут",
+          "duration_minutes": 5,
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "Встали, отошли от экрана, размяли руки и глаза. Возвращаемся через 5 минут — дальше самое интересное, начинаем строить!"
+            }
+          ],
+          "speaker_notes": "Поставить таймер на экран, если есть возможность."
+        }
+      ]
+    },
+    {
+      "block_id": "practice",
+      "title": "Строим свой первый блокаут",
+      "duration_minutes": 20,
+      "slides": [
+        {
+          "slide_id": "1-p-1",
+          "slide_title": "Задача практики",
+          "duration_minutes": 2,
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "Набросаем черновой план квест-лобби: 2-3 условные комнаты, соединённые проходами. Именно эта заготовка станет основой твоего финального проекта на уроке 8 — так что строим на будущее."
+            }
+          ],
+          "speaker_notes": null
+        },
+        {
+          "slide_id": "1-p-2",
+          "slide_title": "Шаги 1-2: пол и стены стартовой комнаты",
+          "duration_minutes": 7,
+          "content": [
+            {
+              "type": "step_list",
+              "items": [
+                "Полетать камерой (W/A/S/D + правая кнопка мыши, F — фокус)",
+                "Вставить Part (деталь) и растянуть Scale (масштабировать) в плоский пол",
+                "Скопировать Part и инструментами Move/Scale поставить 3-4 стены по периметру"
+              ]
+            }
+          ],
+          "speaker_notes": "Ходить по группе, мягко возвращать тех, кто увлёкся цветом — сейчас только серые формы."
+        },
+        {
+          "slide_id": "1-p-3",
+          "slide_title": "Шаг 3: проём, коридор и финальная комната",
+          "duration_minutes": 5,
+          "content": [
+            {
+              "type": "step_list",
+              "items": [
+                "В одной стене оставить проход",
+                "Пристроить узкий коридор-переход",
+                "Достроить вторую (финальную) комнату и пройти маршрут камерой"
+              ]
+            }
+          ],
+          "speaker_notes": "Здесь проверяется главная идея блокаута — по уровню реально «пройти»."
+        },
+        {
+          "slide_id": "1-p-4",
+          "slide_title": "Шаг 4: Group, имена и Anchored",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "step_list",
+              "items": [
+                "Выделить детали зоны и Group (сгруппировать) в Model",
+                "Назвать модели: StartRoom, Corridor, FinalRoom",
+                "Включить Anchored (закрепить) у всех Part, чтобы блокаут не развалился"
+              ]
+            }
+          ],
+          "speaker_notes": "Напомнить про ошибку с Anchored со слайда теории — тут её закрываем на практике."
+        },
+        {
+          "slide_id": "1-p-5",
+          "slide_title": "Шаг 5: публикация",
+          "duration_minutes": 3,
+          "content": [
+            {
+              "type": "step_list",
+              "items": [
+                "File → Publish to Roblox…",
+                "Придумать название, нажать Create",
+                "Убедиться, что проект появился в списке своих игр"
+              ]
+            }
+          ],
+          "speaker_notes": "Повторная публикация — Alt+P. Если у кого-то не вышло — помочь точечно."
+        }
+      ]
+    },
+    {
+      "block_id": "qa_practice",
+      "title": "Обсуждаем практику",
+      "duration_minutes": 4,
+      "slides": [
+        {
+          "slide_id": "1-qp-1",
+          "slide_title": "Вопросы по практике",
+          "duration_minutes": 4,
+          "content": [
+            {
+              "type": "question",
+              "text": "Сколько комнат получилось в твоём блокауте?"
+            },
+            {
+              "type": "question",
+              "text": "Все ли детали заякорены (Anchored)? Проверь через Play."
+            },
+            {
+              "type": "question",
+              "text": "Получилось ли опубликовать проект и найти его в списке игр?"
+            }
+          ],
+          "speaker_notes": "Если у кого-то деталь падает при Play — вместе найти незаякоренную. Ожидаем: 2-3 связанные комнаты и один опубликованный проект."
+        }
+      ]
+    },
+    {
+      "block_id": "closing",
+      "title": "Прощание и домашнее задание",
+      "duration_minutes": 2,
+      "slides": [
+        {
+          "slide_id": "1-c-1",
+          "slide_title": "До следующего урока",
+          "duration_minutes": 2,
+          "content": [
+            {
+              "type": "paragraph",
+              "text": "Отличная работа! Сегодня ты был Level Designer'ом и построил черновой каркас своего мира — фундамент будущего квеста."
+            },
+            {
+              "type": "bullet_list",
+              "items": [
+                "ДЗ: окончательно выбрать тему своего квеста (подземелье, космос, лес, замок)",
+                "Следующий урок: роль Environment Artist — оживляем локацию рельефом и природой (Terrain)"
+              ]
+            }
+          ],
+          "speaker_notes": null
+        }
+      ]
+    }
+  ]
+}

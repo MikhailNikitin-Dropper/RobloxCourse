@@ -1,0 +1,189 @@
+{
+  "lesson_number": 2,
+  "lesson_title": "Природа и рельеф (Terrain)",
+  "designer_role": "Environment Artist",
+  "raw_theory_points": [
+    {
+      "topic": "Что такое Terrain и где его редактор",
+      "explanation": "Terrain (ландшафт) — это сетка вокселей 4×4×4 студа, у каждого свой материал; из них Studio строит горы, пустыни, воду и холмы. Terrain Editor открывается с вкладки Home или через Window → 3D. Внутри две вкладки: Create (Generate, Import, Clear) и Edit (Select, Transform, Fill, Sea Level и кисти).",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/parts/terrain",
+        "https://create.roblox.com/docs/en-us/studio/terrain-editor"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Актуальные имена инструментов-кистей",
+      "explanation": "Кисти актуального Terrain Editor: Draw (рисовать — добавляет/убирает террейн), Sculpt (лепить — с ползунком силы: тянешь вверх — рельеф растёт, с Ctrl/вниз — убывает), Smooth (сгладить), Flatten (выровнять — по плоскости), Paint (покрасить материалом). В материалы урока включать только эти названия (правило заказчика: прежние названия инструментов и старый интерфейс не упоминать нигде).",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/parts/terrain",
+        "https://create.roblox.com/docs/en-us/studio/terrain-editor"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Настройки кисти",
+      "explanation": "У кистей три формы (sphere/box/cylinder — шар/куб/цилиндр), размер 1–64 студа, у Sculpt/Smooth/Flatten есть Strength (сила, 0.1–1). Plane Lock (замок плоскости, Auto/Manual) держит кисть на одной высоте — спасает от рваных ям. Auto Material берёт материал из-под кисти. Есть галочки Ignore Water/Ignore Parts.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/studio/terrain-editor",
+        "https://create.roblox.com/docs/en-us/parts/terrain"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Материалы местности",
+      "explanation": "Всего 23 материала террейна: Grass (трава), Leafy Grass (густая трава), Rock (камень), Sand (песок), Water (вода), Snow (снег), Ice (лёд), Mud (грязь), Ground (земля), Basalt, Glacier, Cracked Lava и другие. Нюанс: анимированная колышущаяся травка отображается только на материале Grass — на Sand или Rock её не будет.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/parts/terrain"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Вода: Sea Level и свойства",
+      "explanation": "Инструмент Sea Level создаёт ровный уровень воды в выбранном регионе (или убирает всю воду), Fill в режиме Replace заливает регион водой. У воды настраиваются WaterColor (цвет), WaterTransparency (прозрачность), WaterReflectance (отражение), WaterWaveSize и WaterWaveSpeed (волны). Часть эффектов воды видна только в плейтесте или при поднятом Editor Quality Level в настройках Studio.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/parts/terrain",
+        "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Generate: целый мир за секунды",
+      "explanation": "Инструмент Generate на вкладке Create процедурно генерирует ландшафт в выделенном регионе с выбором биомов: Arctic (арктика), Dunes (дюны), Mountains (горы), Plains (равнины) и др. Хорош как быстрый черновик, но для локации под свой квест надёжнее лепить руками — сгенерированное трудно подгонять под готовый блокаут.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/parts/terrain",
+        "https://create.roblox.com/docs/en-us/studio/terrain-editor"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Рельеф и материалы задают настроение локации",
+      "explanation": "Приёмы художников окружения: красить слоями (сначала земля/грязь, поверх камни, сверху трава), делать переходы материалов там, где они естественны (грязь у стен построек, песок у воды); варьировать размер и поворот растений, чтобы не было «копипасты»; форма рельефа читается эмоционально — обрыв и тёмный лес = опасность, открытая солнечная поляна = передышка. Большие формы + мелкие детали = композиция.",
+      "source_refs": [
+        "https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172"
+      ],
+      "requires_verification": false
+    },
+    {
+      "topic": "Toolbox: первые готовые модели природы и проверка ассетов",
+      "explanation": "Toolbox (Window или вкладка Home) — библиотека моделей: разделы Creator Store, Inventory, Recent, Creations. Модель можно проверить до вставки: лупа на карточке показывает рейтинг сообщества и описание; в расширенных фильтрах есть отбор по verified creators (проверенным авторам). Важно: в моделях могут прятаться скрипты — подозрительной модели можно отключить их через правый клик в Explorer → Disable Scripts.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/projects/assets/toolbox"
+      ],
+      "requires_verification": false
+    }
+  ],
+  "raw_practice_steps": [
+    {
+      "step": "Открыть Terrain Editor и подготовить площадку",
+      "explanation": "Открыть проект с блокаутом урока 1. Terrain Editor: вкладка Home. Кистью Draw (материал Ground или Grass, размер ~32) набросать основу земли вокруг блокаута; Flatten с Fixed Plane (Y=0) — выровнять площадку, чтобы комнаты не «утонули».",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain",
+        "https://create.roblox.com/docs/en-us/studio/terrain-editor"
+      ],
+      "requires_verification": false
+    },
+    {
+      "step": "Слепить рельеф под настроение",
+      "explanation": "Sculpt: поднять холмы по краям локации, у «опасной» зоны — крутой обрыв или скалу, у «спокойной» — ровную поляну. Smooth пройтись по рваным краям. Держать Plane Lock под контролем, кисть не гигантская.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain",
+        "https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172"
+      ],
+      "requires_verification": false
+    },
+    {
+      "step": "Добавить воду",
+      "explanation": "Озеро или река: выделить низину и Sea Level (Create water level) — либо Fill с Replace Air → Water по официальному туториалу острова. Проверить, что вода не затопила блокаут.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain",
+        "https://create.roblox.com/docs/en-us/parts/terrain"
+      ],
+      "requires_verification": false
+    },
+    {
+      "step": "Покрасить материалами слоями",
+      "explanation": "Paint: Leafy Grass/Grass на поляны (проверить анимированную травку — только на Grass), Rock на склоны, Ground/Mud — протоптать тропу между комнатами блокаута, Sand у воды. Мелкой кистью (размер ~3) добавить пятна-детали по краям.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain",
+        "https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172"
+      ],
+      "requires_verification": false
+    },
+    {
+      "step": "Оживить мир моделями из Toolbox",
+      "explanation": "Найти в Toolbox 2-3 дерева/камня/куста (смотреть рейтинг и verified creator), вставить и расставить: менять размер и поворот у копий, мелкое — под крупным (куст под деревом). Убедиться, что у моделей включён Anchored.",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/projects/assets/toolbox",
+        "https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172"
+      ],
+      "requires_verification": false
+    },
+    {
+      "step": "Пройти маршрут и опубликовать",
+      "explanation": "Плейтест: пройти маршрут комнат урока 1 пешком — рельеф не должен ломать путь (не перекрыл проходы, вода не мешает). Опубликовать: Alt+P (повторная публикация в тот же плейс).",
+      "source_refs": [
+        "https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places"
+      ],
+      "requires_verification": false
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://create.roblox.com/docs/en-us/parts/terrain",
+      "type": "web",
+      "title": "Terrain — Roblox Creator Hub",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Воксели 4×4×4, актуальный список инструментов, 23 материала, травка только на Grass, свойства воды, биомы Generate"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/studio/terrain-editor",
+      "type": "web",
+      "title": "Terrain Editor — Roblox Creator Hub",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Где открыть редактор, вкладки Create/Edit, точные имена инструментов, настройки кисти (формы, 1–64, Strength, Plane Lock, Auto Material)"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain",
+      "type": "web",
+      "title": "Create an environment with terrain — официальный туториал (остров)",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Порядок практики: Draw → Flatten → Sculpt → Fill/Sea Level (вода) → Paint (Leafy Grass + Grass мелкой кистью); отличие Draw от Sculpt"
+    },
+    {
+      "url": "https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172",
+      "type": "web",
+      "title": "How to make your smooth terrain landscapes more immersive — DevForum Community Tutorials",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Слои материалов, естественные переходы, вариация размеров/поворотов растений, композиция и настроение"
+    },
+    {
+      "url": "https://create.roblox.com/docs/en-us/projects/assets/toolbox",
+      "type": "web",
+      "title": "Toolbox — Roblox Creator Hub",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Разделы Toolbox, проверка ассетов (рейтинг, verified creators), предупреждение о скриптах и Disable Scripts"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=HYZr6R0ePLI",
+      "type": "youtube",
+      "title": "Beginner Guide to Terrain in Roblox Studio (02.2026)",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Свежий (2026) обзор базовых инструментов Terrain для новичков — подтверждает актуальность набора инструментов; субтитры недоступны, использованы метаданные"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=cKkPMozEWWE",
+      "type": "youtube",
+      "title": "How To Use Terrain Editor in Roblox Studio! Tutorial (2025)",
+      "accessed_date": "2026-07-07",
+      "supports_fact": "Обзор Terrain Editor в актуальном интерфейсе Studio (2025); субтитры недоступны, использованы метаданные"
+    }
+  ],
+  "references_previous_lesson_candidates": [
+    "Зоны интерфейса Studio: Explorer, Properties, Toolbox, 3D viewport",
+    "Полёт камерой: W/A/S/D, Q/E, F — фокус, правая кнопка мыши — осмотреться",
+    "Part и инструменты Move / Scale / Rotate; блокаут из серых форм",
+    "Group в Model и понятные имена (StartRoom, Corridor, FinalRoom)",
+    "Anchored, чтобы детали не падали; публикация File → Publish (Alt+P)"
+  ]
+}

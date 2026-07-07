@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 2. Природа и рельеф (Terrain)</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="2">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 2. Природа и рельеф (Terrain)</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Environment Artist</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="2-w-1">
+<h3 class="slide-title">Привет! Сегодня ты — Environment Artist <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">С возвращением в мастерскую! На прошлом уроке ты построил каркас мира из серых кубов. Сегодня вдохнём в него жизнь.</p>
+<p class="content-item content-paragraph">Твоя роль — Environment Artist (художник окружения): человек, который превращает коробки уровня в живой мир с холмами, водой и лесом.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд, с энергией. Обещание урока: «к концу занятия твой серый блокаут будет стоять посреди настоящей природы».</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="2-r-1">
+<h3 class="slide-title">Что мы делали на уроке 1? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">В какой панели Studio живёт дерево всех объектов твоего мира?</p><ol class="content-item content-quiz-options"><li data-correct="true">Explorer (обозреватель) ✓</li><li>Properties (свойства)</li><li>Toolbox (набор ассетов)</li></ol>
+<p class="content-item content-question">Зачем мы включали Anchored (закрепление) у каждой детали блокаута?</p><ol class="content-item content-quiz-options"><li>Чтобы деталь нельзя было случайно сдвинуть мышкой</li><li>Чтобы деталь красиво блестела на солнце</li><li data-correct="true">Чтобы деталь не упала под физикой при нажатии Play ✓</li></ol>
+<p class="content-item content-question">Почему мы строили серый блокаут, а не сразу красивую локацию?</p><ol class="content-item content-quiz-options"><li>Потому что цвета в Studio открываются только со второго урока</li><li data-correct="true">Чтобы просто проверить маршрут и размеры комнат до украшения ✓</li><li>Чтобы игра быстрее загружалась</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Разминка-квиз по уроку 1. Ожидаемые ответы: Explorer; чтобы детали не падали при Play; блокаут — просто проверить маршрут и масштаб до декора. Заодно попросить каждого открыть свой проект урока 1 — он нужен для практики.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Environment Artist: рельеф, вода и настроение мира <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="2-t-1">
+<h3 class="slide-title">Terrain: мир, слепленный из вокселей <span class="slide-duration">(3 мин)</span></h3>
+<p class="content-item content-paragraph">Terrain (ландшафт) — это «пластилин» Roblox: мир из маленьких кубиков-вокселей 4×4×4 студа, у каждого свой материал. Из него лепят горы, пустыни, реки и целые острова.</p>
+<ul class="content-item content-bullets"><li>Terrain Editor (редактор ландшафта) открывается с вкладки Home</li><li>Вкладка Create (создать) — Generate: целый биом за секунды (горы, дюны, равнины)</li><li>Вкладка Edit (править) — кисти для ручной лепки и покраски</li><li>Generate хорош для черновика, но свою локацию мы слепим руками — под наш блокаут</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот окна Terrain Editor с вкладками Create и Edit и рядом кистей (Draw, Sculpt, Smooth, Flatten, Paint)]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: открыть Terrain Editor, крутануть Generate на пустом плейсе — «вау-момент», потом объяснить, почему для квеста будем лепить сами. Термины: Terrain (ландшафт), voxel (воксель).</aside>
+</div>
+<div class="slide" id="2-t-2">
+<h3 class="slide-title">Пять кистей художника окружения <span class="slide-duration">(4 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Draw (рисовать) — добавляет или убирает куски ландшафта кистью</li><li>Sculpt (лепить) — то же, но нежнее: есть ползунок силы; тянешь — рельеф растёт, с Ctrl — убывает</li><li>Smooth (сгладить) — убирает рваные края и ступеньки</li><li>Flatten (выровнять) — делает площадку одной высоты</li><li>Paint (покрасить) — наносит материал поверх готового рельефа</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Каждую кисть показать на демо-холме по 15-20 секунд. Отличие Draw от Sculpt (по докам): Draw добавляет материал по позиции кисти, Sculpt растит/размывает уже существующий рельеф.</aside>
+</div>
+<div class="slide" id="2-t-3">
+<h3 class="slide-title">Кисть под контролем <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Форма кисти: sphere (шар), box (куб), cylinder (цилиндр)</li><li>Size (размер) — от 1 до 64 студов: большая кисть для холмов, маленькая для деталей</li><li>Strength (сила) у Sculpt/Smooth/Flatten — чем меньше, тем аккуратнее</li><li>Plane Lock (замок плоскости) — кисть держится одной высоты и не роет ям</li><li>Auto Material — кисть сама берёт материал, который уже под ней</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Главный совет практики: почти все «у меня всё раскопалось!» лечатся уменьшением кисти, силы и включением Plane Lock. Показать разницу: гигантская кисть 64 против аккуратной 8.</aside>
+</div>
+<div class="slide" id="2-t-4">
+<h3 class="slide-title">23 материала и живая вода <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Материалы: Grass (трава), Rock (камень), Sand (песок), Snow (снег), Mud (грязь), Ice (лёд), Water (вода) — всего 23</li><li>Секрет: анимированная колышущаяся травка растёт только на материале Grass</li><li>Sea Level (уровень моря) — ровная вода в выбранном регионе одним кликом</li><li>У воды есть свои настройки: цвет, прозрачность, размер и скорость волн</li><li>Часть эффектов воды видна только в плейтесте — не пугайся, если в редакторе вода «простая»</li></ul>
+<p class="content-item content-image-prompt">[изображение: Палитра материалов Terrain в редакторе (сетка иконок: трава, камень, песок, снег, вода и т.д.) с выделенным материалом Grass]</p>
+<aside class="speaker-notes">Заметка ведущего: Свойства воды (WaterColor, WaterTransparency, WaterWaveSize/Speed) — на панели Terrain в Explorer/Properties; в классе достаточно показать волны в плейтесте. Факт про травку — официальные доки.</aside>
+</div>
+<div class="slide" id="2-t-5">
+<h3 class="slide-title">Рельеф — это настроение <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-paragraph">Environment Artist управляет эмоциями игрока без единого слова: формой земли и цветом материалов.</p>
+<ul class="content-item content-bullets"><li>Крутой обрыв, тёмные скалы, узкое ущелье — «здесь опасно, будь осторожен»</li><li>Открытая солнечная поляна у воды — «здесь можно выдохнуть»</li><li>Красим слоями: земля → пятна камня → трава сверху; переходы там, где они естественны</li><li>Растения из Toolbox расставляем с разным размером и поворотом — никакой «копипасты»</li><li>Terrain дружит с постройками: у стен — вытоптанная земля, тропа соединяет комнаты</li></ul>
+<p class="content-item content-image-prompt">[изображение: Сравнение двух настроений одной локации: слева мрачное ущелье с тёмными скалами, справа солнечная поляна с озером и деревьями]</p>
+<aside class="speaker-notes">Заметка ведущего: Ключевой слайд роли. Спросить детей: «какая зона твоего квеста опасная, а какая спокойная?» — ответ пригодится через 20 минут в практике. Приёмы — из гайда DevForum по иммерсивным ландшафтам.</aside>
+</div>
+<div class="slide" id="2-t-6">
+<h3 class="slide-title">Типичные ошибки новичка <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Гигантская кисть на полную силу — полкарты перекопано одним движением (уменьшай Size и Strength)</li><li>Выключенный Plane Lock — вместо ровного холма получаются ямы и бугры</li><li>Один материал на всю карту — скучно; красим слоями и добавляем переходы</li><li>Покрасил поляну не в Grass — и удивляешься, почему травка не колышется</li><li>Взял модель из Toolbox не глядя — внутри может сидеть чужой скрипт: смотри рейтинг и verified creator</li><li>Утопил блокаут в рельефе — проходы завалены, маршрут сломан; проверяй плейтестом</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Слайд-предупреждение (пожелание заказчика). Первую ошибку показать вживую: кисть 64 + Strength 1 — и полигон испорчен, потом Ctrl+Z. Про Toolbox: правый клик → Disable Scripts, если модель подозрительная.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="2-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Каким инструментом наносят материал (траву, снег) на уже готовый рельеф?</p><ol class="content-item content-quiz-options"><li>Sculpt (лепить)</li><li data-correct="true">Paint (покрасить) ✓</li><li>Flatten (выровнять)</li></ol>
+<p class="content-item content-question">Что делает Plane Lock (замок плоскости)?</p><ol class="content-item content-quiz-options"><li>Запрещает удалять чужие постройки</li><li>Красит рельеф только в один материал</li><li data-correct="true">Держит кисть на одной высоте — без случайных ям и бугров ✓</li></ol>
+<p class="content-item content-question">Почему на песчаном пляже травка не колышется?</p><ol class="content-item content-quiz-options"><li data-correct="true">Анимированная травка растёт только на материале Grass ✓</li><li>Травку нужно включать отдельной кнопкой у каждого материала</li><li>Это баг Studio — надо перезапустить</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Paint; Plane Lock держит кисть на одной высоте; травка — только на Grass. После каждого квиза — короткое «почему» вслух.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="2-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Разомнись и дай глазам отдохнуть. Через 5 минут берём в руки кисти — будем лепить настоящую природу вокруг твоего мира!</p>
+<aside class="speaker-notes">Заметка ведущего: Таймер на экран. После перерыва у всех должен быть открыт проект с блокаутом урока 1.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Оживляем мир вокруг блокаута <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="2-p-1">
+<h3 class="slide-title">Задача практики <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Превращаем пустоту вокруг блокаута урока 1 в живую локацию: земля, рельеф под настроение твоего квеста, вода, материалы слоями и первые растения из Toolbox. Это тот самый мир, в котором на уроке 8 развернётся твой финальный квест.</p>
+<aside class="speaker-notes">Заметка ведущего: Напомнить тему квеста каждого (записывали на уроке 1). Кто потерял проект — быстро выдать резервную заготовку с простым блокаутом.</aside>
+</div>
+<div class="slide" id="2-p-2">
+<h3 class="slide-title">Шаги 1-2: земля под ногами <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открыть проект урока 1 и Terrain Editor (вкладка Home)</li><li>Кистью Draw (материал Ground или Grass, размер ~32) набросать основу земли вокруг блокаута</li><li>Flatten — выровнять площадку возле комнат, чтобы стены не «тонули» в земле</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Порядок из официального туториала острова (Draw → Flatten). Следить, чтобы кисть не была на максимум — иначе зароют собственный блокаут.</aside>
+</div>
+<div class="slide" id="2-p-3">
+<h3 class="slide-title">Шаги 3-4: рельеф под настроение <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Sculpt: поднять холмы по краям локации — они станут естественными «стенами» мира</li><li>У опасной зоны квеста слепить обрыв или скалу, у спокойной — оставить ровную поляну</li><li>Smooth: пройтись по рваным краям и ступенькам</li><li>Проверить Plane Lock и силу кисти, если рельеф выходит из-под контроля</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Держать фокус на смысле: рельеф — это настроение зон, а не случайные бугры. Спрашивать: «где у тебя опасно и почему это видно?»</aside>
+</div>
+<div class="slide" id="2-p-4">
+<h3 class="slide-title">Шаги 5-6: вода и покраска слоями <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Слепить низину и налить озеро или реку: инструмент Sea Level (уровень моря)</li><li>Убедиться, что вода не затопила комнаты блокаута</li><li>Paint: трава (Grass) на поляны, камень (Rock) на склоны, песок (Sand) у воды</li><li>Протоптать тропу материалом Ground или Mud между комнатами блокаута</li><li>Мелкой кистью (размер ~3) добавить пятна-переходы по краям материалов</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Проверка травки: если поляна покрашена в Grass — она колышется. Слои и переходы — приём из DevForum-гайда: сначала земля, поверх камни, сверху трава.</aside>
+</div>
+<div class="slide" id="2-p-5">
+<h3 class="slide-title">Шаг 7: растения из Toolbox и публикация <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>В Toolbox найти 2-3 модели природы: дерево, камень, куст (смотри рейтинг и значок verified)</li><li>Расставить копии с разным размером и поворотом — никакой «копипасты»</li><li>Проверить у вставленных моделей Anchored</li><li>Плейтест: пройти маршрут комнат пешком — проходы свободны, вода не мешает</li><li>Опубликовать обновление: Alt+P</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Помочь с фильтрами Toolbox (verified creators). Подозрительная модель — правый клик в Explorer → Disable Scripts. Плейтест-проверка маршрута — главный критерий приёмки практики.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="2-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Какое настроение у твоей локации и чем оно задано — формой рельефа или материалами?</p>
+<p class="content-item content-question">Сколько разных материалов ты использовал? Где проходит самый заметный переход между ними?</p>
+<p class="content-item content-question">Пройди маршрут от старта до финальной комнаты: рельеф нигде не сломал путь?</p>
+<aside class="speaker-notes">Заметка ведущего: Мини-шоукейс: 2-3 добровольца показывают локацию с экрана. Ожидаем: осмысленный рельеф (опасная/спокойная зоны), 3+ материала со слоями, живой маршрут. Если у кого-то травка не колышется — вместе проверяем материал Grass.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание и домашнее задание <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="2-c-1">
+<h3 class="slide-title">До следующего урока <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Сегодня ты был Environment Artist&#x27;ом: серый каркас превратился в мир с холмами, водой и лесом. Уже почти настоящая игра!</p>
+<ul class="content-item content-bullets"><li>ДЗ: добавить в локацию ещё 2-3 модели природы из Toolbox и решить, где будет самая опасная зона квеста</li><li>Следующий урок: роль Prop Artist — слепим уникальные предметы для квеста (сундук, ключ, кристалл) инструментами Union и Negate</li></ul>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/parts/terrain">Terrain — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/terrain-editor">Terrain Editor — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/create-an-environment-with-terrain">Create an environment with terrain — официальный туториал</a></li><li><a href="https://devforum.roblox.com/t/how-to-make-your-smooth-terrain-landscapes-more-immersive/252172">How to make your smooth terrain landscapes more immersive — DevForum</a></li><li><a href="https://create.roblox.com/docs/en-us/projects/assets/toolbox">Toolbox — Roblox Creator Hub</a></li><li><a href="https://www.youtube.com/watch?v=HYZr6R0ePLI">Beginner Guide to Terrain in Roblox Studio (02.2026)</a></li><li><a href="https://www.youtube.com/watch?v=cKkPMozEWWE">How To Use Terrain Editor in Roblox Studio! Tutorial (2025)</a></li></ul></section>
+</article>
+</body>
+</html>
