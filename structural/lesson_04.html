@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 4. ПРОЕКТ 1: охота за сокровищами</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="4">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 4. ПРОЕКТ 1: охота за сокровищами</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Level Designer + Gameplay Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="4-w-1">
+<h3 class="slide-title">Сегодня твой мир становится ИГРОЙ <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Три урока ты строил мир: комнаты, рельеф, авторские предметы. Сегодня — первый ПРОЕКТ: превращаем всё это в настоящую игру «Охота за сокровищами».</p>
+<p class="content-item content-paragraph">Роль двойная: Level Designer (дизайнер уровней) расставляет сокровища так, чтобы искать было интересно, а Gameplay Designer (дизайнер геймплея) отвечает за правила игры: цель, сбор, победу.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд, максимум энергии: это эмоциональный пик первых уроков — «сегодня появится игра, в которую смогут играть твои друзья». Обещание: к концу урока — работающая охота с трекером находок и финальным окном победы.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="4-r-1">
+<h3 class="slide-title">Что мы делали на уроке 3? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Ты выделил несколько деталей и нажал Union. Что получилось?</p><ol class="content-item content-quiz-options"><li>Детали удалились из мира</li><li data-correct="true">Детали склеились в один предмет ✓</li><li>Детали покрасились в один цвет</li></ol>
+<p class="content-item content-question">Зачем у каждого предмета мы включали Anchored?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы предмет не упал и не укатился при запуске игры ✓</li><li>Чтобы предмет стал ярче</li><li>Чтобы предмет нельзя было выделить</li></ol>
+<p class="content-item content-question">«Предмет + место = история». Куда мы поставили сундук, чтобы он обещал награду за риск?</p><ol class="content-item content-quiz-options"><li>На ровную поляну у самого спауна</li><li>Спрятали под землю, чтобы никто не нашёл</li><li data-correct="true">В опасное тёмное ущелье из урока 2 ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Разминка-квиз по уроку 3. Ожидаемые ответы: склеились в один предмет; чтобы не упал при запуске; в опасное ущелье. Третий вопрос — мостик к теме урока: сегодня предметы урока 3 станут сокровищами, а правило «предмет + место» — главным инструментом Level Designer. Попросить всех открыть свой проект.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Из мира — в игру: механика охоты без единой строчки кода <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="4-t-1">
+<h3 class="slide-title">Что превращает мир в игру? <span class="slide-duration">(2.5 мин)</span></h3>
+<p class="content-item content-paragraph">Красивый мир — ещё не игра. Игра появляется, когда есть три вещи:</p>
+<ul class="content-item content-bullets"><li>Цель — игрок понимает, что делать: «найди все сокровища»</li><li>Правила — как это делается: коснись сокровища, и оно засчитается</li><li>Обратная связь — игрок видит прогресс: сколько нашёл и что осталось, а в конце — победа!</li></ul>
+<p class="content-item content-paragraph">Сегодня Gameplay Designer в тебе настроит правила и обратную связь, а Level Designer сделает так, чтобы идти к цели было интересно.</p>
+<aside class="speaker-notes">Заметка ведущего: Спросить детей: «во что вы играли на этой неделе? какая там цель?» — 2-3 быстрых ответа. Подчеркнуть: без ясной цели игрок побродит и выйдет. Первые учебные проекты Roblox Education тоже строятся вокруг «исследуй и собери» — это классика жанра.</aside>
+</div>
+<div class="slide" id="4-t-2">
+<h3 class="slide-title">Toolbox: берём готовую механику <span class="slide-duration">(3 мин)</span></h3>
+<p class="content-item content-paragraph">Механику сбора предметов не нужно программировать — её уже сделали за нас. Готовые вещи живут в Toolbox (набор готовых материалов) и его магазине Creator Store.</p>
+<ul class="content-item content-bullets"><li>Открыть Toolbox: меню Window или тулбар вкладки Home</li><li>Выпадающий список слева-сверху выбирает тип: модели, звуки, плагины…</li><li>Фильтр поиска умеет показывать только verified creator (проверенных авторов)</li><li>Модели сообщества могут содержать встроенные скрипты — так они «умеют» двигаться, звучать, засчитывать касания</li><li>Правило безопасности: смотри рейтинг и автора; сомневаешься — ПКМ по объекту в Explorer → Disable Scripts</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот открытого Toolbox в Roblox Studio: вкладка Creator Store, выпадающий список категорий и кнопка фильтра с опцией verified creator]</p>
+<aside class="speaker-notes">Заметка ведущего: Toolbox дети уже трогали на уроке 2 (деревья) — сейчас главное новое: у моделей бывают скрипты, и это нормально, если автор проверенный. Мы не пишем код — мы, как настоящие продюсеры, собираем игру из надёжных готовых узлов.</aside>
+</div>
+<div class="slide" id="4-t-3">
+<h3 class="slide-title">Модуль Prop Hunt <span class="slide-duration">(3 мин)</span></h3>
+<p class="content-item content-paragraph">Для охоты за предметами в Roblox мы будем использовать готовый модуль. Его будем доставать по ссылке.</p>
+<ol class="content-item content-steps"><li>Переходим по ссылке в чате</li><li>Добавляем предмет-модуль в инвентарь</li><li>Возвращаемся в Roblox Studio</li><li>Заходим в свой инвентарь</li><li>Вставляем модель Prop Hunt целиком в Workspace в Explorer — всё, механика в игре!</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: https://create.roblox.com/store/asset/86765084963670/PropHunter</p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: модель Prop Hunt лежит в Workspace, рядом открыт Toolbox с сохранённым модулем Prop Hunt]</p>
+<aside class="speaker-notes">Заметка ведущего: Ключевая идея слайда: модули — это «кубики LEGO» для Roblox. Модуль настраивается кодом, но нам это НЕ нужно — базовая охота работает из коробки.</aside>
+</div>
+<div class="slide" id="4-t-4">
+<h3 class="slide-title">Тег + записка: предмет становится сокровищем <span class="slide-duration">(3.5 мин)</span></h3>
+<p class="content-item content-paragraph">Как модуль узнаёт, что твой сундук — сокровище? По специальной метке-тегу. Сокровищем может стать ЛЮБАЯ деталь или модель — в том числе твои предметы из урока 3!</p>
+<ul class="content-item content-bullets"><li>Тег: выдели предмет → окно Properties → секция Tags внизу → добавь тег Prop Hunt</li><li>Записка: вставь внутрь предмета объект StringValue (текстовое значение) и впиши в его Value текст — игрок увидит его при находке</li><li>Уникальное имя: по имени модуль отличает сокровища друг от друга — Chest, Key, Crystal уже готовы!</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот: выделен сундук, в окне Properties внизу секция Tags с тегом Prop Hunt, а в Explorer внутри модели сундука — объект StringValue]</p>
+<aside class="speaker-notes">Заметка ведущего: Заметка ведущего: Термины: Tag (тег — метка), StringValue (текстовое значение). Записка — момент нарративного дизайна: «Старинный сундук! Кто его здесь оставил?» — предмет продолжает рассказывать историю. Показать вживую на одном предмете весь путь: тег → StringValue → имя. Именно за этим мы давали предметам имена на уроке 3.</aside>
+</div>
+<div class="slide" id="4-t-5">
+<h3 class="slide-title">Расстановка: интересно искать — не значит невозможно найти <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Первое сокровище — на виду у спауна: игрок сразу понимает правила и чувствует успех</li><li>Дальше — по нарастающей: каждое следующее спрятано чуть хитрее</li><li>Каждое сокровище — у ориентира: у водопада, в ущелье, у факела (не «в случайной точке поля»)</li><li>Самое ценное — в самом опасном или дальнем месте: награда за смелость</li><li>Запрещено прятать так, что без подсказки не найти: злость — не азарт</li><li>Охота — экскурсия по твоему миру: веди игрока через самые красивые места</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема карты сверху: маршрут игрока от точки старта через шесть сокровищ — первое на виду, дальше у ориентиров, последнее в тёмном ущелье; пунктирная линия пути]</p>
+<aside class="speaker-notes">Заметка ведущего: Главный слайд роли Level Designer. Метафора «тёплый след»: от каждого сокровища должно быть видно или угадываться, куда идти дальше. Связка с уроком 2: рельеф-настроение подсказывает цену находки. Спросить: «где в ВАШЕМ мире самое опасное место? вот туда и кладём главный приз».</aside>
+</div>
+<div class="slide" id="4-t-6">
+<h3 class="slide-title">Плейтест: проверь игру чужими глазами <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Test (F5) — запускает игру, твой аватар появляется на SpawnLocation</li><li>Test Here — аватар появляется там, куда смотрит камера: удобно проверять дальний угол карты</li><li>Run (F8) — мир «оживает» без аватара; Stop (Shift+F5) — всё возвращается как было</li><li>Автору его загадки всегда кажутся лёгкими — он же знает, где всё лежит!</li><li>Поэтому обмениваемся плейтестами и даём фидбек: «две звезды и пожелание» — что понравилось (2 вещи) и что улучшить (1 вещь)</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Названия режимов — по актуальной документации Studio: Test, Test Here, Run, Stop. «Две звезды и пожелание» — методика фидбека из учебных программ Roblox Education: сначала хвалим, потом мягко предлагаем. Проговорить правило класса: фидбек — подарок, за него говорят спасибо.</aside>
+</div>
+<div class="slide" id="4-t-7">
+<h3 class="slide-title">Типичные ошибки новичка <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Не добавил модель Prop Hunt в Workspace — механика не заработала</li><li>Опечатка в теге — модуль ищет точное имя Prop Hunt</li><li>Два сокровища с одинаковым именем — прогресс считается неправильно</li><li>Спрятал сокровище «гениально» — и ни один тестер его не нашёл</li><li>Не проверил Anchored — сокровище укатилось со своего места ещё до старта охоты</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Первые три ошибки — технические, их поймаем на плейтесте («жетон не засчитывается — проверяем тег и имя»). Последние три — дизайнерские. Показать вживую ошибку с опечаткой в теге: касаешься — ничего не происходит; исправить тег — работает.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="4-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Как добавить модуль Prop Hunt из Toolbox?</p><ol class="content-item content-quiz-options"><li data-correct="true">Зайти в свой инвентарь и добавить модуль в мир ✓</li><li>Никуда - добавили в инвентарь и всё работает</li><li>Найти в общем Toolbox и добавить в мир</li></ol>
+<p class="content-item content-question">Что нужно предмету, чтобы модуль считал его сокровищем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тег Prop Hunt, записка StringValue и уникальное имя ✓</li><li>Золотой цвет и материал Metal</li><li>Размер не больше 4 студов</li></ol>
+<p class="content-item content-question">Где по правилам левел-дизайна должно лежать САМОЕ ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у спауна, чтобы все его сразу нашли</li><li data-correct="true">В самом опасном или дальнем месте карты ✓</li><li>Под землёй, где его никто никогда не найдёт</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: зайти в свой инвентарь и добавить модуль в мир; тег + StringValue + уникальное имя; в опасном/дальнем месте. После третьего вопроса переспросить: «а первое сокровище куда?» — на виду у спауна: правила игры учат сразу.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="4-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Разомнись! Через 5 минут — самое интересное: запускаем охоту за сокровищами в твоём собственном мире.</p>
+<aside class="speaker-notes">Заметка ведущего: Таймер на экран. После перерыва у всех открыт проект с локацией и предметами уроков 1-3.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем игру: охота за сокровищами <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="4-p-1">
+<h3 class="slide-title">Задача практики: план охоты <span class="slide-duration">(2 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выбери 5-6 сокровищ: сундук, ключ, кристалл, факел из урока 3 + домашний предмет или вещь из Toolbox</li><li>Проверь у каждого: уникальное имя в Explorer и включённый Anchored</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать готовый образец охоты 15 секунд — «вот к чему идём»: касание, записка, трекер, финальное окно. Обязательный минимум для отстающих — 4 сокровища из урока 3; новые предметы — бонус.</aside>
+</div>
+<div class="slide" id="4-p-2">
+<h3 class="slide-title">Шаг 1: устанавливаем механику <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Перейти по ссылке от преподавателя и нажать Get Model</li><li>Toolbox → Inventory → My Models → Prop Hunter</li><li>Найди Prop Hunter и вставь в проект</li><li>Проверь в Explorer: Prop Hunter лежит в Workspace</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Обойти класс: проверьте, что у всех получилось установить модуль</aside>
+</div>
+<div class="slide" id="4-p-3">
+<h3 class="slide-title">Шаг 2: превращаем предметы в сокровища <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выдели первое сокровище → Properties → Tags → добавь Prop Hunt</li><li>В Explorer нажми «+» у модели → вставь StringValue</li><li>В Properties у StringValue заполни Value — записку игроку: «Старинный сундук! Кто его здесь оставил?»</li><li>Повтори для всех сокровищ — у каждого свой тег, своя записка, своё имя</li><li>Придумай записки с характером: пусть каждая находка продолжает историю твоего мира</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Самый длинный шаг — дать поработать. Следить за точностью тега: Prop Hunt без опечаток. Записки — момент творчества: у кого получилась самая смешная/загадочная — зачитать вслух классу.</aside>
+</div>
+<div class="slide" id="4-p-4">
+<h3 class="slide-title">Шаг 3: расставляем и обозначаем цель <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Расставь сокровища по правилам: первое — на виду у SpawnLocation, ценное — в опасной зоне</li><li>Проверь маршрут камерой: от каждого сокровища угадывается путь к следующему</li><li>У спауна собери стартовую табличку из деталей: «Найди все 6 сокровищ!» — игрок должен узнать цель сразу</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Табличка — приём урока 3 (детали + материал), заодно решает задачу «понятная цель»: игрок узнаёт цель сразу, ещё до первой находки. Напомнить: злых тайников не делаем.</aside>
+</div>
+<div class="slide" id="4-p-5">
+<h3 class="slide-title">Шаг 4: первый запуск охоты <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test (F5) → пройди маршрут и собери ВСЕ сокровища</li><li>Проверь: приближение к предмету засчитывает находку и показывает твою записку</li><li>Собрал всё — появится финальное окно «Победа!»</li><li>Stop (Shift+F5). Жетон не засчитался? Проверь тег, имя и записку</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот запущенной охоты от лица игрока: рука касается светящегося кристалла, на экране всплывает записка находки и трекер собранных жетонов]</p>
+<aside class="speaker-notes">Заметка ведущего: Момент «ВАУ» урока — первый работающий геймплей. Чек-лист отладки со слайда типичных ошибок: тег → имя → модуль в Workspace.</aside>
+</div>
+<div class="slide" id="4-p-6">
+<h3 class="slide-title">Шаг 5: чужие глаза и публикация <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поменяйся местами с соседом: пройди его охоту, он — твою</li><li>Фидбек «две звезды и пожелание»: две вещи, которые понравились + одна, которую стоит улучшить</li><li>Поправь по фидбеку самое сложное: добавь ориентир или передвинь слишком хитрое сокровище</li><li>Опубликуй игру: Alt+P. Твоя первая настоящая игра готова!</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Следить, чтобы фидбек шёл по формуле: сначала две похвалы, потом пожелание. Частый итог: «моё гениально спрятанное сокровище никто не нашёл» — это и есть ценность чужих глаз. После публикации — напомнить, что в игру уже можно позвать семью с планшета/телефона.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="4-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Коснулся сокровища, а оно не засчиталось. Что проверяем в первую очередь?</p><ol class="content-item content-quiz-options"><li>Переустановить Roblox Studio</li><li data-correct="true">Тег Prop Hunt, уникальное имя и установку модуля ✓</li><li>Перекрасить предмет в золотой цвет</li></ol>
+<p class="content-item content-question">Какие «две звезды и пожелание» ты получил от соседа — и что уже изменил в своей охоте?</p>
+<p class="content-item content-question">Зачем первое сокровище кладут на виду у спауна?</p><ol class="content-item content-quiz-options"><li data-correct="true">Игрок сразу понимает правила игры и чувствует первый успех ✓</li><li>Так игра быстрее загружается</li><li>Иначе трекер находок не включится</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: чек-лист тег/имя/модуль в Workspace; открытый вопрос — 2-3 ребят рассказывают полученный фидбек и правку (важно услышать «я передвинул/добавил ориентир»); первая находка учит правилам. Открытый вопрос главный: он закрепляет культуру фидбека.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание и домашнее задание <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="4-c-1">
+<h3 class="slide-title">У тебя есть НАСТОЯЩАЯ игра! <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Сегодня ты собрал первый проект: мир трёх уроков стал игрой с целью, правилами и победой — без единой строчки кода.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь в охоту седьмое сокровище с самой интригующей запиской и дай сыграть кому-нибудь дома — запиши его «две звезды и пожелание»</li><li>Подумай: в каком месте твоей карты игрок чаще всего застревал и почему?</li><li>Следующий урок — «Свет, эффекты и звук»: научим мир светиться, дымиться и звучать — охота станет атмосферной!</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить конкретные находки: лучшие записки, самые честные тайники. Подчеркнуть достижение: «у вас у каждого — опубликованная игра, в которую прямо сегодня могут сыграть друзья». Анонс урока 5 связать с проектом: тот же мир станет в разы атмосфернее.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/store/asset/86765084963670/PropHunter">PropHunter — Creator Store (модуль курса)</a></li><li><a href="https://create.roblox.com/docs/en-us/projects/assets/toolbox.md">Toolbox — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/test-here-does-not-test-here/4667349">&quot;Test Here&quot; does not Test Here — DevForum (Studio Bugs, 2026)</a></li><li><a href="https://devforum.roblox.com/t/add-and-remove-tags-from-the-properties-panel-beta/2506442">Add and Remove Tags from the Properties Panel — DevForum Announcements</a></li><li><a href="https://create.roblox.com/docs/en-us/education/lesson-plans/build-an-obby-lesson.md">Create Your Own Game on Roblox — 1 Hour Activity Plan (Roblox Education)</a></li><li><a href="https://create.roblox.com/docs/en-us/education/lesson-plans/intro-to-game-and-coding">Intro to coding and game design — Roblox Education</a></li><li><a href="https://www.youtube.com/watch?v=jmn9sx_iEW0">Roblox Toolbox and Free Models (Tutorial for New Beginners, PrizeCP)</a></li><li><a href="https://www.youtube.com/watch?v=_GnxUebJtOo">Roblox Studio — Exploring the Toolbox, How to find safe good models (gocobi)</a></li></ul></section>
+</article>
+</body>
+</html>
