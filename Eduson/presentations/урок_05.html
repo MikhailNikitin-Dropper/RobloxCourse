@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 5. Свет, эффекты и звук — Eduson Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ek-violet:#8C7FF6; --ek-violet-soft:#A79EF9; --ek-violet-deep:#6F61E8; --ek-violet-bg:#F0EEFE;
+  --ek-green:#3DF79D; --ek-green-soft:#7BF9BD; --ek-green-mint:#C9F7E3; --ek-green-pale:#E7FDF2; --ek-green-deep:#0FBF6E;
+  --ek-ink:#17171C; --ek-gray:#8F8F98; --ek-gray-light:#EFEFF2; --ek-line:#E3E3EA; --ek-white:#fff;
+  --ek-red:#FF6B6B; --ek-red-pale:#FFECEC; --ek-bg:#F7F7FB; --ek-radius:28px;
+  --ek-font-head:'Inter Tight','Inter','Segoe UI',system-ui,sans-serif;
+  --ek-font-body:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#101016;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;font-family:var(--ek-font-head);color:var(--ek-ink)}
+.slide.on{display:block}
+.fit{overflow:hidden}
+.slide--violet{background:var(--ek-violet)}
+.slide--green{background:var(--ek-green)}
+.slide--white{background:#fff}
+
+/* декор «Орбита» */
+.sl-orbit{position:absolute;inset:0;pointer-events:none}
+.slide--violet .sl-orbit{--decor:#A79EF9;--letter:#C4BEFA}
+.slide--green .sl-orbit{--decor:#7BF9BD;--letter:#C4FCE0}
+.slide--white .sl-orbit{--decor:#97F3C8;--letter:#fff}
+.sl-ring{position:absolute;left:50%;top:50%;width:1040px;height:660px;transform:translate(-50%,-50%);border:3px solid var(--decor);border-radius:50%;opacity:.9}
+.sl-ico{position:absolute;color:var(--decor)}
+.sl-letter{position:absolute;border-radius:50%;background:var(--decor);color:var(--letter);display:flex;align-items:center;justify-content:center;font:800 var(--fs,40px)/1 var(--ek-font-head);font-style:normal}
+.sl-waves{position:absolute;right:0;top:0;width:520px;height:720px;pointer-events:none}
+.sl-waves svg{width:100%;height:100%}
+
+/* базовые элементы слайда */
+.sl-card{position:relative;background:#fff;border-radius:28px;box-shadow:0 30px 80px rgba(23,23,28,.16)}
+.sl-card-top{display:flex;justify-content:space-between;align-items:center;padding:24px 30px 0}
+.sl-dots{display:flex;gap:9px}
+.sl-dots i{width:13px;height:13px;border-radius:50%;background:var(--ek-violet)}
+.sl-close{position:relative;width:22px;height:22px;opacity:.9}
+.sl-close::before,.sl-close::after{content:"";position:absolute;left:-1px;top:9px;width:24px;height:4px;border-radius:2px;background:var(--ek-violet)}
+.sl-close::before{transform:rotate(45deg)}
+.sl-close::after{transform:rotate(-45deg)}
+.sl-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 26px/1 var(--ek-font-head);padding:14px 24px;border-radius:14px;transform:rotate(-4deg);box-shadow:0 10px 24px rgba(23,23,28,.10)}
+.ek-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 14px/1 var(--ek-font-head);padding:9px 16px;border-radius:10px;transform:rotate(-3deg)}
+.ek-badge--violet{background:var(--ek-violet);color:#fff}
+.sl-h1{font:800 54px/1.12 var(--ek-font-head);letter-spacing:-.015em;margin:0}
+.sl-h2{font:800 40px/1.18 var(--ek-font-head);letter-spacing:-.01em;margin:0}
+.sl-body{font:500 1em/1.5 var(--ek-font-body)}
+.sl-pagenum{position:absolute;right:54px;bottom:38px;font:800 38px/1 var(--ek-font-head);color:#fff}
+.slide--white .sl-pagenum{color:var(--ek-ink)}
+.sl-bubble{position:relative;background:#EFEFF1;border-radius:30px;padding:58px 74px;text-align:center}
+.sl-bubble::after{content:"";position:absolute;right:56px;bottom:-24px;width:0;height:0;border-left:38px solid transparent;border-top:28px solid #EFEFF1}
+
+/* титульный */
+.title-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:860px}
+.title-badge{position:absolute;left:50%;top:-30px;transform:translateX(-50%) rotate(-4deg)}
+.title-card-in{padding:26px 70px 56px;text-align:center}
+.title-role{margin-top:18px;font:700 24px/1.3 var(--ek-font-head);color:var(--ek-violet-deep)}
+
+/* разделитель и перерыв */
+.div-bubble{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px}
+.div-bubble-text{font:800 38px/1.25 var(--ek-font-head)}
+.break-wrap{position:absolute;left:50%;top:0;transform:translateX(-50%);width:1000px;height:720px}
+.break-wrap .div-bubble{position:static;transform:none;margin:90px auto 0;width:760px}
+.break-body{margin-top:50px;text-align:center;font-size:26px;max-height:200px}
+
+/* таймер перерыва: клик по времени — старт/пауза, «Заново» — сброс */
+.break-timer{margin-top:44px;text-align:center}
+.bt-time{display:block;margin:0 auto;border:0;cursor:pointer;background:#fff;color:var(--ek-violet-deep);font:800 76px/1 var(--ek-font-head);font-variant-numeric:tabular-nums;padding:22px 52px;border-radius:26px;box-shadow:0 14px 36px rgba(23,23,28,.14);transition:background .15s,color .15s}
+.bt-time.bt-run{color:var(--ek-violet)}
+.bt-time.bt-done{background:var(--ek-violet-deep);color:#fff}
+.bt-row{margin-top:16px;display:flex;gap:16px;align-items:center;justify-content:center}
+.bt-hint{font:600 16px var(--ek-font-body);color:var(--ek-ink);opacity:.75}
+.bt-reset{background:transparent;border:2px solid rgba(23,23,28,.35);color:var(--ek-ink);border-radius:12px;padding:8px 16px;font:700 15px var(--ek-font-head);cursor:pointer}
+.bt-reset:hover{border-color:var(--ek-ink)}
+.bt-reset:disabled{opacity:.4;cursor:not-allowed}
+
+/* вопросы */
+.qa-wrap{position:absolute;left:100px;top:110px;width:760px;bottom:70px;display:flex;flex-direction:column}
+.qa-head{color:var(--ek-violet-deep);font-size:30px;margin-bottom:46px;flex:0 0 auto}
+.qa-list{flex:1 1 auto;min-height:0;font-size:38px}
+.q-item{font-size:1em;margin-bottom:1.47em}
+.qa-counter{display:block;margin-top:12px;font:700 15px/1 var(--ek-font-head);letter-spacing:.09em;text-transform:uppercase;color:var(--ek-gray)}
+
+/* квиз (компонент quiz-single дизайн-бука; размеры в em — под авто-ужатие .fit) */
+.quiz-q{font:800 .9em/1.25 var(--ek-font-head);letter-spacing:-.01em;margin-bottom:.95em}
+.ek-option{display:flex;align-items:center;gap:.7em;width:100%;text-align:left;background:#fff;border:2px solid var(--ek-line);border-radius:16px;padding:.7em .9em;font:600 .55em/1.35 var(--ek-font-body);color:var(--ek-ink);cursor:pointer;transition:border-color .15s,background .15s,opacity .2s}
+.ek-option+.ek-option{margin-top:.55em}
+.ek-option:hover{border-color:var(--ek-violet-soft)}
+.ek-option:disabled{cursor:default}
+.ek-option:disabled:not(.is-correct):not(.is-wrong){opacity:.5}
+.ek-option:disabled:not(.is-correct):not(.is-wrong):hover{border-color:var(--ek-line)}
+.ek-option.is-correct{border-color:var(--ek-green-deep);background:var(--ek-green-pale);animation:quiz-pop .35s ease}
+.ek-option.is-wrong{border-color:var(--ek-red);background:var(--ek-red-pale);animation:quiz-shake .3s ease}
+.ek-chip{flex:0 0 auto;width:1.9em;height:1.9em;border-radius:50%;background:var(--ek-gray-light);display:flex;align-items:center;justify-content:center;font:800 .85em var(--ek-font-head)}
+.ek-option.is-correct .ek-chip{background:var(--ek-green)}
+.ek-option.is-wrong .ek-chip{background:var(--ek-red);color:#fff}
+/* пустой блок фидбека всегда занимает место: авто-ужатие .fit меряет слайд
+   до клика, и появившийся позже текст не должен выталкивать кнопку «Заново» */
+.ek-feedback{display:block;min-height:4.2em;margin-top:.5em;border-radius:14px;padding:.55em .75em;font:600 .47em/1.5 var(--ek-font-body)}
+.ek-feedback.is-on{animation:quiz-rise .25s ease}
+.ek-feedback--ok{background:var(--ek-green-pale);color:#0B7A48}
+.ek-feedback--err{background:var(--ek-red-pale);color:#C6403F}
+.quiz-actions{display:flex;justify-content:flex-end;margin-top:.4em}
+.ek-btn{font:700 .42em/1 var(--ek-font-head);border:0;border-radius:14px;padding:.8em 1.3em;cursor:pointer;transition:opacity .15s,border-color .15s}
+.ek-btn--ghost{background:transparent;border:2px solid var(--ek-line);color:var(--ek-ink)}
+.ek-btn--ghost:hover{border-color:var(--ek-violet-soft)}
+.ek-btn:disabled{opacity:.45;cursor:not-allowed}
+@keyframes quiz-pop{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes quiz-shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+@keyframes quiz-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.ek-option.is-correct,.ek-option.is-wrong,.ek-feedback.is-on{animation:none}}
+
+/* контентные */
+.content-wrap{position:absolute;left:80px;right:80px;top:70px;bottom:80px;display:flex;flex-direction:column}
+.content-wrap .sl-h2{flex:0 0 auto}
+.one-col,.two-col{margin-top:40px;flex:1 1 auto;min-height:0;font-size:23px}
+.two-col{display:flex;gap:44px;align-items:flex-start}
+.two-col .col{flex:1 1 50%}
+.para{margin-bottom:.87em}
+.quote{border-left:6px solid var(--ek-violet);padding:6px 0 6px 22px;margin-bottom:.87em;color:var(--ek-violet-deep)}
+.rows{display:grid;gap:.78em}
+.row{display:flex;gap:.87em;align-items:center;background:var(--ek-bg);border-radius:22px;padding:.87em 1.13em}
+.row-dot{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:var(--ek-violet)}
+.row-num{flex:0 0 auto;width:48px;height:48px;border-radius:50%;background:var(--ek-violet);color:#fff;display:flex;align-items:center;justify-content:center;font:800 22px var(--ek-font-head)}
+.row-num--green{background:var(--ek-green);color:var(--ek-ink)}
+.row-text{font-size:.91em}
+
+/* практика */
+.practice-card{position:absolute;left:64px;right:64px;top:48px;bottom:48px;border-radius:30px}
+.practice-card-in{padding:40px 56px;height:100%;font-size:23px}
+.practice-badge{font-size:20px;padding:12px 20px}
+.practice-head{margin:20px 0 24px;font-size:34px}
+
+/* картинка слайда (реальная из images/ или SVG-заглушка) */
+.ph-card{padding-bottom:22px}
+.ph-wrap{position:relative;width:calc(100% - 44px);max-width:var(--ph-maxw,none);margin:16px auto 0}
+.ph{display:block;width:100%;height:auto;max-height:440px;object-fit:cover;background:#fff;border-radius:14px;border:2px solid var(--ek-line)}
+
+/* несколько кадров одного слота (images/<урок>-<номер>-1.* ...) —
+   листаются по клику по циклу, чип показывает номер кадра.
+   Размер рамки задаёт первый кадр (он всегда в потоке, но невидим, когда
+   активен другой) — остальные кадры вписываются в эту рамку, и высота
+   слайда не прыгает при переключении */
+.ph-multi{cursor:pointer}
+.ph-multi .ph:first-of-type{visibility:hidden}
+.ph-multi .ph:first-of-type.ph-on{visibility:visible}
+.ph-multi .ph:first-of-type~.ph{display:none;position:absolute;left:0;top:0;width:100%;height:100%;max-height:none;object-fit:contain}
+.ph-multi .ph:first-of-type~.ph.ph-on{display:block}
+.ph-cycle{position:absolute;right:10px;bottom:10px;border:none;border-radius:10px;background:rgba(23,23,28,.55);color:#fff;font:700 15px var(--ek-font-head);padding:7px 12px;cursor:pointer;z-index:3}
+.ph-cycle:hover{background:rgba(23,23,28,.78)}
+
+/* полноэкранный просмотр картинки: чип ⛶ на картинке открывает оверлей;
+   блок картинки переносится в оверлей целиком, поэтому интерактивные
+   области и карусель кадров продолжают работать; Esc/✕ — назад */
+.ph-zoom{position:absolute;left:10px;bottom:10px;width:38px;height:34px;border:none;border-radius:10px;background:rgba(23,23,28,.55);color:#fff;font-size:17px;line-height:1;cursor:pointer;z-index:3}
+.ph-zoom:hover{background:rgba(23,23,28,.78)}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(23,23,28,.92);display:flex;align-items:center;justify-content:center}
+.lightbox[hidden]{display:none}
+.lightbox .ph-wrap{display:inline-block;width:auto;max-width:none;margin:0}
+.lightbox .ph{width:auto;height:auto;max-width:94vw;max-height:90vh;object-fit:contain}
+.lightbox .ph-multi .ph:first-of-type~.ph{object-fit:contain}
+.lb-close{position:fixed;top:20px;right:22px;width:56px;height:56px;border:0;border-radius:14px;background:#fff;color:var(--ek-violet-deep);font:700 26px/1 var(--ek-font-head);cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.35);z-index:51}
+.lb-close:hover{color:var(--ek-violet)}
+
+/* интерактивные области картинки (images/<урок>-<номер>.areas.json):
+   наведение/фокус подсвечивает область её цветом и показывает подпись */
+.hs{position:absolute;border:3px solid var(--hs);border-radius:10px;background:transparent;opacity:.45;cursor:pointer;outline:none;transition:opacity .15s,background-color .15s}
+.hs.hs-on,.hs:focus{opacity:1;background:var(--hs-bg);z-index:2}
+.hs-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--hs);color:#fff;font:700 14px/1.2 var(--ek-font-head);padding:6px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;box-shadow:0 4px 14px rgba(23,23,28,.25)}
+.hs.hs-on .hs-label,.hs:focus .hs-label{opacity:1}
+/* области, привязанные к кадру карусели: видны только на своём кадре */
+.hs-fr{display:none}
+.hs-fr.hs-cur{display:block}
+.practice-card .ph-card{box-shadow:0 14px 36px rgba(23,23,28,.10);margin-top:10px}
+.practice-cols{margin-top:0;align-items:center;font-size:inherit}
+.practice-cols .ph-card{margin-top:0}
+
+/* навигация (слева, чтобы не перекрывать номер страницы шаблона) */
+.nav{position:fixed;left:22px;bottom:20px;display:flex;gap:10px;z-index:10}
+.nav button{width:56px;height:56px;border:none;border-radius:14px;background:rgba(255,255,255,.55);color:var(--ek-violet-deep);font-size:26px;line-height:1;cursor:pointer;font-family:var(--ek-font-head)}
+.nav button:hover{background:rgba(255,255,255,.75)}
+.nav button:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="ek-i-trophy" viewBox="0 0 100 100"><path fill="currentColor" d="M24 16h52v12h8c6 0 10 4 10 10 0 15-11 25-23 27-3 5-8 9-14 10v8h14c4 0 7 3 7 7v4H22v-4c0-4 3-7 7-7h14v-8c-6-1-11-5-14-10C17 63 6 53 6 38c0-6 4-10 10-10h8V16zM24 36h-7c-2 0-4 2-4 4 0 8 5 15 12 18-1-5-1-10-1-16v-6zM76 36v6c0 6 0 11-1 16 7-3 12-10 12-18 0-2-2-4-4-4h-7z"/></symbol><symbol id="ek-i-heart" viewBox="0 0 100 100"><path fill="currentColor" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/></symbol><symbol id="ek-i-star" viewBox="0 0 100 100"><path fill="currentColor" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/></symbol><symbol id="ek-i-gem" viewBox="0 0 100 100"><path fill="currentColor" fill-rule="evenodd" d="M22 14H78L94 38L50 90L6 38L22 14zM49 40H51V81H49V40zM21 18L46 38L44 40L19 20zM79 18L54 38L56 40L81 20zM12 37H88V40H12z"/></symbol></defs></svg>
+<div id="stage">
+<section class="slide slide--violet"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div>
+<div class="sl-card title-card">
+  <div class="sl-badge title-badge">Урок №5</div>
+  <div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div>
+  <div class="title-card-in"><h1 class="sl-h1">Свет, эффекты и звук</h1>
+  <p class="title-role">VFX &amp; Lighting Artist</p></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Сегодня ты — VFX &amp; Lighting Artist</h2>
+  <div class="one-col fit"><p class="sl-body para">У тебя уже есть настоящая игра — охота за сокровищами. Но пока в ней всегда полдень: ни заката, ни огней, ни магии.</p><p class="sl-body para">VFX &amp; Lighting Artist (художник по эффектам и свету) не строит новое — он делает так, чтобы игрок ЧУВСТВОВАЛ: закат, туманную даль, живой огонь факела, магическое сияние кристалла. Сегодня твой мир оживёт.</p></div>
+</div>
+<div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 4?<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Как мы добавляли модуль Prop Hunt в свой проект?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Случайный модуль из поиска — лотерея: мы брали проверенный, по ссылке от преподавателя."><span class="ek-chip">А</span><span>Искали случайный модуль в поиске Toolbox</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Ни строчки кода! Весь урок 4 прошёл без программирования."><span class="ek-chip">Б</span><span>Писали скрипт на Lua</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Модуль сохранился в твоём инвентаре — из My Models он вставляется в любой проект."><span class="ek-chip">В</span><span>По ссылке → Get Model → инвентарь → My Models → в Workspace</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 4?<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Что нужно предмету, чтобы он стал сокровищем охоты?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Точно! Метка-тег, записка и своё имя — три условия, по которым модуль узнаёт сокровище."><span class="ek-chip">А</span><span>Тег Prop Hunt, записка StringValue и уникальное имя</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Цвет и материал делают предмет красивым, но модуль смотрит только на тег, записку и имя."><span class="ek-chip">Б</span><span>Золотой цвет и материал Neon</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Размер не важен — сокровищем была и маленькая монетка, и большой сундук."><span class="ek-chip">В</span><span>Размер не меньше 10 студов</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Что мы делали на уроке 4?<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Где по правилам левел-дизайна лежало САМОЕ ценное сокровище?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="У спауна — ПЕРВОЕ сокровище, оно учит правилам. Ценное лежит дальше."><span class="ek-chip">А</span><span>Прямо у спауна</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Награда за смелость. Сегодня мы усилим это чувство светом: в опасной зоне будет по-настоящему тревожно."><span class="ek-chip">Б</span><span>В самом опасном или дальнем месте карты</span></button><button type="button" class="ek-option" data-correct="false" data-expl="За пределами карты сокровище никто не найдёт — это запрещённый приём."><span class="ek-chip">В</span><span>За пределами карты</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Свет, туман и эффекты: как игра получает настроение</span></div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Настроение — это профессия</h2>
+  <div class="one-col fit"><p class="sl-body para">Один и тот же мир на ярком полудне — весёлая прогулка, а в синих сумерках с туманом — тревожная тайна. Ни одна деталь не изменилась — изменилось НАСТРОЕНИЕ.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Свет и воздух управляют эмоциями игрока сильнее, чем постройки</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Все главные «ручки» настроения живут в сервисе Lighting в Explorer</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Сегодня — три инструмента: глобальный свет, локальные огни и эффекты</span></div></div></div>
+</div>
+<div class="sl-pagenum">7</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Properties: пульт управления любым объектом</h2>
+  <div class="two-col fit"><div class="col"><p class="sl-body para">У каждого объекта в Roblox Studio — детали, света, тумана, даже целого сервиса — есть свой список настроек. Он называется Properties (свойства).</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Выдели любой объект — окно Properties покажет все его «ручки»: имя, цвет, размер, поведение</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Мы уже пользовались этим: Color, Material и Anchored у деталей, Value у записки, Tags у сокровищ</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Изменил свойство — мир меняется мгновенно, без единой строчки кода</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Сегодня те же правила — для света и воздуха: у Lighting и огней просто свои свойства</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-1" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtMS5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI4NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodC60YDQuNC90YjQvtGCIFJvYmxveCBTdHVkaW86INCy0YvQtNC10LvQtdC90LAg0LTQtdGC0LDQu9GMLDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7RgNGP0LTQvtC8INC+0LrQvdC+IFByb3BlcnRpZXMg0YHQviDRgdCy0L7QudGB0YLQstCw0LzQuCBOYW1lLDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5Db2xvciwgTWF0ZXJpYWwsIEFuY2hvcmVkIOKAlCDQv9C+0LTQv9C40YHQuC08L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0YHRgtGA0LXQu9C60Lgg0Log0LPQu9Cw0LLQvdGL0Lwg0YHRgtGA0L7Rh9C60LDQvDwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Скриншот Roblox Studio: выделена деталь, рядом окно Properties со свойствами Name, Color, Material, Anchored — подписи-стрелки к главным строчкам" title="Скриншот Roblox Studio: выделена деталь, рядом окно Properties со свойствами Name, Color, Material, Anchored — подписи-стрелки к главным строчкам"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">8</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Lighting: время суток и цвет мира</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">ClockTime — время суток от 0 до 24: 12 — полдень, 18 — закат, 0 — полночь</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Brightness — сила солнца и контраст теней</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ambient — подкраска всего мира, включая тени и помещения</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">OutdoorAmbient — подкраска мест под открытым небом (эффект заката)</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">ColorShift_Top — оттенок на поверхностях, освещённых солнцем или луной</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Всё это — обычные свойства сервиса Lighting в окне Properties</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-2" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtMi5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI4NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodC60YDQuNC90YjQvtGCIEV4cGxvcmVyINGBINCy0YvQtNC10LvQtdC90L3Ri9C8INGB0LXRgNCy0LjRgdC+0Lw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+TGlnaHRpbmcg0Lgg0L7QutC90LAgUHJvcGVydGllcyDRgdC+INGB0LLQvtC50YHRgtCy0LDQvNC4PC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPkNsb2NrVGltZSwgQnJpZ2h0bmVzcywgQW1iaWVudCw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+T3V0ZG9vckFtYmllbnQsIENvbG9yU2hpZnRfVG9wPC90c3Bhbj48L3RleHQ+PC9zdmc+" alt="Скриншот Explorer с выделенным сервисом Lighting и окна Properties со свойствами ClockTime, Brightness, Ambient, OutdoorAmbient, ColorShift_Top" title="Скриншот Explorer с выделенным сервисом Lighting и окна Properties со свойствами ClockTime, Brightness, Ambient, OutdoorAmbient, ColorShift_Top"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">9</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Atmosphere: воздух и туманная даль</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Atmosphere (атмосфера) вставляется внутрь Lighting через «+»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Density — густота воздуха: выше — даль тонет в дымке</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Offset — силуэт горизонта: ниже — даль сливается с небом</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Color и Haze — цвет и сила дымки: задают настроение целой сцены</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Glare — сияние вокруг солнца (работает только при Haze больше 0)</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtMy5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI4NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QntC00LjQvSDQuCDRgtC+0YIg0LbQtSDQv9C10LnQt9Cw0LYg0YEg0LPQvtGA0LDQvNC4INC00L4g0Lgg0L/QvtGB0LvQtTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QtNC+0LHQsNCy0LvQtdC90LjRjyBBdG1vc3BoZXJlOiDRgdC70LXQstCwINGP0YHQvdCw0Y8g0LTQsNC70YwsPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtGB0L/RgNCw0LLQsCDigJQg0LPQu9GD0LHQvtC60LDRjyDRgtGD0LzQsNC90L3QsNGPINC00YvQvNC60LAg0L3QsDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7Qs9C+0YDQuNC30L7QvdGC0LU8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Один и тот же пейзаж с горами до и после добавления Atmosphere: слева ясная даль, справа — глубокая туманная дымка на горизонте" title="Один и тот же пейзаж с горами до и после добавления Atmosphere: слева ясная даль, справа — глубокая туманная дымка на горизонте"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">10</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Локальные огни: PointLight, SpotLight, SurfaceLight</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Вставляются внутрь детали: выделить → «+» → выбрать источник</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">PointLight — светит шаром во все стороны: лампа, факел, кристалл</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">SpotLight — конус света: фонарик, прожектор; Face — направление, Angle — ширина</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">SurfaceLight — светится вся грань детали: экраны, вывески</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Общие свойства: Color (цвет), Brightness (яркость), Range (дальность в студах), Shadows (тени)</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-4" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtNC5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI4NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QotGA0Lgg0LTQtdGC0LDQu9C4INCyINGC0ZHQvNC90L7QuSDRgdGG0LXQvdC1INGA0Y/QtNC+0Lw6INGB0YTQtdGA0LAg0YE8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+UG9pbnRMaWdodCDRgdCy0LXRgtC40YIg0LLQviDQstGB0LUg0YHRgtC+0YDQvtC90YssINC00LXRgtCw0LvRjDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7RgdC+IFNwb3RMaWdodCDRgdCy0LXRgtC40YIg0LrQvtC90YPRgdC+0LwsINC/0LDQvdC10LvRjCDRgTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5TdXJmYWNlTGlnaHQg0YHQstC10YLQuNGC0YHRjyDQs9GA0LDQvdGM0Y48L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Три детали в тёмной сцене рядом: сфера с PointLight светит во все стороны, деталь со SpotLight светит конусом, панель с SurfaceLight светится гранью" title="Три детали в тёмной сцене рядом: сфера с PointLight светит во все стороны, деталь со SpotLight светит конусом, панель с SurfaceLight светится гранью"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">11</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Огонь и частицы: готовые спецэффекты</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Fire — готовый огонь одним объектом: вставь в деталь, настрой Size и Color</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">SecondaryColor — цвет сердцевины пламени: синий огонь? зелёный? легко!</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">ParticleEmitter — конструктор частиц для тонкой магии: Rate, Lifetime, LightEmission</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Готовые красивые эффекты (магия, искры, дым) есть в Toolbox — проверяй автора и рейтинг, как обычно</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-5" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtNS5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QpNCw0LrQtdC7INC40Lcg0LTQtdGC0LDQu9C10Lkg0YEg0Y3RhNGE0LXQutGC0L7QvCBGaXJlINC4INGA0Y/QtNC+0Lw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LrRgNC40YHRgtCw0LvQuyDRgSDQvNCw0LPQuNGH0LXRgdC60LjQvCDRgdC40Y/QvdC40LXQvCDRh9Cw0YHRgtC40YYg0LI8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0YLRkdC80L3QvtC5INGB0YbQtdC90LU8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Факел из деталей с эффектом Fire и рядом кристалл с магическим сиянием частиц в тёмной сцене" title="Факел из деталей с эффектом Fire и рядом кристалл с магическим сиянием частиц в тёмной сцене"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">12</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Настроение зон: свет ведёт игрока</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">У каждой зоны — своё настроение: безопасная = тёплый свет, опасная = полумрак и холодные цвета</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Свет — навигация: игрок идёт «на огонёк», расставляй огни-маяки по маршруту охоты</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Цепочка огней видна издалека — это дорога без единого указателя</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Контраст усиливает историю: после тёплого лагеря тёмное ущелье пугает по-настоящему</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-6" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtNi5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjI3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodGF0LXQvNCwINC60LDRgNGC0Ysg0YHQstC10YDRhdGDOiDRgtGR0L/Qu9GL0Lkg0L7RgdCy0LXRidGR0L3QvdGL0Lk8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LvQsNCz0LXRgNGMINGDINGC0L7Rh9C60Lgg0YHRgtCw0YDRgtCwLCDRhtC10L/QvtGH0LrQsCDQvtCz0L3QtdC5LTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QvNCw0Y/QutC+0LIg0LLQtNC+0LvRjCDQvNCw0YDRiNGA0YPRgtCwINGB0L7QutGA0L7QstC40Ykg0Lgg0YLRkdC80L3QsNGPPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC+0L/QsNGB0L3QsNGPINC30L7QvdCwINGBINC+0LTQvdC40Lwg0YLRgNC10LLQvtC20L3Ri9C8INC60YDQsNGB0L3Ri9C8PC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC+0LPQvtC90YzQutC+0Lw8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Схема карты сверху: тёплый освещённый лагерь у точки старта, цепочка огней-маяков вдоль маршрута сокровищ и тёмная опасная зона с одним тревожным красным огоньком" title="Схема карты сверху: тёплый освещённый лагерь у точки старта, цепочка огней-маяков вдоль маршрута сокровищ и тёмная опасная зона с одним тревожным красным огоньком"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+</div>
+<div class="sl-pagenum">13</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Типичные ошибки новичка</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Сделал полночь (ClockTime 0) без единого огня — игрок не видит ничего и выходит</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Поставил Density на максимум — мир утонул в «молоке»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Neon-материал вместо источника света: светится сам, но не освещает вокруг</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Fire без PointLight рядом — пламя красивое, а света от него нет</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Задрал Rate у частиц в тысячи — игра начала тормозить</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Десять разноцветных огней в одном месте — дискотека вместо настроения</span></div></div></div>
+</div>
+<div class="sl-pagenum">14</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Проверяем теорию</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Как сделать в игре вечер?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Перекрашивать весь мир не нужно — время суток меняется одним свойством."><span class="ek-chip">А</span><span>Покрасить все детали в тёмные цвета</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! ClockTime двигает солнце: 18 — закат, 0 — полночь, 12 — полдень."><span class="ek-chip">Б</span><span>Lighting → ClockTime примерно 18</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Atmosphere — это дымка и воздух, а временем суток управляет ClockTime."><span class="ek-chip">В</span><span>Вставить чёрный Atmosphere</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Какой источник света выбрать для факела?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="SurfaceLight хорош для экранов и вывесок — у факела светится не грань, а пламя."><span class="ek-chip">А</span><span>SurfaceLight — светящаяся грань</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Конус — для фонарика или прожектора, а пламя светит во все стороны."><span class="ek-chip">Б</span><span>SpotLight — узкий конус</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Точно! Пламя факела освещает всё вокруг себя — это шар света, PointLight."><span class="ek-chip">В</span><span>PointLight — светит шаром во все стороны</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Ты выделил PointLight. Где поменять его цвет и дальность?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Properties — пульт управления любым объектом: выделил → меняешь свойства."><span class="ek-chip">А</span><span>В окне Properties — там свойства Color и Range</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Кнопка Color красит ДЕТАЛИ, а у источника света свой Color — в окне Properties."><span class="ek-chip">Б</span><span>Кнопкой Color в тулбаре — она красит всё</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Ни строчки кода: всё, что мы делаем на курсе, настраивается через Properties."><span class="ek-chip">В</span><span>Никак — свет настраивается только кодом</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div>
+<div class="break-wrap">
+  <div class="sl-bubble div-bubble"><span class="div-bubble-text">Перерыв 5 минут</span></div>
+  <div class="break-body fit"><p class="sl-body para">Разомнись! Через 5 минут включаем закат, зажигаем факелы и добавляем магию.</p></div>
+  <div class="break-timer"><button type="button" class="bt-time" data-secs="300" aria-label="Таймер перерыва: клик — старт или пауза">05:00</button><div class="bt-row"><span class="bt-hint">клик по времени — старт / пауза</span><button type="button" class="bt-reset" disabled>Заново</button></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Оживляем мир: закат, огни и магия</span></div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 1: вечер и воздух</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Открой мир охоты. Lighting в Explorer → ClockTime ≈ 17–18: предзакатный вечер</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Ambient — тёмно-серый, ColorShift_Top — тёплый оранжевый: закатные краски</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">«+» у Lighting → Atmosphere: Density ≈ 0.35–0.4, Offset ≈ 0.2</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Покрутись камерой: даль тонет в дымке, мир стал глубже и загадочнее</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">21</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 2: факел оживает</h2>
+    <div class="two-col practice-cols"><div class="col"><div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Выдели сферу-пламя факела из урока 3 → «+» → PointLight</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">PointLight: Color — оранжевый, Range 12–16 студов, Brightness ≈ 2, Shadows — вкл</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Туда же «+» → Fire: Size под размер пламени, Color — оранжевый</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Проверь в темноте: факел освещает вход в пещеру и отбрасывает тени</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-wrap"><img class="ph ph-on" id="img-7" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzUtNy5wbmcpOjwvdGV4dD48dGV4dCB4PSI1MDAiIHk9IjMwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjMiIGZpbGw9IiMxNzE3MUMiPjx0c3BhbiB4PSI1MDAiIGR5PSIwIj7QodC60YDQuNC90YjQvtGCIEV4cGxvcmVyOiDQstC90YPRgtGA0Lgg0YHRhNC10YDRiy3Qv9C70LDQvNC10L3QuDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7RhNCw0LrQtdC70LAg0LvQtdC20LDRgiBQb2ludExpZ2h0INC4IEZpcmUsINGA0Y/QtNC+0Lw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+UHJvcGVydGllcyDRgSDQvdCw0YHRgtGA0L7QudC60LDQvNC4IFJhbmdlINC4IENvbG9yPC90c3Bhbj48L3RleHQ+PC9zdmc+" alt="Скриншот Explorer: внутри сферы-пламени факела лежат PointLight и Fire, рядом Properties с настройками Range и Color" title="Скриншот Explorer: внутри сферы-пламени факела лежат PointLight и Fire, рядом Properties с настройками Range и Color"><button type="button" class="ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">22</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 3: магия кристалла</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">В кристалл → «+» → PointLight: Color — под цвет кристалла, Range 10–14</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Сияние: найди в Toolbox готовый эффект (поиск «magic particle»; автор и рейтинг — как учили) или вставь ParticleEmitter</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">У ParticleEmitter подними LightEmission — частицы засветятся</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Кристалл теперь виден издалека — это же сокровище-маяк!</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">23</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 4: тёплый лагерь и тёмное ущелье</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">У спауна собери «лагерь»: костёр из деталей + Fire + тёплый PointLight</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Вдоль маршрута охоты расставь 2-3 огня-маяка: игрок идёт «на огонёк»</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">В опасной зоне — никаких тёплых огней: один тусклый холодный или красный PointLight у сокровища</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Пролети камерой весь маршрут: зоны читаются по свету?</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">24</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 5: прогулка-проверка и публикация</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Test (F5) → пройди весь маршрут охоты от спауна до последнего сокровища</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Чек-лист: у сокровищ не слишком темно? огни-маяки ведут по маршруту? настроение зон читается?</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Поправь самое тёмное место — добавь маяк или подними Brightness огня</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Опубликуй обновление: Alt+P. Твоя игра теперь ВЫГЛЯДИТ как настоящая!</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">25</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Обсуждаем практику</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Fire в факеле есть, а пещеру он не освещает. Чего не хватает?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="false" data-expl="Size сделает пламя больше, но света от этого не прибавится."><span class="ek-chip">А</span><span>Увеличить Size у Fire</span></button><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Fire — это картинка огня, а освещает мир источник света: связка Fire + PointLight."><span class="ek-chip">Б</span><span>PointLight рядом с пламенем — свет даёт он</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Neon светится сам, но соседей не освещает — нужен настоящий источник света."><span class="ek-chip">В</span><span>Сменить материал факела на Neon</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><h3 class="sl-h2 q-item">Как изменилось настроение твоего мира? Какая зона получилась самой атмосферной и почему?</h3></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Почему в опасной зоне мы НЕ ставим тёплые уютные огни?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно! Свет — это язык: тепло = «здесь безопасно». Обманывать игрока светом нельзя."><span class="ek-chip">А</span><span>Тёплый свет обещает безопасность — а эта зона должна тревожить</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Пара огней на скорость не влияет — дело в языке света, а не в технике."><span class="ek-chip">Б</span><span>Тёплые огни сильно замедляют игру</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Свет работает везде одинаково — просто в опасной зоне он рассказывает другую историю."><span class="ek-chip">В</span><span>В опасной зоне свет вообще не работает</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Твой мир ожил!</h2>
+  <div class="one-col fit"><p class="sl-body para">Сегодня ты поработал VFX &amp; Lighting Artist: закат и туманная даль, живые огни, магия кристалла — и всё это обычными свойствами в Properties, без единой строчки кода.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Домашнее задание: подбери освещение для своего пятого предмета из ДЗ урока 3 и добавь один огонь-маяк там, где тестерам было темно</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Понаблюдай в любимой игре: каким светом тебя ведут и пугают?</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Следующий урок — «NPC и диалоги»: в твоём мире появятся живые персонажи, с которыми можно поговорить!</span></div></div></div>
+</div>
+<div class="sl-pagenum">30</div></section>
+</div>
+<div class="nav">
+  <button id="nav-prev" type="button" aria-label="Предыдущий слайд">&#8592;</button>
+  <button id="nav-next" type="button" aria-label="Следующий слайд">&#8594;</button>
+  <button id="nav-full" type="button" aria-label="Полноэкранный режим (выход — Esc)" title="Полноэкранный режим (выход — Esc)">&#9974;</button>
+</div>
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lb-close" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">&#10005;</button>
+  <div class="lb-slot"></div>
+</div>
+<script>
+(function(){
+'use strict';
+var slides=document.querySelectorAll('.slide');
+var prev=document.getElementById('nav-prev'),next=document.getElementById('nav-next');
+var full=document.getElementById('nav-full');
+var quizResets=[]; /* {slide, reset} — чтобы сбрасывать выбор при уходе со слайда */
+var cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  for(var k=0;k<slides.length;k++)slides[k].classList.toggle('on',k===cur);
+  /* квизы на неактивных слайдах возвращаются в исходное состояние */
+  for(var r=0;r<quizResets.length;r++)
+    if(!quizResets[r].slide.classList.contains('on'))quizResets[r].reset();
+  prev.disabled=cur===0;next.disabled=cur===slides.length-1;
+  if(history.replaceState)history.replaceState(null,'','#'+(cur+1));
+}
+function fit(){
+  var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+  document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';
+}
+prev.addEventListener('click',function(){show(cur-1);});
+next.addEventListener('click',function(){show(cur+1);});
+/* полноэкранный режим; выход — Esc (нативное поведение браузера) */
+full.addEventListener('click',function(){
+  if(document.fullscreenElement){if(document.exitFullscreen)document.exitFullscreen();}
+  else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
+});
+document.addEventListener('keydown',function(e){
+  /* пробел на сфокусированной кнопке (вариант квиза, «Заново») — это клик,
+     а не листание */
+  if(e.key===' '&&e.target&&e.target.tagName==='BUTTON')return;
+  /* пока открыт полноэкранный просмотр картинки, презентация не листается */
+  var lb=document.getElementById('lightbox');
+  if(lb&&!lb.hidden)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+window.addEventListener('resize',fit);
+function initQuizzes(){
+  var quizzes=document.querySelectorAll('.quiz');
+  for(var i=0;i<quizzes.length;i++)(function(q){
+    var opts=q.querySelectorAll('.ek-option'),fb=q.querySelector('.ek-feedback'),
+        rst=q.querySelector('.quiz-reset'),done=false;
+    function pick(e){
+      if(done)return;done=true;
+      var right=e.currentTarget.getAttribute('data-correct')==='true';
+      for(var k=0;k<opts.length;k++){
+        opts[k].disabled=true;
+        if(opts[k].getAttribute('data-correct')==='true')opts[k].classList.add('is-correct');
+      }
+      if(!right)e.currentTarget.classList.add('is-wrong');
+      fb.className='ek-feedback is-on '+(right?'ek-feedback--ok':'ek-feedback--err');
+      var expl=e.currentTarget.getAttribute('data-expl');
+      fb.textContent=(right?'Верно! 🎉':'Пока нет — правильный ответ подсвечен зелёным.')+(expl?' '+expl:'');
+      rst.disabled=false;
+    }
+    function reset(){
+      done=false;fb.className='ek-feedback';fb.textContent='';rst.disabled=true;
+      for(var k=0;k<opts.length;k++){opts[k].disabled=false;opts[k].classList.remove('is-correct','is-wrong');}
+    }
+    for(var j=0;j<opts.length;j++)opts[j].addEventListener('click',pick);
+    rst.addEventListener('click',reset);
+    var sl=q;while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;
+    if(sl)quizResets.push({slide:sl,reset:reset});
+  })(quizzes[i]);
+}
+initQuizzes();
+function shrinkEl(el){
+  if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
+  var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
+  el.style.fontSize='';
+  while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+}
+/* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
+   наружу — после раскладки чип задвигается внутрь картинки (margin поверх
+   центрирующего translate; мерить можно только видимый слайд) */
+function clampHotspotLabels(sl){
+  var wraps=sl.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++){
+    var w=wraps[i].offsetWidth,h=wraps[i].offsetHeight,
+        hss=wraps[i].querySelectorAll('.hs');
+    for(var j=0;j<hss.length;j++){
+      var hs=hss[j],lb=hs.querySelector('.hs-label');
+      if(!lb||!hs.offsetWidth)continue; /* скрытые (кадр карусели) — при показе кадра */
+      var pad=4,
+          cx=hs.offsetLeft+hs.offsetWidth/2,cy=hs.offsetTop+hs.offsetHeight/2,
+          hw=lb.offsetWidth/2,hh=lb.offsetHeight/2,dx=0,dy=0;
+      if(cx+hw>w-pad)dx=(w-pad)-(cx+hw);
+      if(cx-hw+dx<pad)dx=pad-(cx-hw);
+      if(cy+hh>h-pad)dy=(h-pad)-(cy+hh);
+      if(cy-hh+dy<pad)dy=pad-(cy-hh);
+      lb.dataset.mx=dx;lb.dataset.my=dy;
+      lb.style.marginLeft=dx+'px';lb.style.marginTop=dy+'px';
+    }
+  }
+}
+/* области могут перекрываться (вложенные зоны), а браузерный :hover достаётся
+   только самой верхней — поэтому подсветкой управляет JS: активны ВСЕ области
+   под курсором, их подписи раскладываются вертикальной стопкой без наложений
+   (первая — самой маленькой области, на её обычном месте) */
+function initHotspots(){
+  var wraps=document.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++)(function(wrap){
+    var hss=wrap.querySelectorAll('.hs');
+    if(!hss.length)return;
+    function baseLabel(lb){
+      lb.style.left='';lb.style.top='';lb.style.transform='';
+      lb.style.marginLeft=(lb.dataset.mx||0)+'px';
+      lb.style.marginTop=(lb.dataset.my||0)+'px';
+    }
+    function off(hs){
+      hs.classList.remove('hs-on');
+      var lb=hs.querySelector('.hs-label');
+      if(lb)baseLabel(lb);
+    }
+    function clear(){for(var j=0;j<hss.length;j++)off(hss[j]);}
+    function layout(active){
+      var pad=4,W=wrap.offsetWidth,H=wrap.offsetHeight,lbs=[],total=0;
+      for(var j=0;j<active.length;j++){
+        var lb=active[j].querySelector('.hs-label');
+        if(lb)lbs.push({hs:active[j],lb:lb,w:lb.offsetWidth,h:lb.offsetHeight}),total+=lb.offsetHeight+6;
+      }
+      if(!lbs.length)return;
+      total-=6;
+      var f=lbs[0],
+          cx=f.hs.offsetLeft+f.hs.offsetWidth/2+parseFloat(f.lb.dataset.mx||0),
+          top=f.hs.offsetTop+f.hs.offsetHeight/2-f.h/2+parseFloat(f.lb.dataset.my||0);
+      top=Math.max(pad,Math.min(top,H-pad-total));
+      for(var j=0;j<lbs.length;j++){
+        var o=lbs[j],x=Math.max(pad,Math.min(cx-o.w/2,W-pad-o.w));
+        o.lb.style.transform='none';o.lb.style.margin='0';
+        o.lb.style.left=(x-o.hs.offsetLeft)+'px';
+        o.lb.style.top=(top-o.hs.offsetTop)+'px';
+        top+=o.h+6;
+      }
+    }
+    wrap.addEventListener('mousemove',function(e){
+      /* координаты курсора → css-px обёртки (дека масштабируется zoom/scale) */
+      var r=wrap.getBoundingClientRect(),k=r.width/wrap.offsetWidth||1,
+          x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k,active=[];
+      for(var j=0;j<hss.length;j++){
+        var hs=hss[j];
+        if(x>=hs.offsetLeft&&x<=hs.offsetLeft+hs.offsetWidth&&
+           y>=hs.offsetTop&&y<=hs.offsetTop+hs.offsetHeight)active.push(hs);
+        else off(hs);
+      }
+      active.sort(function(a,b){return a.offsetWidth*a.offsetHeight-b.offsetWidth*b.offsetHeight;});
+      for(var j=0;j<active.length;j++)active[j].classList.add('hs-on');
+      if(active.length>1)layout(active);
+      else if(active.length===1){var lb=active[0].querySelector('.hs-label');if(lb)baseLabel(lb);}
+    });
+    wrap.addEventListener('mouseleave',clear);
+  })(wraps[i]);
+}
+initHotspots();
+/* несколько кадров одного слота листаются по клику по циклу (клик по
+   интерактивной области — это про область, кадр не меняет) */
+function initFrameCycles(){
+  var wraps=document.querySelectorAll('.ph-multi');
+  for(var i=0;i<wraps.length;i++)(function(wrap){
+    var frames=wrap.querySelectorAll('.ph'),chip=wrap.querySelector('.ph-cycle'),cur=0;
+    wrap.addEventListener('click',function(e){
+      var t=e.target;
+      while(t&&t!==wrap){if(t.classList&&t.classList.contains('hs'))return;t=t.parentElement;}
+      cur=(cur+1)%frames.length;
+      for(var j=0;j<frames.length;j++)frames[j].classList.toggle('ph-on',j===cur);
+      var frs=wrap.querySelectorAll('.hs-fr'); /* области своего кадра */
+      for(var j=0;j<frs.length;j++)frs[j].classList.toggle('hs-cur',frs[j].getAttribute('data-frame')===''+(cur+1));
+      /* подписи новых областей ещё не прижаты к краям картинки */
+      var host=wrap;
+      while(host&&!(host.classList&&host.classList.contains('slide'))&&host.id!=='lightbox')host=host.parentElement;
+      if(host)clampHotspotLabels(host);
+      if(chip)chip.innerHTML=(cur+1)+'/'+frames.length+' &#9656;';
+    });
+  })(wraps[i]);
+}
+initFrameCycles();
+/* таймер перерыва: отсчёт от точного времени конца (Date.now), а не тиками —
+   интервал может «плыть»; клик по времени — старт/пауза, «Заново» — сброс */
+function initTimers(){
+  var ts=document.querySelectorAll('.break-timer');
+  for(var i=0;i<ts.length;i++)(function(t){
+    var btn=t.querySelector('.bt-time'),rst=t.querySelector('.bt-reset'),
+        hint=t.querySelector('.bt-hint'),hint0=hint?hint.textContent:'',
+        total=parseInt(btn.getAttribute('data-secs'),10)||300,
+        left=total,endAt=0,iv=null;
+    function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+    function render(){btn.textContent=fmt(left);}
+    function stop(){if(iv){clearInterval(iv);iv=null;}btn.classList.remove('bt-run');}
+    function tick(){
+      left=Math.max(0,Math.ceil((endAt-Date.now())/1000));render();
+      if(left===0){stop();btn.classList.add('bt-done');if(hint)hint.textContent='Перерыв окончен!';}
+    }
+    btn.addEventListener('click',function(){
+      if(btn.classList.contains('bt-done'))return;
+      if(iv){stop();return;}
+      endAt=Date.now()+left*1000;
+      iv=setInterval(tick,250);btn.classList.add('bt-run');rst.disabled=false;
+    });
+    rst.addEventListener('click',function(){
+      stop();left=total;render();btn.classList.remove('bt-done');
+      if(hint)hint.textContent=hint0;rst.disabled=true;
+    });
+  })(ts[i]);
+}
+initTimers();
+/* полноэкранный просмотр: блок картинки (.ph-wrap) переносится в оверлей
+   и обратно — слушатели областей/карусели при переносе сохраняются;
+   инлайновые размеры от fitImages на время просмотра снимаются */
+function initLightbox(){
+  var lb=document.getElementById('lightbox');
+  if(!lb)return;
+  var slot=lb.querySelector('.lb-slot'),closeBtn=lb.querySelector('.lb-close'),opened=null;
+  function open(wrap){
+    if(opened)return;
+    var sl=wrap;
+    while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;
+    opened={wrap:wrap,parent:wrap.parentElement,next:wrap.nextSibling,css:wrap.style.cssText,slide:sl};
+    wrap.style.cssText='';
+    slot.appendChild(wrap);
+    lb.hidden=false;
+    clampHotspotLabels(lb);
+  }
+  function close(){
+    if(!opened)return;
+    opened.wrap.style.cssText=opened.css;
+    opened.parent.insertBefore(opened.wrap,opened.next);
+    lb.hidden=true;
+    if(opened.slide)clampHotspotLabels(opened.slide);
+    opened=null;
+  }
+  closeBtn.addEventListener('click',close);
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  document.addEventListener('keydown',function(e){
+    if(!lb.hidden&&(e.key==='Escape'||e.key==='Esc'))close();
+  });
+  var zooms=document.querySelectorAll('.ph-zoom');
+  for(var i=0;i<zooms.length;i++)zooms[i].addEventListener('click',function(e){
+    e.stopPropagation(); /* клик по чипу — не перелистывание кадра карусели */
+    var wrap=e.currentTarget;
+    while(wrap&&!(wrap.classList&&wrap.classList.contains('ph-wrap')))wrap=wrap.parentElement;
+    if(wrap)open(wrap);
+  });
+}
+initLightbox();
+/* картинка, не влезающая по высоте в свою область (например, портретная),
+   ужимается по ширине — пропорции сохраняются, уменьшение шрифта этого
+   исправить не может; мерить можно только видимый слайд */
+function fitImages(el){
+  var wraps=el.querySelectorAll('.ph-wrap');
+  if(!wraps.length)return;
+  var pb=parseFloat(getComputedStyle(el).paddingBottom)||0;
+  for(var i=0;i<wraps.length;i++){
+    var w=wraps[i];
+    w.style.width='';w.style.marginLeft='';w.style.marginRight='';
+    var guard=0;
+    var mb=parseFloat(getComputedStyle(w.parentElement).marginBottom)||0; /* нижний margin фигуры входит в scrollHeight контейнера */
+    while(guard<24){
+      var er=el.getBoundingClientRect(),k=er.height/el.offsetHeight||1,
+          limit=er.bottom-pb*k,
+          cardB=w.parentElement.getBoundingClientRect().bottom+mb*k,
+          over=(cardB-limit)/k;
+      if(over<=1)break;
+      var h=w.getBoundingClientRect().height/k;
+      if(h<=120)break;
+      var t=Math.max(120,h-over);
+      w.style.width=(w.offsetWidth*t/h)+'px';
+      w.style.marginLeft='auto';w.style.marginRight='auto';
+      guard++;
+    }
+  }
+}
+function shrinkAll(){
+  for(var i=0;i<slides.length;i++){
+    var sl=slides[i],was=sl.classList.contains('on');
+    if(!was)sl.classList.add('on');
+    var fits=sl.querySelectorAll('.fit');
+    for(var j=0;j<fits.length;j++){fitImages(fits[j]);shrinkEl(fits[j]);}
+    clampHotspotLabels(sl);
+    if(!was)sl.classList.remove('on');
+  }
+}
+fit();shrinkAll();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(shrinkAll);
+window.addEventListener('load',shrinkAll);
+show((parseInt(location.hash.slice(1),10)||1)-1);
+window.addEventListener('hashchange',function(){show((parseInt(location.hash.slice(1),10)||1)-1);});
+})();
+</script>
+</body>
+</html>
