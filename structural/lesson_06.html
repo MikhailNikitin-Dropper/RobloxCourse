@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 6. NPC и диалоги: рождение персонажей</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="6">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 6. NPC и диалоги: рождение персонажей</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Narrative Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="6-w-1">
+<h3 class="slide-title">Сегодня ты — Narrative Designer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Твой мир прекрасен: закат, огни, туманная даль. Но он… безлюден. Никто не встретит игрока, не расскажет историю, не даст задание.</p>
+<p class="content-item content-paragraph">Narrative Designer (нарративный дизайнер) — сценарист игры: он придумывает персонажей, их характеры и слова. Сегодня в твоём мире появится первый житель — и с ним можно будет поговорить!</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «представьте любимую игру — кто даёт вам задания? кого вы там встречаете?» Дети сами назовут NPC из известных игр. Обещание: к концу урока в мире будет живой персонаж — в наряде, с характером и целым разговором; второго дети сделают дома сами.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="6-r-1">
+<h3 class="slide-title">Что мы делали на уроке 5? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Каким свойством мы устроили в мире вечер?</p><ol class="content-item content-quiz-options"><li>Brightness у Lighting</li><li data-correct="true">ClockTime у Lighting — поставили примерно 18 ✓</li><li>Density у Atmosphere</li></ol>
+<p class="content-item content-question">Факел с Fire горит, но пещера тёмная. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Fire — картинка пламени, а освещает мир PointLight рядом ✓</li><li>Надо увеличить Size у Fire</li><li>Материал факела должен быть Neon</li></ol>
+<p class="content-item content-question">Что говорят игроку тёплые огни лагеря?</p><ol class="content-item content-quiz-options"><li>«Тут можно купить снаряжение»</li><li>«Осторожно, впереди опасность!»</li><li data-correct="true">«Здесь безопасно» — тёплый свет успокаивает и ведёт ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: По 60–70 секунд на вопрос. После третьего — мостик к теме: «свет говорит с игроком без слов, а сегодня мир заговорит по-настоящему — словами персонажей». Спросить, кто сделал ДЗ: подобрал свет пятому предмету.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Персонажи и диалоги без кода <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="6-t-1">
+<h3 class="slide-title">Кто такой NPC? <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>NPC (non-player character — неигровой персонаж) — житель мира, которым не управляет игрок</li><li>NPC дают задания, рассказывают истории, торгуют, охраняют, встречают</li><li>Мир без NPC — декорация; мир с NPC — живая история</li><li>NPC — главный инструмент нарративного дизайнера: он говорит с игроком словами</li></ul>
+<p class="content-item content-image-prompt">[изображение: Сцена из детской игры: персонаж-страж с восклицательным знаком над головой встречает игрока у входа в пещеру с сокровищами, рядом пузырь диалога]</p>
+<aside class="speaker-notes">Заметка ведущего: Спросить: «кто помнит NPC из любимой игры?» — дети назовут торговцев, квестодателей. Подчеркнуть смену роли: раньше мы строили МИР, теперь заселяем его. Термин NPC произносить «эн-пи-си» — так говорят все игроки.</aside>
+</div>
+<div class="slide" id="6-t-2">
+<h3 class="slide-title">Как собрать NPC <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Заготовка для NPC: кнопка Character (персонаж) в тулбаре Studio</li><li>Character предложит манекен: R6 — из 6 частей, R15 — из 15, двигается плавнее</li><li>Фигура «Rig» появляется в Explorer - можно сразу задать базовые цвета через BodyColors</li><li>Обязательно закрепи NPC: Anchored у HumanoidRootPart — иначе упадёт от толчка</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: меню кнопки Character с выбором манекена, рядом в мире стоит вставленная фигура Rig, в Explorer видна её структура с HumanoidRootPart]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую оба путь за минуту: кнопку Character и объект BodyColors внутри созданного персонажа, поиграйтесь с цветами для разных частей. Выбор R6/R15 для нашего урока не важен — NPC стоит на месте.</aside>
+</div>
+<div class="slide" id="6-t-3">
+<h3 class="slide-title">Наряд для персонажа: плагин Tabby <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Plugin (плагин) — инструмент-помощник, который добавляется прямо в Studio</li><li>Tabby (Outfit &amp; Marketplace Importer) — бесплатный плагин-«гардероб» для персонажей</li><li>Установка один раз: страница плагина → Get, затем Toolbox → раздел плагинов → My Plugins → Install</li><li>Умеет одевать манекен целиком: наряды игроков (по нику) и вещи из каталога</li><li>Выделяешь модель → заходим в магазин → находим аксессуар — и аксессуар уже на персонаже, без кода</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открытое окно плагина Tabby с результатами поиска нарядов, рядом манекен Rig до и после — во втором случае одетый в костюм стража]</p>
+<aside class="speaker-notes">Заметка ведущего: Первый плагин курса — объяснить само понятие: плагин расширяет Studio, как аксессуар — персонажа. Tabby установить в этот момент урока и попросить всех учеников нажать Allow в двух запросах разрешений (Script Injection — для анимаций и гира, сетевой доступ Roproxy — для загрузки нарядов). При ошибке HTTP 429 — просто подождать минуту, это лимиты Roblox. Покажите на любом аксесуаре, как его вставить в пресонжа. Видео:</aside>
+</div>
+<div class="slide" id="6-t-4">
+<h3 class="slide-title">Dialog: разговор без единой строчки кода <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Dialog (диалог) — встроенный объект Roblox: вставь в деталь NPC, обычно в голову (Head)</li><li>Над головой появится пузырь — клик по нему начинает разговор</li><li>InitialPrompt — первая фраза NPC при начале разговора</li><li>GoodbyeDialog — фраза от игрока, чтобы попрощтся и закончить диалог</li><li>TriggerDistance — с какого расстояния виден пузырь (в студах); ConversationDistance — отошёл дальше — разговор оборвался</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: NPC с пузырём диалога над головой, в Explorer выделен Dialog внутри Head, в Properties видны InitialPrompt и TriggerDistance]</p>
+<aside class="speaker-notes">Заметка ведущего: Ключевой объект урока. Показать вживую: вставить Dialog в голову манекена, вписать InitialPrompt, запустить тест — пузырь работает. Подчеркнуть: ни строчки кода, всё через Properties — «пульт управления» из урока 5 работает и здесь.</aside>
+</div>
+<div class="slide" id="6-t-5">
+<h3 class="slide-title">Purpose и Tone: иконка и настроение разговора <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Purpose (назначение) — иконка над NPC: Quest — «!», Help — «?», Shop — «$»</li><li>Игрок издалека понимает: «!» — тут задание, «?» — тут подсказка, «$» — тут магазин</li><li>Tone (тон) — цвет полосы диалога: Neutral — синяя, Friendly — зелёная, Enemy — красная</li><li>Это тот же язык знаков, что и свет из урока 5: игрок читает мир без слов</li></ul>
+<p class="content-item content-image-prompt">[изображение: Три NPC рядом с разными иконками над головами: восклицательный знак, вопросительный знак и знак доллара — подписи Quest, Help, Shop]</p>
+<aside class="speaker-notes">Заметка ведущего: Связка с уроком 5: свет и иконки — «немой» язык игры. Спросить: «какая иконка будет у Хранителя, который даёт задание?» — «!», Quest. «А у персонажа-помощника с подсказками?» — «?», Help. Tone для дружелюбных персонажей — Friendly (зелёная полоса).</aside>
+</div>
+<div class="slide" id="6-t-6">
+<h3 class="slide-title">DialogChoice: игрок выбирает, что сказать <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>DialogChoice (вариант ответа) вставляется ВНУТРЬ Dialog</li><li>UserDialog — что говорит игрок; ResponseDialog — что отвечает NPC</li><li>DialogChoice можно вкладывать друг в друга — получается дерево разговора с ветками</li><li>GoodbyeChoiceActive добавляет вариант вежливо попрощаться и выйти</li><li>Разговор = дерево: вопрос игрока → ответ NPC → новые вопросы</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема дерева диалога: от первой фразы Хранителя две ветки — «Что мне делать?» с ответом-заданием и «Кто ты?» с историей, из первой ветки растёт уточнение «А где искать?»]</p>
+<aside class="speaker-notes">Заметка ведущего: Нарисовать дерево на доске или показать схему: корень — InitialPrompt, ветки — DialogChoice. Показать вживую в Explorer: DialogChoice внутри Dialog, вложенный DialogChoice внутри DialogChoice. Метафора: разговор — это лабиринт, который проектирует нарративный дизайнер.</aside>
+</div>
+<div class="slide" id="6-t-7">
+<h3 class="slide-title">Реплики с характером: слова двигают квест <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>У персонажа есть три вещи: имя, желание и манера речи</li><li>Плохо: «Привет». Хорошо: «Тсс! Слышишь, как звенят сокровища? Я стерегу их уже сто лет…»</li><li>Каждая реплика либо раскрывает характер, либо помогает игроку — лучше и то и другое</li><li>Схема разговора квестодателя: приветствие → задание → подсказки на вопросы → благодарность</li><li>Задание отвечает на три вопроса: ЧТО сделать, ГДЕ и ЗАЧЕМ</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сердце роли Narrative Designer — потратить время здесь. Упражнение на 90 секунд: показать скучную реплику «Найди сокровища» и попросить класс прокачать её характером (старый страж? весёлый пират? таинственный призрак?). Схема «приветствие → задание → реакция → благодарность» ляжет на дерево DialogChoice в практике один в один.</aside>
+</div>
+<div class="slide" id="6-t-8">
+<h3 class="slide-title">Типичные ошибки новичка <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Dialog вставлен не в деталь NPC, а рядом в Workspace — пузырь не появляется</li><li>NPC не закреплён — игрок толкнул, и рассказчик уплыл или упал</li><li>TriggerDistance слишком маленький — пузырь не нажать, пока не упрёшься в NPC</li><li>Одна фраза без DialogChoice — разговор закончился, не начавшись</li><li>Реплики без характера: «Привет. Найди 5 предметов.» — скучно, игрок кликает мимо</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Каждую ошибку связать с уже пройденным: пузырь — Dialog живёт В детали; падение — Anchored; расстояния — TriggerDistance/ConversationDistance в студах. Пятую ошибку обыграть голосом: прочитать скучную реплику монотонно, потом живую — с интонацией.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="6-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Куда вставить Dialog, чтобы над NPC появился пузырь разговора?</p><ol class="content-item content-quiz-options"><li data-correct="true">В деталь NPC — обычно в голову (Head) ✓</li><li>В SpawnLocation</li><li>В сервис Lighting</li></ol>
+<p class="content-item content-question">Где написать самую первую фразу NPC?</p><ol class="content-item content-quiz-options"><li>В свойстве Name</li><li data-correct="true">В свойстве InitialPrompt у Dialog ✓</li><li>В свойстве UserDialog у DialogChoice</li></ol>
+<p class="content-item content-question">Как дать игроку выбор, что ответить персонажу?</p><ol class="content-item content-quiz-options"><li>Вставить в голову второй Dialog</li><li>Никак — варианты ответов делаются только кодом</li><li data-correct="true">Вставить внутрь Dialog объекты DialogChoice ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: в голову (деталь NPC); InitialPrompt; DialogChoice. После третьего вопроса — мини-мостик к практике: «сейчас соберём настоящий разговор с Хранителем подземелья». Если время осталось — спросить, чем UserDialog отличается от ResponseDialog.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="6-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Разомнись! Через 5 минут в твоём мире родится Хранитель подземелья — с нарядом, голосом и характером.</p>
+<aside class="speaker-notes">Заметка ведущего: Таймер на экран. После перерыва у всех открыт мир охоты за сокровищами (уроки 4–5). Пока дети отдыхают, можно проверить, у всех ли виден Toolbox.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Практика: Хранитель подземелья <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="6-p-1">
+<h3 class="slide-title">Шаг 1: рождение Хранителя <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Вставь персонажа: кнопка Character → манекен Rig</li><li>Поставь его у входа в опасную зону — там, где прячется самое ценное сокровище</li><li>Переименуй в «Хранитель» и разверни лицом к тропе игрока</li><li>Закрепи: выдели HumanoidRootPart → Properties → Anchored — вкл</li><li>Придумай, КТО он: имя, желание, манера речи — облик подберём на следующем шаге</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Кто выбрал Toolbox — напомнить фильтры и здравый смысл (модель без лишних скриптов, лучше простые персонажи). Проверка по классу: Хранитель стоит и не падает при толчке (Anchored). Характер пусть сформулируют одной фразой — он понадобится и для наряда, и для реплик.</aside>
+</div>
+<div class="slide" id="6-p-2">
+<h3 class="slide-title">Шаг 2: наряд из гардероба Tabby <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой Tabby в тулбаре Studio (плагин уже установлен)</li><li>Найди наряд под характер Хранителя: выбери вещи из каталога</li><li>Выдели модель Хранителя → нажми на предмет — он наденется на персонажа</li><li>Доделай образ: аксессуары из каталога добавляются тем же способом</li><li>Проверь: наряд сел на манекен, Хранитель по-прежнему закреплён</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот практики: окно плагина Tabby с выбранным нарядом и манекен Хранителя в Workspace, на которого наряд уже надет]</p>
+<aside class="speaker-notes">Заметка ведущего: Таймбокс 4 минуты — легко залипнуть в примерке! Правило: образ должен РАССКАЗЫВАТЬ характер (древний страж — плащ и шлем, весёлый пират — треуголка). Если у кого-то Tabby просит разрешения — Allow в обоих запросах. Ошибка HTTP 429 — подождать минуту, это лимиты Roblox.</aside>
+</div>
+<div class="slide" id="6-p-3">
+<h3 class="slide-title">Шаг 3: Хранитель обретает голос <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Голова Хранителя (Head) → «+» → Dialog</li><li>InitialPrompt — приветствие С ХАРАКТЕРОМ: кто он и что стережёт</li><li>Purpose = Quest — над головой загорится «!»</li><li>Tone = Friendly — зелёная полоса дружелюбия</li><li>TriggerDistance ≈ 12–15 студов, ConversationDistance ≈ 20–25</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer внутри Head Хранителя лежит Dialog, в Properties заполнены InitialPrompt, Purpose = Quest, Tone = Friendly, TriggerDistance]</p>
+<aside class="speaker-notes">Заметка ведущего: Первую фразу писать по формуле «характер + зацепка»: «Стой, кладоискатель! Сто лет я жду того, кто соберёт все сокровища…». Запустить быстрый тест: пузырь с «!» виден, клик открывает фразу. У кого не появился пузырь — Dialog точно внутри Head? (ошибка №1 из теории).</aside>
+</div>
+<div class="slide" id="6-p-4">
+<h3 class="slide-title">Шаг 4: дерево разговора <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Dialog → «+» → DialogChoice: UserDialog «Что мне делать?», ResponseDialog — задание: что найти, сколько и зачем</li><li>Внутрь этого DialogChoice вложи ещё один: «А где искать?» → подсказка про огни-маяки</li><li>Второй DialogChoice в Dialog: «Кто ты?» → история Хранителя в его манере речи</li><li>GoodbyeChoiceActive — вкл, GoodbyeDialog — прощание с характером</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот: в Explorer дерево Dialog с двумя DialogChoice и вложенным уточнением, рядом в тесте открытый разговор с вариантами ответов игрока]</p>
+<aside class="speaker-notes">Заметка ведущего: Схема из теории один в один: приветствие → задание → подсказка → прощание. Следить, чтобы вложенный DialogChoice лежал именно ВНУТРИ первого (дерево, а не список). Задание Хранителя должно совпадать с настоящей целью охоты из урока 4 — сколько сокровищ на самом деле в мире.</aside>
+</div>
+<div class="slide" id="6-p-5">
+<h3 class="slide-title">Шаг 5: прогулка-разговор и публикация <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test (F5) → подойди к Хранителю: пузырь с «!» виден издалека?</li><li>Прощёлкай ВСЕ ветки разговора: каждая реплика на месте? опечаток нет?</li><li>Чек-лист: задание совпадает с настоящей целью охоты, наряд рассказывает характер, реплики живые</li><li>Опубликуй обновление: Alt+P. В твоём мире появился первый житель!</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Плейтест снова новый: теперь проверяем СЛОВА. Обмен мирами: сосед проходит твой квест и пересказывает задание своими словами — если пересказал верно, реплики работают. Типовая правка: TriggerDistance маловат — пузырь появляется слишком поздно. В конце — мостик к ДЗ: у выхода из мира пока пусто, там поселится Странник.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="6-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Над Хранителем не появился пузырь разговора. Что проверить первым делом?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у HumanoidRootPart</li><li data-correct="true">Лежит ли Dialog внутри детали NPC — обычно в Head ✓</li><li>Стоит ли Tone = Friendly</li></ol>
+<p class="content-item content-question">Какой характер получился у твоего Хранителя — и как его рассказывают наряд и реплики? Прочитай самую живую.</p>
+<p class="content-item content-question">Зачем мы поставили Хранителю Purpose = Quest?</p><ol class="content-item content-quiz-options"><li data-correct="true">Иконка «!» издалека обещает игроку задание — как огонь-маяк, только знаком ✓</li><li>Quest делает реплики длиннее</li><li>Без Quest разговор не запустится</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Dialog внутри Head; открытый вопрос — 2-3 ребят читают реплики вслух и показывают наряд (главная проверка урока: облик и голос рассказывают ОДИН характер); иконка = обещание. Открытый вопрос важнее квизов — это рефлексия роли Narrative Designer.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание и домашнее задание <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="6-c-1">
+<h3 class="slide-title">Твой мир заговорил! <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Сегодня ты поработал Narrative Designer: в мире появился Хранитель подземелья — в наряде из гардероба Tabby, с характером, заданием и целым деревом разговора. И снова без единой строчки кода.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: посели у выхода ВТОРОГО персонажа — Странника: другой характер и наряд, Purpose = Help («?»), реплики-благодарности и ветка-подсказка для тех, кто нашёл не всё</li><li>Понаблюдай в любимой игре: как NPC дают задания? Какая реплика запомнилась?</li><li>Следующий урок — «Квестовый журнал и интерфейс»: цель задания будет всегда на экране игрока!</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самый яркий характер, самое точное попадание наряда в образ. ДЗ — полный цикл урока самостоятельно: собрать, одеть (Tabby уже установлен), озвучить через Dialog/DialogChoice; контраст со «старшим братом» Хранителем обязателен — их нельзя спутать. Анонс урока 7: «Хранитель рассказал задание словами — но игрок может забыть. В следующий раз сделаем журнал заданий, чтобы цель всегда была на экране». Напомнить Alt+P тем, кто не успел опубликовать.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Dialog.md">Dialog — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/DialogChoice.md">DialogChoice — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/enums/DialogPurpose.md">DialogPurpose — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/enums/DialogTone.md">DialogTone — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/rig-builder.md">Rig Builder — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/resources/npc-kit.md">NPC Kit — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/store/asset/14025724075/Tabby-Outfit-Marketplace-Importer-Loader">Tabby — Outfit &amp; Marketplace Importer &amp; Loader — Creator Store</a></li><li><a href="https://devforum.roblox.com/t/tabby-outfit-marketplace-importer-guide/2462911">Tabby — Outfit &amp; Marketplace Importer Guide — DevForum</a></li><li><a href="https://www.idtech.com/blog/how-to-make-an-npc-dialog-system-in-roblox">How to Make an NPC Dialog System in Roblox — iD Tech</a></li><li><a href="https://www.touchtapplay.com/how-to-make-dialogue-in-roblox-studio/">How to Make Dialogue in Roblox Studio — Touch, Tap, Play</a></li><li><a href="https://www.youtube.com/watch?v=FU3KaAbyAPM">How to Make Dialogs in Roblox Studio! (2025) — Syruproot</a></li><li><a href="https://www.youtube.com/watch?v=kfWAYeDKoys">How to Make Dialog Boxes and Talk to NPCs in Roblox — 10.2024</a></li></ul></section>
+</article>
+</body>
+</html>
