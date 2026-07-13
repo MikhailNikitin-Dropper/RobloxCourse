@@ -122,18 +122,18 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Практика: Хранитель подземелья <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="6-p-1">
 <h3 class="slide-title">Шаг 1: рождение Хранителя <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Вставь персонажа: кнопка Character → манекен Rig</li><li>Поставь его у входа в опасную зону — там, где прячется самое ценное сокровище</li><li>Переименуй в «Хранитель» и разверни лицом к тропе игрока</li><li>Закрепи: выдели HumanoidRootPart → Properties → Anchored — вкл</li><li>Придумай, КТО он: имя, желание, манера речи — облик подберём на следующем шаге</li></ol>
+<ol class="content-item content-steps"><li>Вставь персонажа (Character → манекен Rig) у входа в опасную зону</li><li>Переименуй в «Хранитель» и разверни лицом к тропе игрока</li><li>Закрепи: HumanoidRootPart → Properties → Anchored — вкл</li><li>Придумай, КТО он: имя, желание, манера речи</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Кто выбрал Toolbox — напомнить фильтры и здравый смысл (модель без лишних скриптов, лучше простые персонажи). Проверка по классу: Хранитель стоит и не падает при толчке (Anchored). Характер пусть сформулируют одной фразой — он понадобится и для наряда, и для реплик.</aside>
 </div>
 <div class="slide" id="6-p-2">
 <h3 class="slide-title">Шаг 2: наряд из гардероба Tabby <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой Tabby в тулбаре Studio — мы установили его на теории</li><li>Найди наряд под характер Хранителя: выбери вещи из каталога</li><li>Выдели модель Хранителя → нажми на предмет — он наденется на персонажа</li><li>Доделай образ: аксессуары из каталога добавляются тем же способом</li><li>Проверь: наряд сел на манекен, Хранитель по-прежнему закреплён</li></ol>
+<ol class="content-item content-steps"><li>Открой Tabby в тулбаре Studio — установили его на теории</li><li>Найди наряд под характер Хранителя в каталоге</li><li>Выдели модель Хранителя → клик по вещи надевает её; так же — аксессуары</li><li>Проверь: наряд сел, Хранитель по-прежнему закреплён</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот практики: окно плагина Tabby с выбранным нарядом и манекен Хранителя в Workspace, на которого наряд уже надет]</p>
 <aside class="speaker-notes">Заметка ведущего: Таймбокс 4 минуты — легко залипнуть в примерке! Правило: образ должен РАССКАЗЫВАТЬ характер (древний страж — плащ и шлем, весёлый пират — треуголка). Кто пропустил установку на теории: страница плагина → Get → Toolbox → раздел плагинов → My Plugins → Tabby → Install, в двух запросах разрешений — Allow. Ошибка HTTP 429 — подождать минуту, это лимиты Roblox.</aside>
 </div>
 <div class="slide" id="6-p-3">
 <h3 class="slide-title">Шаг 3: Хранитель обретает голос <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Голова Хранителя (Head) → «+» → Dialog</li><li>InitialPrompt — приветствие С ХАРАКТЕРОМ: кто он и что стережёт</li><li>Purpose = Quest — над головой загорится «!»</li><li>Tone = Friendly — зелёная полоса дружелюбия</li><li>TriggerDistance ≈ 12–15 студов, ConversationDistance ≈ 20–25</li></ol>
+<ol class="content-item content-steps"><li>Голова Хранителя (Head) → «+» → Dialog</li><li>InitialPrompt — приветствие С ХАРАКТЕРОМ: кто он и что стережёт</li><li>Purpose = Quest («!» над головой), Tone = Friendly</li><li>TriggerDistance ≈ 12–15 студов, ConversationDistance ≈ 20–25</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer внутри Head Хранителя лежит Dialog, в Properties заполнены InitialPrompt, Purpose = Quest, Tone = Friendly, TriggerDistance]</p>
 <aside class="speaker-notes">Заметка ведущего: Первую фразу писать по формуле «характер + зацепка»: «Стой, кладоискатель! Сто лет я жду того, кто соберёт все сокровища…». Запустить быстрый тест: пузырь с «!» виден, клик открывает фразу. У кого не появился пузырь — Dialog точно внутри Head? (ошибка №1 из теории).</aside>
 </div>
