@@ -70,16 +70,18 @@ html,body{height:100%;background:#101016;overflow:hidden}
 .div-bubble{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px}
 .div-bubble-text{font:800 38px/1.25 var(--ek-font-head)}
 
-/* приветствие (2-й слайд): плашка роли + акцентные карточки-рамки */
-.welcome-role{display:flex;align-items:center;gap:20px;margin-top:26px}
-.welcome-role-badge{font-size:15px;padding:10px 16px}
-.welcome-role-name{display:inline-block;font:800 26px/1 var(--ek-font-head);color:var(--ek-violet-deep);background:var(--ek-violet-bg);border:2px solid var(--ek-violet-soft);border-radius:14px;padding:12px 22px}
-.welcome-grid{display:grid;gap:22px}
-.welcome-card{border-radius:22px;padding:.95em 1.15em}
+/* приветствие (2-й слайд) и прощание: роль — бейдж в заголовке,
+   абзацы — акцентные карточки; отступы подогнаны под текст */
+.role-chip{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 .78em/1.1 var(--ek-font-head);padding:.2em .45em;border-radius:.28em;transform:rotate(-2deg);box-shadow:0 6px 16px rgba(23,23,28,.08);vertical-align:middle}
+.welcome-role{display:flex;align-items:center;gap:18px;margin-top:24px}
+.welcome-role-badge{font-size:15px;padding:9px 14px}
+.welcome-role-name{display:inline-block;font:800 24px/1 var(--ek-font-head);color:var(--ek-violet-deep);background:var(--ek-violet-bg);border:2px solid var(--ek-violet-soft);border-radius:12px;padding:9px 18px}
+.welcome-grid{display:grid;gap:16px;align-content:start;justify-items:start}
+.welcome-card{border-radius:18px;padding:.52em .8em}
 .welcome-card--violet{background:var(--ek-violet-bg);border:3px solid var(--ek-violet-soft)}
 .welcome-card--green{background:var(--ek-green-pale);border:3px solid var(--ek-green-soft)}
 .welcome-card--dash{background:#fff;border:3px dashed var(--ek-violet-soft)}
-.welcome-card-text{font-size:1.04em}
+.welcome-card-text{font-size:1em}
 
 /* вопросы */
 .qa-wrap{position:absolute;left:100px;top:110px;width:760px;bottom:70px;display:flex;flex-direction:column}
@@ -227,10 +229,8 @@ html,body{height:100%;background:#101016;overflow:hidden}
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
 </div>
 <div class="content-wrap">
-  <h2 class="sl-h2">Привет! Сегодня ты — Level Designer</h2>
-  <div class="welcome-role"><span class="ek-badge welcome-role-badge">Твоя роль сегодня</span>
-  <span class="welcome-role-name">Level Designer</span></div>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Начинаем курс, в котором каждый урок ты примеряешь новую профессию из мира игр. За 8 занятий мы вместе соберём твой собственный квест в Roblox.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Сегодня твоя роль — <b class="def">Level Designer (дизайнер уровней)</b>: архитектор игрового пространства.</p></div></div>
+  <h2 class="sl-h2">Привет! Сегодня ты — <span class="role-chip">Level Designer</span></h2>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Начинаем курс, в котором каждый урок ты примеряешь новую профессию из мира игр. За 8 занятий мы вместе соберём твой собственный квест в Roblox.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Дизайнер уровней — архитектор игрового пространства: он продумывает маршруты, комнаты и масштаб мира.</p></div></div>
 </div>
 <div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-orbit">
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
@@ -275,7 +275,7 @@ html,body{height:100%;background:#101016;overflow:hidden}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Blockout (блокаут): черновик мира из простых форм</h2>
-  <div class="one-col fit"><p class="sl-body para">Профессиональные level-дизайнеры не начинают с украшения. <b class="def">Blockout (блокаут)</b> — это черновой уровень из простых серых форм; в студиях его также называют grey-boxing.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Проверяем маршрут игрока и масштаб комнат</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Серые блоки переставить дёшево, а готовый декор переделывать — дорого</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Наш блокаут станет каркасом квест-лобби на уроке 8</span></div></div></div>
+  <div class="one-col fit"><p class="sl-body para">Профессиональные level-дизайнеры не начинают с украшения. <b class="def">Blockout (блокаут)</b> — это заготовка для уровня из простых серых форм; в студиях его также называют grey-boxing.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Проверяем маршрут игрока и масштаб комнат</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Серые блоки переставить дёшево, а готовый декор переделывать — дорого</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Наш блокаут станет каркасом квест-лобби на уроке 8</span></div></div></div>
 </div>
 <div class="sl-pagenum">8</div></section><section class="slide slide--white"><div class="sl-orbit">
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
@@ -397,7 +397,7 @@ html,body{height:100%;background:#101016;overflow:hidden}
   <div class="practice-card-in fit">
     <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
     <h2 class="sl-h2 practice-head">Задача практики</h2>
-    <p class="sl-body para">Построим черновой план квест-лобби: 2–3 условные комнаты, соединённые проходами. Эта заготовка станет основой твоего финального проекта на уроке 8 — строим на будущее.</p>
+    <p class="sl-body para">Построим план квест-лобби: 2–3 условные комнаты, соединённые проходами. Эта заготовка станет основой твоего финального проекта на уроке 8 — строим на будущее.</p>
   </div>
 </div>
 <div class="sl-pagenum">16</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
@@ -485,7 +485,7 @@ html,body{height:100%;background:#101016;overflow:hidden}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">До следующего урока</h2>
-  <div class="one-col fit"><p class="sl-body para">Отличная работа! Сегодня ты выступил в роли Level Designer и построил черновой каркас своего мира — фундамент будущего квеста.</p><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Домашнее задание: окончательно выбрать тему своего квеста — подземелье, космос, лес или замок</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Следующий урок: роль Environment Artist — оживляем локацию рельефом и природой (Terrain)</span></div></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Отличная работа! Сегодня ты выступил в роли Level Designer и построил заготовку своего мира — основу будущего квеста.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Домашнее задание: окончательно выбрать тему своего квеста — подземелье, космос, лес или замок</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Следующий урок: роль Environment Artist — оживляем локацию рельефом и природой (Terrain)</p></div></div>
 </div>
 <div class="sl-pagenum">23</div></section>
 </div>
