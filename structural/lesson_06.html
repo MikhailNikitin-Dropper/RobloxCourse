@@ -56,7 +56,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="6-t-1">
 <h3 class="slide-title">Кто такой NPC? <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>NPC (non-player character — неигровой персонаж)</b> — житель мира, которым управляет не игрок, а игра</li><li>NPC дают задания, рассказывают истории, торгуют, охраняют, встречают</li><li>Мир без NPC — декорация; мир с NPC — живая история</li><li>NPC — главный инструмент нарративного дизайнера: он говорит с игроком словами</li></ul>
-<p class="content-item content-image-prompt">[изображение: Сцена из детской игры: персонаж-страж с восклицательным знаком над головой встречает игрока у входа в пещеру с сокровищами, рядом пузырь диалога]</p>
+<p class="content-item content-image-prompt">[изображение: Сцена из детской игры: персонаж-страж с восклицательным знаком над головой встречает игрока у входа в пещеру с сокровищами, рядом облако диалога]</p>
 <aside class="speaker-notes">Заметка ведущего: Спросить: «кто помнит NPC из любимой игры?» — дети назовут торговцев, квестодателей. Подчеркнуть смену роли: раньше мы строили мир, теперь заселяем его.</aside>
 </div>
 <div class="slide" id="6-t-2">
@@ -73,9 +73,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-t-4">
 <h3 class="slide-title">Dialog: разговор через Properties <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Dialog (диалог)</b> — встроенный объект Roblox: живёт внутри детали NPC, обычно в голове (Head)</li><li>Над головой появится пузырь — клик по нему начинает разговор</li><li><b>InitialPrompt</b> — первая фраза NPC при начале разговора</li><li><b>GoodbyeDialog</b> — фраза от игрока, чтобы попрощаться и закончить диалог</li><li><b>TriggerDistance</b> — с какого расстояния виден пузырь (в студах); <b>ConversationDistance</b> — отошёл дальше, разговор оборвался</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: NPC с пузырём диалога над головой, в Explorer выделен Dialog внутри Head, в Properties видны InitialPrompt и TriggerDistance]</p>
-<aside class="speaker-notes">Заметка ведущего: Ключевой объект урока. Показать вживую: вставить Dialog в голову манекена, вписать InitialPrompt, запустить тест — пузырь работает. Подчеркнуть: всё настраивается через Properties — «панель управления» из урока 5 работает и здесь.</aside>
+<ul class="content-item content-bullets"><li><b>Dialog (диалог)</b> — встроенный объект Roblox: живёт внутри детали NPC, обычно в голове (Head)</li><li>Над головой появится облако — клик по нему начинает разговор</li><li><b>InitialPrompt</b> — первая фраза NPC при начале разговора</li><li><b>GoodbyeDialog</b> — фраза от игрока, чтобы попрощаться и закончить диалог</li><li><b>TriggerDistance</b> — с какого расстояния видно облако (в студах); <b>ConversationDistance</b> — отошёл дальше, разговор оборвался</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: NPC с облаком диалога над головой, в Explorer выделен Dialog внутри Head, в Properties видны InitialPrompt и TriggerDistance]</p>
+<aside class="speaker-notes">Заметка ведущего: Ключевой объект урока. Показать вживую: вставить Dialog в голову манекена, вписать InitialPrompt, запустить тест — облако работает. Подчеркнуть: всё настраивается через Properties — «панель управления» из урока 5 работает и здесь.</aside>
 </div>
 <div class="slide" id="6-t-5">
 <h3 class="slide-title">Purpose и Tone: иконка и настроение разговора <span class="slide-duration">(2 мин)</span></h3>
@@ -96,15 +96,15 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-t-8">
 <h3 class="slide-title">Частые ошибки с NPC и диалогами <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Dialog вставлен не в деталь NPC, а рядом в Workspace — пузырь не появляется</li><li>NPC не закреплён — игрок толкнул, и рассказчик уплыл или упал</li><li>TriggerDistance слишком маленький — пузырь не нажать, пока не упрёшься в NPC</li><li>Одна фраза без DialogChoice — разговор закончился, не начавшись</li><li>Реплики без характера: «Привет. Найди 5 предметов.» — скучно, игрок кликает мимо</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Каждую ошибку связать с уже пройденным: пузырь — Dialog живёт в детали; падение — Anchored; расстояния — TriggerDistance/ConversationDistance в студах. Пятую ошибку обыграть голосом: прочитать скучную реплику монотонно, потом живую — с интонацией.</aside>
+<ul class="content-item content-bullets"><li>Dialog вставлен не в деталь NPC, а рядом в Workspace — облако не появляется</li><li>NPC не закреплён — игрок толкнул, и рассказчик уплыл или упал</li><li>TriggerDistance слишком маленький — облако не нажать, пока не упрёшься в NPC</li><li>Одна фраза без DialogChoice — разговор закончился, не начавшись</li><li>Реплики без характера: «Привет. Найди 5 предметов.» — скучно, игрок кликает мимо</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Каждую ошибку связать с уже пройденным: облако — Dialog живёт в детали; падение — Anchored; расстояния — TriggerDistance/ConversationDistance в студах. Пятую ошибку обыграть голосом: прочитать скучную реплику монотонно, потом живую — с интонацией.</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="6-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда вставить Dialog, чтобы над NPC появился пузырь разговора?</p><ol class="content-item content-quiz-options"><li data-correct="true">В деталь NPC — обычно в голову (Head) ✓</li><li>В SpawnLocation</li><li>В сервис Lighting</li></ol>
+<p class="content-item content-question">Куда вставить Dialog, чтобы над NPC появилось облако разговора?</p><ol class="content-item content-quiz-options"><li data-correct="true">В деталь NPC — обычно в голову (Head) ✓</li><li>В SpawnLocation</li><li>В сервис Lighting</li></ol>
 <p class="content-item content-question">Где написать самую первую фразу NPC?</p><ol class="content-item content-quiz-options"><li>В свойстве Name</li><li data-correct="true">В свойстве InitialPrompt у Dialog ✓</li><li>В свойстве UserDialog у DialogChoice</li></ol>
 <p class="content-item content-question">Как дать игроку выбор, что ответить персонажу?</p><ol class="content-item content-quiz-options"><li>Вставить в голову второй Dialog</li><li>Никак — варианты ответов делаются только кодом</li><li data-correct="true">Вставить внутрь Dialog объекты DialogChoice ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: в голову (деталь NPC); InitialPrompt; DialogChoice. После третьего вопроса — мини-мостик к практике: «сейчас соберём настоящий разговор с Хранителем подземелья». Если время осталось — спросить, чем UserDialog отличается от ResponseDialog.</aside>
@@ -135,7 +135,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Шаг 3: Хранитель обретает голос <span class="slide-duration">(4 мин)</span></h3>
 <ol class="content-item content-steps"><li>Голова Хранителя (Head) → «+» → Dialog</li><li>InitialPrompt — приветствие с характером: кто он и что стережёт</li><li>Purpose = Quest («!» над головой), Tone = Friendly</li><li>TriggerDistance ≈ 12–15 студов, ConversationDistance ≈ 20–25</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer внутри Head Хранителя лежит Dialog, в Properties заполнены InitialPrompt, Purpose = Quest, Tone = Friendly, TriggerDistance]</p>
-<aside class="speaker-notes">Заметка ведущего: Первую фразу писать по формуле «характер + зацепка»: «Стой, кладоискатель! Сто лет я жду того, кто соберёт все сокровища…». Запустить быстрый тест: пузырь с «!» виден, клик открывает фразу. У кого не появился пузырь — Dialog точно внутри Head? (ошибка №1 из теории).</aside>
+<aside class="speaker-notes">Заметка ведущего: Первую фразу писать по формуле «характер + зацепка»: «Стой, кладоискатель! Сто лет я жду того, кто соберёт все сокровища…». Запустить быстрый тест: облако с «!» видно, клик открывает фразу. У кого не появилось облако — Dialog точно внутри Head? (ошибка №1 из теории).</aside>
 </div>
 <div class="slide" id="6-p-4">
 <h3 class="slide-title">Шаг 4: дерево разговора <span class="slide-duration">(4 мин)</span></h3>
@@ -145,15 +145,15 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-p-5">
 <h3 class="slide-title">Шаг 5: прогулка-разговор и публикация <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → подойди к Хранителю: пузырь с «!» виден издалека?</li><li>Прощёлкай все ветки разговора: каждая реплика на месте? опечаток нет?</li><li>Чек-лист: задание совпадает с настоящей целью охоты, наряд рассказывает характер, реплики живые</li><li>Опубликуй обновление: Alt+P или через меню. В твоём мире появился первый житель!</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Плейтест снова новый: теперь проверяем слова. Обмен мирами: сосед проходит твой квест и пересказывает задание своими словами — если пересказал верно, реплики работают. Типовая правка: TriggerDistance маловат — пузырь появляется слишком поздно. В конце — мостик к ДЗ: у выхода из мира пока пусто, там поселится Странник.</aside>
+<ol class="content-item content-steps"><li>Test → подойди к Хранителю: облако с «!» видно издалека?</li><li>Прощёлкай все ветки разговора: каждая реплика на месте? опечаток нет?</li><li>Чек-лист: задание совпадает с настоящей целью охоты, наряд рассказывает характер, реплики живые</li><li>Опубликуй обновление: Alt+P или через меню. В твоём мире появился первый житель!</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Плейтест снова новый: теперь проверяем слова. Обмен мирами: сосед проходит твой квест и пересказывает задание своими словами — если пересказал верно, реплики работают. Типовая правка: TriggerDistance маловат — облако появляется слишком поздно. В конце — мостик к ДЗ: у выхода из мира пока пусто, там поселится Странник.</aside>
 </div>
 </section>
 <section class="block block-qa_practice">
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="6-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Над Хранителем не появился пузырь разговора. Что проверить первым делом?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у HumanoidRootPart</li><li data-correct="true">Лежит ли Dialog внутри детали NPC — обычно в Head ✓</li><li>Стоит ли Tone = Friendly</li></ol>
+<p class="content-item content-question">Над Хранителем не появилось облако разговора. Что проверить первым делом?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у HumanoidRootPart</li><li data-correct="true">Лежит ли Dialog внутри детали NPC — обычно в Head ✓</li><li>Стоит ли Tone = Friendly</li></ol>
 <p class="content-item content-question">Какой характер получился у твоего Хранителя — и как его рассказывают наряд и реплики? Прочитай самую живую.</p>
 <p class="content-item content-question">Зачем мы поставили Хранителю Purpose = Quest?</p><ol class="content-item content-quiz-options"><li data-correct="true">Иконка «!» издалека обещает игроку задание — как огонь-маяк, только знаком ✓</li><li>Quest делает реплики длиннее</li><li>Без Quest разговор не запустится</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Dialog внутри Head; открытый вопрос — 2–3 ребят читают реплики вслух и показывают наряд (главная проверка урока: облик и голос рассказывают один характер); иконка = обещание. Открытый вопрос важнее квизов — это рефлексия роли Narrative Designer.</aside>
