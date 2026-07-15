@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 8. ПРОЕКТ 2 (финал): квест-лобби</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="8">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 8. ПРОЕКТ 2 (финал): квест-лобби</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер проекта (Game Director)</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="8-w-1">
+<h3 class="slide-title">Сегодня ты — Продюсер проекта (Game Director) <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">За семь уроков в твоём мире появился рельеф, пещера с сокровищами, свет и туман, живой Хранитель и журнал квеста. Сегодня всё это становится одной игрой.</p>
+<p class="content-item content-paragraph"><b>Продюсер проекта (Game Director)</b> не строит новые детали — он собирает готовые механики в цельную историю, даёт игре имя и учится рассказывать о ней за пару минут.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «сегодня мы не добавляем ничего нового технически — мы наконец собираем ВСЁ в одну настоящую игру». Обещание: к концу урока у игры будет имя, страница и цепочка заданий от начала до конца.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="8-r-1">
+<h3 class="slide-title">Что мы делали на уроке 7? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Какое имя должно быть у ScreenGui, чтобы стартовый скрипт его нашёл?</p><ol class="content-item content-quiz-options"><li>MainFrame</li><li data-correct="true">PropHunterGui — точное имя, по которому его ищет скрипт ✓</li><li>Любое, главное чтобы лежал в StarterGui</li></ol>
+<p class="content-item content-question">Что делает AutomaticCanvasSize у ScrollingFrame?</p><ol class="content-item content-quiz-options"><li>Красит фон списка в случайный цвет</li><li>Добавляет полосу прокрутки, которой раньше не было</li><li data-correct="true">Сама увеличивает область прокрутки под новые карточки ✓</li></ol>
+<p class="content-item content-question">Откуда карточка предмета в журнале берёт свою уникальную иконку?</p><ol class="content-item content-quiz-options"><li>Дизайнер рисует отдельную карточку под каждый предмет</li><li data-correct="true">Из свойства ColorMapContent объекта Decal на предмете ✓</li><li>Иконка всегда одна и та же для всех предметов</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: PropHunterGui; сама растёт вместе с UIListLayout; через ColorMapContent на Decal. Мостик к теме: «сегодня всё это — не отдельные приёмы, а кирпичики одной готовой игры».</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Собираем квест-лобби <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="8-t-1">
+<h3 class="slide-title">Квест и квестовая цепочка: язык профессии <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Квест (задание)</b> — задача с понятной целью: что сделать и какая награда ждёт</li><li><b>Квестовая цепочка</b> — одно выполненное задание открывает следующее, а то — ещё одно, до самого финала</li><li>У охоты за сокровищами уже есть все части квеста: цель — собрать предметы, правила, награда — окно «Победа!»</li><li>Сегодня мы добавляем к этой цепочке новые звенья и ведём её к настоящему финалу</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Термины — из официального гайда Roblox по квест-дизайну. Спросить: «в любимой игре задания идут вперемешку или одно тянет за собой следующее?» Подвести к идее цепочки.</aside>
+</div>
+<div class="slide" id="8-t-2">
+<h3 class="slide-title">Три типа заданий в твоём квест-лобби <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Найти предмет</b> — уже готово: охота за сокровищами из уроков 4 и 7</li><li><b>Пройти испытание</b> — новый вид: короткий переход через препятствие к награде</li><li><b>Доставить NPC</b> — вернуться к Хранителю и рассказать о находке</li><li>Три разных ощущения для игрока — а строится всё на инструментах, которые ты уже знаешь</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема-карта сверху квест-лобби: центральный хаб со спауном и NPC-Хранителем, от него три пути — в пещеру охоты за сокровищами, на короткую полосу препятствий с новым сокровищем в конце, обратно к NPC]</p>
+<aside class="speaker-notes">Заметка ведущего: Ключевой слайд урока. Показать на схеме: три пути расходятся из одного хаба. Подчеркнуть, что «доставить NPC» — это не новая механика, а Dialog из урока 6, применённый как финальная точка истории.</aside>
+</div>
+<div class="slide" id="8-t-3">
+<h3 class="slide-title">Один инструмент — много заданий <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Испытание-переход не требует нового инструмента: в конце пути — обычный тег Prop Hunt и Decal, как в охоте за сокровищами</li><li>Один и тот же приём, применённый по-новому, — находчивость продюсера, а не повторение</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Ключевая мысль урока про роль продюсера: сначала ищем, что уже есть под рукой, и только потом — новый инструмент. Пример неудачного пути: скачать первый попавшийся чужой скрипт-квестовик из Store, не проверив, что он делает и обновляется ли.</aside>
+</div>
+<div class="slide" id="8-t-4">
+<h3 class="slide-title">Хаб: комната, которая связывает всё <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Хаб</b> — общая комната, из которой видны или доступны все остальные зоны</li><li>Оформи хаб в одном стиле со всей игрой, чтобы он не выглядел вставкой из другого мира</li><li>Дай игроку заметный ориентир на каждый путь: арка, вывеска, разный свет — глазами, а не текстом</li><li>Не перегружай хаб: одна ясная комната лучше десяти пустых закоулков</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Принципы — из обсуждения дизайна лобби на DevForum. Показать на своём мире: где у ученика уже естественный хаб (обычно — площадка у спауна).</aside>
+</div>
+<div class="slide" id="8-t-5">
+<h3 class="slide-title">NPC ведёт историю <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>InitialPrompt</b> теперь может рассказывать сразу про всю цепочку: что найти и куда потом вернуться</li><li><b>GoodbyeDialog</b> — подходящее место для финальной реплики, когда игрок возвращается с находками</li><li><b>DialogChoice</b> добавляет развилку: например, подсказку, в какой стороне искать испытание</li><li>Всё это — те же свойства Dialog из урока 6, только собранные в цельный разговор</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Новых объектов нет — только новое применение уже знакомых свойств Dialog. Подчеркнуть: реплики Хранителя не проверяют, правда ли игрок всё нашёл, — они рассказывают историю, а считает журнал.</aside>
+</div>
+<div class="slide" id="8-t-6">
+<h3 class="slide-title">Финал, который видно и чувствуется <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>WinFrame</b> и <b>InfoFrame</b> из урока 7 уже умеют встречать игрока в конце пути</li><li>Хороший финал — не просто последний экран, а момент, который хочется запомнить</li><li>Свет и эффекты из урока 5 усиливают этот момент: яркая вспышка, смена настроения зоны</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Связка с уроком 5: попросить вспомнить, каким светом там задавали настроение зоны — тот же приём работает и в момент победы.</aside>
+</div>
+<div class="slide" id="8-t-7">
+<h3 class="slide-title">Страница игры: имя, иконка, описание <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>File → Experience Settings → Basic Info</b> — панель с главными настройками страницы игры</li><li>Name (название) — короткое и запоминающееся, по нему игру находят и узнают</li><li>Description (описание) — то, что читают перед тем, как нажать Play</li><li>Game Icon (иконка) — квадратное изображение минимум 512×512 пикселей</li><li><b>Maturity &amp; Compliance</b> (опрос о возрастном рейтинге) в Creator Dashboard → Audience — без него другие ученики не смогут зайти в твою игру</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот окна Experience Settings в Roblox Studio, вкладка Basic Info: поля Name, Description и Game Icon с примером заполнения]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: File → Experience Settings, вкладка Basic Info. Иконка обязательно квадратная — вытянутый баннер сюда не подойдёт.</aside>
+</div>
+<div class="slide" id="8-t-8">
+<h3 class="slide-title">Описание, которое цепляет <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Пиши конкретно: не «есть дом с привидениями», а что именно там происходит и что делает игрок</li><li>Коротко — один абзац: игрок хочет играть, а не читать</li><li>Без сравнений («как игра X, только...») — описывай СВОЮ игру своими словами</li><li>Без спама тегов, лишних смайликов и просьб поставить лайк — это выглядит неубедительно</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Правила — из разбора описаний на DevForum. Можно быстро прочитать вслух пример плохого и хорошего описания одной и той же воображаемой игры.</aside>
+</div>
+<div class="slide" id="8-t-9">
+<h3 class="slide-title">Питч за 1-2 минуты <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li><b>Название</b> — как называется твоя игра</li><li><b>О чём она</b> — жанр и главная идея одним предложением</li><li><b>Что делает игрок</b> — коротко про геймплей: собирает, проходит, разговаривает</li><li><b>Что особенного</b> — чем твоя игра отличается: своя цепочка заданий, свой хаб, свои находки</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Структура — из практики разработчиков инди-игр: название → жанр/идея → геймплей → изюминка. Уложиться в 1-2 минуты значит выбрать самое важное, а не пересказать всё подряд.</aside>
+</div>
+<div class="slide" id="8-t-10">
+<h3 class="slide-title">Частые ошибки в квест-лобби <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Испытание-переход собрано тем же тегом, но играется неотличимо от охоты за сокровищами — не считается вторым типом задания</li><li>NPC рассказывает только про старые сокровища — про новое испытание в репликах ни слова, игрок о нём не узнает</li><li>Хаб построен, но все пути из него выглядят одинаково — непонятно, какая дорога куда ведёт</li><li>Описание игры — одна общая фраза без сути: «крутая игра, заходи»</li><li>Питч пересказывает каждую деталь вместо главной идеи — не укладывается в 1-2 минуты</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Можно быстро пройтись по каждому пункту и спросить класс, у кого что из этого уже случалось на прошлых уроках — почти у всех, это нормально.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="8-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что такое квестовая цепочка?</p><ol class="content-item content-quiz-options"><li>Список всех предметов, которые лежат в инвентаре</li><li>Одно очень длинное задание без остановок</li><li data-correct="true">Выполнение одного задания открывает следующее — и так до финала ✓</li></ol>
+<p class="content-item content-question">Какого размера должна быть иконка игры?</p><ol class="content-item content-quiz-options"><li>Любого размера, лишь бы яркая</li><li data-correct="true">Квадратная, минимум 512×512 пикселей ✓</li><li>Обязательно вытянутая, как баннер</li></ol>
+<p class="content-item content-question">Зачем для нового испытания-перехода использовать тот же тег Prop Hunt, что и для охоты за сокровищами?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы задействовать уже готовый инструмент, а не искать или собирать новый ✓</li><li>Потому что Roblox не разрешает создавать второй тег</li><li>Тег нужен только одному типу заданий, для остальных он необязателен</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: связка заданий; квадрат 512×512; переиспользуем готовое. Если время осталось — спросить, какой из трёх типов заданий класс хочет добавить ещё.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="8-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Через 5 минут строим квест-лобби: хаб, новое испытание и разговор с Хранителем, который свяжет всё в одну историю.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у всех должен быть открыт мир со всеми механиками уроков 1-7.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Практика: квест-лобби <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="8-p-1">
+<h3 class="slide-title">Шаг 1: собери карту в один хаб <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Пройдись по своему миру от урока 1 до урока 7 — отметь, что уже готово: рельеф, охота за сокровищами, свет, Хранитель, журнал</li><li>Оформи площадку у спауна как хаб: при необходимости добавь арку или вывеску через Union/Negate</li><li>Проверь, что путь от хаба к охоте за сокровищами понятен без слов</li><li>Выбери место для нового испытания-перехода — рядом с хабом, но в стороне от старого маршрута</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Мир уже собран за 7 уроков — сегодня не строим с нуля, а связываем и достраиваем. Проходка по маршруту глазами ученика: если он сам путается, путается и игрок.</aside>
+</div>
+<div class="slide" id="8-p-2">
+<h3 class="slide-title">Шаг 2: испытание-переход <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери короткую полосу препятствий: несколько платформ с промежутками или узкий мост</li><li>В конце пути размести новый предмет с тегом Prop Hunt — так же, как в уроке 4</li><li>Вставь в него Decal с ColorMapContent — своя уникальная иконка, как в уроке 7</li><li>Test → пройди испытание сам: прыжки посильные, а не на грани падения</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот собранной полосы препятствий: несколько платформ с промежутками ведут к сияющему предмету с тегом Prop Hunt в конце]</p>
+<aside class="speaker-notes">Заметка ведущего: Кто не успевает — упростить полосу до одной-двух платформ, суть важнее сложности. Напомнить: этот предмет считается журналом точно так же, как сокровища урока 4 — новый тег заводить не нужно.</aside>
+</div>
+<div class="slide" id="8-p-3">
+<h3 class="slide-title">Шаг 3: NPC связывает историю <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой Dialog Хранителя → в InitialPrompt добавь фразу про новое испытание, не только про сокровища</li><li>В GoodbyeDialog впиши тёплые слова для того, кто уже всё нашёл и вернулся</li><li>При желании — добавь DialogChoice-подсказку, в какой стороне искать испытание</li><li>Проверь реплики вслух: понятно, что делать дальше?</li></ol>
+<p class="content-item content-image-prompt">[изображение: Explorer и Properties рядом: у Dialog Хранителя открыты поля InitialPrompt и GoodbyeDialog с обновлённым текстом]</p>
+<aside class="speaker-notes">Заметка ведущего: Разговор не проверяет, правда ли игрок всё нашёл, — это осознанное упрощение: реплика работает как рассказчик истории, а не как счётчик. Настоящий счёт ведёт журнал из урока 7.</aside>
+</div>
+<div class="slide" id="8-p-4">
+<h3 class="slide-title">Шаг 4: оформи страницу игры <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>File → Experience Settings → Basic Info</li><li>Name — короткое название игры</li><li>Description — коротко и конкретно, что делает игрок</li><li>Game Icon — квадрат минимум 512×512: от преподавателя или своя</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Про описание — вспомнить приёмы со слайда теории: конкретно, коротко, без сравнений. Иконку можно взять готовую от преподавателя, если рисовать свою нет времени.</aside>
+</div>
+<div class="slide" id="8-p-5">
+<h3 class="slide-title">Шаг 5: пройди опрос о возрастном рейтинге <span class="slide-duration">(2 мин)</span></h3>
+<ol class="content-item content-steps"><li>Creator Dashboard → Audience → Maturity &amp; Compliance</li><li>Отвечай честно на каждый вопрос о содержимом игры</li><li>Отправь ответы — появится метка рейтинга твоей игры</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Опрос у детского проекта короткий: почти везде честный ответ «нет». Без него одноклассники не смогут зайти друг к другу в гости — это ограничение самого Roblox, а не прихоть урока.</aside>
+</div>
+<div class="slide" id="8-p-6">
+<h3 class="slide-title">Шаг 6: финальный плейтест и репетиция питча <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → пройди всю цепочку от спауна до возвращения к Хранителю</li><li>Обменяйтесь мирами с соседом: он проходит твою цепочку, ты — его</li><li>Собери питч по формуле: название → о чём игра → что делает игрок → что особенного</li><li>Прорепетируй питч на соседе — уложись в 1-2 минуты</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Финальный плейтест проверяет уже всё сразу: механику, историю, ощущение финала. Питч репетируем в парах, чтобы каждый выступил хотя бы раз перед показом всей группе.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="8-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Игрок прошёл испытание-переход, но не всю охоту за сокровищами. Что покажет журнал?</p><ol class="content-item content-quiz-options"><li>Журнал сразу покажет Победу — испытание засчитывается за всё</li><li>Журнал обнулится и начнётся заново</li><li data-correct="true">Не все предметы отмечены — окно «Победа!» ещё не появится ✓</li></ol>
+<p class="content-item content-question">Что в твоей игре получилось рассказать без единого слова — только светом, расположением зон или диалогом Хранителя?</p>
+<p class="content-item content-question">Какое описание игры сработает лучше?</p><ol class="content-item content-quiz-options"><li>«Крутая игра, заходи, не пожалеешь!»</li><li data-correct="true">«Собери сокровища, пройди испытание и верни находку Хранителю подземелья» ✓</li><li>«Игра как Doors, только у нас тоже есть двери»</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: журнал считает всё вместе; открытый вопрос — про невербальный сторителлинг, обсудить 2-3 примера вслух; конкретное описание побеждает общие фразы. Если будет время — попросить 1-2 добровольцев показать питч всей группе.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание и домашнее задание <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="8-c-1">
+<h3 class="slide-title">Квест-лобби готово <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">За 8 уроков мы прошли путь от первого блока до готовой игры: построили мир, оживили его светом и жителями, а сегодня в роли Продюсера проекта собрали всё в квестовую цепочку с понятным финалом и своей страницей.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: расширь свою игру — добавь ещё одно звено квестовой цепочки, новую комнату или неожиданный поворот истории Хранителя</li><li>Понаблюдай, как выглядит страница любимой игры: что в описании и иконке цепляет именно тебя?</li><li>Следующий урок открывает новый блок — «Школа обби»: разберём физические свойства деталей и построим первую полосу препятствий на скорость</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Это финал первых двух блоков курса — важно отметить масштаб пройденного пути, а не только сегодняшний урок. Похвалить конкретные питчи, если успели показать. Анонс блока 3: с урока 9 начинается работа с физикой Part (Anchored, CanCollide) и настоящими прыжковыми трассами.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/production/game-design/introduction-to-quest-design.md">Introduction to quest design — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/experience-settings.md">Experience Settings — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/experience-icons.md">Experience icons — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/descriptions-make-the-player-play/1136551">Descriptions: Make the Player Play — DevForum</a></li><li><a href="https://devforum.roblox.com/t/creating-lobbies-engagement-and-what-to-include/328575">Creating Lobbies: Engagement and What to Include — DevForum</a></li><li><a href="https://www.youtube.com/watch?v=YAnQPWo9SWM">How to Create a Pitch for your Video Game</a></li><li><a href="https://create.roblox.com/docs/production/promotion/content-maturity">Content maturity and compliance — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/updates-to-our-maturity-compliance-questionnaire/3860056">Updates to Our Maturity &amp; Compliance Questionnaire — Roblox announcement</a></li></ul></section>
+</article>
+</body>
+</html>
