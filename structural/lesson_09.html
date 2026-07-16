@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 9. Физика мира: игровые свойства Part</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="9">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 9. Физика мира: игровые свойства Part</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Level Designer (инженер испытаний)</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="9-w-1">
+<h3 class="slide-title">Сегодня ты — Level Designer (инженер испытаний) <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы завершили квест-лобби и первый большой проект курса. Начинаем новый — «Школу обби»: полосу препятствий, которую игрок проходит на ловкость и внимание.</p>
+<p class="content-item content-paragraph"><b>Level Designer (инженер испытаний)</b> — это специалист, который строит честные препятствия и сам проверяет каждое из них, прежде чем показать игроку.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Тон: переход к новому большому блоку курса — «Школа обби». Сегодня — про физические свойства детали и про главное правило блока: испытание должно быть честным.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="9-r-1">
+<h3 class="slide-title">Что мы делали на уроке 8? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Как устроена квестовая цепочка в квест-лобби?</p><ol class="content-item content-quiz-options"><li data-correct="true">Задание → выполнение → следующее задание → финал ✓</li><li>Все задания открываются сразу, порядок не важен</li><li>Финал происходит раньше первого задания</li></ol>
+<p class="content-item content-question">Что такое «испытание-переход» в квест-лобби?</p><ol class="content-item content-quiz-options"><li>Разговор с NPC без каких-либо действий игрока</li><li data-correct="true">Короткая полоса препятствий, которая ведёт к новому предмету ✓</li><li>Экран с вопросами о содержимом игры</li></ol>
+<p class="content-item content-question">Что обязательно нужно пройти перед тем, как игра станет доступна другим игрокам?</p><ol class="content-item content-quiz-options"><li>Оплату дополнительной подписки</li><li>Согласование темы в чате поддержки</li><li data-correct="true">Опрос о возрастном ограничении содержимого ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: цепочка заданий; испытание-переход — полоса препятствий; обязателен опрос о возрастном ограничении. Мостик к теме: сегодня «испытание-переход» вырастает в отдельную игру — обби.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Свойства детали и честное испытание <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="9-t-1">
+<h3 class="slide-title">Обби строится на честных правилах <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Обби (obstacle course)</b> — это жанр игр, где маршрут собран из простых деталей и проверяет ловкость и внимание игрока</li><li>Главное правило блока: испытание честное, когда подвох можно заметить — внимательный игрок выигрывает, невнимательный учится</li><li>Прежде чем показать препятствие игроку, левел-дизайнер проходит его сам — и не один раз</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Мостик от прошлого блока: там строили историю и диалоги, здесь — честные правила игры на уровне физики одной детали. Спросить группу: было ли обидно проигрывать там, где подвох нельзя было заметить? Это ощущение мы у игрока вызывать не будем.</aside>
+</div>
+<div class="slide" id="9-t-2">
+<h3 class="slide-title">Anchored: деталь держится в воздухе сама <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Новая деталь в Studio не закреплена: как только запускается игра, гравитация тянет её вниз</li><li><b>Anchored (закреплена)</b> — это свойство, которое отключает влияние физики на позицию детали: она остаётся точно там, где её поставили</li><li>Каждая платформа маршрута обязана быть закреплена, иначе есть риск, что она упадёт</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: поставить деталь без Anchored, нажать Test — деталь падает. Включить Anchored, повторить — стоит на месте.</aside>
+</div>
+<div class="slide" id="9-t-3">
+<h3 class="slide-title">CanCollide: можно ли пройти сквозь деталь <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>CanCollide</b> — это свойство, которое решает, твёрдая деталь или нет; по умолчанию включено</li><li>CanCollide = true — персонаж стоит на детали, как на полу</li><li>CanCollide = false — персонаж проходит и проваливается сквозь деталь, физика её не учитывает</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот панели Properties в Roblox Studio: у выделенной детали крупным планом видны включённый чекбокс Anchored и чекбокс CanCollide рядом с ним]</p>
+<aside class="speaker-notes">Заметка ведущего: Обе настройки — соседние строки панели Properties. Устно: «Anchored решает, стоит ли деталь на месте, CanCollide — твёрдая ли она».</aside>
+</div>
+<div class="slide" id="9-t-4">
+<h3 class="slide-title">Честная ловушка: подвох можно заметить <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Платформа с выключенным CanCollide — ловушка: игрок наступает и проваливается</li><li>Точная копия настоящей платформы — нечестно: подвох невозможно заметить, игрок проигрывает вслепую</li><li>Честная ловушка несёт едва заметный намёк: чуть другой оттенок, трещины или другой материал</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Ключевой слайд про честность. Сравнение: нечестная ловушка — монетка «орёл с двух сторон»; честная — загадка, у которой есть разгадка. Намёк делаем тонким: с первого взгляда не бросается, при внимательном — читается.</aside>
+</div>
+<div class="slide" id="9-t-5">
+<h3 class="slide-title">Transparency: от видимой до силуэта <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Transparency (прозрачность)</b> — это число от 0 до 1: 0 — деталь видна полностью, 1 — полностью прозрачна</li><li>Значения между 0 и 1 дают полупрозрачность: деталь видна смутно, как силуэт</li><li>В испытаниях используем максимум 0.9 — силуэт ещё различим, Transparency = 1 делает испытание нечестным</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Продемонстрировать вживую на одной детали: 0 → 0.5 → 0.9 → 1, чтобы группа увидела разницу глазами. На 0.9 силуэт едва виден, но виден — на 1 не виден совсем, игрок может искать путь только наугад.</aside>
+</div>
+<div class="slide" id="9-t-6">
+<h3 class="slide-title">Мост-силуэт через пропасть <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>CanCollide остаётся включённым, меняется только Transparency — мост держит, но виден по-разному</li><li>Transparency около 0.5 — «мост-подсказка» для ранних, щадящих участков</li><li>Transparency = 0.9 — сложный участок: силуэт едва различим, но внимательный игрок его найдёт</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот из игры: полупрозрачный мост с Transparency 0.9 над разрывом между двумя платформами — едва различимый, но заметный силуэт детали]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: уровень Transparency — это регулятор сложности, а не выключатель видимости. Связка со слайдом про честность: даже самый сложный вариант оставляет игроку шанс заметить путь.</aside>
+</div>
+<div class="slide" id="9-t-7">
+<h3 class="slide-title">Material = Ice сам по себе не скользит <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Material (материал)</b> задаёт внешний вид и физические свойства детали по умолчанию: у Ice трение очень низкое</li><li>Но итоговое трение — смесь двух поверхностей: детали и ног персонажа, и влияние персонажа обычно больше</li><li>Поэтому персонаж спокойно ходит по детали с Material = Ice — красивый лёд, а скольжения нет</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: платформа с Material = Ice, пройтись в Test — персонаж не скользит. Это типичная ловушка: материал выглядит как лёд, но геймплей не меняет. Как получить настоящее скольжение — следующий слайд.</aside>
+</div>
+<div class="slide" id="9-t-8">
+<h3 class="slide-title">Настоящее скольжение: CustomPhysicalProperties <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>CustomPhysicalProperties (свои физические свойства)</b> — это переключатель в Properties, который открывает ручную настройку физики детали</li><li><b>Friction (трение)</b> ставим 0 — поверхность перестаёт держать</li><li><b>FrictionWeight (вес трения)</b> ставим 50 — влияние детали на физику перевешивает влияние ног персонажа, игрок скользит по-настоящему</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот панели Properties: включённый чекбокс CustomPhysicalProperties, в раскрытом списке видны поля Friction со значением 0 и FrictionWeight со значением 50]</p>
+<aside class="speaker-notes">Заметка ведущего: Рецепт курса: CustomPhysicalProperties = включено, Friction = 0, FrictionWeight = 50. Material = Ice оставляем ради внешнего вида — по правилу честности игрок должен видеть, что участок ледяной, ещё до того как наступит. Дать группе прокатиться в Test — эффект понятнее на собственном опыте.</aside>
+</div>
+<div class="slide" id="9-t-9">
+<h3 class="slide-title">Длину прыжка измеряют на практике <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Дальность прыжка зависит от настроек персонажа: скорость бега (WalkSpeed) и сила прыжка (JumpPower)</li><li>Расчёты на бумаге зачастую расходятся с тем, что происходит в игре, — дистанцию проверяют только тестом</li><li><b>Тест-стенд</b> — это ряд платформ, где каждый следующий разрыв на 2-4 студа больше предыдущего: последний удавшийся прыжок и есть рабочая дистанция</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Необязательный факт для устного рассказа: на форуме Roblox разработчики сравнивали расчёт по формуле и реальный прыжок — числа расходились в разы, к единому значению так и не пришли. Поэтому дизайнер измеряет прыжок собственным персонажем при текущих настройках игры.</aside>
+</div>
+<div class="slide" id="9-t-10">
+<h3 class="slide-title">Частые ошибки при сборке трассы <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Не включили Anchored у части платформ — они падают при первом же Test</li><li>Разрыв поставили на глаз, без стенда — трасса либо проходится без усилий, либо не проходится совсем</li><li>Ловушка неотличима или мост полностью невидим — испытание стало нечестным, игрок теряет доверие к игре</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Все три ошибки ловятся одним способом — Test и взгляд игрока: пройди сам и спроси себя, можно ли было заметить подвох.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="9-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Деталь висит в воздухе и не падает при запуске игры. Какое свойство за это отвечает?</p><ol class="content-item content-quiz-options"><li data-correct="true">Anchored ✓</li><li>CanCollide</li><li>Transparency</li></ol>
+<p class="content-item content-question">Игрок замечает платформу с трещинами, наступает — и проваливается сквозь неё. Какая настройка это объясняет?</p><ol class="content-item content-quiz-options"><li>Anchored = false</li><li data-correct="true">CanCollide = false ✓</li><li>Transparency = 0.9</li></ol>
+<p class="content-item content-question">Как сделать платформу по-настоящему скользкой для персонажа?</p><ol class="content-item content-quiz-options"><li>Поставить Material = Ice — этого достаточно</li><li>Поднять Transparency до 0.9</li><li data-correct="true">Включить CustomPhysicalProperties: Friction = 0, FrictionWeight = 50 ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Если группа путает Anchored и CanCollide — вернуться к сравнению: одно про позицию, другое про твёрдость. Третий вопрос — главный факт урока: Ice — это вид, скольжение — CustomPhysicalProperties.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="9-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут перерыва. После него строим свою трассу «Школы обби» — от стартовой площадки до финиша.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого должен быть открыт пустой участок Workspace для сборки трассы.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Строим трассу «Школы обби» <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="9-p-1">
+<h3 class="slide-title">Шаг 1: старт и разминочный стенд — измерь свой прыжок <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь стартовую площадку и SpawnLocation на ней — здесь трасса начинается</li><li>Продолжи площадку рядом тест-стендом: 5-6 платформ, каждый разрыв на 2-4 студа больше предыдущего, всё закрепи</li><li>Test → пройди стенд и запиши последний разрыв, который перепрыгивается уверенно, — это рабочая дистанция всей трассы</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Стенд — первая секция трассы и одновременно измерительный инструмент: все разрывы дальше строим по записанному числу. Частая заминка: включили Anchored не у всех платформ — проверить в Test до перехода к шагу 2.</aside>
+</div>
+<div class="slide" id="9-p-2">
+<h3 class="slide-title">Шаг 2: секция прыжков <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Продолжи трассу: 4-5 одинаковых платформ с разрывом чуть меньше рабочей дистанции</li><li>Дублируй первую платформу, чтобы размеры совпадали, и закрепи все</li><li>Test → секция проходится с усилием, но без везения</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Разрыв «чуть меньше максимума» — это и есть «на грани прыжка»: проходимо стабильно, но требует разбега и точности. Если проходится слишком легко — увеличить разрыв на студ, если не проходится — уменьшить.</aside>
+</div>
+<div class="slide" id="9-p-3">
+<h3 class="slide-title">Шаг 3: развилка с честной ловушкой <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Построй развилку: две дорожки ведут дальше, настоящая — только одна</li><li>У ложной дорожки выключи CanCollide и оставь честный намёк: чуть другой оттенок цвета или материал с трещинами</li><li>Test → убедись, что подвох можно заметить взглядом, но только если присмотреться</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот развилки из двух дорожек: ложная дорожка отличается от настоящей едва заметным более тёмным оттенком и трещинами на поверхности]</p>
+<aside class="speaker-notes">Заметка ведущего: Баланс намёка: если отличие кричащее — ловушка не работает, если отличия нет — ловушка нечестная. Хороший тест: сосед по группе замечает подвох со второго-третьего взгляда.</aside>
+</div>
+<div class="slide" id="9-p-4">
+<h3 class="slide-title">Шаг 4: мост-силуэт <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>После развилки поставь широкий разрыв, который не перепрыгнуть, — через него ляжет мост</li><li>Мост-деталь: CanCollide включён, Transparency = 0.9 — едва различимый силуэт</li><li>Test → пройди по мосту, ориентируясь на силуэт</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Проверить у всех: Transparency именно 0.9, не 1 — полностью невидимый мост нарушает правило честности. Кому слишком сложно — временно снизить до 0.5 и поднять обратно, когда маршрут запомнится.</aside>
+</div>
+<div class="slide" id="9-p-5">
+<h3 class="slide-title">Шаг 5: ледяная секция <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Продолжи трассу 2-3 платформами и поставь им Material = Ice — игрок издалека видит, что участок ледяной</li><li>Включи каждой CustomPhysicalProperties и поставь Friction = 0, FrictionWeight = 50</li><li>Test → разбегись по льду и попробуй остановиться точно на краю</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Двойная настройка по уроку: Material = Ice — честный внешний намёк, CustomPhysicalProperties — настоящее скольжение. Если эффект слабый — проверить, что CustomPhysicalProperties включён у каждой ледяной платформы, а не только у первой.</aside>
+</div>
+<div class="slide" id="9-p-6">
+<h3 class="slide-title">Шаг 6: финиш и проверка честности <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь финишную площадку — яркую, заметную с последней секции</li><li>Пройди трассу целиком от SpawnLocation до финиша без остановки</li><li>Чек-лист честности: всё закреплено, каждый подвох можно заметить глазами, каждый прыжок проходим на рабочей дистанции</li></ol>
+<p class="content-item content-image-prompt">[изображение: Вид на собранную трассу «Школы обби» целиком: стартовая площадка со SpawnLocation, стенд с растущими разрывами, секция прыжков, развилка с ловушкой, полупрозрачный мост-силуэт, ледяные платформы и яркий финиш]</p>
+<aside class="speaker-notes">Заметка ведущего: Финальная проверка — в роли игрока, а не строителя: не подглядывать в Explorer. Если какое-то место проходится только со знанием секрета — это сигнал вернуться и добавить намёк.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="9-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Зачем ловушке на развилке едва заметное отличие от настоящей дорожки?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы испытание оставалось честным: внимательный игрок может заметить подвох ✓</li><li>Чтобы дорожка быстрее загружалась</li><li>Отличие не нужно — ловушка должна быть точной копией</li></ol>
+<p class="content-item content-question">Почему у моста-силуэта Transparency = 0.9, а не 1?</p><ol class="content-item content-quiz-options"><li>Значение 1 в поле Transparency ввести нельзя</li><li>При 1 мост перестал бы держать персонажа</li><li data-correct="true">При 0.9 остаётся различимый силуэт — испытание сложное, но честное ✓</li></ol>
+<p class="content-item content-question">Почему разрывы секции прыжков мы ставили по стенду, а не на глаз?</p><ol class="content-item content-quiz-options"><li>На глаз разрешено, просто стенд быстрее</li><li data-correct="true">Реальная дальность прыжка видна только в тесте — расчёты и глазомер с ней расходятся ✓</li><li>Стенд нужен, чтобы Studio разрешила сохранить место</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сквозная мысль всех трёх вопросов — честность и проверка тестом. Если группа отвечает уверенно, попросить одного-двух показать свою ловушку и намёк на ней.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="9-c-1">
+<h3 class="slide-title">Первая трасса «Школы обби» готова <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Мы собрали первую честную полосу препятствий: измерили прыжок стендом, поставили секцию прыжков, развилку с честной ловушкой, мост-силуэт и настоящий скользкий лёд.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь к трассе ещё одну секцию с любым испытанием урока и проверь её чек-листом честности</li><li>На следующем уроке — опасные зоны: готовые kill-блоки и движущиеся препятствия</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить за два ключевых навыка урока: измерять вместо угадывания и делать испытания честными. Оба пригодятся на всех уроках блока «Школа обби».</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/parts.md">Parts — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/parts/materials.md">Materials — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/datatypes/PhysicalProperties.md">PhysicalProperties — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Humanoid.md">Humanoid — Roblox Engine API</a></li><li><a href="https://devforum.roblox.com/t/making-a-block-with-ice-physics-without-a-script/73335">Making a block with ice physics without a script — DevForum</a></li><li><a href="https://www.youtube.com/watch?v=1UHukOcyt2c">How to make SLIPPERY ICE in ROBLOX STUDIO! (RetroAmythest)</a></li><li><a href="https://www.youtube.com/watch?v=9v3GvfX_qr8">How to Make an Obby on Roblox Studio | Beginners Tutorial (AlvinBlox)</a></li><li><a href="https://devforum.roblox.com/t/calculating-maximum-player-jump-distance/455105">Calculating maximum player jump distance — DevForum</a></li></ul></section>
+</article>
+</body>
+</html>
