@@ -76,7 +76,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="8-t-5">
 <h3 class="slide-title">NPC ведёт историю <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>InitialPrompt</b> теперь может рассказывать сразу про всю цепочку: что найти и куда потом вернуться</li><li><b>GoodbyeDialog</b> — подходящее место для финальной реплики, когда игрок возвращается с находками</li><li><b>DialogChoice</b> добавляет развилку: например, подсказку, в какой стороне искать испытание</li><li>Всё это — те же свойства Dialog из урока 6, только собранные в цельный разговор</li></ul>
+<ul class="content-item content-bullets"><li><b>InitialPrompt</b> теперь может рассказывать сразу про всю цепочку: что найти и куда потом вернуться</li><li><b>DialogChoice</b> добавляет развилку: например, подсказку, в какой стороне искать испытание</li><li>Так же с помощью <b>DialogChoice</b> можно сделать завершение квеста с похвалой игрока</li><li>Всё это — те же свойства Dialog из урока 6, только собранные в цельный разговор</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Новых объектов нет — только новое применение уже знакомых свойств Dialog. Подчеркнуть: реплики Хранителя не проверяют, правда ли игрок всё нашёл, — они рассказывают историю, а считает журнал.</aside>
 </div>
 <div class="slide" id="8-t-6">
@@ -86,21 +86,28 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="8-t-7">
 <h3 class="slide-title">Страница игры: имя, иконка, описание <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>File → Experience Settings → Basic Info</b> — панель с главными настройками страницы игры</li><li>Name (название) — короткое и запоминающееся, по нему игру находят и узнают</li><li>Description (описание) — то, что читают перед тем, как нажать Play</li><li>Game Icon (иконка) — квадратное изображение минимум 512×512 пикселей</li><li><b>Maturity &amp; Compliance</b> (опрос о возрастном рейтинге) в Creator Dashboard → Audience — без него другие ученики не смогут зайти в твою игру</li></ul>
+<ul class="content-item content-bullets"><li>Настройка опубликованой игры - через сайт Роблокса</li><li>Name (название) — короткое и запоминающееся, по нему игру находят и узнают</li><li>Description (описание) — то, что читают перед тем, как нажать Play</li><li>Game Icon (иконка) — квадратное изображение минимум 512×512 пикселей</li></ul>
+<p class="content-item content-paragraph">Ссылка на сайт для настройки: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
 <p class="content-item content-image-prompt">[изображение: Скриншот окна Experience Settings в Roblox Studio, вкладка Basic Info: поля Name, Description и Game Icon с примером заполнения]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать вживую: File → Experience Settings, вкладка Basic Info. Иконка обязательно квадратная — вытянутый баннер сюда не подойдёт.</aside>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: перейдите по ссылке -&gt; выберите игру -&gt; Configure -&gt; Settings. Для загрузки картинки -&gt; Places -&gt; нажать на плейс -&gt; Icon</aside>
 </div>
 <div class="slide" id="8-t-8">
+<h3 class="slide-title">Возрастное ограничение <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Для того, чтобы в игру могли зайти игроки - нужно выставить возрастной рейтинг</li><li>Для этого нужно пройти опрос о содержании игры</li><li>После прохождения опроса - несколько часов проверки от модерации Роблокса</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот окна настройки публичости плейса и опроса]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: перейдите обратно в Settings -&gt; Audience -&gt; Public и покажите опрос </aside>
+</div>
+<div class="slide" id="8-t-9">
 <h3 class="slide-title">Описание, которое цепляет <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Пиши конкретно: не «есть дом с привидениями», а что именно там происходит и что делает игрок</li><li>Коротко — один абзац: игрок хочет играть, а не читать</li><li>Без сравнений («как игра X, только...») — описывай СВОЮ игру своими словами</li><li>Без спама тегов, лишних смайликов и просьб поставить лайк — это выглядит неубедительно</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Правила — из разбора описаний на DevForum. Можно быстро прочитать вслух пример плохого и хорошего описания одной и той же воображаемой игры.</aside>
 </div>
-<div class="slide" id="8-t-9">
+<div class="slide" id="8-t-10">
 <h3 class="slide-title">Питч за 1-2 минуты <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li><b>Название</b> — как называется твоя игра</li><li><b>О чём она</b> — жанр и главная идея одним предложением</li><li><b>Что делает игрок</b> — коротко про геймплей: собирает, проходит, разговаривает</li><li><b>Что особенного</b> — чем твоя игра отличается: своя цепочка заданий, свой хаб, свои находки</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Структура — из практики разработчиков инди-игр: название → жанр/идея → геймплей → изюминка. Уложиться в 1-2 минуты значит выбрать самое важное, а не пересказать всё подряд.</aside>
 </div>
-<div class="slide" id="8-t-10">
+<div class="slide" id="8-t-11">
 <h3 class="slide-title">Частые ошибки в квест-лобби <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Испытание-переход собрано тем же тегом, но играется неотличимо от охоты за сокровищами — не считается вторым типом задания</li><li>NPC рассказывает только про старые сокровища — про новое испытание в репликах ни слова, игрок о нём не узнает</li><li>Хаб построен, но все пути из него выглядят одинаково — непонятно, какая дорога куда ведёт</li><li>Описание игры — одна общая фраза без сути: «крутая игра, заходи»</li><li>Питч пересказывает каждую деталь вместо главной идеи — не укладывается в 1-2 минуты</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Можно быстро пройтись по каждому пункту и спросить класс, у кого что из этого уже случалось на прошлых уроках — почти у всех, это нормально.</aside>
@@ -139,13 +146,13 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="8-p-3">
 <h3 class="slide-title">Шаг 3: NPC связывает историю <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой Dialog Хранителя → в InitialPrompt добавь фразу про новое испытание, не только про сокровища</li><li>В GoodbyeDialog впиши тёплые слова для того, кто уже всё нашёл и вернулся</li><li>При желании — добавь DialogChoice-подсказку, в какой стороне искать испытание</li><li>Проверь реплики вслух: понятно, что делать дальше?</li></ol>
+<ol class="content-item content-steps"><li>Открой Dialog Хранителя → добавь новую ветку про новое испытание, не только про сокровища</li><li>Добавь DialogChoice-подсказку, в какой стороне искать испытание</li><li>При желании можешь добавить DialogChoice с завершением квеста</li><li>Проверь реплики вслух: понятно, что делать дальше?</li></ol>
 <p class="content-item content-image-prompt">[изображение: Explorer и Properties рядом: у Dialog Хранителя открыты поля InitialPrompt и GoodbyeDialog с обновлённым текстом]</p>
 <aside class="speaker-notes">Заметка ведущего: Разговор не проверяет, правда ли игрок всё нашёл, — это осознанное упрощение: реплика работает как рассказчик истории, а не как счётчик. Настоящий счёт ведёт журнал из урока 7.</aside>
 </div>
 <div class="slide" id="8-p-4">
 <h3 class="slide-title">Шаг 4: оформи страницу игры <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>File → Experience Settings → Basic Info</li><li>Name — короткое название игры</li><li>Description — коротко и конкретно, что делает игрок</li><li>Game Icon — квадрат минимум 512×512: от преподавателя или своя</li></ol>
+<ol class="content-item content-steps"><li>Перейти на страницу игры</li><li>Name — короткое название игры</li><li>Description — коротко и конкретно, что делает игрок</li><li>Icon — квадрат минимум 512×512: от преподавателя или своя</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Про описание — вспомнить приёмы со слайда теории: конкретно, коротко, без сравнений. Иконку можно взять готовую от преподавателя, если рисовать свою нет времени.</aside>
 </div>
 <div class="slide" id="8-p-5">

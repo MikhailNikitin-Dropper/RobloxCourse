@@ -66,12 +66,13 @@ html,body{height:100%;background:#15161f;overflow:hidden}
 .head{font-family:'Inter Tight','Inter','Segoe UI',system-ui,sans-serif;text-transform:uppercase;color:#4F59F9;font-size:64px;line-height:1.15;
   max-width:1250px;font-weight:800;flex:0 0 auto}
 .head-rule{height:6px;background:#4F59F9;border-radius:3px;width:780px;margin:26px 0 46px;flex:0 0 auto}
-.one-col{max-width:1560px;flex:1 1 auto;min-height:0;font-size:38px;line-height:1.5}
+.one-col{max-width:1560px;flex:1 1 auto;min-height:0;font-size:38px;line-height:1.5;min-width:0}
 .two-col{display:flex;gap:70px;align-items:flex-start;flex:1 1 auto;min-height:0;font-size:36px;line-height:1.5}
-.col-text{flex:1 1 52%}
-.col-fig{flex:1 1 48%}
+.col-text{flex:1 1 52%;min-width:0}
+.col-fig{flex:1 1 48%;min-width:0}
 .para{margin:0 0 .74em}
 .link-card{background:#fff;border:4px solid #4F59F9;border-radius:18px;padding:.5em .8em;margin:0 0 .74em;overflow-wrap:break-word;word-break:break-all}
+.link-card a{display:block;margin-top:.3em}
 a{color:#4F59F9;font-weight:700;text-underline-offset:.15em}
 a:hover{color:#50DCFE}
 .quote{border-left:8px solid #4F59F9;border-radius:4px;padding:10px 0 10px 34px;margin:0 0 .74em;color:#4F59F9}

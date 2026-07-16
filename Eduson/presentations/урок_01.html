@@ -127,11 +127,12 @@ html,body{height:100%;background:#101016;overflow:hidden}
 /* контентные */
 .content-wrap{position:absolute;left:80px;right:80px;top:70px;bottom:80px;display:flex;flex-direction:column}
 .content-wrap .sl-h2{flex:0 0 auto}
-.one-col,.two-col{margin-top:40px;flex:1 1 auto;min-height:0;font-size:23px}
+.one-col,.two-col{margin-top:40px;flex:1 1 auto;min-height:0;font-size:23px;min-width:0}
 .two-col{display:flex;gap:44px;align-items:flex-start}
-.two-col .col{flex:1 1 50%}
+.two-col .col{flex:1 1 50%;min-width:0}
 .para{margin-bottom:.87em}
 .link-card{background:#fff;border:3px solid var(--ek-violet-soft);border-radius:.58em;padding:.58em .87em;margin-bottom:.87em;overflow-wrap:break-word;word-break:break-all}
+.link-card a{display:block;margin-top:.35em}
 a{color:var(--ek-violet);font-weight:700;text-underline-offset:.15em}
 a:hover{color:var(--ek-violet-deep)}
 .quote{border-left:6px solid var(--ek-violet);padding:6px 0 6px 22px;margin-bottom:.87em;color:var(--ek-violet-deep)}
