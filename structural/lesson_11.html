@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 11. Чекпоинты и маршрут</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="11">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 11. Чекпоинты и маршрут</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Level Designer (архитектор маршрута)</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="11-w-1">
+<h3 class="slide-title">Сегодня ты — Level Designer (архитектор маршрута) <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Наша трасса уже опасна и честна. Но погибший игрок каждый раз начинает с самого начала — пора это исправить.</p>
+<p class="content-item content-paragraph"><b>Архитектор маршрута</b> — это специалист, который делит трассу на этапы, расставляет точки сохранения и ведёт игрока по уровню светом и цветом.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Спросить группу: что чувствует игрок, когда после получаса прохождения гибнет и оказывается на старте? Сегодня решаем именно эту проблему.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="11-r-1">
+<h3 class="slide-title">Что мы делали на уроке 10? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что происходит при касании kill-блока?</p><ol class="content-item content-quiz-options"><li>Персонаж замирает на несколько секунд</li><li data-correct="true">Персонаж теряет всё здоровье и возвращается на точку возрождения ✓</li><li>Kill-блок исчезает</li></ol>
+<p class="content-item content-question">Почему опасные зоны мы красили в красный?</p><ol class="content-item content-quiz-options"><li data-correct="true">Красное — общий цветовой код опасности, он читается без слов ✓</li><li>Красный цвет делает деталь скользкой</li><li>Красные детали легче найти в Explorer</li></ol>
+<p class="content-item content-question">Каким свойством мы настраивали скорость вращающегося препятствия?</p><ol class="content-item content-quiz-options"><li>WalkSpeed</li><li>Transparency</li><li data-correct="true">AngularVelocity ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: возврат на точку возрождения; цветовой код опасности; AngularVelocity. Слова «точка возрождения» из первого вопроса — мостик к теме урока: сегодня научимся управлять тем, куда именно возвращается игрок.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Чекпоинты, этапы и навигация светом <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="11-t-1">
+<h3 class="slide-title">Маршрут проектируют, а не надеются на удачу <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Игрок движется по трассе так, как её выстроил архитектор маршрута</li><li>Три инструмента сегодняшнего урока: точка появления, чекпоинты и визуальные ориентиры</li><li>Цель: игрок всегда понимает, куда идти и откуда продолжит после гибели</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Обзорный слайд-карта урока. Устно: до сих пор гибель отбрасывала игрока на самый старт — для длинной трассы это беспощадно.</aside>
+</div>
+<div class="slide" id="11-t-2">
+<h3 class="slide-title">SpawnLocation: здесь игрок появляется <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>SpawnLocation</b> — это площадка, на которой персонаж появляется в начале игры и после гибели</li><li><b>Duration</b> — время защитного поля после появления: по умолчанию 10 секунд, при 0 поля нет</li><li>Если подходящих точек возрождения несколько, игра выбирает случайную из них</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: стартовая платформа обби с SpawnLocation, вокруг только что появившегося персонажа видно голубое сферическое защитное поле ForceField]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: вставить SpawnLocation, запустить Test, показать защитное поле. Устно: поле нужно, чтобы игрока не убило в момент появления — например, вращающимся препятствием у самой точки возрождения.</aside>
+</div>
+<div class="slide" id="11-t-3">
+<h3 class="slide-title">Чекпоинт сохраняет прогресс игрока <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Чекпоинт</b> — это площадка, после касания которой погибший игрок возвращается сюда, а не на старт</li><li>Одна ошибка больше не стирает весь путь — прогресс сохраняется по этапам</li><li>Без чекпоинтов длинная трасса выматывает даже терпеливых игроков</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Спросить группу: в каких играх встречали чекпоинты и как они выглядели? Ответы обычно есть у всех — механика знакома по любым платформерам.</aside>
+</div>
+<div class="slide" id="11-t-4">
+<h3 class="slide-title">Модуль CheckpointSystem <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>На курсе используем модуль <b>CheckpointSystem</b>: папка, внутри — площадки-SpawnLocation с именами-номерами 1, 2, 3 и готовый скрипт</li><li>Коснулся площадки — возвращаться будешь на неё; прогресс двигается только вперёд, а номер этапа виден в таблице игроков</li><li>Новый этап = продублировать площадку внутри папки и назвать следующим числом</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/135627950847968/CheckpointSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/135627950847968/CheckpointSystem</a></p>
+<p class="content-item content-image-prompt">[изображение: Скриншот окна Explorer в Roblox Studio: в Workspace папка CheckpointSystem, внутри неё площадки-SpawnLocation с именами 1, 2, 3 и Script]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: мы снова пользуемся готовым модулем — скрипт лежит внутри самой папки, переносить его никуда не нужно. Каждой площадке скрипт создаёт команду её цвета — поэтому номер этапа виден в таблице игроков. Площадки должны оставаться внутри папки, имена — только числа.</aside>
+</div>
+<div class="slide" id="11-t-5">
+<h3 class="slide-title">Этап: отрезок между чекпоинтами <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Этап</b> — это отрезок трассы между двумя чекпоинтами</li><li>Чекпоинт после сложного участка ощущается как награда: напряжение сменяется отдыхом</li><li>Слишком редкие чекпоинты выматывают, слишком частые — убирают вызов</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Связка с балансом из урока 10: чередование напряжения и передышки теперь закрепляется точками сохранения. Ориентир для наших трасс: чекпоинт после каждого опасного участка.</aside>
+</div>
+<div class="slide" id="11-t-6">
+<h3 class="slide-title">Свет и цвет ведут игрока <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Игрок замечает контраст: яркое пятно на тёмном фоне притягивает взгляд</li><li>Подсвеченный вход, цветная дорожка, светящаяся рамка — маршрут читается без стрелок и надписей</li><li>Начинаем с тонких подсказок и усиливаем их, только если плейтест показал, что игроки теряются</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот тёмного участка обби: правильный путь подсвечен тёплым светом фонарей и зелёными светящимися деталями, ложный проход остаётся в тени]</p>
+<aside class="speaker-notes">Заметка ведущего: Пример для устного рассказа: в тёмном коридоре игрок всегда идёт к освещённой двери — свет работает как приглашение.</aside>
+</div>
+<div class="slide" id="11-t-7">
+<h3 class="slide-title">Маяк: большой ориентир на горизонте <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Высокий заметный объект у цели — башня, кристалл, столб света — виден с любой точки трассы</li><li>Игрок сверяется с ним, как с маяком: далеко ли ещё и в ту ли сторону я иду</li><li>Приём придумали в парках Диснея: гостей ведут по парку заметные издалека постройки</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Термин weenie можно упомянуть устно как забавный факт. Главное: маяк должен быть один и выделяться — три одинаковые башни запутают сильнее, чем отсутствие ориентира.</aside>
+</div>
+<div class="slide" id="11-t-8">
+<h3 class="slide-title">Тест на новичке: смотрим и молчим <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Автор знает трассу наизусть — проблемы маршрута ему не видны</li><li>Даём трассу тому, кто видит её впервые, наблюдаем молча и не подсказываем</li><li>Записываем, где игрок застрял или свернул не туда: каждое застревание — задача для правки</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Ключевое правило: чиним маршрут, а не игрока. Если новичок пошёл не туда — виноват не он, а нечитаемый маршрут.</aside>
+</div>
+<div class="slide" id="11-t-9">
+<h3 class="slide-title">Частые ошибки при разметке маршрута <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Точка возрождения стоит вплотную к опасности — игрок гибнет в момент появления</li><li>Половина трассы без единого чекпоинта — одна ошибка стоит десяти минут прохождения</li><li>Все ориентиры одинаковые — игрок не отличает начало этапа от конца</li><li>Трассу тестировал только автор — проблемы маршрута так и не найдены</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Каждую ошибку сегодня закроем практикой: точка возрождения со свободной зоной, чекпоинты после опасных участков, разные ориентиры, обмен трассами.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="11-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Чем чекпоинт отличается от обычной платформы?</p><ol class="content-item content-quiz-options"><li data-correct="true">После его касания погибший игрок возвращается сюда, а не на старт ✓</li><li>Он прочнее и не ломается</li><li>На нём нельзя стоять дольше десяти секунд</li></ol>
+<p class="content-item content-question">Зачем у SpawnLocation защитное поле (Duration)?</p><ol class="content-item content-quiz-options"><li>Чтобы персонаж красиво светился на скриншотах</li><li data-correct="true">Чтобы игрока не убило в первые секунды после появления ✓</li><li>Чтобы другие игроки не заняли точку возрождения</li></ol>
+<p class="content-item content-question">Как вести игрока по маршруту, не рисуя стрелок?</p><ol class="content-item content-quiz-options"><li>Написать инструкцию в описании игры</li><li>Сделать все пути одинаково красивыми</li><li data-correct="true">Подсветить правильный путь светом и контрастным цветом ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Если группа сомневается во втором вопросе — напомнить пример с вращающимся препятствием у точки возрождения: без поля игрок погибал бы бесконечно.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="11-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут перерыва. После него размечаем трассу: точка возрождения, три чекпоинта и маяк у финиша.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого должна быть открыта трасса с ловушками из урока 10.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Размечаем маршрут трассы <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="11-p-1">
+<h3 class="slide-title">Шаг 1: стартовый SpawnLocation <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Вставь SpawnLocation на стартовую платформу: + → SpawnLocation</li><li>Проверь, что рядом с точкой возрождения нет ловушек — зона появления безопасна</li><li>Test → убедись, что персонаж появляется на старте и видит защитное поле</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Если SpawnLocation утоплен в платформу — приподнять инструментом Move: площадка должна лежать на поверхности. Этот SpawnLocation временный: в шаге 2 его заменит площадка 1 модуля чекпоинтов, а здесь группа успевает разглядеть защитное поле на собственной детали.</aside>
+</div>
+<div class="slide" id="11-p-2">
+<h3 class="slide-title">Шаг 2: модуль CheckpointSystem <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Получи модуль CheckpointSystem по ссылке и вставь его из Inventory</li><li>Поставь площадку 1 на стартовую платформу, а временный SpawnLocation из шага 1 удали</li><li>Test → коснись площадки 2 и проверь, что номер этапа появился в таблице игроков</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/135627950847968/CheckpointSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/135627950847968/CheckpointSystem</a></p>
+<aside class="speaker-notes">Заметка ведущего: Самый технический шаг урока — пройти его вместе с группой на демонстрации экрана. Скрипт уже лежит внутри папки CheckpointSystem, переносить его не нужно; площадки двигаем инструментом Move, но в Explorer они остаются внутри папки, а их имена-номера не меняем.</aside>
+</div>
+<div class="slide" id="11-p-3">
+<h3 class="slide-title">Шаг 3: подели трассу на три этапа <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Передвинь площадку 2 за яму с лавой, а площадку 3 — за вращающееся препятствие: в Explorer обе остаются внутри папки CheckpointSystem</li><li>Проверь этапы: короткий и простой — в начале, длиннее и сложнее — к финалу</li><li>Test → погибни в лаве нарочно и убедись, что вернулся на площадку 2, а не на старт</li></ol>
+<p class="content-item content-image-prompt">[изображение: Вид сверху на трассу обби, поделённую на три этапа: стартовый SpawnLocation, два чекпоинта после опасных участков, подписи этапов 1, 2, 3]</p>
+<aside class="speaker-notes">Заметка ведущего: «Погибни нарочно» — важная проверка: работу чекпоинта проверяют гибелью, а не предположением.</aside>
+</div>
+<div class="slide" id="11-p-4">
+<h3 class="slide-title">Шаг 4: ориентиры — свет, цвет, маяк <span class="slide-duration">(4.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь свет на входе в каждый этап: PointLight на первой платформе отрезка</li><li>Построй у финиша маяк — высокую заметную конструкцию, видную со старта</li><li>Test → обернись с любой точки трассы: виден ли маяк?</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Площадки CheckpointSystem перекрашивать не нужно — их красит сам модуль. Маяк собирается из простых деталей за минуту — важна высота и контраст, а не красота.</aside>
+</div>
+<div class="slide" id="11-p-5">
+<h3 class="slide-title">Шаг 5: тест на новичке <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Обменяйся трассами с соседом</li><li>Не подсказывай, иначе тест получается бессмысленным</li><li>Запиши, где сосед застрял или пошёл не туда, и исправь эти места на своей трассе</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Напомнить правило: чиним маршрут, а не игрока. Если сосед заблудился — это ошибка разработчика, а не игрока. По итогам дать 2-3 минуты на правки.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="11-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Игрок погиб на третьем этапе, но вернулся на самый старт. Что проверяем в первую очередь?</p><ol class="content-item content-quiz-options"><li data-correct="true">Имена площадок и их место внутри папки CheckpointSystem ✓</li><li>Цвет чекпоинтов</li><li>Скорость вращающегося препятствия на первом этапе</li></ol>
+<p class="content-item content-question">Куда логичнее всего ставить чекпоинт?</p><ol class="content-item content-quiz-options"><li>В середину самого сложного участка</li><li data-correct="true">Сразу после сложного участка ✓</li><li>В случайное место — где осталось свободное пространство</li></ol>
+<p class="content-item content-question">Что показал тест на новичке: где сосед застрял на твоей трассе и как ты это починишь?</p>
+<aside class="speaker-notes">Заметка ведущего: Третий вопрос — открытый, на рефлексию: попросить 2-3 учеников назвать конкретное место застревания и способ правки. Ожидаемые ответы на квизы: имена и папка модуля; сразу после сложного участка.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="11-c-1">
+<h3 class="slide-title">Трасса обрела маршрут <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Мы разметили трассу как настоящие архитекторы маршрута: точка возрождения с безопасной зоной, три этапа с чекпоинтами, свет и маяк, которые ведут игрока без единой стрелки.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь на трассу четвёртый этап с чекпоинтом и проверь его</li><li>На следующем уроке — ПРОЕКТ 3: собираем всё в законченное обби «Дорога героя» с тремя зонами сложности</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Анонс проекта: на следующем уроке ничего принципиально нового — собираем и полируем всё, что умеем: ловушки, чекпоинты, ориентиры, свет.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/SpawnLocation.md">SpawnLocation — Roblox Engine API</a></li><li><a href="https://create.roblox.com/store/asset/135627950847968/CheckpointSystem">CheckpointSystem — Creator Store (модуль курса)</a></li><li><a href="https://devforum.roblox.com/t/how-to-create-an-obby-part-1-checkpoints-system-and-lava-bricks/874825">How to create an obby, Part 1: Checkpoints system — DevForum</a></li><li><a href="https://forge.loopmobile.io/how-to-make/roblox-obby">How to Make a Roblox Obby — Stages, Checkpoints, Win Sequence</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li><li><a href="https://jacobryanwheeler.medium.com/game-level-design-35-ways-to-guide-the-player-4bbc324204f4">Game Level Design: 35 Ways to Guide The Player</a></li><li><a href="https://www.creation.dev/blog/roblox-obby-design-guide">How to Build an Obby on Roblox That Players Love — creation.dev</a></li><li><a href="http://www.davetech.co.uk/gamedevleveldifficulty">How to Build Levels at the Perfect Difficulty — Dave Tech</a></li></ul></section>
+</article>
+</body>
+</html>
