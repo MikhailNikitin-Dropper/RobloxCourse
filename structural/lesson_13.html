@@ -56,7 +56,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-t-1">
 <h3 class="slide-title">VehicleSeat: сиденье, которое понимает клавиши <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>VehicleSeat (сиденье машины)</b> — это встроенный объект Studio: коснувшийся персонаж садится за руль и становится водителем</li><li>W и S — газ вперёд и назад, A и D — поворот руля</li><li><b>HeadsUpDisplay</b> — встроенный спидометр: пока едешь, показывает скорость на экране</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio в режиме теста: персонаж сидит за рулём простой машины, в Explorer выделен VehicleSeat, внизу экрана — полоска встроенного спидометра]</p>
+<p class="content-item content-image-prompt">[изображение: Скриншот игры в режиме теста: персонаж сидит за рулём машины на готовом шасси, внизу экрана — полоска встроенного спидометра с текущей скоростью]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: клавиши переводятся в команды Throttle (газ) и Steer (руль) — эти названия видны в Properties, но менять их руками не нужно.</aside>
 </div>
 <div class="slide" id="13-t-2">
@@ -67,8 +67,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-t-3">
 <h3 class="slide-title">Осмотр шасси после вставки <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Открываем модель в Explorer: DriverSeat, четыре колеса и скрипт CarScript на месте</li><li>Папки SuspensionFront, SuspensionBack и Springs — это подвеска: она смягчает кочки и приземления</li><li>Колёса, моторы и подвеска уже связаны — меняем только то, что добавляем сами</li><li>Первый тест-драйв сразу после вставки: машина должна ехать до любых модификаций</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот окна Explorer в Roblox Studio: раскрыта модель Car Chassis, в дереве видны DriverSeat, колёса WheelFL, WheelFR, WheelBL, WheelBR, скрипт CarScript и папки SuspensionFront, SuspensionBack, Springs]</p>
+<ul class="content-item content-bullets"><li>Открываем модель в Explorer: сиденье DriverSeat, скрипт CarScript и три папки механики</li><li>Parts — детали машины: колёса Wheel, ступицы Hub передних колёс, плита Main и руль SteeringWheel</li><li>Motors — моторы колёс и серво поворота; Suspension — пружины: они смягчают кочки и приземления</li><li>Колёса, моторы и подвеска уже связаны — меняем только то, что добавляем сами</li><li>Первый тест-драйв сразу после вставки: машина должна ехать до любых модификаций</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот окна Explorer в Roblox Studio: раскрыта модель Car Chassis, в дереве видны DriverSeat, скрипт CarScript и папки Parts, Motors, Suspension; в Parts раскрыта папка FrontLeft с деталями Wheel, Hub, SuspensionArm, SuspensionMount]</p>
 <aside class="speaker-notes">Заметка ведущего: Правило «сначала едет, потом красим»: если сломается после модификаций, будет понятно, что причина в модификациях, а не в модели. Подвеску подробно разбирать не нужно — достаточно сказать, что пружины гасят удары; сами пружины будем настраивать в блоке про механизмы.</aside>
 </div>
 <div class="slide" id="13-t-4">
@@ -83,9 +83,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-t-6">
 <h3 class="slide-title">Кастомизация: свой кузов поверх шасси <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Панели кузова, спойлер, фары — собираем из Part и операций Union/Negate</li><li><b>Weld (сварка)</b> — это крепление детали к основе машины: прикреплённая деталь едет вместе с ней</li><li>Выдели свою деталь и основу машины — Part с именем Chassis, потом вкладка Model → Weld</li><li>У деталей кузова выключаем CanCollide и включаем Massless: декор не цепляется за препятствия и не утяжеляет машину</li><li>Колёса, DriverSeat и детали подвески не трогаем — это механика, без неё машина встанет</li></ul>
+<ul class="content-item content-bullets"><li>Панели кузова, спойлер, фары — собираем из Part и операций Union/Negate</li><li><b>Weld (сварка)</b> — это крепление детали к основе машины: прикреплённая деталь едет вместе с ней</li><li>Выдели свою деталь и основу машины — Part с именем Main в папке Parts, потом вкладка Model → Weld</li><li>У деталей кузова выключаем CanCollide и включаем Massless: декор не цепляется за препятствия и не утяжеляет машину</li><li>Колёса Wheel, сиденье DriverSeat и стойки подвески не трогаем — это механика, без неё машина встанет</li></ul>
 <p class="content-item content-image-prompt">[изображение: Одно и то же готовое шасси до и после кастомизации: слева простое шасси с колёсами, справа — красная машина со своим кузовом, спойлером на стойках, фарами и лобовым стеклом]</p>
-<aside class="speaker-notes">Заметка ведущего: Прикреплять только к основе машины — Part с именем Chassis: деталь, прикреплённая к подвеске, заклинит ход колеса. Группировка в модель (Ctrl+G) деталь не крепит — она только про порядок в Explorer: без Weld машина уедет, а спойлер останется висеть в воздухе. Anchored у деталей кузова тоже не включаем: закреплённая деталь удержит всю машину на месте. Про CanCollide и Massless: подвеска настроена под вес шасси, и тяжёлый кузов её просаживает, а декор со столкновениями цепляется за отбойники и стены — поэтому у всего, что не механика, столкновения выключаем, а Massless включаем.</aside>
+<aside class="speaker-notes">Заметка ведущего: Прикреплять только к основе машины — Part с именем Main в папке Parts: деталь, прикреплённая к подвеске, заклинит ход колеса. Группировка в модель (Ctrl+G) деталь не крепит — она только про порядок в Explorer: без Weld машина уедет, а спойлер останется висеть в воздухе. Anchored у деталей кузова тоже не включаем: закреплённая деталь удержит всю машину на месте. Про CanCollide и Massless: подвеска настроена под вес шасси, и тяжёлый кузов её просаживает, а декор со столкновениями цепляется за отбойники и стены — поэтому у всего, что не механика, столкновения выключаем, а Massless включаем.</aside>
 </div>
 <div class="slide" id="13-t-7">
 <h3 class="slide-title">Цвет и материал рассказывают историю <span class="slide-duration">(2.5 мин)</span></h3>
@@ -120,7 +120,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Собираем свою машину <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="13-p-1">
 <h3 class="slide-title">Шаг 1: получи и вставь шасси <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль Car Chassis по ссылке и вставь его из Inventory</li><li>Поставь модель на ровную площадку, подальше от других объектов</li><li>Осмотри модель в Explorer: DriverSeat, четыре колеса и скрипт CarScript на месте</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль Car Chassis по ссылке и вставь его из Inventory</li><li>Поставь модель на ровную площадку, подальше от других объектов</li><li>Осмотри модель в Explorer: DriverSeat, скрипт CarScript и папки Parts, Motors, Suspension</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/118669881648248/Car-Chassis" target="_blank" rel="noopener">https://create.roblox.com/store/asset/118669881648248/Car-Chassis</a></p>
 <aside class="speaker-notes">Заметка ведущего: Модуль у всех одинаковый, поэтому и настройка одна и та же — через атрибуты модели. Если после вставки машина стоит боком или внутри другого объекта, проще удалить и вставить заново.</aside>
 </div>
@@ -137,8 +137,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-p-4">
 <h3 class="slide-title">Шаг 4: построй свой кузов <span class="slide-duration">(4.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Добавь хотя бы три свои детали: панели кузова, спойлер, фары</li><li>Каждую деталь прикрепи к основе: выдели её и Part Chassis → Model → Weld</li><li>У деталей кузова: Anchored выключен, CanCollide выключен, Massless включён</li><li>Test → машина едет со всеми обвесами, ничего не отваливается</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Самый творческий шаг — следить за временем. Прикрепляем только к Part Chassis, колёса и сиденье не трогаем. CanCollide и Massless переключаются сразу у всех выделенных деталей: пусть выделят весь кузов рамкой и сделают это за один раз. Три частые поломки: деталь без Weld остаётся на месте при старте, деталь, прикреплённая к подвеске, заклинивает колесо, деталь внутри колеса блокирует его — двигаем инструментом Move.</aside>
+<ol class="content-item content-steps"><li>Добавь хотя бы три свои детали: панели кузова, спойлер, фары</li><li>Каждую деталь прикрепи к основе: выдели её и Part Main → Model → Weld</li><li>У деталей кузова: Anchored выключен, CanCollide выключен, Massless включён</li><li>Test → машина едет со всеми обвесами, ничего не отваливается</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Самый творческий шаг — следить за временем. Прикрепляем только к Part Main, колёса и сиденье не трогаем. CanCollide и Massless переключаются сразу у всех выделенных деталей: пусть выделят весь кузов рамкой и сделают это за один раз. Три частые поломки: деталь без Weld остаётся на месте при старте, деталь, прикреплённая к подвеске, заклинивает колесо, деталь внутри колеса блокирует его — двигаем инструментом Move.</aside>
 </div>
 <div class="slide" id="13-p-5">
 <h3 class="slide-title">Шаг 5: цвет и материал <span class="slide-duration">(2.5 мин)</span></h3>
@@ -166,7 +166,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-c-1">
 <h3 class="slide-title">Машина собрана и настроена <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы поставили готовое шасси, настроили характер движения атрибутами, построили свой кузов и прошли полный тест-драйв. В гараже каждого — машина собственной сборки.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>На следующем уроке — трасса мечты: виражи, трамплины и стартовая решётка для наших машин</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>На следующем уроке — создание гоночной трассы: плавные повороты, ограждения и стартовая решётка для наших машин</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сохранить проекты с машинами — они понадобятся все оставшиеся уроки блока: на трассе, в оформлении гонки и на Гран-при.</aside>
 </div>
 </section>
