@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 15. Оформление гонки: гоночная трасса вместо дороги</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="15">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 15. Оформление гонки: гоночная трасса вместо дороги</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Environment Artist (гонки)</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="15-w-1">
+<h3 class="slide-title">Сегодня ты — Environment Artist гонки <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Трасса построена и проверена. Сегодня превратим простую трассу в гоночное шоу: трибуны, ночные огни, звук гонки и салют над финишем.</p>
+<p class="content-item content-paragraph"><b>Environment Artist</b> — это художник игрового окружения: он отвечает за всё, что игрок видит и слышит вокруг себя.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Мостик: в уроке 5 мы уже делали атмосферу для квеста — сегодня те же инструменты работают на скорость и зрелище.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="15-r-1">
+<h3 class="slide-title">Что мы делали на уроке 14? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Как мы задавали точный угол секции поворота?</p><ol class="content-item content-quiz-options"><li data-correct="true">Вводили угол числом в Properties → Orientation ✓</li><li>Крутили мышкой на глаз</li><li>Угол появляется сам от веса машины</li></ol>
+<p class="content-item content-question">Из чего мы собирали плавный поворот?</p><ol class="content-item content-quiz-options"><li>Из одной большой изогнутой детали</li><li data-correct="true">Из секций, довёрнутых на одинаковый шаг угла ✓</li><li>Из рельефа Terrain</li></ol>
+<p class="content-item content-question">Зачем на длинной прямой нужна шикана?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы сбить скорость и вернуть точность ✓</li><li>Чтобы круг стал короче</li><li>Чтобы машины не обгоняли друг друга</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Orientation; ровная дуга из секций; шикана сбивает скорость. Сегодня строим вокруг этой трассы шоу — проект урока 14 должен быть открыт.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Свет, звук и декорации вокруг трассы <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="15-t-1">
+<h3 class="slide-title">Гонка — это шоу, а не только дорога <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Ощущение большой гонки создаёт мир вокруг: трибуны, флаги, арки, щиты</li><li>Игрок видит трассу секунды — но именно окружение запоминается</li><li>Всё вокруг дороги — декор: работает на картинку, не мешает движению</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Спросить группу: чем отличается заезд по пустой дороге от заезда на стадионе при зрителях? Ответ «атмосферой» — и есть тема урока.</aside>
+</div>
+<div class="slide" id="15-t-2">
+<h3 class="slide-title">Трибуны, флаги и арки <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Трибуны — вдоль стартовой прямой: там зрители «смотрят» самое интересное</li><li>Флаги — на поворотах и в шикане: развеваются там, где кипит борьба</li><li>Готовые модели берём в Toolbox: grandstand, flag, race sign</li><li>У всего декора выключаем CanCollide — правило уже знакомо</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот стартовой прямой гоночной трассы в Roblox Studio: вдоль дороги трибуны со зрителями, на ограждениях флаги, над дорогой арка]</p>
+<aside class="speaker-notes">Заметка ведущего: Экономия времени: одна трибуна копируется три раза — уже стадион. Напомнить про осмотр моделей из Toolbox в Explorer.</aside>
+</div>
+<div class="slide" id="15-t-3">
+<h3 class="slide-title">Ночная гонка: включаем ночь <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ClockTime</b> в Lighting — время суток числом: 0 — полночь, 12 — полдень</li><li>Ночная гонка зрелищнее дневной: фары, неон, огни трибун</li><li>Цена ночи — ответственность за свет: без фонарей гонщик не видит поворотов</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую: сдвинуть ClockTime с 12 на 0 — трасса исчезает в темноте. Этот же приём был в уроке 5, теперь у него гоночная задача.</aside>
+</div>
+<div class="slide" id="15-t-4">
+<h3 class="slide-title">Фонари: свет ведёт на скорости <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>SpotLight</b> светит направленным конусом — фонарь над дорогой</li><li><b>PointLight</b> светит во все стороны — фонарь-шар, огни арки</li><li>Первыми освещаем повороты, шикану и финиш — места решений гонщика</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот ночной гоночной трассы в Roblox Studio: цепочка фонарей со SpotLight освещает поворот, остальная трасса в темноте, светящаяся арка финиша вдалеке]</p>
+<aside class="speaker-notes">Заметка ведущего: Навигация из урока 11 на новой скорости: гонщик принимает решения за доли секунды — свет должен показывать поворот заранее, а не в момент въезда.</aside>
+</div>
+<div class="slide" id="15-t-5">
+<h3 class="slide-title">Звук: фон и звуковые зоны <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Фоновая музыка звучит одинаково по всей игре — это настроение гонки</li><li>Звук, вложенный в деталь, звучит из этой точки и затихает с расстоянием</li><li>Так строятся <b>звуковые зоны</b>: гул толпы у трибун, рёв моторов у решётки</li><li>Аудио берём в Toolbox; свойство Looped повторяет звук по кругу</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Продемонстрировать разницу вживую: проехать мимо трибун со звуком толпы — звук нарастает и затихает. Фоновая музыка при этом ровная.</aside>
+</div>
+<div class="slide" id="15-t-6">
+<h3 class="slide-title">Частицы: дым старта и салют финиша <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Дым у стартовой решётки — напряжение перед стартом</li><li>Салют и конфетти над финишной аркой — праздник победителя</li><li>Готовые эффекты берём в Toolbox: smoke, fireworks, confetti</li><li>Частицы ставим сбоку от траектории — они не должны закрывать обзор</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Знакомые частицы из урока 5 и финиш «Дороги героя» из урока 12 — приём один: праздник в конце пути. Обзор гонщика важнее любого эффекта.</aside>
+</div>
+<div class="slide" id="15-t-7">
+<h3 class="slide-title">Читаемость на скорости <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>На скорости мелкое сливается: ориентиры — крупные и контрастные</li><li>У самого полотна — меньше визуального шума: глаз цепляется за важное</li><li>Проверка только заездом: то, что читается пешком, на скорости исчезает</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Простой тест: если на третьем круге всё ещё путаешься, где поворот, — читаемость не готова. Контраст и размер решают, а не количество украшений.</aside>
+</div>
+<div class="slide" id="15-t-8">
+<h3 class="slide-title">Частые ошибки при оформлении гонки <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Декор поставили на полотно дороги — столкновение на полной скорости</li><li>Включили ночь и забыли фонари — повороты не видны</li><li>Вся трасса звучит одинаково громко — звуковые зоны потерялись</li><li>Частицы прямо на траектории — красиво, но гонщик ничего не видит</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Каждая ошибка ловится контрольным ночным заездом в конце практики — он и есть главная проверка урока.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="15-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Чем SpotLight отличается от PointLight?</p><ol class="content-item content-quiz-options"><li data-correct="true">SpotLight светит направленным конусом, PointLight — во все стороны ✓</li><li>SpotLight ярче любого PointLight</li><li>PointLight работает только днём</li></ol>
+<p class="content-item content-question">Как сделать так, чтобы гул толпы был слышен только у трибун?</p><ol class="content-item content-quiz-options"><li>Включить звук потише</li><li data-correct="true">Вложить звук в деталь трибуны — он затихает с расстоянием ✓</li><li>Написать возле трибун табличку «Здесь шумно»</li></ol>
+<p class="content-item content-question">Что первым делом освещаем на ночной трассе?</p><ol class="content-item content-quiz-options"><li>Центр озера в середине кольца</li><li>Трибуны — чтобы зрителей было видно</li><li data-correct="true">Повороты, шикана и финиш — места решений гонщика ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: конус против сферы; звук в детали; свет местам решений. Если остаётся время — спросить, где ещё пригодятся звуковые зоны (пещера, водопад, рынок NPC).</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="15-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут перерыва. После него зажигаем огни: трибуны, ночь, фонари, звук и салют.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого открыт проект с трассой урока 14.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Превращаем трассу в шоу <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="15-p-1">
+<h3 class="slide-title">Шаг 1: трибуны и флаги <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Вставь из Toolbox трибуну (grandstand) и поставь 2-3 вдоль стартовой прямой</li><li>Расставь флаги на поворотах и в шикане</li><li>Выключи CanCollide у всего декора и проверь заездом, что он не мешает</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Копирование экономит время: одна выверенная трибуна копируется за секунды. Декор за ограждениями, не на дороге.</aside>
+</div>
+<div class="slide" id="15-p-2">
+<h3 class="slide-title">Шаг 2: включи ночь <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой Lighting в Explorer и поставь ClockTime около 0</li><li>Проедь круг в темноте и запомни, какие места трассы пропали из виду</li><li>Составь список мест для фонарей: повороты, шикана, финиш</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Заезд в полной темноте — намеренный: список «слепых» мест станет планом расстановки света на следующем шаге. Если ночь у ребят получилась светлее, чем на кадрах урока, — одного ClockTime мало: в Lighting убавь Brightness (на наших кадрах 0.3), а у эффектов Atmosphere поставь Density около 0.1 и у Bloom Intensity около 0.2. На слайд это намеренно не вынесено: ученику хватает ClockTime, тонкая настройка — на усмотрение преподавателя.</aside>
+</div>
+<div class="slide" id="15-p-3">
+<h3 class="slide-title">Шаг 3: расставь фонари <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Построй фонарь: столб + светящаяся деталь + SpotLight конусом на дорогу</li><li>Скопируй фонари на все места из списка: повороты, шикана, финиш</li><li>Подсвети арку финиша PointLight — она снова маяк</li><li>Test → ночной круг: каждый поворот виден заранее</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот ночного поворота с копиями одинаковых фонарей: столбы со SpotLight освещают полотно дороги, машина в кадре проходит дугу]</p>
+<aside class="speaker-notes">Заметка ведущего: Один хорошо настроенный фонарь копируется по трассе. Направление конуса SpotLight — на полотно, не в глаза гонщику.</aside>
+</div>
+<div class="slide" id="15-p-4">
+<h3 class="slide-title">Шаг 4: звук гонки <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Добавь фоновую музыку гонки из Toolbox, включи Looped</li><li>Вложи звук толпы в деталь трибуны — получится звуковая зона</li><li>Test → проедь мимо трибун: гул нарастает и затихает, музыка ровная</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Если звук не слышен — проверить Playing и громкость. Звуковых зон достаточно одной-двух: перегруженный звук утомляет.</aside>
+</div>
+<div class="slide" id="15-p-5">
+<h3 class="slide-title">Шаг 5: дым старта и салют финиша <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь дым из Toolbox по бокам стартовой решётки</li><li>Повесь салют или конфетти над финишной аркой</li><li>Проверь с места гонщика: эффекты видны, но траекторию не закрывают</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Проверка «с места гонщика» — сесть в машину и посмотреть: именно этот ракурс главный, а не вид сверху.</aside>
+</div>
+<div class="slide" id="15-p-6">
+<h3 class="slide-title">Шаг 6: контрольный ночной заезд <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Проедь три круга ночью на полной скорости</li><li>Проверь чек-лист: повороты видны заранее, звук зонирован, частицы не мешают</li><li>Исправь всё, что мешало, и повтори заезд</li></ol>
+<p class="content-item content-image-prompt">[изображение: Ночная гоночная трасса целиком с высоты: светящаяся цепочка фонарей повторяет контур кольца, яркая арка финиша, подсвеченные трибуны у стартовой прямой]</p>
+<aside class="speaker-notes">Заметка ведущего: Итоговая проверка урока. Красивый кадр с высоты — хороший момент для скриншота: пригодится для страницы игры на Гран-при.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="15-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Ночью гонщик не замечает крутой поворот. Что делаем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ставим фонарь так, чтобы поворот был виден заранее ✓</li><li>Возвращаем день</li><li>Пишем предупреждение в описании игры</li></ol>
+<p class="content-item content-question">Почему звук толпы кладут в деталь трибуны, а не делают фоновым?</p><ol class="content-item content-quiz-options"><li>Фоновым звуком нельзя управлять</li><li data-correct="true">Чтобы гул был слышен у трибун и затихал вдали — это звуковая зона ✓</li><li>Гул толпы бывает только звуком из детали</li></ol>
+<p class="content-item content-question">Какое место твоей ночной трассы выглядит самым зрелищным и почему?</p>
+<aside class="speaker-notes">Заметка ведущего: Открытый вопрос — мини-показ: 2-3 ученика показывают любимый ракурс ночной трассы. Ожидаемые ответы на квизы: фонарь до поворота; звуковая зона.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="15-c-1">
+<h3 class="slide-title">Трасса стала событием <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Мы построили шоу вокруг дороги: трибуны и флаги, ночные фонари на местах решений, звуковые зоны и салют над финишем. Трасса готова принимать гонку.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь одну свою звуковую зону — например, рёв моторов у стартовой решётки</li><li>На следующем уроке — ПРОЕКТ 4 «Гран-при»: лобби на трибунах, модуль раунда и заезд вчетвером</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Всё готово к проекту: машина (13), трасса (14), шоу (15). На Гран-при это соберётся в турнир — проекты сохранить.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/environment/lighting.md">Lighting — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/light-sources.md">Light sources — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/audio/objects.md">Audio objects — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/particle-emitters.md">Particle emitters — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/projects/assets/toolbox.md">Toolbox — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li><li><a href="https://jacobryanwheeler.medium.com/game-level-design-35-ways-to-guide-the-player-4bbc324204f4">Game Level Design: 35 Ways to Guide The Player</a></li></ul></section>
+</article>
+</body>
+</html>
