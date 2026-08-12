@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 16. ПРОЕКТ 4: Гран-при</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="16">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 16. ПРОЕКТ 4: Гран-при</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер гонки</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="16-w-1">
+<h3 class="slide-title">Сегодня ты — Продюсер гонки <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Машина, трасса и шоу вокруг неё готовы. Сегодня Гран-при проводит сама игра: она собирает гонщиков в лобби, бросает жребий, сажает четвёрку за руль и считает время.</p>
+<p class="content-item content-paragraph"><b>Продюсер гонки</b> — это специалист, который превращает трассу в игру: игра сама даёт старт, считает круги и объявляет победителя.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Главная интрига дня — первый раунд с живыми соперниками: ведущим будет игра, а не преподаватель.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="16-r-1">
+<h3 class="slide-title">Что мы делали на уроке 15? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Каким источником света мы освещали полотно дороги с фонаря?</p><ol class="content-item content-quiz-options"><li data-correct="true">SpotLight — направленным конусом ✓</li><li>PointLight — во все стороны</li><li>Материалом Neon на дороге</li></ol>
+<p class="content-item content-question">Как мы сделали, чтобы гул толпы звучал только у трибун?</p><ol class="content-item content-quiz-options"><li>Уменьшили громкость на весь мир</li><li data-correct="true">Вложили звук в деталь трибуны — он затихает с расстоянием ✓</li><li>Включили звук только на время старта</li></ol>
+<p class="content-item content-question">Какие места ночной трассы мы освещали в первую очередь?</p><ol class="content-item content-quiz-options"><li>Озеро и деревья в центре кольца</li><li>Все места равномерно</li><li data-correct="true">Повороты, шикана и финиш — места решений гонщика ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: SpotLight; звук в детали; места решений. Всё это уже стоит на трассах — сегодня добавляем машины, правила и зрителей.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Превращение декорации в игру <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="16-t-1">
+<h3 class="slide-title">Чек-лист Гран-при <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</li><li>Модуль раунда: он проводит гонку сам, без ведущего</li><li>Гараж на четыре машины и стартовая решётка на четыре места</li><li>Ворота по кольцу, финишная линия и дисплей с результатами</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Чек-лист дня перед глазами. Главное отличие проекта: до сих пор гонку проводили мы сами, теперь её проводит игра.</aside>
+</div>
+<div class="slide" id="16-t-2">
+<h3 class="slide-title">Раунд: гонкой дирижирует игра <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Раунд</b> — это повторяющийся цикл матча: ожидание, заезд, итоги и снова ожидание</li><li>Игроки появляются в лобби и ждут отсчёта</li><li>Жребий выбирает четвёрку игроков</li><li>Пять кругов, победа по времени, потом все возвращаются в лобби</li></ul>
+<p class="content-item content-image-prompt">[изображение: Лобби на трибуне гоночной трассы в Roblox Studio: игроки-зрители на скамьях возле трассы, внизу стартовая решётка с четырьмя машинами, рядом дисплей раунда]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: раунд знаком по любой соревновательной игре — ожидание, матч, итоги. Спросить группу, где они такой цикл уже видели.</aside>
+</div>
+<div class="slide" id="16-t-3">
+<h3 class="slide-title">Модуль раунда: что внутри <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Модуль курса <b>RaceRoundSystem</b> проводит раунд гонки: отсчёт, жребий, посадка в машины, подсчёт кругов</li><li>Мы расставляем его части: LobbySpawn, Grid, Garage, Checkpoints, FinishLine, Board</li><li>Имена частей не меняем — скрипт ищет их по именам</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem</a></p>
+<p class="content-item content-image-prompt">[изображение: Окно Explorer в Roblox Studio с раскрытой папкой RaceRoundSystem: видны RoundScript, LobbySpawn, вложенные папки Grid, Garage, Checkpoints, части FinishLine и Board]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать дерево модуля вживую и сопоставить каждую часть с этапом раунда: где ждём, где стартуем, где считаем круги. Устно: RoundScript ничего не строит — он только ищет готовые части и управляет ими.</aside>
+</div>
+<div class="slide" id="16-t-4">
+<h3 class="slide-title">Лобби на трибунах <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>LobbySpawn — точка появления игрока: ставим её на трибуну возле трассы</li><li>С трибуны видно стартовую решётку и хотя бы один поворот — ожидание превращается в просмотр</li><li>После финиша модуль возвращает гонщика на ту же трибуну</li><li>Между лобби и полотном дороги — ограждение: зритель не выходит на трассу</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Устно: место ожидания — часть дизайна. Однообразное лобби игроки покидают, поэтому сажаем их туда, откуда видно борьбу.</aside>
+</div>
+<div class="slide" id="16-t-5">
+<h3 class="slide-title">Гараж: четыре разные машины <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>В папке Garage лежат четыре машины с именами Car1, Car2, Car3, Car4</li><li>Модуль копирует машину и ставит копию на клетку Slot с тем же номером</li><li>Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</li><li>Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Машины берём из урока 13: у каждого уже есть своя сборка. Если своя одна — копируем её и перекрашиваем, физику не трогаем.</aside>
+</div>
+<div class="slide" id="16-t-6">
+<h3 class="slide-title">Круги считают ворота <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Чекпоинт</b> — это ворота поперёк дороги: гонщик проезжает их по порядку</li><li>Срезать нельзя: пропустил ворота — круг не засчитан</li><li>Финишная линия добавляет круг только тем, кто прошёл все ворота</li><li>Ворота ставим равномерно по кольцу — по одним после каждого поворота</li></ul>
+<p class="content-item content-image-prompt">[изображение: Полупрозрачные зелёные ворота чекпоинта поперёк полотна гоночной трассы в Roblox Studio: ворота перекрывают дорогу от ограждения до ограждения, за ними поворот]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: та же идея, что у чекпоинтов в обби, только считаем не прогресс, а круги. Показать, что объезд по краю ловится шириной ворот.</aside>
+</div>
+<div class="slide" id="16-t-7">
+<h3 class="slide-title">Победа по времени и дисплей раунда <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Секундомер гонщика идёт от старта до пятого круга</li><li>Стартуют все одновременно, поэтому лучшее время — это и есть первое место</li><li>Дисплей Board показывает отсчёт, круги и итоговую таблицу заезда</li><li>Настройки раунда — в атрибутах папки: Laps, RacersPerRace, MinRacers, Intermission</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Атрибуты знакомы с урока 13 — Properties, раздел Attributes. Проговорить: Laps — кругов в заезде, RacersPerRace — мест на решётке, MinRacers — сколько игроков нужно для старта.</aside>
+</div>
+<div class="slide" id="16-t-8">
+<h3 class="slide-title">Атрибуты раунда: что за что отвечает <span class="slide-duration">(1.0 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Laps — сколько кругов в заезде, по умолчанию 5</li><li>RacersPerRace — сколько мест на стартовой решётке, по умолчанию 4</li><li>MinRacers — сколько игроков нужно для старта, по умолчанию 2</li><li>Intermission — сколько секунд отсчёта между заездами, по умолчанию 15</li><li>RaceTimeLimit — через сколько секунд заезд закроют принудительно, 300</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Слайд-шпаргалка: держать открытым, пока ученики правят Attributes на шаге 5. Для проверки в одиночку MinRacers ставят в 1, иначе отсчёт стоит и заезд не начинается. RaceTimeLimit трогают редко — он страхует от зависшего заезда, если кто-то застрял на трассе.</aside>
+</div>
+<div class="slide" id="16-t-9">
+<h3 class="slide-title">Частые ошибки на Гран-при <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Переименовали часть модуля — скрипт её не находит, и раунд не начинается</li><li>Лобби поставили у дороги: ожидающим не видно заезд, и они выходят на полотно</li><li>Ворота расставили не по порядку — круги не считаются</li><li>В машине нет VehicleSeat — гонщик остаётся стоять на решётке</li><li>Поставили Laps = 20 на длинном кольце — заезд превращается в рутину</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Все пять ошибок всплывают при живых игроках, поэтому проверяем их на шагах практики, а не на Гран-при.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="16-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Почему лобби ставят на трибуну, а не у ворот трассы?</p><ol class="content-item content-quiz-options"><li data-correct="true">Оттуда видно заезд — ожидание превращается в просмотр ✓</li><li>На трибуне игрок появляется быстрее</li><li>Так требует модуль раунда</li></ol>
+<p class="content-item content-question">Гонщик срезал поворот и пропустил ворота. Что сделает модуль?</p><ol class="content-item content-quiz-options"><li>Засчитает круг: финиш он всё равно пересёк</li><li data-correct="true">Не засчитает круг: ворота проходят по порядку ✓</li><li>Вернёт гонщика в лобби</li></ol>
+<p class="content-item content-question">Какой атрибут папки раунда задаёт число кругов в заезде?</p><ol class="content-item content-quiz-options"><li data-correct="true">Laps ✓</li><li>RacersPerRace</li><li>Intermission</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: обзор с трибуны; круг не засчитан; атрибут Laps. После вопросов — сразу к сборке.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="16-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут перерыва. После него — сборка раунда и главное событие дня: Гран-при вчетвером.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого открыт проект с трассой и оформлением уроков 14-15.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем раунд <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="16-p-1">
+<h3 class="slide-title">Шаг 1: вставь модуль раунда <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Получи модуль RaceRoundSystem по ссылке и вставь его из Inventory</li><li>Осмотри папку в Explorer: RoundScript, LobbySpawn, Grid, Garage, Checkpoints, FinishLine, Board</li><li>Ничего не переименовывай — скрипт ищет части по именам</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem</a></p>
+<aside class="speaker-notes">Заметка ведущего: После вставки части лежат кучей рядом с трассой — это нормально, расставляем их следующими шагами. Корень модуля — папка, поэтому ворота, клетки и дисплей берутся мышью поодиночке и двигаются сразу, без разгруппировки.</aside>
+</div>
+<div class="slide" id="16-p-2">
+<h3 class="slide-title">Шаг 2: лобби на трибуне <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Перенеси LobbySpawn на трибуну — туда, откуда видно решётку и первый поворот</li><li>Поставь дисплей Board так, чтобы его читали и с трибуны, и со старта</li><li>Test → появись в игре: ты в лобби, трасса перед глазами</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Проверка обзора — сесть на место зрителя и посмотреть вперёд: если видно только ограждение, лобби поднимаем выше.</aside>
+</div>
+<div class="slide" id="16-p-3">
+<h3 class="slide-title">Шаг 3: решётка и гараж <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Расставь клетки Slot1-Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</li><li>Положи в папку Garage четыре машины и назови их Car1, Car2, Car3, Car4</li><li>Сверь настройки: MaxSpeed и TurnAngle у всех четырёх сопоставимы</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Клетки полупрозрачные — это метки, а не препятствия. Гараж лучше поставить рядом с лобби: машины видно, но трассе они не мешают.</aside>
+</div>
+<div class="slide" id="16-p-4">
+<h3 class="slide-title">Шаг 4: ворота и финишная линия <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь FinishLine поперёк дороги на линии старта</li><li>Расставь ворота Checkpoints по кольцу — по одним после каждого поворота</li><li>Проверь, что каждые ворота перекрывают дорогу целиком — иначе их объедут по краю</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ворота нумерованы: 1, 2, 3, 4 — порядок расстановки по ходу движения важен, иначе круг не засчитается.</aside>
+</div>
+<div class="slide" id="16-p-5">
+<h3 class="slide-title">Шаг 5: настрой раунд и проверь <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выдели RaceRoundSystem и открой Properties, раздел Attributes</li><li>Поставь Laps = 5 и RacersPerRace = 4, подбери Intermission под свою группу</li><li>Для проверки в одиночку поставь MinRacers = 1, потом верни 2</li><li>Test → проедь круг: дисплей считает круги, время идёт</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Проверка в одиночку — обязательный шаг перед публикацией: она ловит и порядок ворот, и посадку в машину.</aside>
+</div>
+<div class="slide" id="16-p-6">
+<h3 class="slide-title">Шаг 6: Гран-при вчетвером <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Опубликуй игру, сделай её публичной (Public) и пройди опрос о возрастном ограничении</li><li>Позови соперников: жребий соберёт первую четвёрку</li><li>Остальные ждут на трибуне и смотрят заезд</li><li>После итогов на дисплее раунд начинается заново</li></ol>
+<p class="content-item content-image-prompt">[изображение: Заезд на четверых в опубликованной игре: четыре машины разных цветов проходят поворот ночной трассы, на трибуне видны игроки-зрители и дисплей с временем]</p>
+<aside class="speaker-notes">Заметка ведущего: Роль преподавателя — комментатор: раунды идут сами, объявлять победителя игре не нужно. Держать темп: заезд на пять кругов — около трёх минут.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="16-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Отсчёт стоит на надписи «Ждём гонщиков». Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Сколько игроков в лобби и какое значение у MinRacers ✓</li><li>Цвет дисплея</li><li>Материал полотна дороги</li></ol>
+<p class="content-item content-question">Гонщик появился на решётке, но за руль не сел. В чём причина?</p><ol class="content-item content-quiz-options"><li data-correct="true">В машине из гаража нет VehicleSeat ✓</li><li>Слишком яркое освещение трассы</li><li>В заезде мало кругов</li></ol>
+<p class="content-item content-question">Что оказалось самым напряжённым в заезде и как повела себя трасса, когда по ней поехали четыре машины сразу?</p>
+<aside class="speaker-notes">Заметка ведущего: Открытый вопрос — про ощущения от заезда и поведение трассы под нагрузкой. Ожидаемые ответы на квизы: число игроков и MinRacers; отсутствие VehicleSeat.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="16-c-1">
+<h3 class="slide-title">Гран-при состоялся <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</li><li>На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Итог проекта: четыре урока — от сиденья VehicleSeat до игры, которая сама проводит гонку. Следующий проект продолжает мультиплеер.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Seat.md">Seat — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/VehicleSeat.md">VehicleSeat — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Player.md">Player — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/PVInstance.md">PVInstance — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places">Create and publish games and places — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li></ul></section>
+</article>
+</body>
+</html>
