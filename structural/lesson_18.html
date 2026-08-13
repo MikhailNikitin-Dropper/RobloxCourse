@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 18. Дизайн честного сражения</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="18">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 18. Дизайн честного сражения</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Combat Level Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="18-w-1">
+<h3 class="slide-title">Сегодня ты — Combat Level Designer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">На прошлом уроке у нас появились две команды и две базы, а между ними осталась пустая середина. Сегодня превращаем её в арену, на которой ни одна сторона не получает преимущества.</p>
+<p class="content-item content-paragraph"><b>Combat Level Designer</b> — это специалист, который проектирует карту для боя команда на команду: расставляет укрытия, прокладывает маршруты и решает, где риск, а где награда.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Мостик от прошлого урока: команды и базы есть, а карта между ними ещё не карта. Сегодня — правила честной арены.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="18-r-1">
+<h3 class="slide-title">Что мы делали на уроке 17? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Зачем мы включили AutoAssignable у обеих команд?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы игра сама делила игроков поровну ✓</li><li>Чтобы у команд появились разные цвета</li><li>Чтобы игрок мог сменить команду касанием</li></ol>
+<p class="content-item content-question">Что связывает точку возрождения с командой?</p><ol class="content-item content-quiz-options"><li>Видимый цвет детали</li><li data-correct="true">Выключенный Neutral и совпадающий TeamColor ✓</li><li>Название команды, вписанное в имя детали</li></ol>
+<p class="content-item content-question">Зачем мы красили пол базы, стену и флаг в цвет команды?</p><ol class="content-item content-quiz-options"><li>Цвет ускоряет возвращение игрока в игру</li><li>Без покраски точка возрождения не работает</li><li data-correct="true">Чтобы с середины карты было видно, где чья половина ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: авторазбор делит игроков поровну; Neutral выключен плюс совпадающий TeamColor; цвет — указатель для игрока. Третий вопрос — прямой мостик к сегодняшнему цветовому кодированию половин арены.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Арена для честного сражения <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="18-t-1">
+<h3 class="slide-title">Честная карта никому не даёт преимущества <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Честная карта</b> — это карта, на которой у игроков равного мастерства равные шансы, с какой бы стороны они ни начали</li><li>Ориентир соревновательной игры — обе команды выигрывают примерно поровну</li><li>Честность важнее идеального расчёта: оценку выносят игроки, а не таблица чисел</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Спросить группу: из-за чего в командной игре бывает обидно проигрывать? Обычно называют не мастерство противника, а неравные условия — с этого и начинаем урок.</aside>
+</div>
+<div class="slide" id="18-t-2">
+<h3 class="slide-title">Зеркальная симметрия — короткий путь к честности <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Зеркальная симметрия</b> — это когда мы строим одну половину карты, а вторая получается её копией с поворотом на 180 градусов</li><li>У обеих команд совпадает всё: расстояния, укрытия, вид с базы</li><li>Для трёх и более команд один и тот же кусочек карты поворачивают несколько раз — это радиальная симметрия</li></ul>
+<p class="content-item content-image-prompt">[изображение: Вид сверху на арену в Roblox Studio: две зеркальные половины с базами команд по краям и общей площадкой в центре, половины совпадают относительно центральной линии]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: у зеркала есть и цена — половины выглядят одинаково, и игрок легко теряет направление. Спасает оформление: разные цвета команд и заметные ориентиры на каждой стороне. На кадре у базы виден щит с названием команды: делать надписи на деталях мы ещё не умеем, поэтому такие таблички остаются только в презентации — на арене группы их не будет.</aside>
+</div>
+<div class="slide" id="18-t-3">
+<h3 class="slide-title">Как получить вторую половину в Studio <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Готовую половину выделяем и группируем в Model — дальше она копируется целиком</li><li>Копия — правый клик по модели → Duplicate; ставим шаг Rotate 45° на вкладке Model, и четыре шага дают разворот на 180 градусов</li><li>Копию сдвигаем к базе второй команды и стыкуем половины по центральной линии</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую на двух деталях: Group, правый клик → Duplicate, разворот с шагом 45°. Ctrl+D — та же команда горячей клавишей, для тех, кто быстрее. Устно: у скопированной половины все настройки тоже скопировались — точка возрождения внутри неё пока принадлежит первой команде.</aside>
+</div>
+<div class="slide" id="18-t-4">
+<h3 class="slide-title">Укрытия: за чем прятаться <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Укрытие</b> — это объект, за которым игрок пережидает опасный момент: стена, ящик, выступ скалы</li><li>Открытое пространство разбиваем укрытиями, чтобы его можно было пройти перебежками</li><li>Формы и высоты делаем разными: ряды одинаковых коробок выглядят однообразно</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: участок арены с укрытиями разной формы — низкая стена, крупный ящик, выступ скалы и колонна, между ними свободные проходы]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать на примере: ряд одинаковых кубов и та же площадка с разными формами. Устно: площадка из одинаковых кубов по сетке похожа скорее на склад, чем на арену; укрытия удобно собирать из архитектуры самой арены — обломок стены, край лестницы, колонна.</aside>
+</div>
+<div class="slide" id="18-t-5">
+<h3 class="slide-title">Перебежка — единица движения по арене <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Игрок движется от укрытия к укрытию: увидел следующее — перебежал</li><li>Между укрытиями оставляем короткие открытые участки, иначе маршрутом никто не пойдёт</li><li>Лучше недобор укрытий, чем перебор: на арене из сплошных стен игроки просто не находят друг друга</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Устно: проверять это удобно пробежкой — если на маршруте есть место, где бежать страшно и долго, туда просится ещё одно укрытие.</aside>
+</div>
+<div class="slide" id="18-t-6">
+<h3 class="slide-title">Центр арены: риск и награда <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Зона риска</b> — это открытое место, где спрятаться негде, зато лежит что-то ценное</li><li>Классическая постановка: награда в открытом центре, укрытия — по краям площадки</li><li>Игрок сам решает, стоит ли награда риска, — рискованный маршрут остаётся необязательным</li></ul>
+<p class="content-item content-image-prompt">[изображение: Вид сверху на центральную площадку арены в Roblox Studio: в середине открытая площадка со светящимся флагом-наградой, по краям площадки расставлены укрытия]</p>
+<aside class="speaker-notes">Заметка ведущего: Спросить группу, что могло бы лежать в центре их арены. Устно: центр работает магнитом только тогда, когда награда действительно нужна игроку, — иначе площадка будет пустовать.</aside>
+</div>
+<div class="slide" id="18-t-7">
+<h3 class="slide-title">Маршруты атаки: два-три пути <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>От базы к базе ведут два-три маршрута: один перекрыть можно, все сразу — нет</li><li>У важной зоны — минимум три входа, иначе в ней запираются</li><li><b>Узкое место</b> — это проход, который легко перекрыть; такие проходы разносим по разным маршрутам</li></ul>
+<p class="content-item content-image-prompt">[изображение: Вид сверху на арену в Roblox Studio: от базы одной команды к базе другой ведут три маршрута — два вдоль краёв арены и центральный через открытую площадку]</p>
+<aside class="speaker-notes">Заметка ведущего: Устно: схему маршрутов удобно рисовать кругами и линиями — зоны и связи между ними. Хорошо работает «восьмёрка»: два кольца с перекрёстком в центре.</aside>
+</div>
+<div class="slide" id="18-t-8">
+<h3 class="slide-title">Цвет команды по всей половине <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Всё, что принадлежит команде, носит её цвет: база, ближние укрытия, рамки входов</li><li>На зеркальной арене цвет — главный указатель направления</li><li>Центральная площадка остаётся общей: цветов команд на ней нет</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Связать с прошлым уроком: там цвет отмечал базу, теперь он размечает половину карты целиком. Устно: как только цвета пропадают, игрок на симметричной арене начинает бежать не в ту сторону. Если спросят про подписи на базах — надписи на деталях мы ещё не умеем делать, поэтому стороны различаем цветом, а не текстом.</aside>
+</div>
+<div class="slide" id="18-t-9">
+<h3 class="slide-title">Частые ошибки на арене <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Половины похожи, но не равны: у одной стороны укрытий больше — арена перестала быть честной</li><li>Все укрытия одинаковые и расставлены по сетке</li><li>Центр закрыли стенами: награда есть, а риска нет</li><li>Маршрут один: обе команды встречаются в единственном коридоре, остальная арена пустует</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Все четыре ошибки видны сверху: поднять камеру над ареной и сравнить половины. Этим же приёмом проверяем работы на практике.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="18-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Почему зеркальная симметрия делает арену честной?</p><ol class="content-item content-quiz-options"><li data-correct="true">Обе команды получают одинаковые расстояния, укрытия и вид с базы ✓</li><li>Симметричная арена занимает меньше места в игре</li><li>На симметричной арене игра сама расставляет укрытия</li></ol>
+<p class="content-item content-question">Где по правилу риска и награды лежит самое ценное на карте?</p><ol class="content-item content-quiz-options"><li>В глубине базы каждой команды</li><li data-correct="true">В открытом центре ✓</li><li>За стеной в дальнем углу арены</li></ol>
+<p class="content-item content-question">Какую награду интересно положить в центр вашей арены?</p>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: одинаковые условия у обеих сторон; награда в открытом центре. Открытый вопрос — заготовка к практике: услышанные идеи ученики поставят в центр своей арены.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="18-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут перерыва. После него строим арену: три маршрута, укрытия и открытый центр с наградой.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого открыта командная карта с прошлого урока: две базы и общая середина.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Строим честную арену <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="18-p-1">
+<h3 class="slide-title">Шаг 1: наметь три маршрута <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой командную карту прошлого урока: две базы и общая середина</li><li>На своей половине проложи плоскими деталями три дорожки от базы к середине: две вдоль краёв и одну через центр</li><li>Test → пробеги каждую дорожку: нигде не застреваешь?</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Маршруты пока — дорожки из серых деталей, оформление придёт позже. Проследить за шириной: рабочий ориентир — два-три персонажа в ряд. Целиком маршруты сомкнутся на шаге 3, когда половина повторится копией.</aside>
+</div>
+<div class="slide" id="18-p-2">
+<h3 class="slide-title">Шаг 2: укрытия на своей половине <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Работаем на половине одной команды — вторая появится копией</li><li>Вдоль маршрутов расставь укрытия разной формы: стены, ящики, выступы, колонны</li><li>Каждое укрытие закрепи (Anchored), иначе при первом же касании они разъедутся и развалятся на части</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Главное на шаге — не количество укрытий, а ритм: короткая перебежка от одного к другому. Про Anchored напомнить до первого Test, иначе арену придётся собирать заново.</aside>
+</div>
+<div class="slide" id="18-p-3">
+<h3 class="slide-title">Шаг 3: зеркальная копия <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выдели свою половину вместе с базой и сгруппируй в Model (Ctrl+G) — копироваться будет всё сразу</li><li>Правый клик по модели → Duplicate; поставь шаг Rotate 45° на вкладке Model и доверни копию на 180 градусов</li><li>Сдвинь копию на сторону второй команды и состыкуй половины по центральной линии</li><li>Старую базу второй команды удали: её место заняла точная копия первой</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: половина арены сгруппирована в Model и выделена, рядом её копия, повёрнутая на 180 градусов и придвинутая к базе второй команды]</p>
+<aside class="speaker-notes">Заметка ведущего: Дублирование показать кнопкой: правый клик → Duplicate, горячая клавиша Ctrl+D — по желанию. Показать разворот вживую: без шага Rotate копия встанет криво, и половины не совпадут. Старую базу удаляем осознанно: база второй команды становится точной копией первой, а не похожей на неё. Сразу предупредить: точка возрождения внутри копии всё ещё носит цвет первой команды — исправим на шаге 5.</aside>
+</div>
+<div class="slide" id="18-p-4">
+<h3 class="slide-title">Шаг 4: центр риска и награды <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Освободи середину арены: укрытия с центральной площадки убери</li><li>Поставь в центре награду-ориентир: столб или флаг со светящейся деталью — награду должно быть видно с обеих баз</li><li>Укрытия перенеси на края площадки: подойти к центру есть откуда, спрятаться в нём — негде</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Награда пока не работает как предмет — это ориентир и цель для глаз. Устно: награда работает магнитом только тогда, когда её видно издалека.</aside>
+</div>
+<div class="slide" id="18-p-5">
+<h3 class="slide-title">Шаг 5: цвет половин <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Проверь TeamColor у точки возрождения на скопированной половине — он должен совпадать с цветом второй команды</li><li>На каждой половине покрась ближние к базе укрытия и рамку входа в цвет её команды</li><li>Центральную площадку оставь без цветов команд — она общая</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Самое частое место ошибки урока: обе точки возрождения после копирования носят один цвет, и вся вторая команда появляется на первой базе. Проверить это у каждого лично. Надписей на половинах не ждём: делать текст на деталях мы ещё не умеем, весь указатель — цвет.</aside>
+</div>
+<div class="slide" id="18-p-6">
+<h3 class="slide-title">Шаг 6: тест честности <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Запусти Server &amp; Clients с двумя клиентами</li><li>За каждую команду дойди до центра — и проверь, что все три маршрута проходимы</li><li>Сверь время до центра с обеих сторон: разное время означает, что половины не совпали</li></ol>
+<p class="content-item content-image-prompt">[изображение: Два окна-клиента Roblox Studio рядом: игроки обеих команд стоят на своих базах симметричной арены, между базами видна центральная площадка с наградой]</p>
+<aside class="speaker-notes">Заметка ведущего: Время считаем вслух: точность до секунды не нужна, важна сама разница между сторонами. Завершение теста — End Session.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="18-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Почему мы расставляли укрытия только на одной половине арены?</p><ol class="content-item content-quiz-options"><li data-correct="true">Вторая половина — копия с поворотом на 180 градусов, поэтому половины гарантированно равны ✓</li><li>На второй половине укрытия расставляет сама игра</li><li>Вторая половина по правилам обязана оставаться пустой</li></ol>
+<p class="content-item content-question">После копирования половины игрок красной команды появился на половине синих. Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li>Размер центральной площадки</li><li data-correct="true">TeamColor у скопированной точки возрождения ✓</li><li>Число клиентов в симуляции</li></ol>
+<p class="content-item content-question">Что на вашей арене стоит переделать после теста?</p>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: копия повторяет половину точь-в-точь; проверяем TeamColor скопированной точки возрождения. Открытый вопрос — короткий разбор: чаще всего называют длинный пустой участок и незаметный центр.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="18-c-1">
+<h3 class="slide-title">Арена для честного сражения готова <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Мы превратили две базы в арену: зеркальные половины, укрытия вдоль трёх маршрутов и открытый центр с наградой. Условия у обеих команд одинаковые — исход решает мастерство.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: сделай на своей половине второй вход на базу — боковую дорожку в обход ворот, повтори её копией на второй половине и проверь в Server &amp; Clients, что стороны совпали</li><li>На следующем уроке — снаряжение игроков: готовые инструменты в руках и одинаковые наборы для обеих команд</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Отметить главное умение урока: сравнивать половины сверху и замечать неравенство. Оно понадобится и дальше — снаряжение командам тоже раздают поровну. По домашнему заданию: у базы сейчас один вход, и правило «минимум три входа у важной зоны» на неё пока не распространили — второй вход как раз делает базу проходимой, а не тупиковой.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://book.leveldesignbook.com/process/combat/balance">Map balance — The Level Design Book</a></li><li><a href="https://www.ongamedesign.net/designing-fps-multiplayer-maps-part-1/">Designing FPS Multiplayer Maps, Part 1 — On Game Design</a></li><li><a href="https://overdertoza.com/designing-symmetrical-vs-asymmetrical-multiplayer-maps/">Designing Symmetrical vs Asymmetrical Multiplayer Maps</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li><li><a href="https://www.informit.com/articles/article.aspx?p=3113591&amp;seqNum=5">Snapping — Using Roblox Studio (InformIT)</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li></ul></section>
+</article>
+</body>
+</html>
