@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="5-r-1">
 <h3 class="slide-title">Что мы делали на уроке 4? <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как мы добавляли модуль Prop Hunter в свой проект?</p><ol class="content-item content-quiz-options"><li>Искали случайный модуль в поиске Toolbox</li><li>Писали скрипт на Lua</li><li data-correct="true">По ссылке → Get Model → инвентарь → My Models → в Workspace ✓</li></ol>
+<p class="content-item content-question">Как мы добавляли модуль PropHunter в свой проект?</p><ol class="content-item content-quiz-options"><li>Искали случайный модуль в поиске Toolbox</li><li>Писали скрипт на Lua</li><li data-correct="true">По ссылке → Get Model → инвентарь → My Models → в Workspace ✓</li></ol>
 <p class="content-item content-question">Что нужно предмету, чтобы он стал сокровищем охоты?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тег Prop Hunt, записка StringValue и уникальное имя ✓</li><li>Золотой цвет и материал Neon</li><li>Размер не меньше 10 студов</li></ol>
-<p class="content-item content-question">Где по правилам левел-дизайна лежало самое ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у спауна</li><li data-correct="true">В самом опасном или дальнем месте карты ✓</li><li>За пределами карты</li></ol>
+<p class="content-item content-question">Где по правилам левел-дизайна лежало самое ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у точки возрождения</li><li data-correct="true">В самом опасном или дальнем месте карты ✓</li><li>За пределами карты</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Разминка-квиз по уроку 4. Ожидаемые ответы: по ссылке через инвентарь; тег + записка + имя; в опасном месте. Третий вопрос — мостик: сегодня «опасность» и «уют» зон сделаем видимыми. Попросить всех открыть мир охоты.</aside>
 </div>
 </section>
@@ -57,7 +57,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Свет и небо задают настроение игре <span class="slide-duration">(2.5 мин)</span></h3>
 <p class="content-item content-paragraph">Один и тот же мир на ярком полудне — весёлая прогулка, а в синих сумерках с туманом — тревожная тайна. Ни одна деталь не изменилась — изменилось настроение.</p>
 <ul class="content-item content-bullets"><li>Свет и небо часто управляют эмоциями игрока сильнее, чем постройки</li><li>Все главные настройки освещения живут в сервисе Lighting в Explorer</li><li>Сегодня — глобальный свет и локальные эффекты освещения</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Быстрый опрос: «вспомни страшный момент из игры или мультика — как там выглядел мир?» Дети сами называют темноту, туман, мрачные цвета — значит, инструменты урока они уже чувствуют интуитивно.</aside>
+<aside class="speaker-notes">Заметка ведущего: Быстрый опрос: «вспомни страшный момент из игры или мультика — как там выглядел мир?» Ученики сами называют темноту, туман, мрачные цвета — значит, инструменты урока они уже чувствуют интуитивно.</aside>
 </div>
 <div class="slide" id="5-t-2">
 <h3 class="slide-title">Properties: панель управления любым объектом <span class="slide-duration">(2.5 мин)</span></h3>
@@ -76,7 +76,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Atmosphere: воздух и туманная даль <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Atmosphere (атмосфера)</b> находится внутри Lighting</li><li><b>Density</b> — густота воздуха: значение больше — даль тонет в дымке</li><li><b>Offset</b> — силуэт горизонта: значение меньше — горизонт сливается с небом</li><li><b>Color и Haze</b> — цвет и сила дымки: задают настроение целой сцены</li><li><b>Glare</b> — сияние вокруг солнца (работает только при Haze больше 0)</li></ul>
 <p class="content-item content-image-prompt">[изображение: Один и тот же пейзаж с горами до и после добавления Atmosphere: слева ясная даль, справа — глубокая туманная дымка на горизонте]</p>
-<aside class="speaker-notes">Заметка ведущего: Метафора: Density — «сколько тумана налили в воздух». Показать до/после на своей карте: с Density ≈ 0.4 горы урока 2 тонут в дымке и мир кажется огромным. Ориентиры значений: Density ≈ 0.375, Offset ≈ 0.17.</aside>
+<aside class="speaker-notes">Заметка ведущего: Метафора: Density — «сколько тумана налили в воздух». Показать до/после на своей карте: с Density ≈ 0.4 горы урока 2 тонут в дымке и мир кажется огромным. Ориентиры значений: Density ≈ 0.4, Offset ≈ 0.2.</aside>
 </div>
 <div class="slide" id="5-t-5">
 <h3 class="slide-title">Локальные источники света: PointLight, SpotLight, SurfaceLight <span class="slide-duration">(3 мин)</span></h3>
@@ -109,7 +109,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Как сделать в игре вечер?</p><ol class="content-item content-quiz-options"><li>Покрасить все детали в тёмные цвета</li><li data-correct="true">Lighting → ClockTime примерно 18 ✓</li><li>Вставить чёрный Atmosphere</li></ol>
 <p class="content-item content-question">Какой источник света выбрать для факела?</p><ol class="content-item content-quiz-options"><li>SurfaceLight — светящаяся грань</li><li>SpotLight — узкий конус</li><li data-correct="true">PointLight — светит шаром во все стороны ✓</li></ol>
 <p class="content-item content-question">Где поменять цвет и дальность у выделенного PointLight?</p><ol class="content-item content-quiz-options"><li data-correct="true">В окне Properties — там свойства Color и Range ✓</li><li>Кнопкой Color в тулбаре — она красит всё</li><li>Никак — свет настраивается только кодом</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: ClockTime ≈ 18; PointLight; в окне Properties. После второго вопроса спросить «а для прожектора над сценой?» — SpotLight. Третий вопрос закрепляет принцип «Properties = панель» — при верном ответе попросить назвать ещё пару свойств, которые дети уже меняли (Anchored, Material, Value, Tags).</aside>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: ClockTime ≈ 18; PointLight; в окне Properties. После второго вопроса спросить «а для прожектора над сценой?» — SpotLight. Третий вопрос закрепляет принцип «Properties = панель» — при верном ответе попросить назвать ещё пару свойств, которые группа уже меняла (Anchored, Material, Value, Tags).</aside>
 </div>
 </section>
 <section class="block block-break">
@@ -124,8 +124,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Оживляем мир: закат, огни и магия <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="5-p-1">
 <h3 class="slide-title">Шаг 1: вечер и воздух <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой мир охоты. Lighting в Explorer → ClockTime ≈ 17–18: предзакатный вечер</li><li>Ambient — тёмно-серый, ColorShift_Top — тёплый оранжевый: закатные краски</li><li>«+» у Lighting → Atmosphere: Density ≈ 0.35–0.4, Offset ≈ 0.2</li><li>Полетайте по миру камерой: даль тонет в дымке, мир стал глубже и загадочнее</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ориентиры значений: Density ≈ 0.375, Offset ≈ 0.17 — но пусть подбирают на глаз под свой мир. Быстрая проверка по группе: у всех вечер? даль в дымке? Напомнить связку со слайдом Properties: мы просто меняем свойства двух объектов.</aside>
+<ol class="content-item content-steps"><li>Открой мир охоты. Lighting в Explorer → ClockTime ≈ 17–18: предзакатный вечер</li><li>Ambient — тёмно-серый, ColorShift_Top — тёплый оранжевый: закатные краски</li><li>«+» у Lighting → Atmosphere: Density ≈ 0.35–0.4, Offset ≈ 0.2</li><li>Пролети по миру камерой: даль тонет в дымке, мир стал глубже и загадочнее</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ориентиры значений: Density ≈ 0.4, Offset ≈ 0.2 — но пусть подбирают на глаз под свой мир. Быстрая проверка по группе: у всех вечер? даль в дымке? Напомнить связку со слайдом Properties: мы просто меняем свойства двух объектов.</aside>
 </div>
 <div class="slide" id="5-p-2">
 <h3 class="slide-title">Шаг 2: факел оживает <span class="slide-duration">(4 мин)</span></h3>
@@ -140,13 +140,13 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="5-p-4">
 <h3 class="slide-title">Шаг 4: тёплый лагерь и тёмное ущелье <span class="slide-duration">(4.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>У спауна собери «лагерь»: костёр из деталей + Fire + тёплый PointLight</li><li>Вдоль маршрута охоты расставь 2–3 огня-маяка: игрок идёт «на огонёк»</li><li>В опасной зоне — никаких тёплых огней: один тусклый холодный или красный PointLight у сокровища</li><li>Пролети камерой весь маршрут: зоны читаются по свету?</li></ol>
+<ol class="content-item content-steps"><li>У точки возрождения собери «лагерь»: костёр из деталей + Fire + тёплый PointLight</li><li>Вдоль маршрута охоты расставь 2–3 огня-маяка: игрок идёт «на огонёк»</li><li>В опасной зоне — никаких тёплых огней: один тусклый холодный или красный PointLight у сокровища</li><li>Пролети камерой весь маршрут: зоны читаются по свету?</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Главный дизайнерский шаг урока — здесь проявляется роль. Обойти группу с вопросом «где у тебя безопасно, а где страшно — и видно ли это без слов?». Контраст: чем уютнее лагерь, тем страшнее ущелье.</aside>
 </div>
 <div class="slide" id="5-p-5">
 <h3 class="slide-title">Шаг 5: прогулка-проверка и публикация <span class="slide-duration">(4.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → пройди весь маршрут охоты от спауна до последнего сокровища</li><li>Чек-лист: у сокровищ не слишком темно? огни-маяки ведут по маршруту? настроение зон читается?</li><li>Поправь самое тёмное место — добавь маяк или подними Brightness огня</li><li>Опубликуй обновление: Alt+P или через меню. Твоя игра теперь и выглядит как настоящая!</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Плейтест теперь проверяет не механику, а чувства — новый для детей тип теста. Пусть 2–3 ребят посмотрят, как автор проходит свой мир, и скажут одним словом настроение каждой зоны — если слова совпали с задумкой автора, свет работает.</aside>
+<ol class="content-item content-steps"><li>Test → пройди весь маршрут охоты от точки возрождения до последнего сокровища</li><li>Чек-лист: у сокровищ не слишком темно? огни-маяки ведут по маршруту? настроение зон читается?</li><li>Поправь самое тёмное место — добавь маяк или подними Brightness огня</li><li>Опубликуй обновление: File → Publish to Roblox. Твоя игра теперь и выглядит как настоящая!</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Плейтест теперь проверяет не механику, а чувства — для группы это новый тип теста. Пусть 2–3 ученика посмотрят, как автор проходит свой мир, и скажут одним словом настроение каждой зоны — если слова совпали с задумкой автора, свет работает.</aside>
 </div>
 </section>
 <section class="block block-qa_practice">
@@ -156,7 +156,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Fire в факеле есть, а пещеру он не освещает. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Увеличить Size у Fire</li><li data-correct="true">PointLight рядом с пламенем — свет даёт он ✓</li><li>Сменить материал факела на Neon</li></ol>
 <p class="content-item content-question">Как изменилось настроение твоего мира? Какая зона получилась самой атмосферной и почему?</p>
 <p class="content-item content-question">Почему в опасной зоне мы не ставим тёплые уютные огни?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тёплый свет обещает безопасность — а эта зона должна тревожить ✓</li><li>Тёплые огни сильно замедляют игру</li><li>В опасной зоне свет вообще не работает</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: связка Fire + PointLight; открытый вопрос — 2–3 ребят описывают настроение зон (услышать слова-эмоции: уютно, страшно, таинственно); тёплый свет = обещание безопасности. Открытый вопрос главный — он проверяет мышление художника по эффектам и свету.</aside>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: связка Fire + PointLight; открытый вопрос — 2–3 ученика описывают настроение зон (услышать слова-эмоции: уютно, страшно, таинственно); тёплый свет = обещание безопасности. Открытый вопрос главный — он проверяет мышление художника по эффектам и свету.</aside>
 </div>
 </section>
 <section class="block block-closing">
