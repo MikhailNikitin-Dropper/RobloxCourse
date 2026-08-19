@@ -46,9 +46,9 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="10-r-1">
 <h3 class="slide-title">Что мы делали на уроке 9? <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Платформа выглядит обычной, но персонаж проваливается сквозь неё. Какая настройка так работает?</p><ol class="content-item content-quiz-options"><li data-correct="true">CanCollide = false ✓</li><li>Anchored = false</li><li>Transparency = 1</li></ol>
-<p class="content-item content-question">Как мы делали невидимый, но проходимый мостик?</p><ol class="content-item content-quiz-options"><li>Transparency = 1, CanCollide выключен</li><li data-correct="true">Transparency = 1, CanCollide включён ✓</li><li>Transparency = 0, Anchored выключен</li></ol>
+<p class="content-item content-question">Как мы делали мост-силуэт — едва заметный, но проходимый?</p><ol class="content-item content-quiz-options"><li>Transparency = 0.9, CanCollide выключен</li><li data-correct="true">Transparency = 0.9, CanCollide включён ✓</li><li>Transparency = 1, CanCollide включён</li></ol>
 <p class="content-item content-question">Почему дистанцию прыжка мы проверяли тест-стендом, а не считали заранее?</p><ol class="content-item content-quiz-options"><li>В Studio нет калькулятора</li><li>Так требуют правила публикации Roblox</li><li data-correct="true">Расчёт по формуле сильно расходится с тем, что происходит в игре ✓</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: CanCollide = false; Transparency = 1 при включённом CanCollide; расчёт расходится с игрой. Свойства из урока 9 сегодня пригодятся при постройке ловушек.</aside>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: CanCollide = false; Transparency = 0.9 при включённом CanCollide; расчёт расходится с игрой. Свойства из урока 9 сегодня пригодятся при постройке ловушек.</aside>
 </div>
 </section>
 <section class="block block-theory">
@@ -126,9 +126,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Расставляем ловушки на трассе <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="10-p-1">
 <h3 class="slide-title">Шаг 1: яма с kill-блоками <span class="slide-duration">(4.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой трассу урока 9, закрой разрыв между платформами деталью и сгруппируй их в модель (Ctrl+G)</li><li>Получи KillScript по ссылке, вставь его из Inventory и перетащи внутрь модели в Explorer</li><li>Test → наступи на яму и убедись, что персонаж вернулся на точку возрождения</li></ol>
+<ol class="content-item content-steps"><li>Открой трассу урока 9 и закрой разрыв между платформами деталью</li><li>Выдели детали ямы и сгруппируй их в модель</li><li>Перетащи KillScript из Inventory внутрь модели и проверь в Test: персонаж вернулся на точку возрождения</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/75269316315197/UniversalKillScript" target="_blank" rel="noopener">https://create.roblox.com/store/asset/75269316315197/UniversalKillScript</a></p>
-<aside class="speaker-notes">Заметка ведущего: Деталь ямы удобно растянуть на всю ширину инструментом Scale. Частая заминка: KillScript остался лежать в Workspace рядом с моделью — тогда яма не убивает; проверить в Explorer, что скрипт лежит внутри модели с деталями. Вторая заминка: модуль ещё не «получен» по ссылке — тогда его нет во вкладке Inventory.</aside>
+<aside class="speaker-notes">Заметка ведущего: Деталь ямы удобно растянуть на всю ширину инструментом Scale. Группировка в модель — правый клик → Group или Ctrl+G. Перед третьим шагом модуль нужно «получить» по ссылке (Get), иначе его нет во вкладке Inventory. Частая заминка: KillScript остался лежать в Workspace рядом с моделью — тогда яма не убивает; проверить в Explorer, что скрипт лежит внутри модели с деталями.</aside>
 </div>
 <div class="slide" id="10-p-2">
 <h3 class="slide-title">Шаг 2: преврати яму в озеро лавы <span class="slide-duration">(4 мин)</span></h3>
@@ -144,7 +144,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="10-p-4">
 <h3 class="slide-title">Шаг 4: передышка после каждого испытания <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Расставь ловушки по трассе так, чтобы сложные участки не шли подряд</li><li>После каждого испытания добавь передышку: 2-3 широкие платформы без опасностей</li><li>Проверь кривую сложности: старт — самый лёгкий участок, финал — самый сложный</li></ol>
+<ol class="content-item content-steps"><li>Расставь ловушки по трассе так, чтобы сложные участки не шли подряд</li><li>После каждого испытания добавь передышку: 2–3 широкие платформы без опасностей</li><li>Проверь кривую сложности: старт — самый лёгкий участок, финал — самый сложный</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ходить по группе и смотреть раскладку трасс сверху: чередование видно даже без запуска игры — по расстановке красных зон.</aside>
 </div>
 <div class="slide" id="10-p-5">
@@ -161,7 +161,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Куда кладут KillScript, чтобы вся яма из нескольких деталей стала смертельной?</p><ol class="content-item content-quiz-options"><li data-correct="true">В модель, где сгруппированы все детали ямы ✓</li><li>В любую одну деталь ямы</li><li>Прямо в Workspace, рядом с ямой</li></ol>
 <p class="content-item content-question">Вращающееся препятствие на твоей трассе не проходится даже после десяти попыток. Что делаем?</p><ol class="content-item content-quiz-options"><li>Увеличиваем размер стержня</li><li data-correct="true">Уменьшаем AngularVelocity — препятствие крутится медленнее ✓</li><li>Красим стержень в зелёный цвет</li></ol>
 <p class="content-item content-question">Какая ловушка на твоей трассе получилась самой интересной и почему?</p>
-<aside class="speaker-notes">Заметка ведущего: Третий вопрос — открытый, на рефлексию: попросить 2-3 учеников показать свою любимую ловушку и объяснить, чем она честная. Ожидаемые ответы на квизы: в модель с деталями ямы; уменьшить AngularVelocity.</aside>
+<aside class="speaker-notes">Заметка ведущего: Третий вопрос — открытый, на рефлексию: попросить 2–3 учеников показать свою любимую ловушку и объяснить, чем она честная. Ожидаемые ответы на квизы: в модель с деталями ямы; уменьшить AngularVelocity.</aside>
 </div>
 </section>
 <section class="block block-closing">
