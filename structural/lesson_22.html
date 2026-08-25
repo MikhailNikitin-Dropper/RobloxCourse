@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 22. Шарниры и моторы</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="22">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 22. Шарниры и моторы</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Mechanism Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="22-w-1">
+<h3 class="slide-title">Сегодня ты — Mechanism Designer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">На прошлом уроке детали падали куда придётся. Сегодня зададим им ось — и падение превратится в движение по кругу: ворота, качели, карусель.</p>
+<p class="content-item content-paragraph"><b>Mechanism Designer</b> (конструктор механизмов) — это тот, кто собирает движущиеся части игры и подбирает им скорость: механизм должен быть аттракционом, а не декорацией.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Назвать результат урока сразу: к концу занятия рядом с тропой обвала появится площадка аттракционов, по которой можно пройти и прокатиться. Это вторая зона парка, который соберём в конце большого проекта.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="22-r-1">
+<h3 class="slide-title">Что мы делали на уроке 21? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Деталь не падает при запуске. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Галочку Anchored ✓</li><li>Цвет детали</li><li>Название детали</li></ol>
+<p class="content-item content-question">Чем управляют массой детали?</p><ol class="content-item content-quiz-options"><li>Вписывают число в поле Mass</li><li data-correct="true">Размером и плотностью ✓</li><li>Прозрачностью</li></ol>
+<p class="content-item content-question">Почему тяжёлую плиту заслона персонаж не может сдвинуть телом?</p><ol class="content-item content-quiz-options"><li>Плита закреплена</li><li>У плиты выключен CanCollide</li><li data-correct="true">Её масса выше порога, который персонаж тянет ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Anchored; размер и плотность; масса выше порога. Мостик к теме дня: вчера мы отпускали детали на волю физики, и они падали куда попало. Сегодня оставим их свободными, но зададим ось, вокруг которой им разрешено двигаться.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Механизмы: шарниры и моторы <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="22-t-1">
+<h3 class="slide-title">Механизм движется по правилу <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Свободная деталь падает и катится куда придётся — это мы видели на тропе обвала</li><li>Механизму движение ограничено: дверь ходит вокруг петель, карусель — вокруг столба</li><li>Правило задаёт <b>constraint</b> (связь) — объект между двумя деталями</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Опора на прошлый урок: физика та же, изменилось одно — детали больше не предоставлены сами себе. Полезное сравнение: Anchored запрещает движение целиком, связь разрешает ровно один его вид.</aside>
+</div>
+<div class="slide" id="22-t-2">
+<h3 class="slide-title">Attachment: точка, за которую держится механизм <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Attachment</b> (точка крепления) — метка внутри детали: место и направление осей</li><li>Связь соединяет не детали целиком, а две такие точки: Attachment0 и Attachment1</li><li>Физика держит обе точки в одном месте, как петля держит створку у косяка</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать на своём плейсе, как выглядит точка крепления в Explorer: она лежит внутри детали. Устно: если точки развести, Studio рисует красную линию и стягивает их сама — механизм при этом ведёт себя не так, как задумано.</aside>
+</div>
+<div class="slide" id="22-t-3">
+<h3 class="slide-title">HingeConstraint задаёт ось вращения <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>HingeConstraint</b> (шарнир) — связь, разрешающая вращение вокруг одной оси</li><li>Ось — это направление жёлтой стрелки точки крепления, у обеих точек оно общее</li><li>Стрелка вверх — деталь ходит как створка ворот, стрелка вбок — как качели</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Главная мысль слайда: направление стрелки решает, что получится. Устно: у карусели ось смотрит вверх, у качелей — вдоль перекладины. Если ось поставить неправильно, карусель будет кувыркаться через голову.</aside>
+</div>
+<div class="slide" id="22-t-4">
+<h3 class="slide-title">Как поставить шарнир <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Вкладка Model, раздел Constraints, в списке — Hinge</li><li>Кликаем по точке на подвижной детали, затем по той же точке на опоре</li><li>Studio сама создаёт точку крепления в каждой детали и шарнир между ними</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: вкладка Model, раскрытый список Constraints, пункт Hinge подсвечен]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать вживую, порядок кликов проговорить голосом: сначала подвижная деталь, потом опора. Устно: точки надо ставить в одно и то же место — у двери это край створки и ровно напротив него косяк.</aside>
+</div>
+<div class="slide" id="22-t-5">
+<h3 class="slide-title">Constraint Details показывает механизм <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Связь в редакторе почти не видна: её схему включает Constraint Details на вкладке Model</li><li>Рядом переключатель Draw On Top: схема рисуется поверх деталей</li><li>На схеме видны ось вращения, углы и подписи связи</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: две детали, соединённые шарниром, включён Constraint Details с Draw On Top — видна ось вращения и подписи связи]</p>
+<aside class="speaker-notes">Заметка ведущего: Частая жалоба на практике: «я поставил шарнир, но ничего не появилось». Причина обычно в выключенном Constraint Details. Показать оба переключателя на своём экране.</aside>
+</div>
+<div class="slide" id="22-t-6">
+<h3 class="slide-title">Опора закреплена, подвижная деталь — нет <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Механизму нужна точка отсчёта: опоре ставим Anchored, подвижной детали не ставим</li><li>Закрепили обе — сборка разделилась, механизм стоит мёртво</li><li>Не закрепили ни одной — крутится основание, а не платформа</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Это главная ошибка урока, поэтому слайд отдельный. Устно: в документации сказано прямо — связь между двумя закреплёнными сборками отключается. Второй случай смешной и наглядный: мотор упирается в основание и раскручивает его, а платформа стоит.</aside>
+</div>
+<div class="slide" id="22-t-7">
+<h3 class="slide-title">Пределы поворота: створка, а не карусель <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Свободный шарнир крутится на все 360 градусов, и створка уезжает в стену</li><li><b>LimitsEnabled</b> (пределы) включает ограничение поворота</li><li>UpperAngle и LowerAngle задают углы в градусах: например, 90 и 0</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Устно: пределы видно на схеме связи — зелёный сектор показывает, куда створке разрешено ходить. Свойство Restitution решает, отскакивает ли створка от предела; на уроке оставляем как есть.</aside>
+</div>
+<div class="slide" id="22-t-8">
+<h3 class="slide-title">Мотор крутит механизм сам <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ActuatorType</b> (тип привода) по умолчанию None: такую деталь крутит что-то снаружи</li><li>Значение Motor превращает шарнир в мотор, и деталь крутится сама</li><li>Скорость задаёт AngularVelocity: радианы в секунду, полный оборот ≈ 6.28</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель Properties шарнира, ActuatorType = Motor, под ним поля AngularVelocity, MotorMaxTorque и MotorMaxAcceleration]</p>
+<aside class="speaker-notes">Заметка ведущего: Радианы проговорить один раз и на пальцах: 6.28 — полный оборот, значит 1.5 — примерно четверть оборота в секунду. Точные числа группа подберёт запуском на практике.</aside>
+</div>
+<div class="slide" id="22-t-9">
+<h3 class="slide-title">Скорость, сила и разгон — три разных числа <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>AngularVelocity</b> — скорость: как быстро крутится</li><li><b>MotorMaxTorque</b> — сила: провернёт ли мотор платформу с игроками</li><li><b>MotorMaxAcceleration</b> — разгон: за сколько мотор выйдет на свою скорость</li><li>Силы не хватило — механизм дёргается или стоит, хотя скорость задана</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Три числа путают чаще всего. Ориентир для карусели с игроками: сила порядка 900000, разгон 3 — старт плавный. Устно: скорость решает ощущение, сила — сдвинется ли вообще, разгон — рывком или мягко.</aside>
+</div>
+<div class="slide" id="22-t-10">
+<h3 class="slide-title">Частые ошибки при сборке механизма <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Опора не закреплена — крутится основание, а не платформа</li><li>Закреплены обе детали — механизм не двигается вовсе</li><li>Точки крепления в разных местах — механизм ведёт себя не так, как задумано</li><li>Ось смотрит не туда — карусель кувыркается вместо вращения по кругу</li><li>Скорость выставлена огромной — аттракцион сбрасывает игрока и выглядит поломкой</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Пробежать быстро: половина ошибок случится на практике в первые же минуты. Про скорость сказать отдельно — механизм на большой скорости выглядит поломкой, а не аттракционом.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="22-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Карусель не крутится, хотя мотор настроен. Что проверить первым?</p><ol class="content-item content-quiz-options"><li>Цвет настила</li><li data-correct="true">Закреплены ли обе детали ✓</li><li>Название шарнира</li></ol>
+<p class="content-item content-question">Чем ограничить створку ворот, чтобы она не проворачивалась кругом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Включить LimitsEnabled и задать углы ✓</li><li>Уменьшить размер створки</li><li>Поставить ActuatorType = Motor</li></ol>
+<p class="content-item content-question">Какой аттракцион ты хотел бы собрать на моторе и почему именно его?</p>
+<aside class="speaker-notes">Заметка ведущего: Первые два вопроса быстрые, на понимание. Третий открытый: ждём идею, привязанную к игроку, — не просто «крутилку», а механизм, ради которого в парк захочется прийти. Хорошие ответы: колесо обозрения, вращающаяся платформа над водой, мельница с лопастями.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="22-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Разомнись и попей воды. После перерыва собираем площадку аттракционов: ворота, качели, карусель и колесо обозрения.</p>
+<aside class="speaker-notes">Заметка ведущего: Пять минут. После перерыва работаем в том же плейсе, где стоит тропа обвала: площадка аттракционов становится второй зоной парка. Перед перерывом попросить включить Constraint Details — он понадобится на каждом шаге.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем площадку аттракционов <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="22-p-1">
+<h3 class="slide-title">Шаг 1: ворота парка на петлях <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь закреплённый столб, рядом — свободную створку 8×10×1 с Density 0.3</li><li>Model → Constraints → Hinge: клик по краю створки, затем по столбу</li><li>У шарнира включи LimitsEnabled, UpperAngle 90, LowerAngle 0</li><li>Test → открой ворота телом и войди внутрь</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Ось шарнира здесь вертикальная — стрелка смотрит вверх. Масса створки при Density 0.3 около двадцати: это ниже порога, за которым персонаж перестаёт двигать деталь, поэтому ворота открываются телом. Если створка не двигается — она либо тяжёлая, либо закреплена.</aside>
+</div>
+<div class="slide" id="22-p-2">
+<h3 class="slide-title">Шаг 2: качели <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери закреплённую раму с перекладиной, под ней — свободный подвес</li><li>Сиденье возьми не деталью, а объектом Seat: на него садятся</li><li>Шарнир на перекладине, ось вдоль неё: клик по подвесу, затем по перекладине</li><li>Test → толкни подвес телом, потом садись: раскачка не гаснет</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот игры Roblox: качели на закреплённой раме, персонаж сидит на сиденье, сиденье отклонено в сторону]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Ось качелей горизонтальная — вдоль перекладины, это главное отличие от ворот. Подвес и сиденье — одна сборка на WeldConstraint, иначе сиденье улетит отдельно. Про Seat сказать честно: сидящего игра приваривает к сиденью, и раскачаться сидя нельзя — замер даёт 4.8 студа стоя против 1.1 сидя. Зато Roblox колебания не гасит: толкнул подвес телом, сел — и качает дальше (4.6 студа до посадки, 4.2 после).</aside>
+</div>
+<div class="slide" id="22-p-3">
+<h3 class="slide-title">Шаг 3: карусель на моторе <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь закреплённую тумбу, на неё — свободный круглый настил с бортиком</li><li>Скамейки на настиле сделай объектами Seat и приклей их к настилу сваркой</li><li>Шарнир строго по центру настила, ось вверх</li><li>ActuatorType = Motor, AngularVelocity 1.5, MotorMaxTorque 900000</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот игры Roblox: круглая карусель с бортиком крутится, на ней игрок]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, самый заметный аттракцион. Центр важен: шарнир не по центру — карусель пойдёт вразнос. Сила 900000 выглядит огромной, но именно она позволяет мотору крутить настил вместе с игроками; при малой силе карусель дёргается и останавливается. Скамейку обязательно приварить к настилу: без сварки настил уедет из-под неё.</aside>
+</div>
+<div class="slide" id="22-p-4">
+<h3 class="slide-title">Шаг 4: подгони ощущения <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Игрока срывает с настила — уменьши AngularVelocity</li><li>Карусель стартует рывком — уменьши MotorMaxAcceleration до 3</li><li>Механизм дёргается и встаёт — увеличь MotorMaxTorque</li><li>Меняй по одному числу за запуск, иначе непонятно, что сработало</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Правило одного изменения за запуск знакомо с прошлого урока. Ориентир по ощущению: на карусели должно быть весело, а не страшно — если игрок держится за бортик изо всех сил, скорость велика.</aside>
+</div>
+<div class="slide" id="22-p-5">
+<h3 class="slide-title">Шаг 5: колесо обозрения <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь две закреплённые стойки с перекладиной, между ними — свободный круг</li><li>Шарнир по центру круга, но ось теперь ЛЕЖИТ — вдоль перекладины</li><li>ActuatorType = Motor, AngularVelocity 0.4: оборот примерно за 16 секунд</li><li>Кабинки-Seat повесь по краю на свободные шарниры с той же осью</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Колесо собирает вместе всё, что было на уроке: мотор как у карусели, свободный шарнир как у качелей, и лежачая ось — третье направление за урок. Кабинка висит отвесно сама: замер показал наклон 0 градусов на всём обороте. Подъём — 16 студов, полный круг за 16 секунд. Вращающееся препятствие сюда не берём: такое уже собирали на уроке 10.</aside>
+</div>
+<div class="slide" id="22-p-6">
+<h3 class="slide-title">Шаг 6: открытие площадки <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Соедини площадку дорожкой с тропой обвала прошлого урока</li><li>Пройди маршрут целиком: ворота, качели, карусель, колесо</li><li>Отметь, какой аттракцион работает не так, как задумано, — его и настраивай</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот игры Roblox: площадка аттракционов общим планом — ворота, качели, круглая карусель и колесо обозрения]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты, финал маршрута: четыре механизма становятся одной площадкой. Площадка остаётся в игре — в конце большого проекта она станет второй зоной парка рядом с тропой обвала.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="22-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Мотор включён, а крутится тумба под каруселью. В чём дело?</p><ol class="content-item content-quiz-options"><li>Слишком большая AngularVelocity</li><li data-correct="true">Тумба не закреплена ✓</li><li>У настила выключен CanCollide</li></ol>
+<p class="content-item content-question">Качели ходят как дверь, а не качаются. Что поправить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Направление оси шарнира ✓</li><li>Массу сиденья</li><li>Скорость мотора</li></ol>
+<p class="content-item content-question">Какой механизм ты добавишь на площадку дома и что игрок будет с ним делать?</p>
+<aside class="speaker-notes">Заметка ведущего: Первые два вопроса разбирают ошибки, которые точно случились на практике. Третий открытый — он же домашнее задание: пусть каждый назовёт свою идею вслух. Хорошие ответы: колесо обозрения, подъёмный мост на воротах, мельница с лопастями, вращающаяся платформа над водой.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="22-c-1">
+<h3 class="slide-title">Площадка аттракционов готова <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Одна связь — и деталь перестала падать куда попало: ворота ходят на петлях, качели качаются, карусель и колесо крутятся сами.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь на площадку пятый механизм — мельницу, подъёмный мост или вращающуюся дверь — и подбери его скорость</li><li>Дальше — верёвки, пружины и лифты: подвесной мост, батут и подъёмник</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Итог урока одной фразой: шарнир задаёт ось, мотор задаёт движение, а три числа — скорость, силу и разгон — подбирают запуском. Анонс урока 23: сегодня детали крутились вокруг оси, на следующем уроке подвесим их на верёвки и посадим на пружины.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/HingeConstraint.md">HingeConstraint | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/mechanical-constraints.md">Mechanical constraints | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/assemblies.md">Assemblies | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Testing modes | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/BasePart.md">BasePart | Roblox Creator Hub</a></li><li><a href="https://www.youtube.com/watch?v=iGlre0rqi5A">How to make a spinning platform in Roblox</a></li><li><a href="https://www.youtube.com/watch?v=f2xmjcVRd7k">Making a Physics Based Door using HingeConstraints</a></li><li><a href="https://www.youtube.com/watch?v=dtp1-4YhJXY">Motors (Roblox Studio Hinge Constraint Tutorial)</a></li><li><a href="https://devforum.roblox.com/t/can-anyone-explain-how-motormaxtorque-works/303161">Can anyone explain how MotorMaxTorque works? — DevForum</a></li></ul></section>
+</article>
+</body>
+</html>
