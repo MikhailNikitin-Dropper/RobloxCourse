@@ -1,0 +1,861 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Model" referent="RBX6BC1A2A8C2934DE4BFCC98BACD772E81">
+		<Properties>
+			<token name="LevelOfDetail">0</token>
+			<CoordinateFrame name="ModelMeshCFrame">
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+				<R00>1</R00>
+				<R01>0</R01>
+				<R02>0</R02>
+				<R10>0</R10>
+				<R11>1</R11>
+				<R12>0</R12>
+				<R20>0</R20>
+				<R21>0</R21>
+				<R22>1</R22>
+			</CoordinateFrame>
+			<SharedString name="ModelMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			<Vector3 name="ModelMeshSize">
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Vector3>
+			<token name="ModelStreamingMode">0</token>
+			<bool name="NeedsPivotMigration">false</bool>
+			<Ref name="PrimaryPart">RBX469C0DF0F7BC4465BEEF135E85D3A7DB</Ref>
+			<float name="ScaleFactor">1</float>
+			<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			<OptionalCoordinateFrame name="WorldPivotData"></OptionalCoordinateFrame>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">PropHunter</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+		</Properties>
+		<Item class="Folder" referent="RBXED60B343FB7C474FB5623364A16F6914">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">ReplicatedStorage</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+			<Item class="Folder" referent="RBXA4FC14CDD3CD4EF39A89D96776C97FA3">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">PropHunter</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX698B4FFB45CE44DDBC953BA97687417A">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<ProtectedString name="Source"><![CDATA[-- Обновлённая версия ReplicatedStorage/PropHunter/GuiController (урок 7).
+-- Отличие от версии из Prop Hunt.rbxmx: строка списка больше не создаётся
+-- кодом (Instance.new("TextButton")), а клонируется из шаблона ItemTemplate,
+-- который ученик собирает руками внутри MainFrame.ScrollingFrame.
+--
+-- Требуемая структура ItemTemplate (Frame, лежит в ScrollingFrame рядом с
+-- будущими строками списка):
+--   ItemTemplate (Frame)
+--     Icon           (ImageLabel)  -- иконка предмета, подставляется из Decal
+--     NameLabel      (TextLabel)   -- имя предмета
+--     DistanceLabel  (TextLabel)   -- "78m" / скрывается при сборе
+--     CheckIcon      (ImageLabel)  -- галочка, показывается при сборе
+--
+-- Sам ItemTemplate можно оставить Visible = true во время сборки в Studio —
+-- скрипт сам спрячет его первой же строкой Start(), как только игра запустится.
+--
+-- Иконка каждого предмета в списке берётся не из шаблона, а с самого предмета
+-- в мире: первый попавшийся Decal внутри модели даёт Texture для Icon. Так
+-- одна и та же карточка-шаблон подхватывает свою картинку у каждого предмета
+-- отдельно, без ручной сборки карточки под каждый тип предмета.
+
+local Players = game:GetService("Players")
+
+local Registry = require(script.Parent.Registry)
+local Config = require(script.Parent.Config)
+
+local GuiController = {}
+
+local Player = Players.LocalPlayer
+
+local Frame
+
+local WinFrame
+local InfoFrame
+local InfoLabel
+local Template
+
+local Rows = {}
+
+local HasWon = false
+local ShownInfo = {}
+
+local DEFAULT_ICON = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+
+local function GetIcon(model)
+	local decal = model:FindFirstChildWhichIsA("Decal", true)
+
+	if decal and decal.Texture ~= "" then
+		return decal.Texture
+	end
+
+	return DEFAULT_ICON
+end
+
+local function CheckWin()
+	if HasWon then
+		return
+	end
+
+	local hasItems = false
+
+	for _, item in pairs(Registry:GetItems()) do
+		hasItems = true
+
+		if not item.Collected then
+			return
+		end
+	end
+
+	if not hasItems then
+		return
+	end
+
+	HasWon = true
+
+	WinFrame.Visible = true
+
+	task.delay(3, function()
+		if WinFrame then
+			WinFrame.Visible = false
+		end
+	end)
+end
+
+local function ShowItemInfo(item)
+	if ShownInfo[item.Model] then
+		return
+	end
+
+	local Value = item.Model:FindFirstChildWhichIsA("StringValue")
+	if not Value then
+		return
+	end
+
+	ShownInfo[item.Model] = true
+
+	InfoLabel.Text = Value.Value
+	InfoFrame.Visible = true
+
+	task.delay(3, function()
+		InfoFrame.Visible = false
+	end)
+end
+
+local function UpdateLabel(item)
+	local Row = Rows[item.Model]
+
+	if not Row then
+		return
+	end
+
+	Row.NameLabel.Text = item.Name
+
+	if item.Collected then
+		Row.DistanceLabel.Visible = false
+		Row.CheckIcon.Visible = true
+		Row.NameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+
+		ShowItemInfo(item)
+	else
+		Row.DistanceLabel.Visible = true
+		Row.DistanceLabel.Text = string.format("%.0fm", item.Distance)
+		Row.CheckIcon.Visible = false
+		Row.NameLabel.TextColor3 = Color3.new(1, 1, 1)
+	end
+end
+
+local function CreateLabel(item)
+	local Row = Template:Clone()
+
+	Row.Name = item.Name
+	Row.Icon.Image = GetIcon(item.Model)
+	Row.Visible = true
+	Row.Parent = Frame
+
+	Rows[item.Model] = Row
+
+	UpdateLabel(item)
+end
+
+local function RemoveLabel(item)
+	local Row = Rows[item.Model]
+
+	if Row then
+		Row:Destroy()
+		Rows[item.Model] = nil
+	end
+end
+
+function GuiController:Start(gui)
+
+	Frame = gui.MainFrame.ScrollingFrame
+
+	Template = Frame:WaitForChild("ItemTemplate")
+	Template.Visible = false
+
+	WinFrame = gui:WaitForChild("WinFrame")
+	WinFrame.Visible = false
+
+	InfoFrame = gui:WaitForChild("InfoFrame")
+	InfoLabel = InfoFrame:WaitForChild("TextLabel")
+	InfoFrame.Visible = false
+
+	Registry.Added.Event:Connect(CreateLabel)
+	Registry.Removed.Event:Connect(RemoveLabel)
+	Registry.Collected.Event:Connect(UpdateLabel)
+
+	for _, item in pairs(Registry:GetItems()) do
+		CreateLabel(item)
+	end
+
+	task.spawn(function()
+
+		while true do
+
+			task.wait(Config.RefreshRate)
+
+			local Character = Player.Character
+			if not Character then
+				continue
+			end
+
+			local Root = Character:FindFirstChild("HumanoidRootPart")
+			if not Root then
+				continue
+			end
+
+
+			local Items = {}
+
+			for _, item in pairs(Registry:GetItems()) do
+
+				if item.Model and item.Model.Parent then
+
+					item.Distance = (Root.Position - item.Model:GetPivot().Position).Magnitude
+
+					if item.Distance <= Config.MaxDistance then
+						table.insert(Items, item)
+					end
+
+				end
+
+			end
+
+			table.sort(Items, function(a, b)
+
+				if a.Collected ~= b.Collected then
+					return not a.Collected
+				end
+
+				return a.Distance < b.Distance
+
+			end)
+
+			for index, item in ipairs(Items) do
+
+				local Row = Rows[item.Model]
+
+				if Row then
+
+					UpdateLabel(item)
+
+					Row.LayoutOrder = index
+
+				end
+
+			end
+
+			CheckWin()
+
+		end
+
+	end)
+
+end
+
+return GuiController
+]]></ProtectedString>
+						<string name="ScriptGuid">{A74A1CA0-918A-4A7B-B642-118CF456BC8C}</string>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">GuiController</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBXFB556DA8C3B34D22B3D73D1BAFF51298">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<ProtectedString name="Source"><![CDATA[local CollectionService = game:GetService("CollectionService")
+
+local Registry = require(script.Parent.Registry)
+local Config = require(script.Parent.Config)
+
+local Scanner = {}
+
+local Started = false
+
+function Scanner:Scan()
+	for _, model in ipairs(CollectionService:GetTagged(Config.Tag)) do
+		if model:IsA("Model") then
+			Registry:Add(model)
+		end
+	end
+end
+
+function Scanner:Start()
+
+	if Started then
+		return
+	end
+
+	Started = true
+
+	self:Scan()
+
+	CollectionService:GetInstanceAddedSignal(Config.Tag):Connect(function(instance)
+
+		if instance:IsA("Model") then
+			Registry:Add(instance)
+		end
+
+	end)
+
+	CollectionService:GetInstanceRemovedSignal(Config.Tag):Connect(function(instance)
+
+		Registry:Remove(instance)
+
+	end)
+end
+
+return Scanner]]></ProtectedString>
+						<string name="ScriptGuid">{ECB7E803-B3D9-49C7-A901-C71EB24C5A75}</string>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Scanner</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX222E873AA25A42A7BD1934A78759BC4D">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<ProtectedString name="Source"><![CDATA[local Registry = {}
+
+Registry.Items = {}
+
+Registry.Added = Instance.new("BindableEvent")
+Registry.Removed = Instance.new("BindableEvent")
+Registry.Collected = Instance.new("BindableEvent")
+
+function Registry:Add(model)
+	if self.Items[model] then
+		return
+	end
+
+	local Item = {
+		Model = model,
+		Name = model.Name,
+		Distance = 0,
+		Collected = false
+	}
+
+	self.Items[model] = Item
+
+	self.Added:Fire(Item)
+end
+
+function Registry:Remove(model)
+	local Item = self.Items[model]
+
+	if Item then
+		self.Removed:Fire(Item)
+	end
+
+	self.Items[model] = nil
+end
+
+function Registry:SetCollected(model)
+	local Item = self.Items[model]
+
+	if not Item then
+		return
+	end
+
+	if Item.Collected then
+		return
+	end
+
+	Item.Collected = true
+
+	self.Collected:Fire(Item)
+end
+
+function Registry:GetItems()
+	return self.Items
+end
+
+return Registry]]></ProtectedString>
+						<string name="ScriptGuid">{4BF27849-025C-487C-9E39-7B1C573B8AC7}</string>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Registry</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX9AB4B630204541C0AF99D683E518E2C1">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<ProtectedString name="Source"><![CDATA[local Config = {}
+
+Config.Tag = "Prop Hunt"
+
+Config.RefreshRate = 0.25
+
+Config.MaxDistance = math.huge
+
+return Config]]></ProtectedString>
+						<string name="ScriptGuid">{15A05ED4-9D79-44D4-A94C-3C9A6A9AE258}</string>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Config</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX7C1DABE3714C44679D0E4D33154E8B27">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Scanner = require(script.Parent.Scanner)
+local Registry = require(script.Parent.Registry)
+local GuiController = require(script.Parent.GuiController)
+
+local Remotes = ReplicatedStorage.PropHunter.Remotes
+
+local PropHunter = {}
+
+function PropHunter.Start(Gui)
+
+	-- Scan existing tagged models
+	Scanner:Start()
+
+	-- Start GUI
+	GuiController:Start(Gui)
+
+	-- Server tells this player a prop was collected
+	Remotes.SyncCollected.OnClientEvent:Connect(function(Model)
+
+		Registry:SetCollected(Model)
+
+	end)
+
+end
+
+return PropHunter]]></ProtectedString>
+						<string name="ScriptGuid">{4F41DA59-C4C4-4C90-81FF-1788920D88D8}</string>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Init</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+				</Item>
+				<Item class="Folder" referent="RBXF260067F87F34759B08833ED0CF81E07">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Remotes</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+					</Properties>
+					<Item class="RemoteEvent" referent="RBXEA6AB0E2495B4FF181FA3586E545FAA4">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<string name="Name">AllItemsCollected</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+						</Properties>
+					</Item>
+					<Item class="RemoteEvent" referent="RBXFF0907BBBB404A9B9090A5F3137A4A35">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<string name="Name">SyncCollected</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+						</Properties>
+					</Item>
+					<Item class="RemoteEvent" referent="RBX5E97B51DAF4D4B6A9B18ED584A10A9BE">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<string name="Name">CollectProp</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+						</Properties>
+					</Item>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX98F4AF2AE8524935B1ED4C5B986729C3">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">StarterPlayerScripts</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+			<Item class="LocalScript" referent="RBXF8C81B6CC2CF45E083AAE19464C916AE">
+				<Properties>
+					<ProtectedString name="Source"><![CDATA[local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Player = Players.LocalPlayer
+
+local PropHunter = require(
+	ReplicatedStorage.PropHunter.Init
+)
+
+local Gui = Player.PlayerGui:WaitForChild("PropHunterGui")
+
+PropHunter.Start(Gui)
+
+ReplicatedStorage.PropHunter.Remotes.SyncCollected.OnClientEvent:Connect(function(model: Model) 
+	print("Synced", model.Name)
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") then
+			part.Transparency = 1
+		end
+	end
+end)]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<token name="RunContext">0</token>
+					<string name="ScriptGuid">{39967A93-3B31-4E92-BB9D-D032EA021451}</string>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">PropHunter.client</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Script" referent="RBX6C7681827EE0470085BF1DD087191683">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[local model = script.Parent
+
+local function copyChildren(from, to)
+	for _, child in ipairs(from:GetChildren()) do
+		child:Clone().Parent = to
+	end
+end
+
+copyChildren(model.ReplicatedStorage, game:GetService("ReplicatedStorage"))
+copyChildren(model.ServerScriptService, game:GetService("ServerScriptService"))
+--copyChildren(model.StarterGui, game:GetService("StarterGui"))
+copyChildren(model.StarterPlayerScripts, game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"))
+
+print("PropHunter installed.")
+script:Destroy()
+model:Destroy()]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">0</token>
+				<string name="ScriptGuid">{D2081FC0-66EE-482B-92F8-BF1F29D94045}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Installer</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBX098D84214BEA45518FCBB1CC07C810CD">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">ServerScriptService</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+			<Item class="Script" referent="RBX76CFFD7A9406498BA8A0B548D6C39A6B">
+				<Properties>
+					<ProtectedString name="Source"><![CDATA[local Players = game:GetService("Players")
+local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SyncCollected = ReplicatedStorage:WaitForChild("PropHunter").Remotes.SyncCollected
+local TAG = "Prop Hunt"
+local COLLECT_DISTANCE = 6
+
+-- Collected[player][model] = true
+local Collected = {}
+
+Players.PlayerRemoving:Connect(function(player)
+	Collected[player] = nil
+end)
+
+while wait() do
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		if not character then
+			continue
+		end
+
+		local root = character:FindFirstChild("HumanoidRootPart")
+		if not root then
+			continue
+		end
+
+		Collected[player] = Collected[player] or {}
+		for _, model in ipairs(CollectionService:GetTagged(TAG)) do
+
+			if not model:IsA("Model") then
+				continue
+			end
+
+			if Collected[player][model] then
+				continue
+			end
+
+			if not model.Parent then
+				continue
+			end
+
+			local distance = (root.Position - model:GetPivot().Position).Magnitude
+			if distance <= COLLECT_DISTANCE then
+
+				Collected[player][model] = true
+
+				print(player.Name .. " collected " .. model.Name)
+
+				SyncCollected:FireClient(player, model)
+
+			end
+		end
+	end
+end]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<token name="RunContext">1</token>
+					<string name="ScriptGuid">{4AB7D167-3ED0-47F5-87E3-E413D098840E}</string>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">PropHunter.server</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBX469C0DF0F7BC4465BEEF135E85D3A7DB">
+			<Properties>
+				<token name="shape">1</token>
+				<token name="formFactorRaw">1</token>
+				<bool name="Anchored">false</bool>
+				<bool name="AudioCanCollide">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<CoordinateFrame name="CFrame">
+					<X>-118</X>
+					<Y>0.099999994</Y>
+					<Z>-862</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<bool name="CanQuery">true</bool>
+				<bool name="CanTouch">true</bool>
+				<bool name="CastShadow">true</bool>
+				<string name="CollisionGroup">Default</string>
+				<int name="CollisionGroupId">0</int>
+				<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<bool name="EnableFluidForces">true</bool>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<bool name="Massless">false</bool>
+				<token name="Material">1088</token>
+				<string name="MaterialVariantSerialized"></string>
+				<CoordinateFrame name="PivotOffset">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<int name="RootPriority">0</int>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0.5</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>4</X>
+					<Y>0.200000003</Y>
+					<Z>4</Z>
+				</Vector3>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PrimaryPart</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+			<Item class="Decal" referent="RBX94050B7C8D5447F78A1D965ADD29B669">
+				<Properties>
+					<bool name="AutoLocalize">true</bool>
+					<Color3 name="Color3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<Content name="MetalnessMap"><null></null></Content>
+					<Content name="NormalMap"><null></null></Content>
+					<float name="Rotation">0</float>
+					<Content name="RoughnessMap"><null></null></Content>
+					<Content name="Texture"><url>rbxassetid://1523548823</url></Content>
+					<Content name="TexturePack"><null></null></Content>
+					<string name="TexturePackMetadata"></string>
+					<float name="Transparency">0</float>
+					<Vector2 name="UVOffset">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<Vector2 name="UVScale">
+						<X>1</X>
+						<Y>1</Y>
+					</Vector2>
+					<int name="ZIndex">1</int>
+					<token name="Face">1</token>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">Decal</string>
+					<int64 name="SourceAssetId">1523548846</int64>
+					<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				</Properties>
+			</Item>
+			<Item class="Decal" referent="RBXD83055A3885948B9B233E7D1F5A37F47">
+				<Properties>
+					<bool name="AutoLocalize">true</bool>
+					<Color3 name="Color3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<Content name="MetalnessMap"><null></null></Content>
+					<Content name="NormalMap"><null></null></Content>
+					<float name="Rotation">0</float>
+					<Content name="RoughnessMap"><null></null></Content>
+					<Content name="Texture"><null></null></Content>
+					<Content name="TexturePack"><null></null></Content>
+					<string name="TexturePackMetadata"></string>
+					<float name="Transparency">0</float>
+					<Vector2 name="UVOffset">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<Vector2 name="UVScale">
+						<X>1</X>
+						<Y>1</Y>
+					</Vector2>
+					<int name="ZIndex">1</int>
+					<token name="Face">1</token>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">Decal</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				</Properties>
+			</Item>
+		</Item>
+	</Item>
+	<SharedStrings>
+		<SharedString md5="yuZpQdnvvUBOTYh1jqZ2cA=="></SharedString>
+	</SharedStrings>
+</roblox>

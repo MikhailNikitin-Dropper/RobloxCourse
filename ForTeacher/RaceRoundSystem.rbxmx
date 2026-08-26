@@ -1,0 +1,880 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXAA67896E4DE1488E86E3FFDA490A7E0C">
+		<Properties>
+			<BinaryString name="AttributesSerialize">BQAAAAwAAABJbnRlcm1pc3Npb24GAAAAAAAALkAEAAAATGFwcwYAAAAAAAAUQAkAAABNaW5SYWNlcnMGAAAAAAAAAEANAAAAUmFjZVRpbWVMaW1pdAYAAAAAAMByQA0AAABSYWNlcnNQZXJSYWNlBgAAAAAAABBA</BinaryString>
+			<string name="Name">RaceRoundSystem</string>
+		</Properties>
+		<Item class="Script" referent="RBX81EC918C6A0E4254946F9098F332E48B">
+			<Properties>
+				<bool name="Disabled">false</bool>
+				<string name="Name">RoundScript</string>
+				<token name="RunContext">0</token>
+				<ProtectedString name="Source">-- RaceRoundSystem: &#208;&#179;&#208;&#190;&#208;&#189;&#208;&#186;&#208;&#176; &#209;&#128;&#208;&#176;&#209;&#131;&#208;&#189;&#208;&#180;&#208;&#176;&#208;&#188;&#208;&#184;.
+-- &#208;&#155;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184; -&gt; &#209;&#129;&#208;&#187;&#209;&#131;&#209;&#135;&#208;&#176;&#208;&#185;&#208;&#189;&#208;&#176;&#209;&#143; &#209;&#135;&#208;&#181;&#209;&#130;&#208;&#178;&#209;&#145;&#209;&#128;&#208;&#186;&#208;&#176; -&gt; &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#208;&#189;&#208;&#176; 5 &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179;&#208;&#190;&#208;&#178; -&gt; &#208;&#191;&#208;&#190;&#208;&#177;&#208;&#181;&#208;&#180;&#208;&#176; &#208;&#191;&#208;&#190; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#184; -&gt; &#208;&#190;&#208;&#177;&#209;&#128;&#208;&#176;&#209;&#130;&#208;&#189;&#208;&#190; &#208;&#178; &#208;&#187;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184;.
+-- &#208;&#157;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#128;&#208;&#190;&#208;&#185;&#208;&#186;&#208;&#184; &#208;&#187;&#208;&#181;&#208;&#182;&#208;&#176;&#209;&#130; &#208;&#178; &#208;&#176;&#209;&#130;&#209;&#128;&#208;&#184;&#208;&#177;&#209;&#131;&#209;&#130;&#208;&#176;&#209;&#133; &#208;&#191;&#208;&#176;&#208;&#191;&#208;&#186;&#208;&#184; RaceRoundSystem (Properties -&gt; Attributes).
+
+local Players = game:GetService(&quot;Players&quot;)
+local TweenService = game:GetService(&quot;TweenService&quot;)
+
+local system = script.Parent
+
+local lobbySpawn = system:WaitForChild(&quot;LobbySpawn&quot;)
+local grid = system:WaitForChild(&quot;Grid&quot;)
+local garage = system:WaitForChild(&quot;Garage&quot;)
+local checkpointsFolder = system:WaitForChild(&quot;Checkpoints&quot;)
+local finishLine = system:WaitForChild(&quot;FinishLine&quot;)
+local board = system:WaitForChild(&quot;Board&quot;)
+local statusLabel = board:WaitForChild(&quot;SurfaceGui&quot;):WaitForChild(&quot;Status&quot;)
+
+local function setting(name, default)
+	local value = system:GetAttribute(name)
+	if typeof(value) == &quot;number&quot; then
+		return value
+	end
+	return default
+end
+
+-- &#208;&#167;&#208;&#181;&#208;&#186;&#208;&#191;&#208;&#190;&#208;&#184;&#208;&#189;&#209;&#130;&#209;&#139; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#133;&#208;&#190;&#208;&#180;&#209;&#143;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#191;&#208;&#190; &#208;&#191;&#208;&#190;&#209;&#128;&#209;&#143;&#208;&#180;&#208;&#186;&#209;&#131; &#208;&#184;&#208;&#188;&#209;&#145;&#208;&#189;: 1, 2, 3, ...
+local checkpoints = {}
+for _, part in ipairs(checkpointsFolder:GetChildren()) do
+	if part:IsA(&quot;BasePart&quot;) then
+		table.insert(checkpoints, part)
+	end
+end
+table.sort(checkpoints, function(a, b)
+	return (tonumber(a.Name) or 0) &lt; (tonumber(b.Name) or 0)
+end)
+
+-- &#208;&#146;&#209;&#139;&#208;&#178;&#208;&#190;&#208;&#180; &#208;&#187;&#208;&#176;&#209;&#130;&#208;&#184;&#208;&#189;&#208;&#184;&#209;&#134;&#208;&#181;&#208;&#185; &#208;&#189;&#208;&#176;&#208;&#188;&#208;&#181;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190;: &#208;&#186;&#208;&#184;&#209;&#128;&#208;&#184;&#208;&#187;&#208;&#187;&#208;&#184;&#209;&#134;&#209;&#131; &#208;&#178; Output &#208;&#187;&#208;&#190;&#208;&#188;&#208;&#176;&#208;&#181;&#209;&#130; &#208;&#186;&#208;&#190;&#208;&#180;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#186;&#208;&#176;.
+local function report(text)
+	print(&quot;[RaceRound] &quot; .. text)
+end
+
+local function problem(text)
+	warn(&quot;[RaceRound] &quot; .. text)
+end
+
+local function isSlot(item)
+	return item:IsA(&quot;BasePart&quot;)
+end
+
+local function isCar(item)
+	return item:IsA(&quot;Model&quot;)
+end
+
+-- &#208;&#154;&#208;&#187;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#184; &#208;&#184; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#139; &#208;&#177;&#208;&#181;&#209;&#128;&#209;&#145;&#208;&#188; &#208;&#191;&#208;&#190; &#208;&#184;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#176;&#208;&#188; Slot1..SlotN &#208;&#184; Car1..CarN, &#208;&#189;&#208;&#190; &#208;&#181;&#209;&#129;&#208;&#187;&#208;&#184;
+-- &#208;&#191;&#209;&#128;&#208;&#181;&#208;&#191;&#208;&#190;&#208;&#180;&#208;&#176;&#208;&#178;&#208;&#176;&#209;&#130;&#208;&#181;&#208;&#187;&#209;&#140; &#208;&#189;&#208;&#176;&#208;&#183;&#208;&#178;&#208;&#176;&#208;&#187; &#208;&#184;&#209;&#133; &#208;&#184;&#208;&#189;&#208;&#176;&#209;&#135;&#208;&#181; (&#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#208;&#176; &#208;&#184;&#208;&#183; Toolbox &#208;&#191;&#209;&#128;&#208;&#184;&#209;&#133;&#208;&#190;&#208;&#180;&#208;&#184;&#209;&#130; &#208;&#186;&#208;&#176;&#208;&#186; &quot;Car Chassis&quot;),
+-- &#208;&#177;&#208;&#181;&#209;&#128;&#209;&#145;&#208;&#188; &#208;&#178;&#209;&#129;&#209;&#145; &#208;&#191;&#208;&#190;&#208;&#180;&#209;&#133;&#208;&#190;&#208;&#180;&#209;&#143;&#209;&#137;&#208;&#181;&#208;&#181; &#208;&#184;&#208;&#183; &#208;&#191;&#208;&#176;&#208;&#191;&#208;&#186;&#208;&#184; &#208;&#191;&#208;&#190; &#208;&#176;&#208;&#187;&#209;&#132;&#208;&#176;&#208;&#178;&#208;&#184;&#209;&#130;&#209;&#131;. &#208;&#156;&#208;&#190;&#208;&#187;&#209;&#135;&#208;&#176;&#208;&#187;&#208;&#184;&#208;&#178;&#209;&#139;&#208;&#185; &#208;&#190;&#209;&#130;&#208;&#186;&#208;&#176;&#208;&#183; &#209;&#133;&#209;&#131;&#208;&#182;&#208;&#181; &#208;&#189;&#208;&#181;&#209;&#130;&#208;&#190;&#209;&#135;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190;
+-- &#208;&#191;&#208;&#190;&#209;&#128;&#209;&#143;&#208;&#180;&#208;&#186;&#208;&#176;: &#209;&#128;&#208;&#176;&#208;&#189;&#209;&#140;&#209;&#136;&#208;&#181; &#208;&#189;&#208;&#181;&#209;&#129;&#208;&#190;&#208;&#178;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#184;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#184; &#208;&#190;&#208;&#183;&#208;&#189;&#208;&#176;&#209;&#135;&#208;&#176;&#208;&#187;&#208;&#190; &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#208;&#177;&#208;&#181;&#208;&#183; &#208;&#181;&#208;&#180;&#208;&#184;&#208;&#189;&#208;&#190;&#208;&#185; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#139;.
+local function ordered(container, prefix, wanted, suitable)
+	local list = {}
+	for i = 1, wanted do
+		local item = container:FindFirstChild(prefix .. i)
+		if item and suitable(item) then
+			table.insert(list, item)
+		end
+	end
+	if #list &gt; 0 then
+		return list
+	end
+	for _, child in ipairs(container:GetChildren()) do
+		if suitable(child) then
+			table.insert(list, child)
+		end
+	end
+	table.sort(list, function(a, b)
+		return a.Name &lt; b.Name
+	end)
+	return list
+end
+
+local function names(list)
+	local out = {}
+	for _, item in ipairs(list) do
+		table.insert(out, item.Name)
+	end
+	if #out == 0 then
+		return &quot;-&quot;
+	end
+	return table.concat(out, &quot;, &quot;)
+end
+
+local racers = {}      -- [Player] = {car, lap, nextCheckpoint, startTime, finishTime}
+local raceRunning = false
+
+local function say(text)
+	statusLabel.Text = text
+end
+
+local function formatTime(seconds)
+	local minutes = math.floor(seconds / 60)
+	return string.format(&quot;%d:%05.2f&quot;, minutes, seconds - minutes * 60)
+end
+
+local function sendToLobby(player)
+	player.RespawnLocation = lobbySpawn
+	local character = player.Character
+	if character then
+		local humanoid = character:FindFirstChildOfClass(&quot;Humanoid&quot;)
+		if humanoid then
+			humanoid.Sit = false
+		end
+		task.wait(0.1)
+		character:PivotTo(lobbySpawn.CFrame * CFrame.new(0, 4, 0))
+	end
+end
+
+local function clearRace()
+	for player, data in pairs(racers) do
+		if data.car then
+			data.car:Destroy()
+		end
+		sendToLobby(player)
+	end
+	racers = {}
+end
+
+-- &#208;&#154;&#209;&#130;&#208;&#190; &#208;&#184;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190; &#208;&#186;&#208;&#190;&#209;&#129;&#208;&#189;&#209;&#131;&#208;&#187;&#209;&#129;&#209;&#143;: &#208;&#178;&#208;&#190;&#208;&#180;&#208;&#184;&#209;&#130;&#208;&#181;&#208;&#187;&#209;&#140; &#208;&#184;&#208;&#187;&#208;&#184; &#208;&#180;&#208;&#181;&#209;&#130;&#208;&#176;&#208;&#187;&#209;&#140; &#208;&#181;&#208;&#179;&#208;&#190; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#139;.
+local function racerFromPart(part)
+	local player = Players:GetPlayerFromCharacter(part.Parent)
+	if player and racers[player] then
+		return player
+	end
+	for candidate, data in pairs(racers) do
+		if data.car and part:IsDescendantOf(data.car) then
+			return candidate
+		end
+	end
+	return nil
+end
+
+-- &#208;&#173;&#209;&#132;&#209;&#132;&#208;&#181;&#208;&#186;&#209;&#130; &#208;&#183;&#208;&#176;&#209;&#135;&#209;&#130;&#209;&#145;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#181;&#208;&#183;&#208;&#180;&#208;&#176;: &#209;&#135;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#140; &#208;&#178;&#209;&#129;&#208;&#191;&#209;&#139;&#209;&#133;&#208;&#184;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;, &#208;&#183;&#208;&#178;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#130; &#208;&#186;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#186;&#208;&#184;&#208;&#185; &#209;&#129;&#208;&#184;&#208;&#179;&#208;&#189;&#208;&#176;&#208;&#187; &#208;&#184;
+-- &#209;&#128;&#208;&#176;&#209;&#129;&#209;&#129;&#209;&#139;&#208;&#191;&#208;&#176;&#209;&#142;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#184;&#209;&#129;&#208;&#186;&#209;&#128;&#209;&#139;. &#208;&#160;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#208;&#176;&#208;&#181;&#209;&#130; &#208;&#184; &#208;&#189;&#208;&#176; &#208;&#178;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#176;&#209;&#133; &#209;&#135;&#208;&#181;&#208;&#186;&#208;&#191;&#208;&#190;&#208;&#184;&#208;&#189;&#209;&#130;&#208;&#190;&#208;&#178;, &#208;&#184; &#208;&#189;&#208;&#176; &#209;&#132;&#208;&#184;&#208;&#189;&#208;&#184;&#209;&#136;&#208;&#189;&#208;&#190;&#208;&#185; &#208;&#187;&#208;&#184;&#208;&#189;&#208;&#184;&#208;&#184;.
+-- &#208;&#146;&#209;&#129;&#209;&#145; &#209;&#129;&#208;&#190;&#208;&#183;&#208;&#180;&#208;&#176;&#209;&#145;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#129;&#208;&#186;&#209;&#128;&#208;&#184;&#208;&#191;&#209;&#130;&#208;&#190;&#208;&#188; &#208;&#191;&#209;&#128;&#208;&#184; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#131;&#209;&#129;&#208;&#186;&#208;&#181;, &#209;&#128;&#209;&#131;&#208;&#186;&#208;&#176;&#208;&#188;&#208;&#184; &#208;&#189;&#208;&#184;&#209;&#135;&#208;&#181;&#208;&#179;&#208;&#190; &#208;&#180;&#208;&#190;&#208;&#177;&#208;&#176;&#208;&#178;&#208;&#187;&#209;&#143;&#209;&#130;&#209;&#140; &#208;&#189;&#208;&#181; &#208;&#189;&#208;&#176;&#208;&#180;&#208;&#190; &#226;&#128;&#148;
+-- &#209;&#128;&#208;&#176;&#209;&#129;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#186;&#208;&#176; &#208;&#189;&#208;&#176; &#209;&#130;&#209;&#128;&#208;&#176;&#209;&#129;&#209;&#129;&#208;&#181; &#208;&#189;&#208;&#181; &#208;&#188;&#208;&#181;&#208;&#189;&#209;&#143;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143;.
+local CHECKPOINT_COLOR = Color3.fromRGB(120, 255, 150)   -- &#208;&#178;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#176;: &#208;&#183;&#208;&#176;&#209;&#135;&#209;&#130;&#209;&#145;&#208;&#189; &#209;&#135;&#208;&#181;&#208;&#186;&#208;&#191;&#208;&#190;&#208;&#184;&#208;&#189;&#209;&#130;
+local FINISH_COLOR = Color3.fromRGB(255, 225, 120)       -- &#209;&#132;&#208;&#184;&#208;&#189;&#208;&#184;&#209;&#136;: &#208;&#183;&#208;&#176;&#209;&#135;&#209;&#130;&#209;&#145;&#208;&#189; &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179;
+local FLASH_TIME = 0.4
+
+local passEffect = {}   -- [&#209;&#135;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#140;] = {color, transparency, flash, sparkles, sound, tween}
+
+local function prepareEffect(gate, flashColor)
+	local sparkles = Instance.new(&quot;ParticleEmitter&quot;)
+	sparkles.Name = &quot;PassSparkles&quot;
+	sparkles.Texture = &quot;rbxasset://textures/particles/sparkles_main.dds&quot;
+	sparkles.Color = ColorSequence.new(flashColor)
+	sparkles.Lifetime = NumberRange.new(0.35, 0.7)
+	sparkles.Speed = NumberRange.new(6, 12)
+	sparkles.SpreadAngle = Vector2.new(180, 180)
+	sparkles.Size = NumberSequence.new(0.8)
+	sparkles.Rate = 0          -- &#208;&#191;&#208;&#190;&#209;&#129;&#209;&#130;&#208;&#190;&#209;&#143;&#208;&#189;&#208;&#189;&#208;&#190; &#208;&#189;&#208;&#181; &#209;&#129;&#209;&#139;&#208;&#191;&#208;&#187;&#208;&#181;&#209;&#130;, &#209;&#130;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#186;&#208;&#190; &#208;&#178;&#209;&#129;&#208;&#191;&#209;&#139;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#185; &#208;&#191;&#208;&#190; Emit
+	sparkles.Enabled = false
+	sparkles.Parent = gate
+
+	local sound = Instance.new(&quot;Sound&quot;)
+	sound.Name = &quot;PassSound&quot;
+	sound.SoundId = &quot;rbxasset://sounds/electronicpingshort.wav&quot;
+	sound.Volume = 0.5
+	sound.RollOffMaxDistance = 150
+	sound.Parent = gate
+
+	passEffect[gate] = {
+		color = gate.Color,
+		transparency = gate.Transparency,
+		flash = flashColor,
+		sparkles = sparkles,
+		sound = sound,
+		tween = nil,
+	}
+end
+
+local function playPassEffect(gate)
+	local look = passEffect[gate]
+	if not look then
+		return
+	end
+	-- &#209;&#135;&#208;&#181;&#209;&#130;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#190; &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#133;&#208;&#190;&#208;&#180;&#209;&#143;&#209;&#130; &#208;&#190;&#208;&#180;&#208;&#189;&#209;&#131; &#209;&#135;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#140; &#208;&#178;&#209;&#128;&#208;&#176;&#208;&#183;&#208;&#189;&#208;&#190;&#208;&#177;&#208;&#190;&#208;&#185;: &#208;&#189;&#208;&#181;&#208;&#180;&#208;&#190;&#208;&#184;&#208;&#179;&#209;&#128;&#208;&#176;&#208;&#189;&#208;&#189;&#209;&#131;&#209;&#142; &#208;&#178;&#209;&#129;&#208;&#191;&#209;&#139;&#209;&#136;&#208;&#186;&#209;&#131;
+	-- &#208;&#179;&#208;&#176;&#209;&#129;&#208;&#184;&#208;&#188;, &#208;&#184;&#208;&#189;&#208;&#176;&#209;&#135;&#208;&#181; &#209;&#130;&#208;&#178;&#208;&#184;&#208;&#189;&#209;&#139; &#209;&#130;&#209;&#143;&#208;&#189;&#209;&#131;&#209;&#130; &#209;&#134;&#208;&#178;&#208;&#181;&#209;&#130; &#208;&#186;&#208;&#176;&#208;&#182;&#208;&#180;&#209;&#139;&#208;&#185; &#208;&#178; &#209;&#129;&#208;&#178;&#208;&#190;&#209;&#142; &#209;&#129;&#209;&#130;&#208;&#190;&#209;&#128;&#208;&#190;&#208;&#189;&#209;&#131;
+	if look.tween then
+		look.tween:Cancel()
+	end
+	gate.Color = look.flash
+	gate.Transparency = math.min(look.transparency, 0.15)
+	look.tween = TweenService:Create(gate, TweenInfo.new(FLASH_TIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Color = look.color,
+		Transparency = look.transparency,
+	})
+	look.tween:Play()
+	look.sparkles:Emit(20)
+	look.sound:Play()
+end
+
+for _, gate in ipairs(checkpoints) do
+	prepareEffect(gate, CHECKPOINT_COLOR)
+end
+prepareEffect(finishLine, FINISH_COLOR)
+
+local function onCheckpointTouched(index, hit)
+	if not raceRunning then
+		return
+	end
+	local player = racerFromPart(hit)
+	if not player then
+		return
+	end
+	local data = racers[player]
+	if data.finishTime then
+		return
+	end
+	-- &#208;&#161;&#209;&#128;&#208;&#181;&#208;&#183;&#208;&#176;&#209;&#130;&#209;&#140; &#208;&#189;&#208;&#181;&#208;&#187;&#209;&#140;&#208;&#183;&#209;&#143;: &#209;&#135;&#208;&#181;&#208;&#186;&#208;&#191;&#208;&#190;&#208;&#184;&#208;&#189;&#209;&#130; &#208;&#183;&#208;&#176;&#209;&#129;&#209;&#135;&#208;&#184;&#209;&#130;&#209;&#139;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#130;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#186;&#208;&#190; &#208;&#191;&#208;&#190; &#208;&#191;&#208;&#190;&#209;&#128;&#209;&#143;&#208;&#180;&#208;&#186;&#209;&#131;.
+	if data.nextCheckpoint == index then
+		data.nextCheckpoint = index + 1
+		-- &#208;&#178;&#209;&#129;&#208;&#191;&#209;&#139;&#209;&#136;&#208;&#186;&#208;&#176; &#209;&#130;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#186;&#208;&#190; &#208;&#189;&#208;&#176; &#208;&#183;&#208;&#176;&#209;&#135;&#209;&#130;&#209;&#145;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#188; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#181;&#208;&#183;&#208;&#180;&#208;&#181;: &#209;&#129;&#209;&#128;&#208;&#181;&#208;&#183;&#208;&#176;&#208;&#178;&#209;&#136;&#208;&#181;&#208;&#188;&#209;&#131; &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179; &#208;&#178;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#176; &#208;&#189;&#208;&#181; &#208;&#188;&#208;&#184;&#208;&#179;&#208;&#176;&#209;&#142;&#209;&#130;
+		playPassEffect(checkpoints[index])
+	end
+end
+
+local function onFinishTouched(hit)
+	if not raceRunning then
+		return
+	end
+	local player = racerFromPart(hit)
+	if not player then
+		return
+	end
+	local data = racers[player]
+	if data.finishTime or data.nextCheckpoint &lt;= #checkpoints then
+		return
+	end
+
+	data.lap += 1
+	data.nextCheckpoint = 1
+	-- &#209;&#129;&#209;&#142;&#208;&#180;&#208;&#176; &#208;&#191;&#208;&#190;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#176;&#208;&#181;&#208;&#188; &#209;&#130;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#186;&#208;&#190; &#208;&#191;&#208;&#190;&#209;&#129;&#208;&#187;&#208;&#181; &#208;&#178;&#209;&#129;&#208;&#181;&#209;&#133; &#208;&#178;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#130; &#208;&#191;&#208;&#190; &#208;&#191;&#208;&#190;&#209;&#128;&#209;&#143;&#208;&#180;&#208;&#186;&#209;&#131;: &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179; &#208;&#180;&#208;&#181;&#208;&#185;&#209;&#129;&#209;&#130;&#208;&#178;&#208;&#184;&#209;&#130;&#208;&#181;&#208;&#187;&#209;&#140;&#208;&#189;&#208;&#190; &#208;&#183;&#208;&#176;&#209;&#135;&#209;&#130;&#209;&#145;&#208;&#189;
+	playPassEffect(finishLine)
+
+	local laps = setting(&quot;Laps&quot;, 5)
+	if data.lap &gt;= laps then
+		data.finishTime = os.clock() - data.startTime
+		say(player.Name .. &quot; &#209;&#132;&#208;&#184;&#208;&#189;&#208;&#184;&#209;&#136;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#176;&#208;&#187;: &quot; .. formatTime(data.finishTime))
+		task.spawn(function()
+			task.wait(2)
+			if data.car then
+				data.car:Destroy()
+				data.car = nil
+			end
+			sendToLobby(player)
+		end)
+	else
+		say(player.Name .. &quot;: &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179; &quot; .. (data.lap + 1) .. &quot; &#208;&#184;&#208;&#183; &quot; .. laps)
+	end
+end
+
+for index, checkpoint in ipairs(checkpoints) do
+	checkpoint.Touched:Connect(function(hit)
+		onCheckpointTouched(index, hit)
+	end)
+end
+finishLine.Touched:Connect(onFinishTouched)
+
+Players.PlayerRemoving:Connect(function(player)
+	local data = racers[player]
+	if data then
+		if data.car then
+			data.car:Destroy()
+		end
+		racers[player] = nil
+	end
+end)
+
+-- &#208;&#161;&#208;&#187;&#209;&#131;&#209;&#135;&#208;&#176;&#208;&#185;&#208;&#189;&#208;&#176;&#209;&#143; &#209;&#135;&#208;&#181;&#209;&#130;&#208;&#178;&#209;&#145;&#209;&#128;&#208;&#186;&#208;&#176; &#208;&#184;&#208;&#183; &#209;&#130;&#208;&#181;&#209;&#133;, &#208;&#186;&#209;&#130;&#208;&#190; &#209;&#129;&#208;&#181;&#208;&#185;&#209;&#135;&#208;&#176;&#209;&#129; &#208;&#178; &#208;&#187;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184;.
+local function pickRacers()
+	local waiting = {}
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		if character and character:FindFirstChildOfClass(&quot;Humanoid&quot;) then
+			table.insert(waiting, player)
+		end
+	end
+	-- &#208;&#191;&#208;&#181;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#209;&#136;&#208;&#184;&#208;&#178;&#208;&#176;&#208;&#181;&#208;&#188;: &#208;&#190;&#209;&#135;&#208;&#181;&#209;&#128;&#208;&#181;&#208;&#180;&#209;&#140; &#208;&#189;&#208;&#181; &#208;&#191;&#208;&#190; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#184; &#208;&#178;&#209;&#133;&#208;&#190;&#208;&#180;&#208;&#176;, &#208;&#176; &#208;&#182;&#209;&#128;&#208;&#181;&#208;&#177;&#208;&#184;&#208;&#181;&#208;&#188;
+	for i = #waiting, 2, -1 do
+		local j = math.random(i)
+		waiting[i], waiting[j] = waiting[j], waiting[i]
+	end
+
+	local wanted = setting(&quot;RacersPerRace&quot;, 4)
+	local seats = math.min(wanted, #ordered(grid, &quot;Slot&quot;, wanted, isSlot))
+	local chosen = {}
+	for i = 1, math.min(seats, #waiting) do
+		table.insert(chosen, waiting[i])
+	end
+	return chosen
+end
+
+-- &#208;&#159;&#208;&#184;&#208;&#178;&#208;&#190;&#209;&#130; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#139; &#209;&#128;&#208;&#181;&#208;&#180;&#208;&#186;&#208;&#190; &#209;&#129;&#208;&#190;&#208;&#178;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#176;&#208;&#181;&#209;&#130; &#209;&#129; &#209;&#134;&#208;&#181;&#208;&#189;&#209;&#130;&#209;&#128;&#208;&#190;&#208;&#188; &#208;&#181;&#209;&#145; &#208;&#179;&#208;&#176;&#208;&#177;&#208;&#176;&#209;&#128;&#208;&#184;&#209;&#130;&#208;&#190;&#208;&#178;, &#208;&#191;&#208;&#190;&#209;&#141;&#209;&#130;&#208;&#190;&#208;&#188;&#209;&#131; &#209;&#129;&#209;&#130;&#208;&#176;&#208;&#178;&#208;&#184;&#208;&#188; &#208;&#191;&#208;&#190;
+-- &#208;&#179;&#208;&#176;&#208;&#177;&#208;&#176;&#209;&#128;&#208;&#184;&#209;&#130;&#208;&#176;&#208;&#188;: PivotTo &#208;&#191;&#209;&#128;&#209;&#143;&#208;&#188;&#208;&#190; &#208;&#178; CFrame &#208;&#186;&#208;&#187;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#184; &#209;&#131;&#209;&#130;&#208;&#176;&#208;&#191;&#208;&#187;&#208;&#184;&#208;&#178;&#208;&#176;&#208;&#187; &#208;&#186;&#209;&#131;&#208;&#183;&#208;&#190;&#208;&#178; &#208;&#178; &#208;&#189;&#208;&#181;&#209;&#145;, &#208;&#184; &#209;&#132;&#208;&#184;&#208;&#183;&#208;&#184;&#208;&#186;&#208;&#176;
+-- &#208;&#178;&#209;&#139;&#208;&#177;&#209;&#128;&#208;&#176;&#209;&#129;&#209;&#139;&#208;&#178;&#208;&#176;&#208;&#187;&#208;&#176; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#131; &#208;&#191;&#209;&#128;&#208;&#184; &#209;&#129;&#209;&#130;&#208;&#176;&#209;&#128;&#209;&#130;&#208;&#181;.
+local function placeOn(car, slot)
+	local pivot = car:GetPivot()
+	local boxCF, boxSize = car:GetBoundingBox()
+	local lift = slot.Size.Y / 2 + boxSize.Y / 2 + (pivot.Position.Y - boxCF.Position.Y) + 0.5
+	car:PivotTo(slot.CFrame * CFrame.new(0, lift, 0))
+end
+
+local function startRace(chosen)
+	local seats = setting(&quot;RacersPerRace&quot;, 4)
+	local slots = ordered(grid, &quot;Slot&quot;, seats, isSlot)
+	local cars = ordered(garage, &quot;Car&quot;, seats, isCar)
+
+	for i, player in ipairs(chosen) do
+		local slot = slots[i]
+		-- &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189; &#208;&#188;&#208;&#190;&#208;&#182;&#208;&#181;&#209;&#130; &#208;&#177;&#209;&#139;&#209;&#130;&#209;&#140; &#208;&#188;&#208;&#181;&#208;&#189;&#209;&#140;&#209;&#136;&#208;&#181;, &#209;&#135;&#208;&#181;&#208;&#188; &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178;: &#208;&#191;&#209;&#131;&#209;&#129;&#208;&#186;&#208;&#176;&#208;&#181;&#208;&#188; &#208;&#184;&#209;&#133; &#208;&#191;&#208;&#190; &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179;&#209;&#131;,
+		-- &#208;&#184;&#208;&#189;&#208;&#176;&#209;&#135;&#208;&#181; &#209;&#135;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#140; &#208;&#184;&#208;&#179;&#209;&#128;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#190;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#187;&#208;&#176;&#209;&#129;&#209;&#140; &#208;&#177;&#209;&#139; &#209;&#129;&#209;&#130;&#208;&#190;&#209;&#143;&#209;&#130;&#209;&#140; &#208;&#177;&#208;&#181;&#208;&#183; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189;&#209;&#139;
+		local template = cars[#cars &gt; 0 and (i - 1) % #cars + 1 or 1]
+		local character = player.Character
+		local humanoid = character and character:FindFirstChildOfClass(&quot;Humanoid&quot;)
+
+		if not slot then
+			problem(&quot;no free grid slot for &quot; .. player.Name .. &quot;: put more parts into Grid&quot;)
+		elseif not template then
+			problem(&quot;no car for &quot; .. player.Name .. &quot;: put car models into Garage&quot;)
+		elseif not humanoid then
+			problem(&quot;no character for &quot; .. player.Name .. &quot;: skipped this race&quot;)
+		else
+			local car = template:Clone()
+			car.Parent = workspace
+			placeOn(car, slot)
+			local seat = car:FindFirstChildWhichIsA(&quot;VehicleSeat&quot;, true)
+			if seat then
+				seat:Sit(humanoid)
+			else
+				problem(&quot;car &apos;&quot; .. template.Name .. &quot;&apos; has no VehicleSeat: &quot; .. player.Name .. &quot; not seated&quot;)
+			end
+			-- &#209;&#128;&#208;&#176;&#208;&#183;&#208;&#177;&#208;&#184;&#208;&#187;&#209;&#129;&#209;&#143; &#208;&#184; &#208;&#191;&#208;&#190;&#208;&#179;&#208;&#184;&#208;&#177; &#226;&#128;&#148; &#209;&#129;&#209;&#133;&#208;&#190;&#208;&#180;&#208;&#184;&#209;&#130; &#209;&#129; &#208;&#180;&#208;&#184;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#209;&#134;&#208;&#184;&#208;&#184;, &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#208;&#181;&#208;&#179;&#208;&#190; &#208;&#189;&#208;&#181; &#208;&#182;&#208;&#180;&#209;&#145;&#209;&#130;
+			local died
+			died = humanoid.Died:Connect(function()
+				died:Disconnect()
+				local data = racers[player]
+				if data and not data.finishTime then
+					data.retired = true
+					if data.car then
+						data.car:Destroy()
+						data.car = nil
+					end
+					say(player.Name .. &quot; &#209;&#129;&#208;&#190;&#209;&#136;&#209;&#145;&#208;&#187; &#209;&#129; &#208;&#180;&#208;&#184;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#209;&#134;&#208;&#184;&#208;&#184;&quot;)
+				end
+			end)
+			racers[player] = {
+				car = car,
+				lap = 0,
+				nextCheckpoint = 1,
+				startTime = os.clock(),
+				finishTime = nil,
+				retired = false,
+			}
+		end
+	end
+end
+
+local function results()
+	local finished = {}
+	for player, data in pairs(racers) do
+		if data.finishTime then
+			table.insert(finished, {name = player.Name, time = data.finishTime})
+		end
+	end
+	table.sort(finished, function(a, b)
+		return a.time &lt; b.time
+	end)
+
+	if #finished == 0 then
+		say(&quot;&#208;&#157;&#208;&#184;&#208;&#186;&#209;&#130;&#208;&#190; &#208;&#189;&#208;&#181; &#208;&#180;&#208;&#190;&#208;&#181;&#209;&#133;&#208;&#176;&#208;&#187;. &#208;&#161;&#208;&#187;&#208;&#181;&#208;&#180;&#209;&#131;&#209;&#142;&#209;&#137;&#208;&#184;&#208;&#185; &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#209;&#129;&#208;&#186;&#208;&#190;&#209;&#128;&#208;&#190;!&quot;)
+		return
+	end
+
+	local lines = {&quot;&#208;&#152;&#209;&#130;&#208;&#190;&#208;&#179;&#208;&#184; &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180;&#208;&#176;:&quot;}
+	for place, entry in ipairs(finished) do
+		table.insert(lines, place .. &quot;. &quot; .. entry.name .. &quot; &#226;&#128;&#148; &quot; .. formatTime(entry.time))
+	end
+	say(table.concat(lines, &quot;\n&quot;))
+end
+
+-- &#208;&#161;&#209;&#130;&#208;&#176;&#209;&#128;&#209;&#130;&#208;&#190;&#208;&#178;&#208;&#176;&#209;&#143; &#209;&#129;&#208;&#176;&#208;&#188;&#208;&#190;&#208;&#191;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#186;&#208;&#176;: &#209;&#128;&#208;&#176;&#208;&#189;&#209;&#140;&#209;&#136;&#208;&#181; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#189;&#208;&#190; &#208;&#189;&#208;&#176;&#208;&#183;&#208;&#178;&#208;&#176;&#208;&#189;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#184;&#208;&#187;&#208;&#184; &#208;&#183;&#208;&#176;&#208;&#177;&#209;&#139;&#209;&#130;&#208;&#176;&#209;&#143; &#209;&#135;&#208;&#176;&#209;&#129;&#209;&#130;&#209;&#140; &#208;&#190;&#208;&#183;&#208;&#189;&#208;&#176;&#209;&#135;&#208;&#176;&#208;&#187;&#208;&#176;
+-- &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#208;&#177;&#208;&#181;&#208;&#183; &#208;&#188;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#189; &#208;&#184; &#208;&#191;&#209;&#131;&#209;&#129;&#209;&#130;&#208;&#190;&#208;&#185; Output. &#208;&#162;&#208;&#181;&#208;&#191;&#208;&#181;&#209;&#128;&#209;&#140; &#208;&#191;&#209;&#128;&#208;&#184;&#209;&#135;&#208;&#184;&#208;&#189;&#208;&#176; &#208;&#178;&#208;&#184;&#208;&#180;&#208;&#189;&#208;&#176; &#209;&#129;&#209;&#128;&#208;&#176;&#208;&#183;&#209;&#131; &#208;&#191;&#208;&#190;&#209;&#129;&#208;&#187;&#208;&#181; Test.
+local function selfCheck()
+	local seats = setting(&quot;RacersPerRace&quot;, 4)
+	local slots = ordered(grid, &quot;Slot&quot;, seats, isSlot)
+	local cars = ordered(garage, &quot;Car&quot;, seats, isCar)
+
+	report(string.format(&quot;setup: %d grid slots, %d cars, %d checkpoints, %d racers per race, min %d&quot;,
+		#slots, #cars, #checkpoints, seats, math.max(1, setting(&quot;MinRacers&quot;, 2))))
+	report(&quot;grid slots: &quot; .. names(slots))
+	report(&quot;cars: &quot; .. names(cars))
+
+	if not system:IsDescendantOf(workspace) then
+		problem(&quot;module is not inside Workspace: move RaceRoundSystem into Workspace&quot;)
+	end
+	if #slots == 0 then
+		problem(&quot;Grid is empty: put starting grid parts into Grid, nobody can start&quot;)
+	end
+	if #cars == 0 then
+		problem(&quot;Garage is empty: put car models into Garage, nobody gets a car&quot;)
+	end
+	for _, car in ipairs(cars) do
+		if not car:FindFirstChildWhichIsA(&quot;VehicleSeat&quot;, true) then
+			problem(&quot;car &apos;&quot; .. car.Name .. &quot;&apos; has no VehicleSeat: driver cannot be seated&quot;)
+		end
+	end
+	if #checkpoints == 0 then
+		problem(&quot;Checkpoints is empty: laps would count without gates, shortcuts allowed&quot;)
+	end
+	if #cars &gt; 0 and #slots &gt; 0 and #cars &lt; math.min(seats, #slots) then
+		report(&quot;note: fewer cars than grid slots, cars will be reused&quot;)
+	end
+	-- &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180; &#209;&#129;&#209;&#130;&#208;&#176;&#209;&#128;&#209;&#130;&#209;&#131;&#208;&#181;&#209;&#130; &#208;&#189;&#208;&#181; &#208;&#177;&#208;&#190;&#208;&#187;&#208;&#181;&#208;&#181; &#209;&#135;&#208;&#181;&#208;&#188; &#208;&#189;&#208;&#176; min(RacersPerRace, &#209;&#135;&#208;&#184;&#209;&#129;&#208;&#187;&#208;&#190; &#208;&#186;&#208;&#187;&#208;&#181;&#209;&#130;&#208;&#190;&#208;&#186;) &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178;,
+	-- &#208;&#191;&#208;&#190;&#209;&#141;&#209;&#130;&#208;&#190;&#208;&#188;&#209;&#131; &#209;&#129;&#208;&#187;&#208;&#184;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#188; &#208;&#177;&#208;&#190;&#208;&#187;&#209;&#140;&#209;&#136;&#208;&#190;&#208;&#185; MinRacers &#226;&#128;&#148; &#209;&#141;&#209;&#130;&#208;&#190; &#208;&#178;&#208;&#181;&#209;&#135;&#208;&#189;&#208;&#190;&#208;&#181; &#208;&#190;&#208;&#182;&#208;&#184;&#208;&#180;&#208;&#176;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#178; &#208;&#187;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184;
+	local capacity = math.min(seats, #slots)
+	if #slots &gt; 0 and setting(&quot;MinRacers&quot;, 2) &gt; capacity then
+		problem(string.format(&quot;MinRacers %d is greater than capacity %d: race will never start&quot;,
+			setting(&quot;MinRacers&quot;, 2), capacity))
+	end
+end
+
+selfCheck()
+
+-- &#208;&#147;&#208;&#187;&#208;&#176;&#208;&#178;&#208;&#189;&#209;&#139;&#208;&#185; &#209;&#134;&#208;&#184;&#208;&#186;&#208;&#187; &#209;&#128;&#208;&#176;&#209;&#131;&#208;&#189;&#208;&#180;&#208;&#176;.
+while true do
+	raceRunning = false
+	clearRace()
+
+	local intermission = setting(&quot;Intermission&quot;, 15)
+	local minRacers = math.max(1, setting(&quot;MinRacers&quot;, 2))
+	local seconds = intermission
+	while seconds &gt; 0 do
+		local waiting = pickRacers()
+		if #waiting &lt; minRacers then
+			-- &#208;&#191;&#208;&#190;&#208;&#186;&#208;&#176; &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#188;&#208;&#181;&#208;&#189;&#209;&#140;&#209;&#136;&#208;&#181; &#208;&#189;&#209;&#131;&#208;&#182;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190;, &#208;&#190;&#209;&#130;&#209;&#129;&#209;&#135;&#209;&#145;&#209;&#130; &#209;&#129;&#209;&#130;&#208;&#190;&#208;&#184;&#209;&#130; &#208;&#189;&#208;&#176; &#208;&#188;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#181;
+			say(&quot;&#208;&#150;&#208;&#180;&#209;&#145;&#208;&#188; &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#178; &#208;&#187;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184;: &quot; .. #waiting .. &quot; &#208;&#184;&#208;&#183; &quot; .. minRacers)
+			seconds = intermission
+		else
+			say(&quot;&#208;&#161;&#209;&#130;&#208;&#176;&#209;&#128;&#209;&#130; &#209;&#135;&#208;&#181;&#209;&#128;&#208;&#181;&#208;&#183; &quot; .. seconds .. &quot;\n&#208;&#147;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#178; &#208;&#183;&#208;&#176;&#208;&#181;&#208;&#183;&#208;&#180;&#208;&#181;: &quot; .. #waiting)
+			seconds -= 1
+		end
+		task.wait(1)
+	end
+
+	local chosen = pickRacers()
+	if #chosen &gt;= minRacers then
+		say(&quot;&#208;&#159;&#208;&#190;&#208;&#181;&#209;&#133;&#208;&#176;&#208;&#187;&#208;&#184;! &quot; .. setting(&quot;Laps&quot;, 5) .. &quot; &#208;&#186;&#209;&#128;&#209;&#131;&#208;&#179;&#208;&#190;&#208;&#178;&quot;)
+		startRace(chosen)
+		raceRunning = true
+
+		local deadline = os.clock() + setting(&quot;RaceTimeLimit&quot;, 300)
+		repeat
+			task.wait(1)
+			local racing = 0
+			for _, data in pairs(racers) do
+				if not data.finishTime and not data.retired then
+					racing += 1
+				end
+			end
+		until racing == 0 or os.clock() &gt; deadline
+
+		raceRunning = false
+		results()
+		task.wait(6)
+	end
+end
+</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="SpawnLocation" referent="RBX809F61D4732D40F1ADC34301AB4BB7D0">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<bool name="CanCollide">true</bool>
+				<CoordinateFrame name="CFrame">
+					<X>0</X>
+					<Y>20</Y>
+					<Z>-60</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<Color3uint8 name="Color3uint8">4281565414</Color3uint8>
+				<string name="Name">LobbySpawn</string>
+				<float name="Transparency">0.0</float>
+				<Vector3 name="size">
+					<X>16</X>
+					<Y>1</Y>
+					<Z>16</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="Part" referent="RBX24070EB76C0A4974A93BA59882E30637">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<bool name="CanCollide">true</bool>
+				<CoordinateFrame name="CFrame">
+					<X>0</X>
+					<Y>26</Y>
+					<Z>-60</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<Color3uint8 name="Color3uint8">4279900703</Color3uint8>
+				<string name="Name">Board</string>
+				<float name="Transparency">0.0</float>
+				<Vector3 name="size">
+					<X>16</X>
+					<Y>8</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+			<Item class="SurfaceGui" referent="RBXF37CFEC7BF7B4955820719696C370480">
+				<Properties>
+					<string name="Name">SurfaceGui</string>
+					<bool name="AlwaysOnTop">false</bool>
+					<token name="Face">5</token>
+					<float name="PixelsPerStud">50</float>
+					<token name="SizingMode">0</token>
+				</Properties>
+			<Item class="TextLabel" referent="RBX9929834863F44B82867EB7E16A7D0161">
+				<Properties>
+					<string name="Name">Status</string>
+					<Color3 name="BackgroundColor3">
+						<R>0.05</R>
+						<G>0.05</G>
+						<B>0.08</B>
+					</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<int name="BorderSizePixel">0</int>
+					<UDim2 name="Size">
+						<XS>1</XS>
+						<XO>0</XO>
+						<YS>1</YS>
+						<YO>0</YO>
+					</UDim2>
+					<string name="Text">&#208;&#150;&#208;&#180;&#209;&#145;&#208;&#188; &#208;&#179;&#208;&#190;&#208;&#189;&#209;&#137;&#208;&#184;&#208;&#186;&#208;&#190;&#208;&#178; &#208;&#178; &#208;&#187;&#208;&#190;&#208;&#177;&#208;&#177;&#208;&#184;</string>
+					<Color3 name="TextColor3">
+						<R>1</R>
+						<G>1</G>
+						<B>1</B>
+					</Color3>
+					<bool name="TextScaled">true</bool>
+					<bool name="TextWrapped">true</bool>
+				</Properties>
+			</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX3E6F616E73494C81A31E1803F09D510F">
+			<Properties>
+				<string name="Name">Grid</string>
+			</Properties>
+			<Item class="Part" referent="RBX4209778F3E984F41B6E9897E3F26B1B9">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>-12</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4293322470</Color3uint8>
+					<string name="Name">Slot1</string>
+					<float name="Transparency">0.5</float>
+					<Vector3 name="size">
+						<X>7</X>
+						<Y>1</Y>
+						<Z>14</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Decal" referent="RBXBDD66CA42BAB43FAAE3FB6088B7DD4E4">
+					<Properties>
+						<token name="Face">1</token>
+						<string name="Name">Arrow</string>
+						<Content name="Texture"><url>rbxassetid://153287167</url></Content>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Part" referent="RBX17ACC7B0485B43FF9825F72D21275A04">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>-4</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4293322470</Color3uint8>
+					<string name="Name">Slot2</string>
+					<float name="Transparency">0.5</float>
+					<Vector3 name="size">
+						<X>7</X>
+						<Y>1</Y>
+						<Z>14</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Decal" referent="RBX754572D70A5E4FE3945D173448069438">
+					<Properties>
+						<token name="Face">1</token>
+						<string name="Name">Arrow</string>
+						<Content name="Texture"><url>rbxassetid://153287167</url></Content>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Part" referent="RBX5FE44B337F4246C0B77BBDE99A10673C">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>4</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4293322470</Color3uint8>
+					<string name="Name">Slot3</string>
+					<float name="Transparency">0.5</float>
+					<Vector3 name="size">
+						<X>7</X>
+						<Y>1</Y>
+						<Z>14</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Decal" referent="RBX017A7AD75A894FC6A6167E1494F26DEE">
+					<Properties>
+						<token name="Face">1</token>
+						<string name="Name">Arrow</string>
+						<Content name="Texture"><url>rbxassetid://153287167</url></Content>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Part" referent="RBXBEF5BBFFD9034B10B5A6EE3C86AF1EA1">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>12</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4293322470</Color3uint8>
+					<string name="Name">Slot4</string>
+					<float name="Transparency">0.5</float>
+					<Vector3 name="size">
+						<X>7</X>
+						<Y>1</Y>
+						<Z>14</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Decal" referent="RBX5A4D2F65D93347DF8943ED6D28924FFD">
+					<Properties>
+						<token name="Face">1</token>
+						<string name="Name">Arrow</string>
+						<Content name="Texture"><url>rbxassetid://153287167</url></Content>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX4E93217E74AF478984CB9D988995C6DF">
+			<Properties>
+				<string name="Name">Garage</string>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBX10A5840A6F284A90AAD7AF9E40E0D557">
+			<Properties>
+				<string name="Name">Checkpoints</string>
+			</Properties>
+			<Item class="Part" referent="RBXD990C706037343218D46F6987EF4E8DF">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>0</X>
+						<Y>8</Y>
+						<Z>60</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4281584742</Color3uint8>
+					<string name="Name">1</string>
+					<float name="Transparency">0.7</float>
+					<Vector3 name="size">
+						<X>44</X>
+						<Y>16</Y>
+						<Z>2</Z>
+					</Vector3>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBXAE1A93AE685E4F83B9A84CEAF4236990">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>0</X>
+						<Y>8</Y>
+						<Z>110</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4281584742</Color3uint8>
+					<string name="Name">2</string>
+					<float name="Transparency">0.7</float>
+					<Vector3 name="size">
+						<X>44</X>
+						<Y>16</Y>
+						<Z>2</Z>
+					</Vector3>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBX66FB97529465400090A495A6BF8ADAEC">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>0</X>
+						<Y>8</Y>
+						<Z>160</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4281584742</Color3uint8>
+					<string name="Name">3</string>
+					<float name="Transparency">0.7</float>
+					<Vector3 name="size">
+						<X>44</X>
+						<Y>16</Y>
+						<Z>2</Z>
+					</Vector3>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBX21D72B7B4F8D4B9C8F18A6A5DD1B3D25">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<bool name="CanCollide">false</bool>
+					<CoordinateFrame name="CFrame">
+						<X>0</X>
+						<Y>8</Y>
+						<Z>210</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<Color3uint8 name="Color3uint8">4281584742</Color3uint8>
+					<string name="Name">4</string>
+					<float name="Transparency">0.7</float>
+					<Vector3 name="size">
+						<X>44</X>
+						<Y>16</Y>
+						<Z>2</Z>
+					</Vector3>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBX135A2F88EB104671A90A4FC6FDE421B4">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<bool name="CanCollide">false</bool>
+				<CoordinateFrame name="CFrame">
+					<X>0</X>
+					<Y>8</Y>
+					<Z>20</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<Color3uint8 name="Color3uint8">4294069324</Color3uint8>
+				<string name="Name">FinishLine</string>
+				<float name="Transparency">0.7</float>
+				<Vector3 name="size">
+					<X>44</X>
+					<Y>16</Y>
+					<Z>2</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
