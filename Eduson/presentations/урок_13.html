@@ -872,7 +872,17 @@ function initLightbox(){
   closeBtn.addEventListener('click',close);
   lb.addEventListener('click',function(e){if(e.target===lb)close();});
   document.addEventListener('keydown',function(e){
-    if(!lb.hidden&&(e.key==='Escape'||e.key==='Esc'))close();
+    if(lb.hidden)return;
+    if(e.key==='Escape'||e.key==='Esc'){close();return;}
+    /* пока картинка развёрнута, стрелки листают КАДРЫ галереи, а не слайды:
+       слайды в этот момент и так стоят (общий обработчик выходит раньше).
+       Жмём те же кнопки панели — их слушатели уже переключают области
+       подсветки и счётчик кадров. У одиночной картинки кнопок нет, и
+       стрелки в развёрнутом виде просто ничего не делают. */
+    var btn=null;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')btn=lb.querySelector('.ph-next');
+    else if(e.key==='ArrowLeft'||e.key==='PageUp')btn=lb.querySelector('.ph-prev');
+    if(btn){e.preventDefault();btn.click();}
   });
   var zooms=document.querySelectorAll('.ph-zoom');
   for(var i=0;i<zooms.length;i++)zooms[i].addEventListener('click',function(e){
