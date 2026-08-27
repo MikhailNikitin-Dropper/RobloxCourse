@@ -1,0 +1,575 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX804FC704F87747748844C49250D6E09D">
+		<Properties>
+			<BinaryString name="AttributesSerialize"><![CDATA[EAAAAAwAAABBaW1BbmltYXRpb24GAACAbE2Y7UEJAAAAQWltTGVuZ3RoBgAAAAAAAABACAAA
+AEFpbVJhbmdlBgAAAAAAAHlACAAAAEFpbVN3ZWVwBgAAAAAAAFRACQAAAENvbGxpc2lvbgMB
+CAAAAERpc3RhbmNlBgAAAAAAACVABwAAAEVuYWJsZWQDAQkAAABMb2NrTW91c2UDAQgAAABN
+YXhQaXRjaAYAAAAAAMBSQAgAAABNaW5QaXRjaAYAAAAAAMBSwAcAAABNb3ZlQXJtAwEEAAAA
+TmVhcgYzMzMzMzPjPwUAAABSaWdodAYAAAAAAAACQAsAAABTZW5zaXRpdml0eQa4HoXrUbi+
+PwgAAABUdXJuQm9keQMBAgAAAFVwBgAAAAAAAAJA]]></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">ShoulderCam</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBX346CB50097B24179B963078F24087669">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<ProtectedString name="Source"><![CDATA[-- CamCore — общая часть модуля наводки (урок 20).
+--
+-- Модуль подключают оба скрипта: клиент водит камеру и целится, сервер знает
+-- точку прицела для проверки выстрелов. Настройки и вся геометрия наводки
+-- живут здесь — тогда клиент и сервер точно не разъедутся.
+--
+-- Устройство взято с оружейного набора Roblox (тот самый, из которого собран
+-- AK-12): там ровно эти три приёма, и каждый решает свою беду.
+--
+--   1. Заряд летит ОТ СРЕЗА СТВОЛА В ТОЧКУ ПОД ПРИЦЕЛОМ. Не «параллельно
+--      взгляду» — камера стоит сбоку от персонажа, и параллельный выстрел
+--      мажет мимо прицела на эти же пару студов, одинаково вблизи и вдали.
+--   2. Руку с оружием держит АНИМАЦИЯ, у которой мы протягиваем время. Не
+--      сустав, повёрнутый скриптом: у нового R15 плечо живёт на физике, и
+--      любая заигравшая анимация тут же сбивает наведённую руку.
+--   3. Хват оружия модуль НЕ ТРОГАЕТ. Как пушка лежит в руке — дело ученика:
+--      он ставит Tool.Grip и видит результат. Мы правим только то, куда
+--      персонаж смотрит и куда летит заряд.
+
+local Core = {}
+
+-- Настройки лежат в атрибутах самой папки модуля (Properties → Attributes).
+-- Здесь только запасные значения: атрибут стёрли или вписали чепуху — модуль
+-- всё равно работает.
+local NUMBERS = {
+	Distance = 10.5,    -- как далеко камера от плеча, студы
+	Right = 2.25,       -- сдвиг вправо: камера смотрит из-за ПРАВОГО плеча
+	Up = 2.25,          -- высота точки обзора над центром персонажа
+	Sensitivity = 0.12, -- градусов на пиксель движения мыши
+	MinPitch = -75,     -- насколько низко можно смотреть, градусы
+	MaxPitch = 75,      -- и насколько высоко
+	AimRange = 400,     -- как далеко ищем точку под прицелом, студы
+	Near = 0.6,         -- зазор до стены, в которую упёрлась камера
+	AimAnimation = 3972164452, -- анимация «держу оружие и целюсь»
+	AimSweep = 80,      -- на сколько градусов вверх и вниз она размечена
+	AimLength = 2,      -- и сколько она длится, секунды
+}
+
+local FLAGS = {
+	Enabled = true,     -- выключатель всего модуля
+	TurnBody = true,    -- персонаж поворачивается за камерой
+	MoveArm = true,     -- рука держит оружие по анимации наводки
+	LockMouse = true,   -- курсор заперт в центре экрана
+	Collision = true,   -- камера не проходит сквозь стены
+}
+
+function Core.config(root)
+	local cfg = {}
+	for name, fallback in pairs(NUMBERS) do
+		local value = root:GetAttribute(name)
+		cfg[name] = typeof(value) == "number" and value or fallback
+	end
+	for name, fallback in pairs(FLAGS) do
+		local value = root:GetAttribute(name)
+		cfg[name] = typeof(value) == "boolean" and value or fallback
+	end
+
+	-- Границы разумного: отрицательная дальность вывернула бы камеру наизнанку,
+	-- а перепутанные пределы взгляда заклинили бы её.
+	if cfg.Distance < 0 then
+		cfg.Distance = 0
+	end
+	if cfg.MaxPitch < cfg.MinPitch then
+		cfg.MaxPitch = cfg.MinPitch
+	end
+	if cfg.AimRange < 10 then
+		cfg.AimRange = 10
+	end
+	if cfg.AimSweep < 1 then
+		cfg.AimSweep = 1
+	end
+	return cfg
+end
+
+-- --- оружие в руках -------------------------------------------------------
+
+local AIM_POINT = "AimPoint" -- атрибут персонажа: куда целится игрок
+
+-- Оружие в руках. Взятый инструмент лежит прямо в персонаже, рядом с
+-- туловищем и руками; пока он в рюкзаке, персонаж его не держит.
+function Core.armed(character)
+	return character and character:FindFirstChildOfClass("Tool") or nil
+end
+
+-- Точка, куда целится игрок: что лежит под прицелом. Луч пускаем от камеры
+-- через центр экрана — там и заперт курсор.
+function Core.target(character, cfg)
+	local eye = workspace.CurrentCamera.CFrame
+	local range = cfg and cfg.AimRange or NUMBERS.AimRange
+
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = { character }
+	params.IgnoreWater = true
+
+	-- Луч начинаем не от самой камеры, а от точки ПЕРЕД персонажем. Камера
+	-- стоит в десяти студах позади, и без этого прицел цеплялся бы за то, что
+	-- лежит между ней и игроком: за угол, из-за которого он выглядывает, за
+	-- пол под ногами. Точка прицела оказывалась бы у персонажа за спиной.
+	local root = character:FindFirstChild("HumanoidRootPart")
+	local ahead = 0
+	if root then
+		ahead = math.max((root.Position - eye.Position):Dot(eye.LookVector) + 4, 0)
+	end
+
+	local from = eye.Position + eye.LookVector * ahead
+	local hit = workspace:Raycast(from, eye.LookVector * range, params)
+	return hit and hit.Position or from + eye.LookVector * range
+end
+
+-- --- рука ------------------------------------------------------------------
+
+-- Руку с оружием держит АНИМАЦИЯ — та же, что в оружейном наборе Roblox.
+--
+-- Приём в ней такой. Анимация длиной в две секунды размечена как разворот
+-- прицела: в самом начале персонаж целится вниз на 80°, в самом конце — вверх
+-- на 80°, между ними всё промежуточное. Играть её не даём вовсе (скорость
+-- почти ноль), а вместо этого сами ставим время внутри неё по углу взгляда.
+-- Получается не «проигранная анимация», а поза, которой управляют как ручкой.
+--
+-- Почему не поворот сустава скриптом: у новых аватаров R15 суставов Motor6D
+-- нет, рука висит на физике, и всё, что мы ей приказали, тут же затирает
+-- заигравшая анимация покоя. А одна анимация другую не сбивает — движок
+-- смешивает их сам, по старшинству.
+local TRACKS = setmetatable({}, { __mode = "k" }) -- на каждого персонажа своя
+
+function Core.track(character, cfg)
+	local ready = TRACKS[character]
+	if ready then
+		return ready
+	end
+
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	local animator = humanoid and humanoid:FindFirstChildOfClass("Animator")
+	if not animator then
+		return nil
+	end
+
+	local anim = Instance.new("Animation")
+	anim.AnimationId = "rbxassetid://" .. math.floor(cfg.AimAnimation)
+
+	local track = animator:LoadAnimation(anim)
+	track.Priority = Enum.AnimationPriority.Action -- поверх ходьбы и покоя
+	track.Looped = false
+	TRACKS[character] = track
+	return track
+end
+
+-- --- наводка ---------------------------------------------------------------
+
+-- Навести оружие в точку. Зовёт её клиент каждый кадр: он один знает, куда
+-- смотрит камера. Серверу точка приезжает событием — ему она нужна, чтобы
+-- проверять выстрелы.
+function Core.aim(character, target, cfg)
+	if typeof(target) ~= "Vector3" then
+		return
+	end
+	local tool = Core.armed(character)
+	if not tool then
+		Core.relax(character)
+		return
+	end
+
+	-- Оружие и выстрел общаются через этот атрибут: бластер урока 19 сам
+	-- заглядывает в него и, если точка есть, стреляет из среза ствола в неё
+	-- вместо своего ствола. Никаких общих модулей между уроками не нужно.
+	--
+	-- Сам Tool мы не трогаем ВООБЩЕ. Раньше модуль доворачивал хват каждый
+	-- кадр, чтобы ствол смотрел точно в прицел, — и этим стирал хват, который
+	-- настроил ученик: менять Grip в Properties становилось бессмысленно.
+	-- Заряд и так летит куда надо, а как пушка лежит в руке — дело ученика.
+	character:SetAttribute(AIM_POINT, target)
+end
+
+-- Поза руки по углу взгляда. Только у себя: анимацию, заигравшую у хозяина
+-- персонажа, движок сам показывает остальным игрокам.
+function Core.pose(character, angle, cfg)
+	local track = Core.track(character, cfg)
+	if not track then
+		return
+	end
+	if not track.IsPlaying then
+		track:Play(0.15)
+	end
+	track:AdjustSpeed(0.001) -- почти стоп: время в анимации ставим сами
+
+	local sweep = math.rad(cfg.AimSweep)
+	local part = math.clamp((angle + sweep) / (2 * sweep), 0, 1)
+	local length = cfg.AimLength
+	track.TimePosition = math.clamp(part * length, 0.001, length - 0.03)
+end
+
+-- Отпустить руку: оружия нет — персонаж двигается своими анимациями.
+function Core.relax(character)
+	if not character then
+		return
+	end
+	character:SetAttribute(AIM_POINT, nil)
+
+	local track = TRACKS[character]
+	if track and track.IsPlaying then
+		track:Stop(0.15)
+	end
+end
+
+return Core
+]]></ProtectedString>
+				<string name="ScriptGuid">{86405B2A-8A31-4C4C-92BD-DA520CB73FB4}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">CamCore</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX363E25516A254754B9995875590E25CF">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- CamServer — серверная часть модуля наводки (урок 20).
+--
+-- Script с RunContext = Server: лежит в папке модуля и работает оттуда же.
+--
+-- Дел у него ровно одно, зато важное: знать, куда целится каждый игрок.
+--
+-- Камеру сервер не водит — камера у каждого своя. Позу руки он тоже не
+-- трогает: анимацию, заигравшую у хозяина персонажа, движок сам показывает
+-- остальным игрокам, и рассылать её вручную не нужно.
+--
+-- А вот точка прицела серверу нужна для дела. Бластер урока 19 проверяет
+-- выстрел по СВОЕЙ копии наводки: клиент прислал направление, сервер смотрит,
+-- могло ли оружие туда смотреть. Без точки прицела сервер считал бы, что
+-- пушка глядит туда, куда её повернула анимация, и разворачивал бы честные
+-- выстрелы по-своему.
+
+local Players = game:GetService("Players")
+
+local module = script.Parent
+local Core = require(module:WaitForChild("CamCore"))
+local aimEvent = module:WaitForChild("Aim")
+
+-- Когда у кого следующий раз примем точку: ограничитель на поток сообщений.
+local nextAim = {}
+
+local function watch(player)
+	local function ready(character)
+		character:WaitForChild("Humanoid", 10)
+
+		-- Оружие убрали: точка прицела больше не нужна.
+		character.ChildRemoved:Connect(function(child)
+			if child:IsA("Tool") then
+				Core.relax(character)
+			end
+		end)
+	end
+
+	player.CharacterAdded:Connect(ready)
+	if player.Character then
+		task.spawn(ready, player.Character)
+	end
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+	watch(player)
+end
+Players.PlayerAdded:Connect(watch)
+Players.PlayerRemoving:Connect(function(player)
+	nextAim[player] = nil
+end)
+
+-- Точку прицела проверяем на разумность: с другого конца карты она развернула
+-- бы оружие в никуда, а не-Vector3 уронил бы расчёт.
+aimEvent.OnServerEvent:Connect(function(player, target)
+	if typeof(target) ~= "Vector3" then
+		return
+	end
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+	local cfg = Core.config(module)
+	if (target - root.Position).Magnitude > cfg.AimRange + 50 then
+		return
+	end
+
+	local now = os.clock()
+	if now < (nextAim[player] or 0) then
+		return
+	end
+	nextAim[player] = now + 0.03
+
+	Core.aim(character, target, cfg)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">1</token>
+				<string name="ScriptGuid">{0A0182DD-7CF5-4A7F-A75D-3D2AFF59C2D0}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">CamServer</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX9D311E0E029D4F2D8E5030CD5478C363">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- CamClient — камера за плечом и наводка (урок 20).
+--
+-- Это Script с RunContext = Client: такой скрипт лежит прямо в папке модуля и
+-- запускается сам у каждого игрока. Обычный LocalScript в Workspace не
+-- работает, и модуль пришлось бы разносить по StarterPlayer.
+--
+-- Что делает:
+--   * держит камеру за ПРАВЫМ плечом персонажа;
+--   * поворачивает персонажа туда, куда смотрит камера (вправо-влево);
+--   * держит руку с оружием анимацией наводки (вверх-вниз);
+--   * находит точку под прицелом и объявляет её оружию;
+--   * шлёт эту точку на сервер: ему она нужна для проверки выстрелов.
+--
+-- Камерой правим сами, а не подкручиваем стандартную: курсор заперт в центре
+-- экрана, и мы читаем его сдвиг за кадр. Поэтому вид не «догоняет» мышь и
+-- целиться удобно.
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local module = script.Parent
+local Core = require(module:WaitForChild("CamCore"))
+local aimEvent = module:WaitForChild("Aim")
+
+local player = Players.LocalPlayer
+
+local yaw = 0    -- вправо-влево, радианы
+local pitch = 0  -- вверх-вниз
+local sentAim = Vector3.new() -- куда целились, когда последний раз слали серверу
+local sentAt = 0
+local given = false -- вернули ли управление стандартной камере
+
+-- --- мышь ------------------------------------------------------------------
+
+-- Delta — сдвиг курсора за кадр в пикселях; чувствительность переводит его в
+-- градусы. Взгляд вверх-вниз упирается в пределы: свернуть себе шею игрок не
+-- должен.
+UserInputService.InputChanged:Connect(function(input, busy)
+	if busy or input.UserInputType ~= Enum.UserInputType.MouseMovement then
+		return
+	end
+	local cfg = Core.config(module)
+	if not cfg.Enabled then
+		return
+	end
+	yaw = yaw - math.rad(input.Delta.X * cfg.Sensitivity)
+	pitch = math.clamp(
+		pitch - math.rad(input.Delta.Y * cfg.Sensitivity),
+		math.rad(cfg.MinPitch),
+		math.rad(cfg.MaxPitch)
+	)
+end)
+
+-- --- персонаж --------------------------------------------------------------
+
+-- Отправка точки прицела серверу. Сам себе игрок наводит оружие мгновенно, но
+-- сервер об этом не знает, а проверять выстрелы ему нужно.
+local function sendAim(target)
+	sentAim = target
+	sentAt = os.clock()
+	aimEvent:FireServer(target)
+end
+
+-- Перед выстрелом точку шлём НЕМЕДЛЕННО, не дожидаясь очереди: сервер
+-- проверяет выстрел по своей копии прицела, и если она отстала на долю
+-- секунды, на быстром развороте заряд уйдёт в сторону.
+local hooked = setmetatable({}, { __mode = "k" }) -- один раз на каждое оружие
+
+local function watch(tool)
+	if not tool:IsA("Tool") or hooked[tool] then
+		return
+	end
+	hooked[tool] = true
+	tool.Activated:Connect(function()
+		local character = player.Character
+		local cfg = Core.config(module)
+		if character and cfg.Enabled and cfg.MoveArm and tool.Parent == character then
+			sendAim(Core.target(character, cfg))
+		end
+	end)
+end
+
+-- Новый персонаж: камера должна смотреть туда же, куда он стоит, иначе на
+-- каждом возрождении вид дёргался бы.
+local function start(character)
+	character.ChildAdded:Connect(watch)
+	for _, child in ipairs(character:GetChildren()) do
+		watch(child)
+	end
+
+	local root = character:WaitForChild("HumanoidRootPart", 10)
+	if root then
+		local _, y = root.CFrame:ToOrientation()
+		yaw = y
+		pitch = 0
+	end
+end
+
+player.CharacterAdded:Connect(start)
+if player.Character then
+	task.spawn(start, player.Character)
+end
+
+-- Отдать управление обратно: модуль выключили атрибутом Enabled.
+local function giveBack()
+	given = true
+	workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+	UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.AutoRotate = true
+	end
+	if character then
+		Core.relax(character)
+	end
+end
+
+local function update()
+	local cfg = Core.config(module)
+	if not cfg.Enabled then
+		if not given then
+			giveBack()
+		end
+		return
+	end
+	given = false
+
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not root or not humanoid or humanoid.Health <= 0 then
+		return
+	end
+
+	local camera = workspace.CurrentCamera
+	if camera.CameraType ~= Enum.CameraType.Scriptable then
+		-- Пока камера не Scriptable, её каждый кадр двигает стандартный
+		-- скрипт, и наши правки не доживают до экрана.
+		camera.CameraType = Enum.CameraType.Scriptable
+	end
+	if cfg.LockMouse and UserInputService.MouseBehavior ~= Enum.MouseBehavior.LockCenter then
+		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+	end
+
+	-- Точка, вокруг которой вертится камера — примерно плечо персонажа.
+	local focus = root.Position + Vector3.new(0, cfg.Up, 0)
+	local pivot = CFrame.new(focus) * CFrame.Angles(0, yaw, 0) * CFrame.Angles(pitch, 0, 0)
+
+	-- Камеру отодвигаем назад и вправо, но НЕ доворачиваем к персонажу: она
+	-- смотрит параллельно прицелу. Иначе центр экрана и направление взгляда
+	-- разъезжались бы, и целиться стало бы невозможно.
+	local wanted = pivot * CFrame.new(cfg.Right, 0, cfg.Distance)
+
+	local position = wanted.Position
+	if cfg.Collision and cfg.Distance > 0 then
+		-- Упор в стену: между плечом и камерой пускаем луч и, если что-то
+		-- есть, придвигаем камеру вплотную к находке.
+		local params = RaycastParams.new()
+		params.FilterType = Enum.RaycastFilterType.Exclude
+		params.FilterDescendantsInstances = { character }
+		params.IgnoreWater = true
+
+		local step = position - focus
+		local hit = workspace:Raycast(focus, step, params)
+		if hit then
+			position = hit.Position - step.Unit * cfg.Near
+		end
+	end
+
+	camera.CFrame = CFrame.new(position) * wanted.Rotation
+	camera.Focus = CFrame.new(focus)
+
+	-- Персонаж поворачивается за камерой — только вправо-влево. Наклоняться
+	-- вперёд-назад ему нечем, для этого и есть поза руки.
+	if cfg.TurnBody then
+		if humanoid.AutoRotate then
+			-- Иначе персонаж доворачивался бы ещё и сам, к направлению бега.
+			humanoid.AutoRotate = false
+		end
+		root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, yaw, 0)
+	end
+
+	-- Оружие в руках. Пока его нет, рука живёт своей анимацией — это обычное
+	-- поведение персонажа, и трогать его незачем.
+	local armed = cfg.MoveArm and Core.armed(character)
+	if not armed then
+		Core.relax(character)
+		return
+	end
+
+	-- Точка под прицелом — своя на каждый кадр: цель может ехать (враг бежит),
+	-- да и сам игрок не стоит на месте.
+	local target = Core.target(character, cfg)
+	Core.aim(character, target, cfg)
+
+	-- Поза руки считается от угла взгляда ОТНОСИТЕЛЬНО ПЕРСОНАЖА: анимация
+	-- размечена в его координатах, а не в мировых.
+	local look = root.CFrame:VectorToObjectSpace(camera.CFrame.LookVector)
+	Core.pose(character, math.asin(math.clamp(look.Y, -1, 1)), cfg)
+
+	-- Серверу точку шлём 20 раз в секунду и только когда прицел заметно
+	-- сдвинулся — глазу хватает, а сеть разгружается. Раз в треть секунды
+	-- отправляем в любом случае: цель могла уехать, а прицел — остаться.
+	local now = os.clock()
+	if now - sentAt > 0.05 then
+		local was = (sentAim - root.Position)
+		local is = (target - root.Position)
+		local moved = was.Magnitude < 0.001 or is.Unit:Dot(was.Unit) < 0.99995
+		if moved or now - sentAt > 0.3 then
+			sendAim(target)
+		end
+	end
+end
+
+-- Приоритет ровно как у камеры: наш расчёт встаёт на её место в кадре.
+RunService:BindToRenderStep("ShoulderCam", Enum.RenderPriority.Camera.Value, update)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">2</token>
+				<string name="ScriptGuid">{EEC28F16-C9CB-4AD2-88F5-02D2375C656D}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">CamClient</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBXD5561991FEB3407E9BBE066FDE140A8D">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Aim</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+	</Item>
+	<SharedStrings>
+		<SharedString md5="yuZpQdnvvUBOTYh1jqZ2cA=="></SharedString>
+	</SharedStrings>
+</roblox>

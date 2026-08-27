@@ -285,7 +285,7 @@ a:hover{color:#50DCFE}
 <div class="content-wrap">
   <h2 class="head">Чек-лист Гран-при</h2>
   <div class="head-rule"></div>
-  <div class="one-col fit"><ul class="bullets"><li>Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</li><li>Модуль раунда: он проводит гонку сам, без ведущего</li><li>Гараж на четыре машины и стартовая решётка на четыре места</li><li>Ворота по кольцу, финишная линия и дисплей с результатами</li></ul></div>
+  <div class="one-col fit"><ul class="bullets"><li>Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</li><li>Модуль раунда: он проводит гонку сам, без ведущего</li><li>Гараж с машинами и стартовая решётка на четыре места</li><li>Ворота по кольцу, финишная линия и дисплей с результатами</li></ul></div>
 </div></section><section class="slide s-light s-content">
 <div class="logo"><svg width="411" height="80" viewBox="0 0 411 80" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M99.7005 15.8495H52.1464L36.2969 0V72.7291C36.2983 74.4589 36.9862 76.1175 38.2093 77.3407C39.4325 78.5638 41.091 79.2516 42.8209 79.2531H109.02C110.751 79.2531 112.411 78.5659 113.636 77.3426C114.86 76.1193 115.549 74.4599 115.55 72.7291V0L99.7005 15.8495Z" fill="#50DCFE"/>
@@ -355,9 +355,9 @@ a:hover{color:#50DCFE}
 </svg>
 </div>
 <div class="content-wrap">
-  <h2 class="head">Гараж: четыре разные машины</h2>
+  <h2 class="head">Гараж: машины гонки</h2>
   <div class="head-rule"></div>
-  <div class="one-col fit"><ul class="bullets"><li>В папке Garage лежат четыре машины с именами Car1, Car2, Car3, Car4</li><li>Модуль копирует машину и ставит копию на клетку Slot с тем же номером</li><li>Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</li><li>Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</li></ul></div>
+  <div class="one-col fit"><ul class="bullets"><li>В папке Garage лежат машины с именами Car1, Car2, Car3… — номер задаёт клетку на решётке</li><li>Модуль копирует машину и ставит копию на клетку Slot с тем же номером</li><li>Машин может быть меньше, чем гонщиков: модуль раздаст их по кругу — хватит и одной</li><li>Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</li><li>Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</li></ul></div>
 </div></section><section class="slide s-light s-content">
 <div class="logo"><svg width="411" height="80" viewBox="0 0 411 80" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M99.7005 15.8495H52.1464L36.2969 0V72.7291C36.2983 74.4589 36.9862 76.1175 38.2093 77.3407C39.4325 78.5638 41.091 79.2516 42.8209 79.2531H109.02C110.751 79.2531 112.411 78.5659 113.636 77.3426C114.86 76.1193 115.549 74.4599 115.55 72.7291V0L99.7005 15.8495Z" fill="#50DCFE"/>
@@ -503,7 +503,7 @@ a:hover{color:#50DCFE}
 <div class="content-wrap">
   <h2 class="head">Шаг 3: решётка и гараж</h2>
   <div class="head-rule"></div>
-  <div class="one-col fit"><ol class="steps"><li><span class="stepnum">1</span><span class="steptext">Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</span></li><li><span class="stepnum">2</span><span class="steptext">Положи в папку Garage четыре машины и назови их Car1, Car2, Car3, Car4</span></li><li><span class="stepnum">3</span><span class="steptext">Сверь настройки: MaxSpeed и TurnAngle у всех четырёх сопоставимы</span></li></ol></div>
+  <div class="one-col fit"><ol class="steps"><li><span class="stepnum">1</span><span class="steptext">Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</span></li><li><span class="stepnum">2</span><span class="steptext">Положи в папку Garage свои машины и назови Car1, Car2, Car3… — машин может быть меньше, чем клеток, модуль раздаст их по кругу</span></li><li><span class="stepnum">3</span><span class="steptext">Машина одна? Скопируй и перекрась копию: образы разные, MaxSpeed и TurnAngle оставь сопоставимыми</span></li></ol></div>
 </div></section><section class="slide s-light s-content">
 <div class="logo"><svg width="411" height="80" viewBox="0 0 411 80" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M99.7005 15.8495H52.1464L36.2969 0V72.7291C36.2983 74.4589 36.9862 76.1175 38.2093 77.3407C39.4325 78.5638 41.091 79.2516 42.8209 79.2531H109.02C110.751 79.2531 112.411 78.5659 113.636 77.3426C114.86 76.1193 115.549 74.4599 115.55 72.7291V0L99.7005 15.8495Z" fill="#50DCFE"/>
@@ -590,7 +590,7 @@ a:hover{color:#50DCFE}
 <div class="content-wrap">
   <h2 class="head">Гран-при состоялся</h2>
   <div class="head-rule"></div>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--blue"><p class="welcome-card-text">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p></div><div class="welcome-card welcome-card--cyan"><p class="welcome-card-text">Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</p></div><div class="welcome-card welcome-card--dash"><p class="welcome-card-text">На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--blue"><p class="welcome-card-text">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p></div><div class="welcome-card welcome-card--cyan"><p class="welcome-card-text">Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</p></div><div class="welcome-card welcome-card--dash"><p class="welcome-card-text">Сохрани проект в конце занятия: File → Publish to Roblox</p></div><div class="welcome-card welcome-card--blue"><p class="welcome-card-text">На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</p></div></div>
 </div></section>
 </div>
 <div class="nav">

@@ -329,7 +329,7 @@ a:hover{color:var(--ek-violet-deep)}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Чек-лист Гран-при</h2>
-  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Модуль раунда: он проводит гонку сам, без ведущего</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Гараж на четыре машины и стартовая решётка на четыре места</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ворота по кольцу, финишная линия и дисплей с результатами</span></div></div></div>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Модуль раунда: он проводит гонку сам, без ведущего</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Гараж с машинами и стартовая решётка на четыре места</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ворота по кольцу, финишная линия и дисплей с результатами</span></div></div></div>
 </div>
 <div class="sl-pagenum">7</div></section><section class="slide slide--white"><div class="sl-orbit">
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
@@ -356,8 +356,8 @@ a:hover{color:var(--ek-violet-deep)}
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
 </div>
 <div class="content-wrap">
-  <h2 class="sl-h2">Гараж: четыре разные машины</h2>
-  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">В папке Garage лежат четыре машины с именами Car1, Car2, Car3, Car4</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Модуль копирует машину и ставит копию на клетку Slot с тем же номером</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</span></div></div></div>
+  <h2 class="sl-h2">Гараж: машины гонки</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">В папке Garage лежат машины с именами Car1, Car2, Car3… — номер задаёт клетку на решётке</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Модуль копирует машину и ставит копию на клетку Slot с тем же номером</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Машин может быть меньше, чем гонщиков: модуль раздаст их по кругу — хватит и одной</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</span></div></div></div>
 </div>
 <div class="sl-pagenum">11</div></section><section class="slide slide--white"><div class="sl-orbit">
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
@@ -515,7 +515,7 @@ a:hover{color:var(--ek-violet-deep)}
   <div class="practice-card-in fit">
     <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
     <h2 class="sl-h2 practice-head">Шаг 3: решётка и гараж</h2>
-    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Положи в папку Garage четыре машины и назови их Car1, Car2, Car3, Car4</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Сверь настройки: MaxSpeed и TurnAngle у всех четырёх сопоставимы</span></div></div>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Положи в папку Garage свои машины и назови Car1, Car2, Car3… — машин может быть меньше, чем клеток, модуль раздаст их по кругу</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Машина одна? Скопируй и перекрась копию: образы разные, MaxSpeed и TurnAngle оставь сопоставимыми</span></div></div>
   </div>
 </div>
 <div class="sl-pagenum">23</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
@@ -644,7 +644,7 @@ a:hover{color:var(--ek-violet-deep)}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Гран-при состоялся</h2>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Сохрани проект в конце занятия: File → Publish to Roblox</p></div><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</p></div></div>
 </div>
 <div class="sl-pagenum">31</div></section>
 </div>
