@@ -1,0 +1,983 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX51646D0E96754C12B72DF186BA2F8FC1">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">ArenaBlaster</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBX6D36F122D9B44FAB825B02E16285C4D7">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<ProtectedString name="Source"><![CDATA[-- BlasterCore — общая часть бластера (урок 19).
+--
+-- Модуль подключают оба скрипта Tool: сервер считает по нему урон, клиент
+-- рисует по нему выстрел. Правила полёта общие — значит, картинка на экране
+-- и попадание на сервере не расходятся.
+--
+-- Бластер стреляет ТУДА, КУДА СМОТРИТ СТВОЛ, и ничем больше не управляет.
+-- Повернуть руку персонажа за мышью — отдельная история и отдельный модуль:
+-- так и пушку проще понять, и прицеливание потом подойдёт к любому оружию.
+--
+-- Главное: заряд НЕ физическое тело. Он летит шагами, и на каждом шаге между
+-- прошлой и новой точкой пускается Raycast. Луч проверяет весь отрезок
+-- целиком, поэтому сквозь стену заряд не проскакивает ни на какой скорости —
+-- в отличие от летящей детали с Touched.
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+
+local Core = {}
+
+-- Настройки живут в атрибутах Tool (Properties → Attributes). Здесь только
+-- запасные значения: если атрибут стёрли или вписали не число, бластер всё
+-- равно стреляет.
+local NUMBERS = {
+	Damage = 20,               -- урон одного попадания
+	Range = 300,               -- дальность выстрела, студы
+	Speed = 250,               -- скорость заряда, студов в секунду
+	Cooldown = 0.35,           -- пауза между выстрелами, секунды
+	Spread = 1,                -- разброс, градусы (0 — бьёт точно в прицел)
+	Drop = 0,                  -- падение заряда, студов в секунду за секунду
+	HeadshotMultiplier = 2,    -- во сколько раз больнее попадание в голову
+	Recoil = 0.15,             -- отдача: толчок камеры, студы
+	Knockback = 0,             -- отбрасывание попавшего, 0 — выключено
+}
+
+local TEXTS = {
+	FireSoundId = "rbxasset://sounds/electronicpingshort.wav",
+	HitSoundId = "rbxasset://sounds/electronicpingshort.wav",
+}
+
+local DEFAULT_COLOR = Color3.fromRGB(255, 205, 80)
+
+function Core.config(tool)
+	local cfg = {}
+	for name, fallback in pairs(NUMBERS) do
+		local value = tool:GetAttribute(name)
+		if typeof(value) == "number" then
+			cfg[name] = value
+		else
+			cfg[name] = fallback
+		end
+	end
+	for name, fallback in pairs(TEXTS) do
+		local value = tool:GetAttribute(name)
+		if typeof(value) == "string" then
+			cfg[name] = value
+		else
+			cfg[name] = fallback
+		end
+	end
+	local color = tool:GetAttribute("BoltColor")
+	cfg.BoltColor = typeof(color) == "Color3" and color or DEFAULT_COLOR
+	cfg.Auto = tool:GetAttribute("Auto") == true
+
+	-- Границы разумного: с нулевым кулдауном бластер уходит в бесконечный
+	-- поток выстрелов, с нулевой скоростью заряд висит на месте.
+	if cfg.Cooldown < 0.05 then cfg.Cooldown = 0.05 end
+	if cfg.Speed < 20 then cfg.Speed = 20 end
+	if cfg.Range < 10 then cfg.Range = 10 end
+	if cfg.Spread < 0 then cfg.Spread = 0 end
+	return cfg
+end
+
+-- Поворот «смотреть туда». Прямо вверх и прямо вниз CFrame.lookAt вырождается
+-- (верх совпал с направлением), поэтому в зените подменяем опорный верх.
+function Core.aim(position, direction)
+	local unit = direction.Unit
+	local up = Vector3.new(0, 1, 0)
+	if math.abs(unit.Y) > 0.999 then
+		up = Vector3.new(0, 0, 1)
+	end
+	return CFrame.lookAt(position, position + unit, up)
+end
+
+-- Наше ли это оружие.
+--
+-- Система лежит отдельно от пушек и должна как-то узнавать своё. Правило то
+-- же, что в оружейном наборе Roblox: у оружия есть рукоять Handle и метка
+-- среза ствола. Больше ничего не требуется — ученик собирает пистолет сам, из
+-- своих деталей, и никаких скриптов внутрь него не кладёт.
+--
+-- Возвращает рукоять, чтобы вызывающему не искать её второй раз.
+function Core.weapon(tool)
+	if not (tool and tool:IsA("Tool")) then
+		return nil
+	end
+	local handle = tool:FindFirstChild("Handle")
+	if not (handle and handle:IsA("BasePart")) then
+		return nil
+	end
+	local tip = tool:FindFirstChild("TipAttachment", true)
+		or tool:FindFirstChild("Muzzle", true)
+		or tool:FindFirstChild("Barrel", true)
+	if not tip then
+		return nil
+	end
+	return handle
+end
+
+-- Откуда вылетает заряд. Порядок поиска:
+--   1. Attachment с именем TipAttachment — так эта метка называется в
+--      оружейном наборе Roblox, и собранная по нему пушка заводится у нас без
+--      единой правки;
+--   2. Attachment или деталь с именем Muzzle — то же самое, наше старое имя;
+--   3. деталь Barrel;
+--   4. рукоять Handle.
+-- Модель пушки каждый собирает свою, и модуль подстраивается под неё, а не
+-- наоборот.
+function Core.muzzle(tool)
+	local tip = tool:FindFirstChild("TipAttachment", true)
+	if tip and tip:IsA("Attachment") then
+		return tip.WorldPosition
+	end
+	local marker = tool:FindFirstChild("Muzzle", true)
+	if marker then
+		if marker:IsA("Attachment") then
+			return marker.WorldPosition
+		end
+		if marker:IsA("BasePart") then
+			return marker.Position
+		end
+	end
+	local barrel = tool:FindFirstChild("Barrel", true)
+	if barrel and barrel:IsA("BasePart") then
+		return barrel.Position
+	end
+	local handle = tool:FindFirstChild("Handle")
+	if handle and handle:IsA("BasePart") then
+		return handle.Position
+	end
+	return nil
+end
+
+-- Куда полетит заряд. Возвращает точку вылета и направление.
+--
+-- Точка вылета — срез ствола, всегда. А вот направление берётся из ДВУХ
+-- разных мест, и в этом вся суть.
+--
+-- ЕСЛИ ЕСТЬ ТОЧКА ПРИЦЕЛА — целимся в неё. Систему наводки (урок 20) видно по
+-- атрибуту AimPoint у персонажа: она каждый кадр пишет туда точку, в которую
+-- смотрит игрок. Заряд летит из среза ствола В ЭТУ ТОЧКУ, и попадание
+-- совпадает с прицелом на любом расстоянии. Так же устроен и оружейный набор
+-- Roblox: он стреляет от метки TipAttachment в точку, найденную лучом из
+-- камеры, а не «туда, куда повёрнута пушка».
+--
+-- ЕСЛИ ТОЧКИ НЕТ — бластер стреляет по своему стволу, как и раньше. Урок 19
+-- этим и обходится: пушка бьёт туда, куда её повернули, а прицеливание —
+-- отдельная тема и отдельный модуль.
+function Core.barrel(tool)
+	local handle = tool:FindFirstChild("Handle")
+	if not handle or not handle:IsA("BasePart") then
+		return nil, nil
+	end
+	local origin = Core.muzzle(tool) or handle.Position
+
+	local character = tool.Parent
+	local aim = character and character:GetAttribute("AimPoint")
+	if typeof(aim) == "Vector3" then
+		local toAim = aim - origin
+		-- Цель вплотную к срезу: направление посчиталось бы наугад.
+		if toAim.Magnitude > 1 then
+			return origin, toAim.Unit
+		end
+	end
+
+	return origin, handle.CFrame.LookVector
+end
+
+-- Разброс: направление отклоняется на случайный угол внутри конуса. Квадратный
+-- корень нужен, чтобы попадания ложились по кругу ровно, а не кучей в центре.
+function Core.spread(direction, degrees, rng)
+	if degrees <= 0 then
+		return direction.Unit
+	end
+	local angle = math.rad(degrees) * math.sqrt(rng:NextNumber())
+	local roll = rng:NextNumber() * math.pi * 2
+	local base = Core.aim(Vector3.new(), direction)
+	return (base * CFrame.Angles(0, 0, roll) * CFrame.Angles(angle, 0, 0)).LookVector
+end
+
+-- Кто попал под выстрел. Луч приходит в деталь, а здоровье живёт у Humanoid
+-- модели — поднимаемся от детали вверх по дереву.
+function Core.victim(instance)
+	local model = instance:FindFirstAncestorOfClass("Model")
+	while model do
+		local humanoid = model:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			return model, humanoid, Players:GetPlayerFromCharacter(model)
+		end
+		model = model:FindFirstAncestorOfClass("Model")
+	end
+	return nil, nil, nil
+end
+
+-- Свой или чужой. Команду игрока задаёт сервис Teams (урок 17); если команд
+-- в игре нет, свой — только сам стрелявший.
+function Core.friendly(shooter, victim)
+	if not shooter or not victim then
+		return false
+	end
+	if shooter == victim then
+		return true
+	end
+	return shooter.Team ~= nil and shooter.Team == victim.Team
+end
+-- --- полёт заряда ------------------------------------------------------
+
+local flying = {}
+local stepper = nil
+
+local function stop(shot, position)
+	if shot.done then
+		return
+	end
+	shot.done = true
+	if shot.onEnd then
+		shot.onEnd(position)
+	end
+end
+
+local function advance(shot, dt)
+	local cfg = shot.cfg
+
+	-- Падение заряда. Drop = 0 — летит по прямой, и это честная прямая, а не
+	-- деталь, которой гравитацию гасят встречной силой.
+	if cfg.Drop ~= 0 then
+		shot.velocity = shot.velocity - Vector3.new(0, cfg.Drop * dt, 0)
+	end
+
+	local from = shot.position
+	local to = from + shot.velocity * dt
+
+	-- Дальше дальности заряд не летит: обрезаем последний шаг.
+	local left = cfg.Range - shot.traveled
+	if (to - from).Magnitude > left then
+		to = from + (to - from).Unit * left
+	end
+
+	-- Луч по всему отрезку шага. Сквозь своих заряд летит дальше, поэтому
+	-- отрезок иногда проверяется несколько раз — но не бесконечно.
+	local point = from
+	for _ = 1, 5 do
+		local segment = to - point
+		if segment.Magnitude < 0.001 then
+			break
+		end
+		local hit = workspace:Raycast(point, segment, shot.params)
+		if not hit then
+			break
+		end
+		local pass = shot.onHit and shot.onHit(hit)
+		if not pass then
+			shot.position = hit.Position
+			stop(shot, hit.Position)
+			return
+		end
+		-- Пропускаем: то, что вернул onHit (обычно всю модель своего), больше
+		-- этот заряд не останавливает.
+		local skip = typeof(pass) == "Instance" and pass or hit.Instance
+		shot.ignore[#shot.ignore + 1] = skip
+		shot.params.FilterDescendantsInstances = shot.ignore
+		point = hit.Position + segment.Unit * 0.05
+	end
+
+	shot.traveled = shot.traveled + (to - from).Magnitude
+	shot.position = to
+	if shot.onStep then
+		shot.onStep(to, shot.velocity)
+	end
+	if shot.traveled >= cfg.Range - 0.001 then
+		stop(shot, to)
+	end
+end
+
+-- Все заряды двигает один Heartbeat: по соединению на выстрел движок бы
+-- захлебнулся. Когда лететь нечему — соединение отключается.
+local function ensureStepper()
+	if stepper then
+		return
+	end
+	stepper = RunService.Heartbeat:Connect(function(dt)
+		-- Провал кадра не должен телепортировать заряд через полкарты:
+		-- попадание луч всё равно найдёт, а вот выглядит такой прыжок плохо.
+		if dt > 0.25 then
+			dt = 0.25
+		end
+		local i = 1
+		while i <= #flying do
+			local shot = flying[i]
+			advance(shot, dt)
+			if shot.done then
+				table.remove(flying, i)
+			else
+				i = i + 1
+			end
+		end
+		if #flying == 0 and stepper then
+			stepper:Disconnect()
+			stepper = nil
+		end
+	end)
+end
+
+-- Запуск заряда. Ответ onHit решает судьбу луча:
+--   false/nil   — заряд гаснет здесь (стена, укрытие, попадание по врагу);
+--   Instance    — это свой, пропускаем его насквозь и летим дальше.
+function Core.fire(spec)
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.IgnoreWater = true
+
+	local ignore = {}
+	for _, item in ipairs(spec.ignore or {}) do
+		if item then
+			ignore[#ignore + 1] = item
+		end
+	end
+	params.FilterDescendantsInstances = ignore
+
+	local shot = {
+		position = spec.origin,
+		velocity = spec.direction.Unit * spec.cfg.Speed,
+		traveled = 0,
+		cfg = spec.cfg,
+		params = params,
+		ignore = ignore,
+		onHit = spec.onHit,
+		onStep = spec.onStep,
+		onEnd = spec.onEnd,
+		done = false,
+	}
+	flying[#flying + 1] = shot
+	ensureStepper()
+	return shot
+end
+
+-- --- что видно и слышно ------------------------------------------------
+
+-- Вся временная красота складывается в одну папку. Детали в ней помечены
+-- CanQuery = false, поэтому чужие выстрелы об них не спотыкаются.
+function Core.effects()
+	local folder = workspace:FindFirstChild("BlasterEffects")
+	if not folder then
+		folder = Instance.new("Folder")
+		folder.Name = "BlasterEffects"
+		folder.Parent = workspace
+	end
+	return folder
+end
+
+local function decor(part)
+	part.Material = Enum.Material.Neon
+	part.Anchored = true
+	part.CanCollide = false
+	part.CanQuery = false
+	part.CanTouch = false
+	part.CastShadow = false
+	part.Parent = Core.effects()
+end
+
+function Core.bolt(cfg)
+	local part = Instance.new("Part")
+	part.Name = "Bolt"
+	part.Size = Vector3.new(0.22, 0.22, 2.6)
+	part.Color = cfg.BoltColor
+	decor(part)
+
+	local light = Instance.new("PointLight")
+	light.Color = cfg.BoltColor
+	light.Range = 12
+	light.Brightness = 2
+	light.Parent = part
+	return part
+end
+
+function Core.flash(position, color, size, life)
+	local part = Instance.new("Part")
+	part.Name = "Flash"
+	part.Shape = Enum.PartType.Ball
+	part.Size = Vector3.new(size, size, size)
+	part.Position = position
+	part.Color = color
+	part.Transparency = 0.2
+	decor(part)
+
+	local light = Instance.new("PointLight")
+	light.Color = color
+	light.Range = size * 6
+	light.Brightness = 4
+	light.Parent = part
+
+	Debris:AddItem(part, life)
+	return part
+end
+
+-- Звук в точке мира: выстрел слышно оттуда, где он случился.
+function Core.sound(id, position, speed, volume)
+	if not id or id == "" then
+		return
+	end
+	local anchor = Instance.new("Part")
+	anchor.Name = "Sound"
+	anchor.Size = Vector3.new(0.2, 0.2, 0.2)
+	anchor.Position = position
+	anchor.Transparency = 1
+	anchor.Anchored = true
+	anchor.CanCollide = false
+	anchor.CanQuery = false
+	anchor.CanTouch = false
+	anchor.Parent = Core.effects()
+
+	local sound = Instance.new("Sound")
+	sound.SoundId = id
+	sound.PlaybackSpeed = speed or 1
+	sound.Volume = volume or 0.5
+	sound.RollOffMaxDistance = 150
+	sound.Parent = anchor
+	sound:Play()
+
+	Debris:AddItem(anchor, 4)
+end
+
+return Core
+]]></ProtectedString>
+				<string name="ScriptGuid">{909488E6-1BA9-42F6-99C3-32AE287EC4B6}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">BlasterCore</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX7875A81D295D413C9A9D56C476F771EE">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- Сервер бластера (урок 19). Он один решает, кому попало и сколько здоровья
+-- снять. Кулдаун, дальность, урон и команды проверяются здесь, поэтому
+-- переделать клиент «под себя» бесполезно.
+--
+-- Script с RunContext = Server лежит в папке системы, ОДИН на весь плейс — не
+-- по копии в каждой пушке. Так же устроен и оружейный набор Roblox: оружие
+-- само по себе скриптов не содержит вовсе, это просто модель с метками, а
+-- работать её заставляет система со стороны. Ученик собирает свой пистолет и
+-- ничего внутрь него не кладёт.
+--
+-- Поэтому от клиента приходит ДВА значения: какое оружие стреляет и куда.
+-- Направление приходит с уже добавленным разбросом — разброс у каждого
+-- выстрела свой, и бросать кубик дважды нельзя, заряд на экране и попадание
+-- разъехались бы. Чтобы это не превратилось в дыру, сервер проверяет, что
+-- присланное направление и правда лежит в конусе разброса вокруг наводки.
+
+local Players = game:GetService("Players")
+
+local module = script.Parent
+local Core = require(module:WaitForChild("BlasterCore"))
+local fireEvent = module:WaitForChild("Fire")
+local hitmark = module:WaitForChild("Hitmark")
+local shotEvent = module:WaitForChild("Shot")
+
+-- Когда каждому игроку можно стрелять снова. Кулдаун теперь считается на
+-- игрока, а не на пушку: скрипт-то один, а пушек в плейсе много.
+local nextShot = {}
+
+Players.PlayerRemoving:Connect(function(player)
+	nextShot[player] = nil
+end)
+
+fireEvent.OnServerEvent:Connect(function(player, tool, direction)
+	-- От клиента может прийти что угодно, вплоть до текста вместо вектора.
+	if typeof(direction) ~= "Vector3" then
+		return
+	end
+	local length = direction.Magnitude
+	if length < 0.9 or length > 1.1 then
+		return
+	end
+
+	-- Стреляет только тот, кто держит ЭТО оружие в руке и ещё жив. Проверка
+	-- важнее прежней: раньше скрипт жил внутри одной пушки и чужую подсунуть
+	-- было нельзя, теперь оружие называет сам клиент.
+	local character = player.Character
+	if not (character and Core.weapon(tool) and tool.Parent == character) then
+		return
+	end
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if not humanoid or humanoid.Health <= 0 then
+		return
+	end
+
+	local cfg = Core.config(tool)
+
+	-- Кулдаун считает сервер: скорострельность не зависит от того, что творится
+	-- на клиенте. Небольшой запас — на дрожание сети, иначе честные выстрелы
+	-- иногда пропадали бы.
+	local now = os.clock()
+	if now < (nextShot[player] or 0) then
+		return
+	end
+	nextShot[player] = now + cfg.Cooldown * 0.9
+
+	local origin, aim = Core.barrel(tool)
+	if not origin then
+		return
+	end
+	direction = direction.Unit
+
+	-- Проверка направления: заряд может уйти в сторону не дальше, чем на угол
+	-- разброса. Запас в пару градусов — на то, что у клиента прицел в этот
+	-- момент наведён чуть иначе, сеть не мгновенная. Не прошло проверку —
+	-- стреляем строго по наводке, которую видит сервер.
+	local limit = math.cos(math.rad(cfg.Spread + 3))
+	if aim:Dot(direction) < limit then
+		direction = aim
+	end
+
+	Core.fire({
+		origin = origin,
+		direction = direction,
+		cfg = cfg,
+		ignore = { character },
+		onHit = function(result)
+			local model, victimHumanoid, victim = Core.victim(result.Instance)
+			if not victimHumanoid then
+				-- Стена, ящик, укрытие: заряд гаснет здесь. Из-за угла теперь
+				-- не попасть, и это главное отличие от прошлой версии.
+				return false
+			end
+			if victimHumanoid.Health <= 0 or Core.friendly(player, victim) then
+				-- По своим не стреляем: команду игрока задаёт сервис Teams
+				-- (урок 17). Заряд летит дальше, сквозь товарища.
+				return model
+			end
+
+			local damage = cfg.Damage
+			if result.Instance.Name == "Head" then
+				damage = damage * cfg.HeadshotMultiplier
+			end
+			victimHumanoid:TakeDamage(damage)
+
+			-- Отбрасывание. По умолчанию выключено: на маленькой арене от него
+			-- игроки улетают с площадки.
+			if cfg.Knockback > 0 then
+				local root = victimHumanoid.RootPart
+				if root then
+					root:ApplyImpulse(direction * root.AssemblyMass * cfg.Knockback)
+				end
+			end
+
+			hitmark:FireClient(player, damage)
+
+			-- Договор с модулем счёта (урок 20): попав, увеличиваем у
+			-- стрелявшего атрибут Hits. Больше системе стрельбы о счёте знать
+			-- нечего — она не ищет табло и не падает, если его нет. Модуль
+			-- счёта читает изменение атрибута и складывает суммы по командам.
+			player:SetAttribute("Hits", (player:GetAttribute("Hits") or 0) + 1)
+
+			return false
+		end,
+	})
+
+	-- Свой выстрел стрелявший уже нарисовал сам, остальным показываем отсюда.
+	shotEvent:FireAllClients(player, tool, origin, direction)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">1</token>
+				<string name="ScriptGuid">{52F5926F-14EF-4025-AF5C-09E6615AC49A}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">BlasterServer</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX54A8CCD33F694DDAA70BC41056653128">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- Клиент бластера (урок 19): свой выстрел без задержки, отдача, звук.
+-- Урон здесь не считается — это дело сервера, сюда он не заглядывает.
+--
+-- Script с RunContext = Client лежит в папке системы, ОДИН на всё оружие
+-- плейса. Внутрь самой пушки не кладётся ничего: она просто модель с меткой
+-- среза ствола, и собирает её ученик. Скрипт сам замечает, что в руках
+-- появилось оружие, и берётся за него.
+--
+-- Нужен клиент ровно для одного: показать СВОЙ выстрел сразу по нажатию, не
+-- дожидаясь ответа сервера. Иначе на любой задержке сети заряд вылетал бы с
+-- опозданием, и стрельба чувствовалась бы вязкой.
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local module = script.Parent
+local Core = require(module:WaitForChild("BlasterCore"))
+local fireEvent = module:WaitForChild("Fire")
+local hitmark = module:WaitForChild("Hitmark")
+local shotEvent = module:WaitForChild("Shot")
+
+local player = Players.LocalPlayer
+local rng = Random.new()
+
+-- Оружие в руке и его настройки. Настройки читаем на взятии, а не в каждом
+-- выстреле; поменяли атрибут в Properties прямо во время игры — перечитаем.
+local tool = nil
+local cfg = nil
+
+local nextShot = 0
+local holding = false
+local burst = 0
+
+-- Полёт заряда на экране. Считается тем же Core.fire, что и попадание на
+-- сервере, поэтому заряд гаснет ровно на тех же стенах.
+local function render(origin, direction, settings, ignore, shooter)
+	local bolt = Core.bolt(settings)
+	bolt.CFrame = Core.aim(origin, direction)
+
+	Core.flash(origin, settings.BoltColor, 1.1, 0.05)
+	Core.sound(settings.FireSoundId, origin, 1.7, 0.5)
+
+	Core.fire({
+		origin = origin,
+		direction = direction,
+		cfg = settings,
+		ignore = ignore,
+		onStep = function(position, velocity)
+			-- Заряд смотрит туда, куда летит: с падением (Drop) он на глазах
+			-- клюёт носом вниз.
+			bolt.CFrame = Core.aim(position, velocity)
+		end,
+		onHit = function(result)
+			local model, humanoid, victim = Core.victim(result.Instance)
+			if humanoid and (humanoid.Health <= 0 or Core.friendly(shooter, victim)) then
+				return model
+			end
+			return false
+		end,
+		onEnd = function(position)
+			bolt:Destroy()
+			Core.flash(position, settings.BoltColor, 1.5, 0.08)
+			Core.sound(settings.HitSoundId, position, 0.7, 0.4)
+		end,
+	})
+end
+
+-- Отдача — короткий толчок камеры. Именно камеры: персонаж не сдвигается,
+-- поэтому на бег, прыжки и физику отдача не влияет. На точность выстрела она
+-- тоже не влияет — стреляет ствол, а не камера.
+local function recoil()
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not humanoid or cfg.Recoil <= 0 then
+		return
+	end
+	humanoid.CameraOffset = Vector3.new(0, cfg.Recoil, cfg.Recoil * 1.5)
+	local back = TweenService:Create(
+		humanoid,
+		TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		{ CameraOffset = Vector3.new(0, 0, 0) }
+	)
+	back:Play()
+end
+
+local function shoot()
+	local character = player.Character
+	if not tool or not cfg or not character or tool.Parent ~= character then
+		return
+	end
+
+	local now = os.clock()
+	if now < nextShot then
+		return
+	end
+	nextShot = now + cfg.Cooldown
+
+	local origin, direction = Core.barrel(tool)
+	if not origin then
+		return
+	end
+	direction = Core.spread(direction, cfg.Spread, rng)
+
+	render(origin, direction, cfg, { character }, player)
+	recoil()
+
+	-- Направление уходит на сервер: разброс у каждого выстрела свой, и если бы
+	-- сервер бросал кубик отдельно, заряд на экране и попадание разъехались
+	-- бы. Слепо верить клиенту сервер при этом не будет — он проверит, что
+	-- направление и правда лежит в конусе разброса вокруг ствола.
+	fireEvent:FireServer(tool, direction)
+end
+
+-- --- оружие в руке -------------------------------------------------------
+
+-- Подписываемся на каждое оружие один раз — на то, которое взяли в руку.
+-- Раньше скрипт лежал внутри пушки и знал её с рождения; теперь он один на
+-- всех и должен сам следить, что появилось в персонаже.
+local hooked = setmetatable({}, { __mode = "k" })
+
+local function hold(item)
+	if not Core.weapon(item) then
+		return
+	end
+	tool = item
+	cfg = Core.config(item)
+	holding = false
+
+	if hooked[item] then
+		return
+	end
+	hooked[item] = true
+
+	item.AttributeChanged:Connect(function()
+		if tool == item then
+			cfg = Core.config(item)
+		end
+	end)
+
+	item.Activated:Connect(function()
+		if tool ~= item then
+			return
+		end
+		holding = true
+		burst = burst + 1
+		local mine = burst
+
+		shoot()
+		if not cfg.Auto then
+			return
+		end
+		-- Автоматический огонь: кнопку держат — бластер стреляет сам. Паузу
+		-- между выстрелами всё равно держит Cooldown, здесь только опрос кнопки.
+		while holding and burst == mine do
+			task.wait(0.03)
+			if holding and burst == mine then
+				shoot()
+			end
+		end
+	end)
+
+	item.Deactivated:Connect(function()
+		holding = false
+	end)
+
+	item.Unequipped:Connect(function()
+		holding = false
+		if tool == item then
+			tool = nil
+		end
+	end)
+end
+
+local function watch(character)
+	character.ChildAdded:Connect(hold)
+	for _, child in ipairs(character:GetChildren()) do
+		hold(child)
+	end
+end
+
+player.CharacterAdded:Connect(watch)
+if player.Character then
+	task.spawn(watch, player.Character)
+end
+
+-- Отметка о попадании: в хорошем шутере попадание слышно, а не угадывается.
+hitmark.OnClientEvent:Connect(function()
+	if not cfg then
+		return
+	end
+	local eye = workspace.CurrentCamera.CFrame
+	Core.sound(cfg.HitSoundId, eye.Position + eye.LookVector * 2, 2.2, 0.35)
+end)
+
+-- Чужие выстрелы. Свой уже нарисован по клику — второй раз не рисуем.
+shotEvent.OnClientEvent:Connect(function(shooter, other, origin, direction)
+	if shooter == player or not Core.weapon(other) then
+		return
+	end
+	if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
+		return
+	end
+	render(origin, direction, Core.config(other), { shooter.Character }, shooter)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">2</token>
+				<string name="ScriptGuid">{DC04EB14-08C5-448C-9631-775151F0AE32}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">BlasterClient</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX7D176838A60E4C69AE9ACD356A593C71">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Fire</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBXBB002E3C02CD48B98C686C6A6D064EE0">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Hitmark</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBXFF356C0F601649C6809D9EA049C65E48">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Shot</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Tool" referent="RBX71DC3B2F7DA345E0A0644D694FFABDCF">
+			<Properties>
+				<bool name="CanBeDropped">false</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<bool name="RequiresHandle">true</bool>
+				<string name="ToolTip">&#208;&#145;&#208;&#187;&#208;&#176;&#209;&#129;&#209;&#130;&#208;&#181;&#209;&#128;</string>
+				<Content name="TextureId"><null></null></Content>
+				<token name="LevelOfDetail">0</token>
+				<CoordinateFrame name="ModelMeshCFrame">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<SharedString name="ModelMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				<Vector3 name="ModelMeshSize">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="ModelStreamingMode">0</token>
+				<bool name="NeedsPivotMigration">false</bool>
+				<Ref name="PrimaryPart">null</Ref>
+				<float name="ScaleFactor">1</float>
+				<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				<OptionalCoordinateFrame name="WorldPivotData"></OptionalCoordinateFrame>
+				<BinaryString name="AttributesSerialize"><![CDATA[DQAAAAQAAABBdXRvAwAJAAAAQm9sdENvbG9yDwAAgD/OzU0/oaCgPggAAABDb29sZG93bgZm
+ZmZmZmbWPwYAAABEYW1hZ2UGAAAAAAAANEAEAAAARHJvcAYAAAAAAAAAAAsAAABGaXJlU291
+bmRJZAIpAAAAcmJ4YXNzZXQ6Ly9zb3VuZHMvZWxlY3Ryb25pY3BpbmdzaG9ydC53YXYSAAAA
+SGVhZHNob3RNdWx0aXBsaWVyBgAAAAAAAABACgAAAEhpdFNvdW5kSWQCKQAAAHJieGFzc2V0
+Oi8vc291bmRzL2VsZWN0cm9uaWNwaW5nc2hvcnQud2F2CQAAAEtub2NrYmFjawYAAAAAAAAA
+AAUAAABSYW5nZQYAAAAAAMByQAYAAABSZWNvaWwGMzMzMzMzwz8FAAAAU3BlZWQGAAAAAABA
+b0AGAAAAU3ByZWFkBgAAAAAAAPA/]]></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Blaster</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Tool" referent="RBX50F14FE708EA42D3A70F4316A51A2556">
+			<Properties>
+				<bool name="CanBeDropped">false</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<bool name="RequiresHandle">true</bool>
+				<string name="ToolTip">&#208;&#163;&#209;&#129;&#208;&#184;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#189;&#209;&#139;&#208;&#185; &#208;&#177;&#208;&#187;&#208;&#176;&#209;&#129;&#209;&#130;&#208;&#181;&#209;&#128;</string>
+				<Content name="TextureId"><null></null></Content>
+				<token name="LevelOfDetail">0</token>
+				<CoordinateFrame name="ModelMeshCFrame">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<SharedString name="ModelMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				<Vector3 name="ModelMeshSize">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="ModelStreamingMode">0</token>
+				<bool name="NeedsPivotMigration">false</bool>
+				<Ref name="PrimaryPart">null</Ref>
+				<float name="ScaleFactor">1</float>
+				<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+				<OptionalCoordinateFrame name="WorldPivotData"></OptionalCoordinateFrame>
+				<BinaryString name="AttributesSerialize"><![CDATA[DQAAAAQAAABBdXRvAwAJAAAAQm9sdENvbG9yD/Hw8D7JyEg/AACAPwgAAABDb29sZG93bgaa
+mZmZmZnpPwYAAABEYW1hZ2UGAAAAAAAAREAEAAAARHJvcAYAAAAAAAAAAAsAAABGaXJlU291
+bmRJZAIpAAAAcmJ4YXNzZXQ6Ly9zb3VuZHMvZWxlY3Ryb25pY3BpbmdzaG9ydC53YXYSAAAA
+SGVhZHNob3RNdWx0aXBsaWVyBgAAAAAAAABACgAAAEhpdFNvdW5kSWQCKQAAAHJieGFzc2V0
+Oi8vc291bmRzL2VsZWN0cm9uaWNwaW5nc2hvcnQud2F2CQAAAEtub2NrYmFjawYAAAAAAAAA
+AAUAAABSYW5nZQYAAAAAAMByQAYAAABSZWNvaWwGMzMzMzMzwz8FAAAAU3BlZWQGAAAAAAAA
+dEAGAAAAU3ByZWFkBgAAAAAAAOA/]]></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">BlasterPro</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+	</Item>
+	<SharedStrings>
+		<SharedString md5="yuZpQdnvvUBOTYh1jqZ2cA=="></SharedString>
+	</SharedStrings>
+</roblox>

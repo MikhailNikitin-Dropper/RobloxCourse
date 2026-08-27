@@ -55,7 +55,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Превращение декорации в игру <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="16-t-1">
 <h3 class="slide-title">Чек-лист Гран-при <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</li><li>Модуль раунда: он проводит гонку сам, без ведущего</li><li>Гараж на четыре машины и стартовая решётка на четыре места</li><li>Ворота по кольцу, финишная линия и дисплей с результатами</li></ul>
+<ul class="content-item content-bullets"><li>Лобби на трибунах: сюда игрок попадает при входе и возвращается после заезда</li><li>Модуль раунда: он проводит гонку сам, без ведущего</li><li>Гараж с машинами и стартовая решётка на четыре места</li><li>Ворота по кольцу, финишная линия и дисплей с результатами</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Чек-лист дня перед глазами. Главное отличие проекта: до сих пор гонку проводили мы сами, теперь её проводит игра.</aside>
 </div>
 <div class="slide" id="16-t-2">
@@ -77,9 +77,9 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Устно: место ожидания — часть дизайна. Однообразное лобби игроки покидают, поэтому сажаем их туда, откуда видно борьбу.</aside>
 </div>
 <div class="slide" id="16-t-5">
-<h3 class="slide-title">Гараж: четыре разные машины <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>В папке Garage лежат четыре машины с именами Car1, Car2, Car3, Car4</li><li>Модуль копирует машину и ставит копию на клетку Slot с тем же номером</li><li>Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</li><li>Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Машины берём из урока 13: у каждого уже есть своя сборка. Если своя одна — копируем её и перекрашиваем, физику не трогаем.</aside>
+<h3 class="slide-title">Гараж: машины гонки <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>В папке Garage лежат машины с именами Car1, Car2, Car3… — номер задаёт клетку на решётке</li><li>Модуль копирует машину и ставит копию на клетку Slot с тем же номером</li><li>Машин может быть меньше, чем гонщиков: модуль раздаст их по кругу — хватит и одной</li><li>Образы машин разные, а физика сопоставимая: MaxSpeed и TurnAngle держим близкими</li><li>Внутри каждой машины нужен VehicleSeat — именно в него модуль сажает гонщика</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Машины берём из урока 13: у каждого уже есть своя сборка. Если своя одна — копируем её и перекрашиваем, физику не трогаем. Четырёх разных машин урок не требует: модуль пускает копии по кругу, и заезд состоится даже с одной машиной в гараже.</aside>
 </div>
 <div class="slide" id="16-t-6">
 <h3 class="slide-title">Круги считают ворота <span class="slide-duration">(2.5 мин)</span></h3>
@@ -100,7 +100,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="16-t-9">
 <h3 class="slide-title">Частые ошибки на Гран-при <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Переименовали часть модуля — скрипт её не находит, и раунд не начинается</li><li>Лобби поставили у дороги: ожидающим не видно заезд, и они выходят на полотно</li><li>Ворота расставили не по порядку — круги не считаются</li><li>В машине нет VehicleSeat — гонщик остаётся стоять на решётке</li><li>Поставили Laps = 20 на длинном кольце — заезд превращается в рутину</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Все пять ошибок всплывают при живых игроках, поэтому проверяем их на шагах практики, а не на Гран-при.</aside>
+<aside class="speaker-notes">Заметка ведущего: Все пять ошибок всплывают при живых игроках, поэтому проверяем их на шагах практики, а не на Гран-при. Все пять выглядят для ученика одинаково — «раунд не начинается»; какая именно, ведущий смотрит в Output (см. пометку шага 1).</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
@@ -127,7 +127,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Шаг 1: вставь модуль раунда <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Получи модуль RaceRoundSystem по ссылке и вставь его из Inventory</li><li>Осмотри папку в Explorer: RoundScript, LobbySpawn, Grid, Garage, Checkpoints, FinishLine, Board</li><li>Ничего не переименовывай — скрипт ищет части по именам</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/124764173014102/RaceRoundSystem</a></p>
-<aside class="speaker-notes">Заметка ведущего: После вставки части лежат кучей рядом с трассой — это нормально, расставляем их следующими шагами. Корень модуля — папка, поэтому ворота, клетки и дисплей берутся мышью поодиночке и двигаются сразу, без разгруппировки.</aside>
+<aside class="speaker-notes">Заметка ведущего: После вставки части лежат кучей рядом с трассой — это нормально, расставляем их следующими шагами. Корень модуля — папка, поэтому ворота, клетки и дисплей берутся мышью поодиночке и двигаются сразу, без разгруппировки. Диагностика для ведущего: если раунд не стартовал — открыть Window → Output. Модуль пишет туда строками «[RaceRound] …», какой части ему не хватает (латиницей: кириллица в Output ломается). Ученикам про Output не рассказываем — новой сущности им сегодня не нужно, разбирается ведущий.</aside>
 </div>
 <div class="slide" id="16-p-2">
 <h3 class="slide-title">Шаг 2: лобби на трибуне <span class="slide-duration">(3 мин)</span></h3>
@@ -136,8 +136,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="16-p-3">
 <h3 class="slide-title">Шаг 3: решётка и гараж <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</li><li>Положи в папку Garage четыре машины и назови их Car1, Car2, Car3, Car4</li><li>Сверь настройки: MaxSpeed и TurnAngle у всех четырёх сопоставимы</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Клетки полупрозрачные — это метки, а не препятствия. Гараж лучше поставить рядом с лобби: машины видно, но трассе они не мешают.</aside>
+<ol class="content-item content-steps"><li>Расставь клетки Slot1–Slot4 по стартовой решётке — стрелка на клетке смотрит в сторону первого поворота</li><li>Положи в папку Garage свои машины и назови Car1, Car2, Car3… — машин может быть меньше, чем клеток, модуль раздаст их по кругу</li><li>Машина одна? Скопируй и перекрась копию: образы разные, MaxSpeed и TurnAngle оставь сопоставимыми</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Клетки полупрозрачные — это метки, а не препятствия. Гараж лучше поставить рядом с лобби: машины видно, но трассе они не мешают. Четырёх своих машин урок не ждёт: с урока 13 у большинства одна, вторая была домашним заданием. Одна машина в гараже — заезд состоится, все поедут на её копиях; две-три — модуль раздаст их по кругу. Копию перекрашивают за полминуты, физику при этом не трогают.</aside>
 </div>
 <div class="slide" id="16-p-4">
 <h3 class="slide-title">Шаг 4: ворота и финишная линия <span class="slide-duration">(3.5 мин)</span></h3>
@@ -171,8 +171,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="16-c-1">
 <h3 class="slide-title">Гран-при состоялся <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Гонкой теперь управляет игра — честно и беспристрастно: лобби на трибунах, жребий, четыре машины на решётке, пять кругов и победа по времени. Большой проект «Гоночная мастерская» завершён.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</li><li>На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Итог проекта: четыре урока — от сиденья VehicleSeat до игры, которая сама проводит гонку. Следующий проект продолжает мультиплеер.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: подбери Laps и Intermission под свою трассу и проведи заезд с друзьями</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>На следующем уроке — новый большой проект: делимся на команды и строим первую арену для командного боя</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Итог проекта: четыре урока — от сиденья VehicleSeat до игры, которая сама проводит гонку. Следующий проект продолжает мультиплеер. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Seat.md">Seat — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/VehicleSeat.md">VehicleSeat — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Player.md">Player — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/PVInstance.md">PVInstance — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places">Create and publish games and places — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li></ul></section>

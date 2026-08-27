@@ -1,0 +1,309 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXF8DC4C4F09FD4608B2E9F9415B0A76F4">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">ArenaScore</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBX6DD380B9A162440EBDA7069BC83A7A63">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Update</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX73819DB6271A4066A5CCCBC1116E7CD4">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- Счёт матча (урок 20). Считает по каждому игроку попадания и поражения,
+-- складывает их по командам и рассылает итог на экраны.
+--
+-- Модуль намеренно НИЧЕГО не настраивает у оружия и не лезет внутрь системы
+-- стрельбы: он только читает и складывает. Поэтому его можно поставить в любой
+-- плейс с оружием курса, и наоборот — убрать, ничего не сломав.
+--
+-- Договор с системой стрельбы ровно один: попав, она увеличивает у стрелявшего
+-- атрибут Hits (Player:SetAttribute("Hits", ...)). Больше между модулями нет
+-- ничего — ни общих событий, ни требований к порядку установки. Нет системы
+-- стрельбы — попадания просто останутся нулями, а поражения считаться будут.
+--
+-- Почему не «кто кого убил»: на арене курса важен не последний выстрел, а то,
+-- сколько раз игрок попал. Попадание видно сразу и не зависит от того, добил
+-- ли ты соперника или это сделал сосед, — спорить не о чем.
+
+local Players = game:GetService("Players")
+local Teams = game:GetService("Teams")
+
+local module = script.Parent
+local updateEvent = module:WaitForChild("Update")
+
+local STAT_HITS = "\208\159\208\190\208\191\208\176\208\180\208\176\208\189\208\184\209\143"      -- Попадания
+local STAT_DOWNS = "\208\159\208\190\209\128\208\176\208\182\208\181\208\189\208\184\209\143"    -- Поражения
+local STAT_DIFF = "\208\160\208\176\208\183\208\189\208\184\209\134\208\176"                      -- Разница
+
+-- Счёт держим здесь, а не только в leaderstats: значения IntValue игрок
+-- изменить не может, но читать удобнее из своей таблицы.
+local score = {}
+
+local function stat(player, name)
+	local board = player:FindFirstChild("leaderstats")
+	return board and board:FindFirstChild(name)
+end
+
+local function refresh(player)
+	local s = score[player]
+	if not s then
+		return
+	end
+	local hits, downs = stat(player, STAT_HITS), stat(player, STAT_DOWNS)
+	local diff = stat(player, STAT_DIFF)
+	if hits then hits.Value = s.hits end
+	if downs then downs.Value = s.downs end
+	if diff then diff.Value = s.hits - s.downs end
+end
+
+-- Итог по командам. Считаем по живому списку игроков, а не по накопленной
+-- таблице: игрок мог сменить команду или выйти, и старая сумма врала бы.
+local function teamTotals()
+	local rows = {}
+	for _, team in ipairs(Teams:GetTeams()) do
+		rows[#rows + 1] = {
+			name = team.Name,
+			color = team.TeamColor.Color,
+			hits = 0,
+			downs = 0,
+		}
+	end
+	local byName = {}
+	for _, row in ipairs(rows) do
+		byName[row.name] = row
+	end
+	for player, s in pairs(score) do
+		local row = player.Team and byName[player.Team.Name]
+		if row then
+			row.hits = row.hits + s.hits
+			row.downs = row.downs + s.downs
+		end
+	end
+	return rows
+end
+
+local function broadcast()
+	updateEvent:FireAllClients(teamTotals())
+end
+
+local function board(player)
+	local existing = player:FindFirstChild("leaderstats")
+	if existing then
+		existing:Destroy()
+	end
+	local folder = Instance.new("Folder")
+	folder.Name = "leaderstats"
+	for _, name in ipairs({ STAT_HITS, STAT_DOWNS, STAT_DIFF }) do
+		local value = Instance.new("IntValue")
+		value.Name = name
+		value.Value = 0
+		value.Parent = folder
+	end
+	folder.Parent = player
+end
+
+local function watchCharacter(player, character)
+	local humanoid = character:WaitForChild("Humanoid", 10)
+	if not humanoid then
+		return
+	end
+	-- Одно соединение на персонажа: после гибели персонаж пересоздаётся,
+	-- и старый Humanoid вместе со своим сигналом уходит сам.
+	humanoid.Died:Connect(function()
+		local s = score[player]
+		if not s then
+			return
+		end
+		s.downs = s.downs + 1
+		refresh(player)
+		broadcast()
+	end)
+end
+
+local function join(player)
+	score[player] = { hits = 0, downs = 0 }
+	board(player)
+
+	-- Попадания приходят от системы стрельбы атрибутом. Читаем изменение, а не
+	-- опрашиваем в цикле: счёт обновляется ровно в момент попадания.
+	player:SetAttribute("Hits", 0)
+	player:GetAttributeChangedSignal("Hits"):Connect(function()
+		local s = score[player]
+		if not s then
+			return
+		end
+		s.hits = player:GetAttribute("Hits") or 0
+		refresh(player)
+		broadcast()
+	end)
+
+	player.CharacterAdded:Connect(function(character)
+		watchCharacter(player, character)
+	end)
+	if player.Character then
+		watchCharacter(player, player.Character)
+	end
+
+	-- Смена команды тоже меняет итог: очки игрока переезжают вместе с ним.
+	player:GetPropertyChangedSignal("Team"):Connect(broadcast)
+	broadcast()
+end
+
+local function leave(player)
+	score[player] = nil
+	broadcast()
+end
+
+Players.PlayerAdded:Connect(join)
+Players.PlayerRemoving:Connect(leave)
+for _, player in ipairs(Players:GetPlayers()) do
+	join(player)
+end
+
+-- Новому клиенту нужен текущий счёт сразу, а не после ближайшего попадания.
+updateEvent.OnServerEvent:Connect(function(player)
+	updateEvent:FireClient(player, teamTotals())
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">1</token>
+				<string name="ScriptGuid">{90E6DECF-AE87-4723-A2A1-882AE5647694}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">ScoreServer</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX41F3291C2FE34F6386040FA0178B2F3E">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- Табло счёта (урок 20): полоска вверху экрана с суммой попаданий по командам.
+--
+-- Личные числа игрок и так видит в списке игроков (leaderstats их показывает
+-- сам), а вот командной суммы там нет — её и рисуем. Панель маленькая и стоит
+-- вверху по центру: в бою смотрят в центр экрана, туда же уходит и взгляд
+-- за счётом.
+--
+-- Клиент только показывает. Считает сервер, поэтому подрисовать себе очки,
+-- поправив этот скрипт, не выйдет.
+
+local Players = game:GetService("Players")
+
+local module = script.Parent
+local updateEvent = module:WaitForChild("Update")
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ArenaScoreGui"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local bar = Instance.new("Frame")
+bar.Name = "Bar"
+bar.AnchorPoint = Vector2.new(0.5, 0)
+bar.Position = UDim2.new(0.5, 0, 0, 12)
+bar.Size = UDim2.new(0, 320, 0, 44)
+bar.BackgroundColor3 = Color3.fromRGB(20, 22, 28)
+bar.BackgroundTransparency = 0.25
+bar.BorderSizePixel = 0
+bar.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = bar
+
+local layout = Instance.new("UIListLayout")
+layout.FillDirection = Enum.FillDirection.Horizontal
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Center
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Parent = bar
+
+-- Ячейка команды: цифра цветом команды, под ней название мелко. Цвет берём
+-- у самой команды, поэтому переименовали или перекрасили — панель подхватит.
+local function cell(index, row)
+	local holder = Instance.new("Frame")
+	holder.Name = "Team" .. index
+	holder.LayoutOrder = index
+	holder.Size = UDim2.new(0, 130, 1, 0)
+	holder.BackgroundTransparency = 1
+	holder.Parent = bar
+
+	local number = Instance.new("TextLabel")
+	number.Name = "Hits"
+	number.Size = UDim2.new(1, 0, 0.62, 0)
+	number.BackgroundTransparency = 1
+	number.Font = Enum.Font.GothamBold
+	number.TextScaled = true
+	number.TextColor3 = row.color
+	number.Text = tostring(row.hits)
+	number.Parent = holder
+
+	local name = Instance.new("TextLabel")
+	name.Name = "Title"
+	name.Position = UDim2.new(0, 0, 0.62, 0)
+	name.Size = UDim2.new(1, 0, 0.38, 0)
+	name.BackgroundTransparency = 1
+	name.Font = Enum.Font.Gotham
+	name.TextScaled = true
+	name.TextColor3 = Color3.fromRGB(225, 228, 235)
+	name.Text = row.name
+	name.Parent = holder
+end
+
+local function draw(rows)
+	for _, child in ipairs(bar:GetChildren()) do
+		if child:IsA("Frame") then
+			child:Destroy()
+		end
+	end
+	if not rows or #rows == 0 then
+		bar.Visible = false
+		return
+	end
+	bar.Visible = true
+	bar.Size = UDim2.new(0, math.min(#rows, 4) * 130 + 20, 0, 44)
+	for i, row in ipairs(rows) do
+		cell(i, row)
+	end
+end
+
+updateEvent.OnClientEvent:Connect(draw)
+
+-- Счёт мог идти до того, как этот клиент подключился: просим текущий.
+updateEvent:FireServer()
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<token name="RunContext">2</token>
+				<string name="ScriptGuid">{02FDBB62-73A9-41E8-9EC6-F04661A5954D}</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">ScoreClient</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+			</Properties>
+		</Item>
+	</Item>
+	<SharedStrings>
+		<SharedString md5="yuZpQdnvvUBOTYh1jqZ2cA=="></SharedString>
+	</SharedStrings>
+</roblox>

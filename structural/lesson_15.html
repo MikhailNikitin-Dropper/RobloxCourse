@@ -60,7 +60,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="15-t-2">
 <h3 class="slide-title">Трибуны, флаги и арки <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Трибуны — вдоль стартовой прямой: там зрители «смотрят» самое интересное</li><li>Флаги — на поворотах и в шикане: развеваются там, где кипит борьба</li><li>Готовые модели берём в Toolbox: grandstand, flag, race sign</li><li>У всего декора выключаем CanCollide — правило уже знакомо</li></ul>
+<ul class="content-item content-bullets"><li>Трибуны — вдоль стартовой прямой: там зрители «смотрят» самое интересное</li><li>Флаги — на поворотах и в шикане: развеваются там, где кипит борьба</li><li>Готовые модели берём в Toolbox: grandstand, flag, race sign</li><li>У всего декора: Anchored включён, CanCollide выключен — связка знакома с урока 12</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот стартовой прямой гоночной трассы в Roblox Studio: вдоль дороги трибуны со зрителями, на ограждениях флаги, над дорогой арка]</p>
 <aside class="speaker-notes">Заметка ведущего: Экономия времени: одна трибуна копируется три раза — уже стадион. Напомнить про осмотр моделей из Toolbox в Explorer.</aside>
 </div>
@@ -77,7 +77,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="15-t-5">
 <h3 class="slide-title">Звук: фон и звуковые зоны <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Фоновая музыка звучит одинаково по всей игре — это настроение гонки</li><li>Звук, вложенный в деталь, звучит из этой точки и затихает с расстоянием</li><li>Так строятся <b>звуковые зоны</b>: гул толпы у трибун, рёв моторов у решётки</li><li>Аудио берём в Toolbox; свойство Looped повторяет звук по кругу</li></ul>
+<ul class="content-item content-bullets"><li>Фоновая музыка звучит одинаково по всей игре — это настроение гонки</li><li>Звук, вложенный в деталь, звучит из этой точки и затихает с расстоянием — его задают RollOffMinDistance и RollOffMaxDistance</li><li>Так строятся <b>звуковые зоны</b>: гул толпы у трибун, рёв моторов у решётки</li><li>Аудио берём в Toolbox; свойство Looped повторяет звук по кругу</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Продемонстрировать разницу вживую: проехать мимо трибун со звуком толпы — звук нарастает и затихает. Фоновая музыка при этом ровная.</aside>
 </div>
 <div class="slide" id="15-t-6">
@@ -92,7 +92,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="15-t-8">
 <h3 class="slide-title">Частые ошибки при оформлении гонки <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Декор поставили на полотно дороги — столкновение на полной скорости</li><li>Включили ночь и забыли фонари — повороты не видны</li><li>Вся трасса звучит одинаково громко — звуковые зоны потерялись</li><li>Частицы прямо на траектории — красиво, но гонщик ничего не видит</li></ul>
+<ul class="content-item content-bullets"><li>Декор поставили на полотно дороги — столкновение на полной скорости</li><li>Декор не закреплён — при запуске падает прямо на трассу</li><li>Включили ночь и забыли фонари — повороты не видны</li><li>Вся трасса звучит одинаково громко — звуковые зоны потерялись</li><li>Частицы прямо на траектории — красиво, но гонщик ничего не видит</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Каждая ошибка ловится контрольным ночным заездом в конце практики — он и есть главная проверка урока.</aside>
 </div>
 </section>
@@ -118,13 +118,13 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Превращаем трассу в шоу <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="15-p-1">
 <h3 class="slide-title">Шаг 1: трибуны и флаги <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Вставь из Toolbox трибуну (grandstand) и поставь 2–3 вдоль стартовой прямой</li><li>Расставь флаги на поворотах и в шикане</li><li>Выключи CanCollide у всего декора и проверь заездом, что он не мешает</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Копирование экономит время: одна выверенная трибуна копируется за секунды. Декор за ограждениями, не на дороге.</aside>
+<ol class="content-item content-steps"><li>Вставь из Toolbox трибуну (grandstand) и поставь 2–3 вдоль стартовой прямой</li><li>Расставь флаги на поворотах и в шикане</li><li>Включи Anchored и выключи CanCollide у всего декора, проверь заездом, что он не мешает</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Копирование экономит время: одна выверенная трибуна копируется за секунды. Декор за ограждениями, не на дороге. Про Anchored сказать вслух: незакреплённая трибуна падает на полотно и встречает машины на полной скорости — это та же связка «закрепить и пропустить сквозь», что на уроке 12.</aside>
 </div>
 <div class="slide" id="15-p-2">
 <h3 class="slide-title">Шаг 2: включи ночь <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой Lighting в Explorer и поставь ClockTime около 0</li><li>Проедь круг в темноте и запомни, какие места трассы пропали из виду</li><li>Составь список мест для фонарей: повороты, шикана, финиш</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Заезд в полной темноте — намеренный: список «слепых» мест станет планом расстановки света на следующем шаге. Если ночь у ребят получилась светлее, чем на кадрах урока, — одного ClockTime мало: в Lighting убавь Brightness (на наших кадрах 0.3), а у эффектов Atmosphere поставь Density около 0.1 и у Bloom Intensity около 0.2. На слайд это намеренно не вынесено: ученику хватает ClockTime, тонкая настройка — на усмотрение преподавателя.</aside>
+<ol class="content-item content-steps"><li>Сделай ночь: открой Lighting в Explorer и поставь ClockTime около 0</li><li>Проедь круг в темноте и запомни, какие места трассы пропали из виду</li><li>Составь список мест для фонарей: повороты, шикана, финиш</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Заезд в полной темноте — намеренный: список «слепых» мест станет планом расстановки света на следующем шаге. Формулировка на слайде — «сделай ночь», а не «поставь ClockTime»: цель шага — темнота, и если после ClockTime всё ещё светло, дело не в ученике. Тонкая настройка на ведущем: в Lighting убавить Brightness (на наших кадрах 0.3), у эффекта Atmosphere поставить Density около 0.1, у Bloom Intensity около 0.2. На слайд это не выносим — ученику хватает ClockTime и понятной цели.</aside>
 </div>
 <div class="slide" id="15-p-3">
 <h3 class="slide-title">Шаг 3: расставь фонари <span class="slide-duration">(4 мин)</span></h3>
@@ -134,8 +134,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="15-p-4">
 <h3 class="slide-title">Шаг 4: звук гонки <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Добавь фоновую музыку гонки из Toolbox, включи Looped</li><li>Вложи звук толпы в деталь трибуны — получится звуковая зона</li><li>Test → проедь мимо трибун: гул нарастает и затихает, музыка ровная</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Если звук не слышен — проверить Playing и громкость. Звуковых зон достаточно одной-двух: перегруженный звук утомляет.</aside>
+<ol class="content-item content-steps"><li>Добавь фоновую музыку гонки из Toolbox, включи Looped</li><li>Вложи звук толпы в деталь трибуны — получится звуковая зона</li><li>Задай зоне расстояния: RollOffMinDistance 12, RollOffMaxDistance 150 — дальше 150 студов гула уже не слышно</li><li>Test → проедь мимо трибун: гул нарастает и затихает, музыка ровная</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот панели Properties в Roblox Studio: у выделенного объекта Sound внутри детали трибуны видны свойство Volume, RollOffMaxDistance со значением 150 и RollOffMinDistance со значением 12, а также включённый Looped]</p>
+<aside class="speaker-notes">Заметка ведущего: Числа не с потолка: у свежего Sound RollOffMaxDistance = 10000 студов (замер в Studio), поэтому «гул трибун» без правки слышно с любой точки кольца — и выходит ровно та ошибка, которую урок называет ошибкой: вся трасса звучит одинаково громко. 12 и 150 — числа эталонной трассы: ближе 12 студов звук на полной громкости, дальше 150 его нет. Фоновой музыке эти свойства не нужны, она и должна звучать ровно. Если звук не слышен — проверить Playing и Volume. Звуковых зон достаточно одной-двух: перегруженный звук утомляет.</aside>
 </div>
 <div class="slide" id="15-p-5">
 <h3 class="slide-title">Шаг 5: дым старта и салют финиша <span class="slide-duration">(3 мин)</span></h3>
@@ -165,7 +166,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Трасса стала событием <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы построили шоу вокруг дороги: трибуны и флаги, ночные фонари на местах решений, звуковые зоны и салют над финишем. Трасса готова принимать гонку.</p>
 <ul class="content-item content-bullets"><li>Домашнее задание: добавь свою звуковую зону — например, рёв моторов у решётки — и опубликуй трассу: Public плюс опрос о возрастном ограничении</li><li>На следующем уроке — ПРОЕКТ 4 «Гран-при»: лобби на трибунах, модуль раунда и заезд вчетвером в твоей опубликованной игре</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Всё готово к проекту: машина (13), трасса (14), шоу (15). На Гран-при это соберётся в турнир — проекты сохранить. Про публикацию сказать отдельно и настойчиво: после опроса рейтинг подтверждается не сразу, может уйти несколько часов, поэтому сделать это нужно дома, а не на следующем уроке. Кто не успеет — заедет на плейсе преподавателя.</aside>
+<aside class="speaker-notes">Заметка ведущего: Всё готово к проекту: машина (13), трасса (14), шоу (15). На Гран-при это соберётся в турнир. Про публикацию сказать отдельно и настойчиво: после опроса рейтинг подтверждается не сразу, может уйти несколько часов, поэтому сделать это нужно дома, а не на следующем уроке. Кто не успеет — заедет на плейсе преподавателя. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/environment/lighting.md">Lighting — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/light-sources.md">Light sources — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/audio/objects.md">Audio objects — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/particle-emitters.md">Particle emitters — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/projects/assets/toolbox.md">Toolbox — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Wayfinding — The Level Design Book</a></li><li><a href="https://jacobryanwheeler.medium.com/game-level-design-35-ways-to-guide-the-player-4bbc324204f4">Game Level Design: 35 Ways to Guide The Player</a></li></ul></section>

@@ -74,7 +74,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-t-4">
 <h3 class="slide-title">Тест-драйв: три проверки <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Прямая: разгон и максимальная скорость — хватает ли динамики</li><li>Повороты: змейка между препятствиями — слушается ли руля, не заносит ли</li><li>Устойчивость: наезд на бордюр и резкий разворот — не переворачивается ли</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Профессиональный приём: тест-драйв по одному и тому же маршруту после каждого изменения — так видно, что именно поменялось.</aside>
+<aside class="speaker-notes">Заметка ведущего: Профессиональный приём: тест-драйв по одному и тому же маршруту после каждого изменения — так видно, что именно поменялось. Змейка и бордюр здесь не фигура речи: на шаге 2 практики каждый ставит себе маленький полигон — четыре столбика и плиту-порожек, — и все три проверки делаются на нём.</aside>
 </div>
 <div class="slide" id="13-t-5">
 <h3 class="slide-title">Два числа задают характер машины <span class="slide-duration">(2.5 мин)</span></h3>
@@ -125,12 +125,12 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Модуль у всех одинаковый, поэтому и настройка одна и та же — через атрибуты модели. Если после вставки машина стоит боком или внутри другого объекта, проще удалить и вставить заново.</aside>
 </div>
 <div class="slide" id="13-p-2">
-<h3 class="slide-title">Шаг 2: первый тест-драйв <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → подойди к машине и сядь на DriverSeat</li><li>Проедь по прямой, поверни, сдай назад</li><li>Проверь спидометр: скорость меняется при разгоне и торможении</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Машина обязана ехать до любых модификаций. Если не едет — заменить модель сразу, не тратить время на исправление чужой механики.</aside>
+<h3 class="slide-title">Шаг 2: первый тест-драйв <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери полигон рядом с машиной: четыре детали-столбика в ряд для змейки и одну плоскую плиту-порожек, всё закрепи</li><li>Test → подойди к машине и сядь на DriverSeat</li><li>Проедь по прямой, поверни, сдай назад</li><li>Проверь спидометр: скорость меняется при разгоне и торможении</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Полигон строится за минуту дублированием одной детали: четыре столбика на расстоянии полутора корпусов друг от друга и низкая плита-порожек рядом — по ним пройдут змейка и проверка устойчивости из теории, и на нём же будет финальный тест-драйв шага 6. Столбики закрепить обязательно, иначе машина их просто снесёт. Машина обязана ехать до любых модификаций: если не едет — заменить модель сразу, не тратить время на исправление чужой механики.</aside>
 </div>
 <div class="slide" id="13-p-3">
-<h3 class="slide-title">Шаг 3: настрой характер движения <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Шаг 3: настрой характер движения <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выдели модель машины в Explorer и найди в Properties раздел Attributes</li><li>Меняй по одному атрибуту: MaxSpeed — скорость вперёд, TurnAngle — угол поворота</li><li>После каждого изменения — короткий тест-драйв: машина быстрая, но вписывается в поворот</li><li>Кто успел — попробуй Acceleration (разгон), BrakeForce (торможение) и ReverseSpeed (задний ход)</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer выделена модель Car Chassis, в панели Properties раскрыт раздел Attributes со значениями MaxSpeed и TurnAngle]</p>
 <aside class="speaker-notes">Заметка ведущего: Метод «одно изменение — один тест»: так сразу видно, что дало каждое число. Атрибуты можно менять и во время теста — машина слушается сразу. Числа ограничены сверху, поэтому «миллион» ничего не сломает. Пусть запишут свои итоговые значения, они пригодятся на следующем уроке.</aside>
@@ -138,7 +138,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-p-4">
 <h3 class="slide-title">Шаг 4: построй свой кузов <span class="slide-duration">(4.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Добавь хотя бы три свои детали: панели кузова, спойлер, фары</li><li>Каждую деталь прикрепи к основе: выдели её и Part Main → Model → Weld</li><li>У деталей кузова: Anchored выключен, CanCollide выключен, Massless включён</li><li>Test → машина едет со всеми обвесами, ничего не отваливается</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Самый творческий шаг — следить за временем. Прикрепляем только к Part Main, колёса и сиденье не трогаем. CanCollide и Massless переключаются сразу у всех выделенных деталей: пусть выделят весь кузов рамкой и сделают это за один раз. Три частые поломки: деталь без Weld остаётся на месте при старте, деталь, прикреплённая к подвеске, заклинивает колесо, деталь внутри колеса блокирует его — двигаем инструментом Move.</aside>
+<aside class="speaker-notes">Заметка ведущего: Самый творческий шаг — следить за временем. Прикрепляем только к Part Main, колёса и сиденье не трогаем. Три галочки ставятся сразу всему кузову: выделить рамкой все свои детали и переключить Anchored, CanCollide и Massless — это три клика на весь декор, а не на каждую деталь. Три частые поломки: деталь без Weld остаётся на месте при старте, деталь, прикреплённая к подвеске, заклинивает колесо, деталь внутри колеса блокирует его — двигаем инструментом Move.</aside>
 </div>
 <div class="slide" id="13-p-5">
 <h3 class="slide-title">Шаг 5: цвет и материал <span class="slide-duration">(2.5 мин)</span></h3>
@@ -148,7 +148,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-p-6">
 <h3 class="slide-title">Шаг 6: финальный тест-драйв <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Прямая: разгонись до максимума</li><li>Змейка: пять поворотов подряд без заноса</li><li>Разворот и наезд на бордюр: машина остаётся на колёсах</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Три проверки из теории — теперь на собственной машине. Кто прошёл все три — готов к следующему уроку, к постройке трассы.</aside>
+<aside class="speaker-notes">Заметка ведущего: Три проверки из теории — теперь на собственной машине и на полигоне, который сам же построил на шаге 2. Кто прошёл все три — готов к следующему уроку, к постройке трассы.</aside>
 </div>
 </section>
 <section class="block block-qa_practice">
@@ -166,8 +166,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-c-1">
 <h3 class="slide-title">Машина собрана и настроена <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы поставили готовое шасси, настроили характер движения атрибутами, построили свой кузов и прошли полный тест-драйв. В гараже каждого — машина собственной сборки.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>На следующем уроке — создание гоночной трассы: плавные повороты, ограждения и стартовая решётка для наших машин</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сохранить проекты с машинами — они понадобятся все оставшиеся уроки блока: на трассе, в оформлении гонки и на Гран-при.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>Сохрани проект с машиной — она понадобится на уроках 14, 15 и 16: трасса, оформление гонки и Гран-при</li><li>На следующем уроке — создание гоночной трассы: плавные повороты, ограждения и стартовая решётка для наших машин</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Про сохранение сказать отдельно и проверить у каждого: машина нужна урокам 14, 15 и 16, и её потеря стоит целого занятия. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/VehicleSeat.md">VehicleSeat — Roblox Engine API</a></li><li><a href="https://devforum.roblox.com/t/vehicleseat-constraints/101781">VehicleSeat Constraints — DevForum</a></li><li><a href="https://devforum.roblox.com/t/vehiclesear-doesnt-detect-wheels/589189">VehicleSeat doesn&#x27;t detect wheels — DevForum</a></li><li><a href="https://create.roblox.com/store/asset/118669881648248/Car-Chassis">Car Chassis — готовый модуль курса</a></li><li><a href="https://create.roblox.com/docs/en-us/parts/solid-modeling.md">Solid modeling — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/parts/materials.md">Materials — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/properties.md">Properties: Instance attributes — Roblox Creator Hub</a></li></ul></section>

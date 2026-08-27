@@ -1,0 +1,38 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Script" referent="RBX16F9B055C7D54C5CA897587F4D2745A6">
+		<Properties>
+			<ProtectedString name="Source"><![CDATA[-- Камнепад: возвращает валун наверх, чтобы обвал повторялся.
+-- Пауза между падениями — в атрибуте Pause самого валуна (секунды).
+--
+-- Модуль курса для урока 21. Лежит внутри валуна (Part формы Ball,
+-- Density 2, Anchored снят). Всё остальное делает физика: скатывание,
+-- разгон по жёлобу и удар по игроку.
+local rock = script.Parent
+local home = rock.CFrame
+
+while true do
+	task.wait(script:GetAttribute("Pause") or 3)
+	rock.Anchored = true
+	rock.CFrame = home
+	rock.Anchored = false
+end
+]]></ProtectedString>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<token name="RunContext">0</token>
+			<string name="ScriptGuid">{1ACCBD62-6B7D-4EED-924E-D1242513E8DA}</string>
+			<BinaryString name="AttributesSerialize">AQAAAAUAAABQYXVzZQYAAAAAAAAIQA==</BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">RockfallScript</string>
+			<int64 name="SourceAssetId">-1</int64>
+			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
+		</Properties>
+	</Item>
+	<SharedStrings>
+		<SharedString md5="yuZpQdnvvUBOTYh1jqZ2cA=="></SharedString>
+	</SharedStrings>
+</roblox>
