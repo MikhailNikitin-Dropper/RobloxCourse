@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 23. Верёвки, пружины и лифты</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="23">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 23. Верёвки, пружины и лифты</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Ride Engineer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="23-w-1">
+<h3 class="slide-title">Сегодня ты — Ride Engineer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">На прошлом занятии мы научили детали вращаться вокруг оси: ворота, качели и колесо обозрения. Сегодня они будут висеть, пружинить и поднимать.</p>
+<p class="content-item content-paragraph"><b>Ride Engineer</b> (инженер аттракционов) — это тот, кто собирает из деталей маршрут: по нему должно быть интересно пройти, а не только посмотреть на него.</p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Связка с прошлым занятием: там детали вращались вокруг оси, сегодня они держатся друг за друга на расстоянии. Результат урока — полоса препятствий рядом с площадкой аттракционов, по ней можно пройти от начала до конца.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="23-r-1">
+<h3 class="slide-title">Что мы узнали на уроке 22? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что делает ActuatorType = Motor у шарнира?</p><ol class="content-item content-quiz-options"><li data-correct="true">Шарнир начинает вращаться сам ✓</li><li>Шарнир перестаёт вращаться</li><li>Деталь становится закреплённой</li></ol>
+<p class="content-item content-question">Зачем шарниру включают LimitsEnabled?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы ограничить угол поворота ✓</li><li>Чтобы ускорить вращение</li><li>Чтобы скрыть ограничение из виду</li></ol>
+<p class="content-item content-question">Какая часть механизма обязана быть закреплена?</p><ol class="content-item content-quiz-options"><li data-correct="true">Опора ✓</li><li>Подвижная часть</li><li>Обе части сразу</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса вслух. Ответы разбираем коротко: сегодня всё это понадобится — точки крепления те же, закреплённая опора та же, а ограничения будут новые.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Верёвка, пружина и рельс <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="23-t-1">
+<h3 class="slide-title">Три новых способа крепления <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Шарнир прошлого урока держал ось — а три новых крепления сохраняют расстояние</li><li><b>RopeConstraint</b> (верёвка) — не даёт точкам разойтись дальше заданной длины</li><li><b>SpringConstraint</b> (пружина) — притягивает точки к своей длине покоя</li><li><b>PrismaticConstraint</b> (рельс) — разрешает скольжение только вдоль одной оси</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты, обзор. Проговорить связь с прошлым уроком: шарнир держал ось и разрешал поворот, эти три крепления сохраняют расстояние. Переводы названий даём здесь, дальше повторять не нужно.</aside>
+</div>
+<div class="slide" id="23-t-2">
+<h3 class="slide-title">Верёвка сохраняет расстояние между точками <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Length</b> — дальше этого расстояния точки крепления не разойдутся</li><li>Сблизиться верёвка позволяет, вращаться не мешает</li><li>Из этого получаются висячий мост и маятник</li></ul>
+<p class="content-item content-image-prompt">[изображение: Висячий мост в редакторе Studio: две опоры и планки между ними, верёвки на стыках видны линиями]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Показать на кадре, что верёвок на каждом стыке две: одна верёвка разрешала бы планке крутиться вокруг неё. Устно: Thickness — толщина верёвки на экране, Visible — показывать её или нет.</aside>
+</div>
+<div class="slide" id="23-t-3">
+<h3 class="slide-title">Пружина возвращается к своей длине <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>FreeLength</b> (длина покоя) — к этой длине пружина и притягивает точки</li><li><b>Stiffness</b> (жёсткость) — с какой силой пружина отвечает на сжатие</li><li><b>Damping</b> (гашение) — как быстро успокаиваются колебания</li><li><b>LimitsEnabled</b> с MinLength и MaxLength — минимальная и максимальная длина пружины</li></ul>
+<p class="content-item content-image-prompt">[изображение: Панель Properties пружины в Studio: поля FreeLength, Stiffness, Damping и раздел с MinLength и MaxLength]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Кадр разворачиваем на весь экран: в развороте подсвечены четыре поля, на самом слайде панель мелкая. Назвать каждое поле вслух. Устно: MaxForce — потолок силы, его на уроке не трогаем; Coils, Radius и Thickness задают только вид витков на экране.</aside>
+</div>
+<div class="slide" id="23-t-4">
+<h3 class="slide-title">Пружина чувствует груз, а игрока — почти нет <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Деталь весом с игрока продавливает пружинную площадку на 4.5 студа</li><li>Сам игрок — всего на 0.4: на опору он давит вдесятеро слабее</li><li>Поэтому батут из пружин не собрать, а подъёмник с грузом — можно</li></ul>
+<p class="content-item content-image-prompt">[изображение: Галерея из трёх кадров одной пружинной площадки: пустая площадка наверху; под ящиком она просела на восемь студов; игрок стоит на ней, и она просела едва заметно]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, главный слайд урока. Числа сняты на той самой площадке, которую соберём на практике: четыре пружины по 116. Деталь массой 10.6 просаживает её на 4.46 студа, ящик массой 18.9 — на 8.01, а игрок той же массы 10.6 — только на 0.39, и даже когда прыгает, на 0.44. Пружина игрока чувствует, но его вес доходит до неё в одиннадцать раз слабее: персонажем управляет не чистая физика деталей, а свой обработчик. Отсюда весь замысел практики: поднимает игрока не его собственный вес, а пружина, с которой спихнули тяжёлый груз.</aside>
+</div>
+<div class="slide" id="23-t-6">
+<h3 class="slide-title">Рельс задаёт направление <span class="slide-duration">(4 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Рельс разрешает скольжение вдоль одной оси и запрещает поворот</li><li>Пружины держат расстояние, но не держат направление</li><li>Без рельса площадку уводит вбок, и она сваливается с основания</li></ul>
+<p class="content-item content-image-prompt">[изображение: Галерея из двух кадров площадки на четырёх пружинах без рельса: до запуска она стоит ровно на основании; после запуска её увело вбок]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. На кадрах — та самая ошибка: площадка на четырёх пружинах без рельса стоит ровно до запуска, а после первого же толчка уходит вбок и сваливается с основания. Ось рельса — первая ось точки крепления, как и у шарнира.</aside>
+</div>
+<div class="slide" id="23-t-7">
+<h3 class="slide-title">Ход пружины считаем заранее <span class="slide-duration">(3.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Ход 8 студов — это подъём от настила моста до террасы, куда площадка и должна поднять</li><li>Вес ящика: масса 18.9 × 196.2 — это Gravity, свойство Workspace — получается 3708</li><li>Жёсткость — вес делённый на ход: 3708 ÷ 8 = 464 на все пружины, по 116 на каждую</li></ul>
+<p class="content-item content-image-prompt">[изображение: Галерея из двух кадров с подсветкой полей: свойства ящика — масса 18.9, из которой считается вес 3708; свойства пружины — Stiffness 116]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты, считаем вместе на экране. Два числа стоит показать прямо в Studio, иначе они выглядят взятыми с потолка. Первое — ход: выделяем настил моста (высота 8.0) и террасу (15.9), разница и есть те самые 8 студов, на которые площадка должна подняться. Второе — 196.2: это свойство Gravity у Workspace, стандартное ускорение свободного падения Roblox; его никто не задаёт и не меняет, но именно на него умножается масса, когда считается вес. Массу 18.9 Studio показывает сам — она на первом кадре, в свойствах ящика. Дальше делим вес на ход и получаем жёсткость всех четырёх пружин, 464; на каждую — 116, это и стоит в поле Stiffness на втором кадре. Проверено замером: ящик просаживает готовую площадку ровно на 8.01 студа.</aside>
+</div>
+<div class="slide" id="23-t-8">
+<h3 class="slide-title">Частые ошибки с верёвками и пружинами <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Один стык на одной верёвке — планка крутится вокруг неё</li><li>Верёвки маятника из разных точек перекладины — площадку разворачивает</li><li>Пружины без MinLength сжимаются в ноль, и площадка ложится на основание</li><li>Площадка без рельса по центру уезжает вбок</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Все четыре ошибки найдены на сборке этой полосы. Первая заметна не сразу: на одной верёвке планка держится, но крутится вокруг неё, и мост превращается в качели — поэтому на каждом стыке верёвок две. Вторая про маятник: если верёвки уходят в разные точки перекладины, площадку разворачивает поперёк переправы.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="23-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что произойдёт с пружинной площадкой, если на неё встанет игрок?</p><ol class="content-item content-quiz-options"><li data-correct="true">Она просядет чуть-чуть ✓</li><li>Она просядет и подбросит его</li><li>Пружины сожмутся в ноль</li></ol>
+<p class="content-item content-question">Зачем пружинной площадке рельс по центру?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы её не уводило вбок ✓</li><li>Чтобы она поднималась быстрее</li><li>Чтобы пружины стали жёстче</li></ol>
+<p class="content-item content-question">Мотор крутится всё время, а маятник качается, только пока его раскачивают. Какой из двух механизмов проще встроить в полосу препятствий и почему?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый — ответы принимаем любые обоснованные, важно, чтобы группа сама назвала разницу между «работает всегда» и «работает, пока толкают».</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="23-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Отдыхаем пять минут. После перерыва собираем полосу препятствий в том же проекте парка — рядом с площадкой аттракционов.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого должен быть открыт проект парка с площадкой аттракционов урока 22: полосу строим в нём же, восточнее площадки.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем полосу препятствий <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="23-p-1">
+<h3 class="slide-title">Шаг 1: висячий мост <span class="slide-duration">(4.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Две закреплённые опоры, между ними три свободные планки 4×0.5×6, Density 0.3</li><li>Model → Constraints → Rope: соседние планки — по две верёвки, Length 1.5</li><li>Крайние планки свяжи с опорами: по две верёвки, Length 2</li><li>Срежь опоры вровень с настилом и пройди мост в Test</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея сборки моста, 5 кадров: две опоры и планки по местам; панель Properties верёвки с полем Length; первый стык с двумя верёвками; готовый мост целиком; персонаж идёт по мосту в игре]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре с половиной минуты — самый долгий шаг: даже на трёх планках верёвок восемь. Порядок, который спасает время: сначала ОДИН стык с двумя верёвками, проверка в Test, и только потом остальные. Три планки — обязательный минимум, четвёртую и пятую ставим, если группа успевает: мост от этого только длиннее. Планки лёгкие — чем больше масса, тем сильнее провисает мост. Торчащая опора превращает конец моста в стену: персонаж упирается в неё и дальше не идёт, поэтому опоры срезаем вровень с настилом.</aside>
+</div>
+<div class="slide" id="23-p-2">
+<h3 class="slide-title">Шаг 2: пружинный подъёмник <span class="slide-duration">(5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Закреплённое основание 12×1×12, над ним свободная площадка 8×0.5×8</li><li>Model → Constraints → Spring: четыре пружины по углам площадки</li><li>Каждой: FreeLength 25, Stiffness 116, Damping 60, LimitsEnabled с MinLength 5</li><li>Model → Constraints → Prismatic по центру, бортики по бокам, ящик 3×3×3 наверх</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея сборки подъёмника, 6 кадров: основание и площадка; четыре пружины по углам; панель Properties пружины с FreeLength, Stiffness, Damping и MinLength; рельс по центру; ящик на площадке, она осела вровень с мостом; площадка наверху без ящика]</p>
+<aside class="speaker-notes">Заметка ведущего: Пять минут, главный механизм урока. Порядок важен: сначала пружины, потом рельс, потом ящик — иначе площадка уедет вбок ещё до проверки. ПРОВЕРКА ЧИСЛА: FreeLength 25 верна только для наших размеров и для точек крепления на верху основания и на низу площадки. Ставим ящик и смотрим: площадка должна сесть вровень с настилом моста. Села ниже — увеличиваем FreeLength, встала выше — уменьшаем, шаг 2 студа. Так же проверяем и пустую площадку: она задаёт высоту террасы в шаге 3. Бортики обязательны: с площадки без них игрок уезжает следом за ящиком и падает вниз.</aside>
+</div>
+<div class="slide" id="23-p-3">
+<h3 class="slide-title">Шаг 3: терраса и ступени <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test с пустым подъёмником: запомни, на какой высоте встаёт площадка</li><li>Поставь террасу на эту высоту, от неё — три ступени по 2 студа</li><li>Положи на террасу запасной ящик: сброшенный остаётся внизу</li><li>Test → зайди с моста, столкни ящик и поднимись на террасу</li></ol>
+<p class="content-item content-image-prompt">[изображение: Терраса и ступени: пустая площадка подъёмника поднялась вровень с террасой, от террасы три ступени ведут выше]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Высоту террасы не вычисляем, а смотрим: запускаем Test без ящика, площадка встаёт на свою верхнюю высоту — туда и ставим террасу. Запасной ящик нужен потому, что сброшенный остаётся внизу: без него подъёмник на второй заход не зарядить, а заходов за урок будет много. Сказать прямо: выше террасы поднять игрока механизмом нечем — ни лебёдка, ни мотор рельса для этого не годятся, поэтому дальше идут ступени. Test открывает две вкладки — высоту смотрим на Client, там идёт игра: выделяем площадку и читаем Y в свойстве Position.</aside>
+</div>
+<div class="slide" id="23-p-4">
+<h3 class="slide-title">Шаг 4: маятник-переправа <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Перекладина на двух закреплённых стойках</li><li>Под ней свободная площадка 8×1×8, Density 0.15</li><li>Две верёвки Length 12 — обе из одной точки перекладины</li><li>Приварь бортики; от площадки до каждого берега — 5 студов</li></ol>
+<p class="content-item content-image-prompt">[изображение: Маятник-переправа в редакторе: перекладина на двух стойках, площадка с бортиками на двух верёвках, по сторонам от неё края башни и финиша]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Обе верёвки идут из ОДНОЙ точки на перекладине — так площадка качается в одной плоскости и не разворачивается. Площадка нарочно лёгкая: чем меньше масса, тем шире размах от того же толчка. Замер: ходьба по площадке из конца в конец раскачивает её на 7 студов. Верёвки ставим с вкладки Model → Constraints → Rope. Пять студов — это прыжок, но с запасом: предел прыжка на курсе около девяти студов.</aside>
+</div>
+<div class="slide" id="23-p-5">
+<h3 class="slide-title">Шаг 5: финиш и проход полосы <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь площадку финиша с флагом на высоте верхнего яруса</li><li>Test → пройди полосу целиком: мост, подъёмник, ступени, маятник, финиш</li><li>Заметь, где застрял, и исправь это место</li><li>Сохрани проект</li></ol>
+<p class="content-item content-image-prompt">[изображение: Персонаж стоит на площадке финиша у флага, за ним — маятник-переправа и пружинный подъёмник полосы]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Правило одного изменения за запуск знакомо с урока 21. Проход целиком — обязательная часть шага: полоса должна проходиться, а не просто стоять. Сохранение обязательно: на этом проекте стоит весь большой проект блока, а на следующем занятии из него собирается луна-парк.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="23-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Площадка подъёмника легла на основание и больше не поднимается. Что забыли?</p><ol class="content-item content-quiz-options"><li data-correct="true">Включить LimitsEnabled и задать MinLength ✓</li><li>Закрепить площадку</li><li>Увеличить Damping</li></ol>
+<p class="content-item content-question">Ящик столкнули, а площадка не поднялась. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Не закреплена ли площадка ✓</li><li>Не слишком ли лёгкий ящик</li><li>Не короткие ли верёвки</li></ol>
+<p class="content-item content-question">Какое ещё препятствие можно собрать на верёвках или пружинах? Опиши его в двух фразах: что держит и что делает.</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про ошибки, которые группа сегодня видела вживую. Третий открытый: собираем идеи для домашнего задания.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="23-c-1">
+<h3 class="slide-title">Полоса препятствий собрана <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Сегодня мы собрали полосу препятствий на верёвках и пружинах: мост держится верёвками, подъёмник работает пружинами, а переправа качается на двух верёвках.</p>
+<ul class="content-item content-bullets"><li>Дома: добавь к полосе ещё один участок на верёвках — второй мост или второй маятник</li><li>Проверь его: полоса должна проходиться целиком</li><li>На следующем занятии тропа, площадка аттракционов и полоса станут одним парком</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Проговорить главный вывод дня: на игрока пружина отзывается вдесятеро слабее, чем на груз, и на этом держится весь подъёмник. Домашнее задание нарочно про верёвки: пружина без груза препятствием не станет, а верёвка даёт и мост, и маятник, и подвес. Анонс: на следующем занятии тропа, площадка аттракционов и полоса становятся одним парком.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/RopeConstraint.md">RopeConstraint — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/constraints/spring.md">Spring constraint — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/SpringConstraint.md">SpringConstraint — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/PrismaticConstraint.md">PrismaticConstraint — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/mechanical-constraints.md">Mechanical constraints — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/how-do-you-use-a-prismatic-constraint/2079122">How do you use a Prismatic Constraint? — Roblox DevForum</a></li><li><a href="https://devforum.roblox.com/t/how-do-i-make-my-character-weigh-the-same-way-parts-do/902574">How do I make my character weigh the same way Parts do? — Roblox DevForum</a></li><li><a href="fixes/23-mechanics.md">Замеры механизмов урока 23 в запущенной игре (файл проекта)</a></li></ul></section>
+</article>
+</body>
+</html>
