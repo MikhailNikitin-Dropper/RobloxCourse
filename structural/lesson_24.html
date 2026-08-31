@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 24. ПРОЕКТ 6: луна-парк «Механика чудес»</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="24">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 24. ПРОЕКТ 6: луна-парк «Механика чудес»</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер парка</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="24-w-1">
+<h3 class="slide-title">Сегодня ты — Продюсер парка <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">За три занятия мы построили тропу обвала, площадку аттракционов и полосу препятствий. Сегодня они перестают быть тремя отдельными постройками и становятся одним парком, в который можно позвать друзей.</p>
+<p class="content-item content-paragraph"><b>Продюсер парка</b> — это тот, кто соединяет готовые части в цельную игру: даёт посетителю дорогу, цель и повод вернуться.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Сразу назвать результат занятия: к концу урока парк проходится целиком от входа, у посетителя есть цель, а игра уезжает в облако обновлением. Ничего нового сегодня не строим с нуля — работаем с тем, что уже стоит в плейсе.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="24-r-1">
+<h3 class="slide-title">Что мы узнали на уроке 23? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что задаёт свойство Length у верёвки?</p><ol class="content-item content-quiz-options"><li data-correct="true">Расстояние, дальше которого точки не разойдутся ✓</li><li>Расстояние, ближе которого точки не сойдутся</li><li>Толщину верёвки на экране</li></ol>
+<p class="content-item content-question">Почему пружинному подъёмнику нужен рельс по центру?</p><ol class="content-item content-quiz-options"><li>Чтобы пружины стали жёстче</li><li data-correct="true">Чтобы площадку не уводило вбок ✓</li><li>Чтобы площадка поднималась выше</li></ol>
+<p class="content-item content-question">Насколько сильно игрок продавливает пружинную площадку по сравнению с грузом того же веса?</p><ol class="content-item content-quiz-options"><li>Так же</li><li>Заметно сильнее</li><li data-correct="true">Примерно вдесятеро слабее ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса вслух. Третий вопрос сегодня понадобится дважды: на нём стоит и подъёмник прошлого занятия, и правило для своего аттракциона — механизм не умеет ждать, пока на него встанут.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Как из зон получается парк <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="24-t-1">
+<h3 class="slide-title">Что собираем сегодня <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Три зоны уже стоят в плейсе: тропа обвала, площадка аттракционов, полоса препятствий</li><li>Сегодня добавляем вход, дорожки между зонами и свой аттракцион</li><li>У посетителя появляется цель: прокатиться на всех и собрать билеты</li><li>Вечерний свет, музыка и частицы делают из построек парк</li><li>В конце занятия парк уезжает в облако обновлением</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты, карта занятия. Проговорить главную мысль роли: продюсер смотрит на готовые части и решает, чего не хватает до целой игры. Сегодня не хватает трёх составляющих — дороги, цели и настроения.</aside>
+</div>
+<div class="slide" id="24-t-2">
+<h3 class="slide-title">План парка: вход и три зоны <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Вход — единственная точка возрождения: любой заход начинается здесь</li><li>От входа видно минимум два направления: зоны не выстраиваем в линию</li><li>Между соседними зонами — 10–15 секунд пути, это 150–250 студов</li><li>От входа понятно, куда идти: гадать игрок не должен</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема парка сверху: площадка входа в центре, от неё три дорожки расходятся к трём зонам — тропе обвала, площадке аттракционов и полосе препятствий]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, главный слайд планирования. Показать на схеме, чем план отличается от того, что стоит сейчас: зоны есть, а дороги между ними нет. Откуда числа: персонаж идёт 16 студов в секунду, значит 10–15 секунд — это 150–250 студов, примерно длина площадки аттракционов. Если идти дольше, игрок успевает заскучать по пути; если зоны стоят вплотную, парк выглядит свалкой построек.</aside>
+</div>
+<div class="slide" id="24-t-3">
+<h3 class="slide-title">Дорожка ведёт игрока сама <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Главный путь — широкий и светлый, необязательный — узкий и тёмный</li><li>У каждой зоны свой ориентир: колесо обозрения, флаг финиша, скала тропы</li><li>Свой цвет дорожки — по нему видно, в какой зоне находишься</li><li>Ориентир должен быть виден от входа, иначе о зоне никто не узнает</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: широкая светлая дорожка с фонарями по сторонам ведёт от входа парка к колесу обозрения, видному издалека]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Приём знаком с уроков 11 и 15: игрока ведут ориентир, ширина и свет. Устно: надписей на деталях курс не делает, поэтому направление показываем только этими тремя средствами. Спросить группу, какой ориентир у каждого получился самым заметным.</aside>
+</div>
+<div class="slide" id="24-t-4">
+<h3 class="slide-title">Билет достаётся за поездку <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Цель посетителя: прокатиться на всех аттракционах и собрать билеты</li><li>Билеты считает готовый модуль <b>PropHunter</b> — им мы собирали сокровища на уроке 4</li><li>Билет — закреплённая деталь с тегом Prop Hunt, своим именем и запиской</li><li>Билет лежит на неподвижной детали в конце маршрута аттракциона</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/86765084963670/PropHunter" target="_blank" rel="noopener">https://create.roblox.com/store/asset/86765084963670/PropHunter</a></p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: билет светится на террасе пружинного подъёмника, внизу видна площадка подъёмника, на экране счётчик собранных билетов]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, слайд про цель игры. Модуль у группы уже есть в инвентаре с урока 4 — ссылка на слайде на случай, если инвентарь пуст. Напомнить точное написание: модуль PropHunter, а тег — Prop Hunt, с пробелом и без «-er»; модуль ищет точное совпадение. Главная мысль слайда — где лежит билет: если положить его у дорожки, аттракцион можно не трогать, и цель разваливается. Отдельно про механизмы, которые крутятся на месте: карусель и мельница никуда не привозят, их билет ставим на площадку у самого механизма — это награда за то, что игрок дошёл и попробовал. Билет обязательно закреплён: иначе он уедет с первым же толчком.</aside>
+</div>
+<div class="slide" id="24-t-5">
+<h3 class="slide-title">Что механизм умеет и чего не умеет <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Механизм на моторе работает всё время: карусель, мельница, колесо</li><li>Механизм на верёвке или пружине ждёт действия игрока: толчка или раскачки</li><li>Ждать, пока на него встанут, механизм не умеет — игрок почти не давит на детали</li><li>Собираем из знакомого: шарнир с мотором, верёвка, пружина, рельс</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты, разбор перед самой творческой частью практики. Назвать вслух рабочие идеи, чтобы никто не завис на выборе: карусель из домашнего задания урока 22, подъёмный мост на шарнире, мельница, второй маятник, качели-корабль. Отдельно предупредить про нажимные площадки и качели-весы: это самая частая идея группы, и она не работает — вес персонажа доходит до опоры вдесятеро ослабленным.</aside>
+</div>
+<div class="slide" id="24-t-6">
+<h3 class="slide-title">Вечерний свет, музыка и частицы <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ClockTime</b> около 18 — предзакатный вечер, при нём фонари становятся заметны</li><li><b>PointLight</b> вдоль дорожек и на аттракционах: свет ведёт и украшает одновременно</li><li>Фоновая музыка — объект <b>Sound</b> в SoundService, с Playing и Looped</li><li><b>Sparkles</b> внутри детали над входом: парк выглядит праздничным с первой секунды</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вечерний парк, дорожки подсвечены фонарями, над аркой входа сияют искры, вдалеке светится колесо обозрения]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Ничего нового: ClockTime и Sparkles с урока 5, музыка в SoundService — с урока 12, здесь только напоминание и выбор. Устно: эффекты, меняющие вид всей игры, живут в Lighting, а частицы существуют только внутри детали. Предупредить про меру — десяток разноцветных источников света рядом превращает парк в мешанину.</aside>
+</div>
+<div class="slide" id="24-t-7">
+<h3 class="slide-title">Игра выходит в мир <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Публикация: <b>File → Publish to Roblox</b> — сегодня это обновление, плейс уехал в облако ещё на уроке 21</li><li>Игра закрыта, пока доступ не открыт на сайте, в разделе Audience</li><li>Опрос о содержимом — Maturity &amp; Compliance: без него Roblox ограничивает доступ всем игрокам</li><li>Страница игры: короткое имя, описание и иконка — квадрат минимум 512×512</li></ul>
+<p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открыто окно Publish Experience с полями Name, Description, Creator, Devices и кнопкой Create]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Сразу сказать, как делится работа: публикация из Studio — на занятии, страница на сайте и опрос о содержимом — в домашнем задании, там на них есть время. Причина та же, что и на уроке 12: страницу оформляют один раз и для готовой игры. Устно: иконка проходит модерацию, поэтому берём кадр из своей игры, а не картинку из интернета. Публикация с клавиатуры — Alt+P.</aside>
+</div>
+<div class="slide" id="24-t-8">
+<h3 class="slide-title">Частые ошибки при сборке парка <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Зоны стоят рядом, но дорожки между ними нет — до дальней никто не доходит</li><li>Точка возрождения осталась на старом месте, и игра начинается в пустом углу</li><li>Опечатка в теге — модуль ищет точное написание Prop Hunt</li><li>Билет положили на подвижную часть аттракциона, и он уехал вместе с ней</li><li>Сделали вечер и забыли фонари — парк утонул в темноте</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Первые две ошибки — про план и заметны только на полном проходе, поэтому шаг 5 практики обязателен. Третью показать вживую: тег с опечаткой — касание не засчитывается, исправили — работает. Пятую проговорить как правило порядка: сначала ставим фонари, потом переводим ClockTime на вечер.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="24-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Где в парке ставим точку возрождения?</p><ol class="content-item content-quiz-options"><li data-correct="true">У входа ✓</li><li>У самого интересного аттракциона</li><li>Посередине между зонами</li></ol>
+<p class="content-item content-question">Игра опубликована, а друг пишет, что не может в неё зайти. Что мы пропустили?</p><ol class="content-item content-quiz-options"><li>Слишком короткое описание</li><li data-correct="true">Опрос о содержимом и открытый доступ ✓</li><li>Иконку игры</li></ol>
+<p class="content-item content-question">Какой ориентир твоего парка виден от входа лучше всего и почему именно он?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый: попросить двух-трёх участников назвать свой ориентир и объяснить, чем он заметен — высотой, цветом или светом. Если ориентира не находится, это и есть задание на шаг 1 практики.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="24-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Отдыхаем пять минут. После перерыва соединяем три зоны в парк и проходим его целиком.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого должен быть открыт проект парка с тремя зонами уроков 21–23.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем луна-парк <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="24-p-1">
+<h3 class="slide-title">Шаг 1: вход и дорожки <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери площадку входа: арка на двух колоннах и будка кассы рядом</li><li>Перенеси SpawnLocation на вход: точка возрождения в парке одна</li><li>Проложи от входа три дорожки — своего цвета к каждой зоне</li><li>Test → встань на точке возрождения и назови, куда пойдёшь первым</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр Roblox Studio: площадка входа парка с аркой и будкой кассы, под аркой SpawnLocation, от площадки расходятся три дорожки разного цвета]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Самое важное действие шага — точка возрождения: пока она стоит там, где её оставил шаблон, игра начинается в пустом углу; вторую точку не оставляем, иначе игроки будут появляться то там, то тут. Если SpawnLocation в плейсе не нашлась — + у Workspace → SpawnLocation. Дорожка — это ОДНА вытянутая плоская деталь на зону, растянутая инструментом Scale: мостить плитку сегодня некогда, а вход — куб с крышей и будка рядом. Развернуть зоны стоит так, чтобы от входа было видно хотя бы два ориентира. Проверка со слайда короткая, но обязательная: если с точки возрождения не понятно, куда идти, зоны стоят неправильно.</aside>
+</div>
+<div class="slide" id="24-p-2">
+<h3 class="slide-title">Шаг 2: свой аттракцион <span class="slide-duration">(4.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь у дорожки свой механизм: карусель из домашнего задания урока 22 или новый</li><li>Опора закреплена, подвижная часть свободна, сиденья приварены к настилу</li><li>Мотор шарнира — если механизм работает сам; верёвка или пружина — если его запускает игрок</li><li>Test → прокатись сам и подбери скорость: слишком быстрый механизм сбрасывает</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: карусель на моторе рядом с дорожкой парка, на её настиле сидит персонаж, вокруг горят фонари]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре с половиной минуты, самый творческий шаг. У большинства механизм уже собран: карусель была домашним заданием урока 22 — её достаточно перенести в парк и подобрать место. Кто собирает заново, берёт числа карусели с пометки: AngularVelocity 1.5, MotorMaxTorque 900000, шарнир строго по центру настила. Другие рабочие замыслы: подъёмный мост на шарнире, мельница, второй маятник, качели-корабль. Ничего нового сегодня не изобретаем — всё разобрано на уроках 22 и 23. Отстающим предлагать карусель: она собирается быстрее всех.</aside>
+</div>
+<div class="slide" id="24-p-3">
+<h3 class="slide-title">Шаг 3: билеты по аттракционам <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Вставь модуль PropHunter в Workspace: он в инвентаре с урока 4</li><li>Билет: закреплённая деталь, своё имя, тег Prop Hunt, внутри StringValue с запиской</li><li>Первый билет — у кассы, остальные — в конце маршрута каждого аттракциона</li><li>Test → возьми билет: счётчик считает, записка видна</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен билет, в Properties внизу раздел Tags с тегом Prop Hunt, в Explorer внутри билета лежит StringValue]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Обязательный минимум — четыре билета: у кассы, за заслоном тропы, на террасе пружинного подъёмника и на своём аттракционе; пятый и шестой ставим, если группа успевает. Тег добавляют в Properties, в разделе Tags внизу; StringValue вставляют кнопкой + у самого билета. Порядок, который спасает время: собрать ОДИН билет целиком, проверить его в Test и только потом копировать — правым кликом → Duplicate. У копий обязательно менять имя и записку: по имени модуль отличает билеты друг от друга. Первый билет лежит на виду не случайно — он объясняет правило игры без объяснений.</aside>
+</div>
+<div class="slide" id="24-p-4">
+<h3 class="slide-title">Шаг 4: вечернее шоу <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь вдоль дорожек фонари: деталь-столб, внутрь PointLight</li><li>В Lighting задай ClockTime около 18 — над парком вечер</li><li>В SoundService добавь Sound с треком, включи Playing и Looped</li><li>Test → пройди от входа до дальней зоны: дорогу видно, музыка играет</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Порядок в списке рабочий: сначала фонари, потом вечер — иначе группа несколько минут расставляет столбы в темноте. Громкость музыки подобрать так, чтобы она не заглушала игру; в режиме редактирования звука не слышно, проверяем только в Test. Кто закончил раньше — искры над аркой входа: выделяем деталь, + → Sparkles. Искры ставим одни: парк должен быть праздничным, а не пёстрым.</aside>
+</div>
+<div class="slide" id="24-p-5">
+<h3 class="slide-title">Шаг 5: проход парка целиком <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → пройди парк как посетитель: собери все билеты и прокатись на всех аттракционах</li><li>Отметь место, где пришлось гадать, куда идти, — там не хватает ориентира или света</li><li>Отметь место, где застрял, — там правим сам аттракцион</li><li>Исправь одно самое неудобное место и пройди этот участок ещё раз</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: персонаж стоит под аркой входа вечернего парка, на экране счётчик собранных билетов заполнен целиком]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, обязательная часть занятия. Правило одного изменения за запуск знакомо с урока 21. Заблудившийся тестер — это ошибка разработчика, а не игрока: значит, ориентира от входа не видно. Собрать все билеты за один заход обязательно — иначе неизвестно, проходится ли парк вообще. Гостей сегодня не зовём: доступ к игре откроется только после домашнего задания.</aside>
+</div>
+<div class="slide" id="24-p-6">
+<h3 class="slide-title">Шаг 6: публикация парка <span class="slide-duration">(2 мин)</span></h3>
+<ol class="content-item content-steps"><li>Опубликуй обновление: File → Publish to Roblox</li><li>Сними кадр парка — из него дома получится иконка</li></ol>
+<p class="content-item content-paragraph">Ссылка на настройки игры, понадобится дома: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Публикация сегодня быстрая: плейс уехал в облако ещё на уроке 21, поэтому это обновление, а не создание новой игры. На сайт с занятия не уходим — страница и опрос о содержимом лежат в домашнем задании. Кадр для иконки снимаем прямо на занятии, иначе дома его снимать нечем: запускаем Test, ставим камеру на вечерний парк с фонарями и колесом, нажимаем клавишу Print Screen и вставляем кадр в любой редактор картинок, либо снимаем область приложением «Ножницы». Иконке нужен квадрат, поэтому кадр дома придётся обрезать.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="24-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Все билеты собраны, а финальное окно не появилось. Что проверяем первым?</p><ol class="content-item content-quiz-options"><li>Громкость музыки</li><li data-correct="true">Тег и имя у каждого билета ✓</li><li>Цвет дорожек</li></ol>
+<p class="content-item content-question">Билет уехал вместе с аттракционом и оказался под землёй. В чём причина?</p><ol class="content-item content-quiz-options"><li data-correct="true">Он лежит на подвижной части механизма ✓</li><li>У него не заполнена записка</li><li>У него слишком маленький размер</li></ol>
+<p class="content-item content-question">Что твой гость увидит в парке первым и что сделает вторым? Опиши двумя фразами.</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про ошибки, которые группа сегодня видела на своих проектах. Третий открытый: он же готовит домашнее задание — гостя зовут после того, как страница игры оформлена.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="24-c-1">
+<h3 class="slide-title">Луна-парк собран <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы завершили шестой большой проект курса: три зоны стали одним парком с входом, дорожками, своим аттракционом и целью для посетителя — собрать все билеты.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Дальше — тьма как инструмент: ночь, туман и свет, который ведёт и пугает</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить масштаб: парк собран из четырёх занятий, и каждое из них видно в готовой игре. Анонс урока 25: сегодня свет украшал парк, на следующем занятии он станет главным инструментом — темнота начнёт работать на игру.</aside>
+</div>
+<div class="slide" id="24-c-2">
+<h3 class="slide-title">Домашнее задание: открыть парк для гостей <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Оформи страницу игры: короткое имя, описание и иконку — кадр из своего парка</li><li>Пройди опрос о содержимом и открой доступ к игре</li><li>Позови двух гостей и посмотри, куда они пойдут от входа</li><li>Добавь ориентир там, где гость растерялся</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Порядок пунктов важен: сначала опрос о содержимом и доступ, иначе гости в игру просто не зайдут. Про гостей сказать главное: смотреть надо не на похвалу, а на первые тридцать секунд — куда человек пошёл без подсказки. Иконку берём из своей игры: чужая картинка не пройдёт модерацию. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-experiences-and-places.md">Publish experiences and places</a></li><li><a href="https://www.youtube.com/watch?v=HXIW9WX4y7s">How to Publish a Game in Roblox Studio (2026 Public Release)</a></li><li><a href="https://create.roblox.com/docs/en-us/production/promotion/content-maturity.md">Content maturity and compliance</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/experience-icons.md">Experience icons</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/thumbnails.md">Experience thumbnails</a></li><li><a href="https://devforum.roblox.com/t/ruskis-tutorial-5-how-to-design-an-open-world-map/3554962">Ruski&#x27;s Tutorial #5 — How to Design an Open World Map</a></li><li><a href="https://book.leveldesignbook.com/process/blockout/wayfinding">Level Design Book — Wayfinding</a></li><li><a href="https://www.youtube.com/watch?v=gWQRutfOoz4">Complete Guide to Roblox Lighting (ByteBlox)</a></li><li><a href="https://www.youtube.com/watch?v=gKuY3JGReWk">How to Use Particle Effects Like a Pro (Roblox Studio)</a></li><li><a href="https://create.roblox.com/store/asset/86765084963670/PropHunter">Модуль PropHunter</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/mechanical-constraints.md">Mechanical constraints</a></li></ul></section>
+</article>
+</body>
+</html>
