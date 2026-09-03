@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 25. Тьма как инструмент</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="25">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 25. Тьма как инструмент</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Lighting Director</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="25-w-1">
+<h3 class="slide-title">Сегодня ты — Lighting Director <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Двадцать четыре урока свет украшал наши игры: подсвечивал дорожки, отмечал финиш, делал вечер в парке. Сегодня он становится главным инструментом — вместе с темнотой.</p>
+<p class="content-item content-paragraph"><b>Lighting Director</b> (режиссёр света) — это тот, кто решает, что игрок увидит, а что от него скроет темнота.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Мостик от прошлого проекта: луна-парк опубликован, начинается новая игра — ночное приключение с лабиринтом. Сразу назвать результат занятия: к концу урока одна и та же комната будет выглядеть двумя разными сценами — дневной и тревожной, а разницу сделают только свойства Lighting.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="25-r-1">
+<h3 class="slide-title">Что мы узнали на уроке 24? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Сколько точек возрождения оставляем в готовой игре?</p><ol class="content-item content-quiz-options"><li>По одной у каждой зоны</li><li data-correct="true">Одну, у входа ✓</li><li>Ни одной, игрок появится где угодно</li></ol>
+<p class="content-item content-question">Билет уехал вместе с каруселью и оказался под землёй. Почему?</p><ol class="content-item content-quiz-options"><li>Тег написан с ошибкой</li><li>У билета не заполнена записка</li><li data-correct="true">Билет лежал на подвижной части механизма ✓</li></ol>
+<p class="content-item content-question">В каком порядке мы делали вечер в парке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Сначала фонари, потом вечерний ClockTime ✓</li><li>Сначала вечерний ClockTime, потом фонари</li><li>Порядок не важен, результат один</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса вслух. Третий вопрос — мостик в сегодняшнюю тему: порядок «сначала источники света, потом тёмное время суток» сегодня повторится один в один, только вместо фонарей будут факелы.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Как темнота становится инструментом <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="25-t-1">
+<h3 class="slide-title">Что делаем сегодня <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Начинаем седьмую игру курса — ночное приключение с лабиринтом</li><li>Строим одну комнату из простых деталей: она нужна как сцена для света</li><li>Разбираем, чем настоящая ночь отличается от выключенного солнца</li><li>К концу занятия одна и та же комната станет то дневной, то тревожной</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты, карта занятия. Главная мысль роли: режиссёр света работает не лампами, а вниманием игрока — решает, что видно, а что нет. Предупредить сразу: строить сегодня почти нечего, комната из шести деталей нужна только как сцена. Сама игра — ночное приключение — начнётся с неё и будет расти следующие три занятия.</aside>
+</div>
+<div class="slide" id="25-t-2">
+<h3 class="slide-title">ClockTime переводит часы, а не выключает свет <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ClockTime</b> (время суток) — число от 0 до 24: 14 — день, 0 — полночь</li><li><b>Brightness</b> (яркость) — сила света солнца и луны</li><li>Ночью солнце уходит, но сцена остаётся серой и игрок всё прекрасно видит</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: каменная комната без потолка с проёмом в стене при дневном ClockTime 14 — видно все четыре угла и пол целиком]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Показать вживую: выкрутить ClockTime с 14 на 0 и попросить группу назвать, что изменилось — солнце ушло, тени пропали, а видно по-прежнему всё. Это и есть завязка урока: ночь в Roblox по умолчанию не тёмная. Числа: 14 — заводское значение времени в новом плейсе, 0 — полночь.</aside>
+</div>
+<div class="slide" id="25-t-3">
+<h3 class="slide-title">Темноту дают Ambient и OutdoorAmbient <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Ambient</b> (фоновый свет) — подсветка мест, закрытых от неба</li><li><b>OutdoorAmbient</b> — та же подсветка там, где небо видно</li><li>Комната открыта небу, поэтому задаём значение цвета в этих свойствах ближе к чёрному</li><li>Пока они светлые, темноты не будет ни при каком ClockTime</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: та же комната при ClockTime 0, но со светлыми Ambient и OutdoorAmbient — небо ночное, а стены и пол по-прежнему хорошо различимы]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты, ключевой слайд теории. Объяснить смысл фонового света: это подсветка, которая приходит ниоткуда, чтобы игра не превращалась в чёрный экран. Пока она светлая, любой ClockTime бесполезен. Устно: заводское значение OutdoorAmbient светло-серое, поэтому ночь и выглядит серой. Порядок действий на практике будет ровно такой: сначала фоновый свет, потом время суток.</aside>
+</div>
+<div class="slide" id="25-t-4">
+<h3 class="slide-title">Atmosphere задаёт дальность видимости <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Atmosphere</b> (атмосфера) — объект внутри Lighting, он есть в плейсе с самого начала</li><li><b>Density</b> (плотность) — сколько частиц в воздухе: значение больше — даль тонет в дымке</li><li><b>Haze</b> (дымка) и <b>Color</b> задают густоту и цвет самой мглы</li><li>Дымка работает на расстоянии: в тесной комнате её почти не видно, а даль исчезает</li></ul>
+<p class="content-item content-paragraph">Пока Atmosphere лежит в Lighting, прежних свойств тумана в списке нет: настройка переехала в один объект.</p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вид из дверного проёма тёмной комнаты наружу — ближние камни различимы, дальний край площадки полностью растворился в дымке]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Разница с прошлым слайдом: фоновый свет решает, насколько темно, а Atmosphere — насколько далеко видно. Сразу честно оговорить границу приёма: дымка считается по расстоянию до камеры, поэтому внутри комнаты в сорок студов она едва заметна, а вот даль за проёмом съедает целиком. Видимость «на три шага» внутри комнаты нам даёт не дымка, а темнота и радиус факела. Числа для ориентира: заводское значение Density 0.395, в официальных примерах встречаются 0.272 и 0.375; для нашей сцены рабочее значение 0.8 — дымка заметна и уже довольно плотная, но не съедает всё подряд.</aside>
+</div>
+<div class="slide" id="25-t-5">
+<h3 class="slide-title">Два источника света: PointLight и SpotLight <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>PointLight</b> (точечный свет) — светит шаром во все стороны: факел, лампа, костёр</li><li><b>SpotLight</b> (направленный свет) — светит конусом: Face задаёт грань, Angle — угол</li><li>Общие настройки обоих: Color, Brightness и Range — радиус освещения в студах</li><li>Shadows включает тени, но видны они только при LightingStyle = Realistic</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer внутри детали-факела лежит PointLight, в Properties выделены Brightness, Color, Range и Shadows]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Показать вживую, как свет вставляется внутрь детали: выделяем деталь, + → PointLight. Числа из официальных примеров Roblox, их можно называть как точку отсчёта: костёр — Brightness 2, Range 48, цвет 255, 179, 73; свеча — Brightness 0.7; настольная лампа — SpotLight с Angle 140 и Range 12. Про LightingStyle сказать отдельно: это свойство самой службы Lighting, одно на всю игру, и при значении Soft теней от факела не будет вообще.</aside>
+</div>
+<div class="slide" id="25-t-6">
+<h3 class="slide-title">Свет ведёт игрока <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>В темноте игрок идёт туда, где светлее: другого ориентира у него нет</li><li>Одно яркое пятно — это направление, два одинаковых — это развилка</li><li>Тёмный тупик читается как «сюда не надо» и экономит игроку время</li><li>За освещённым поворотом можно спрятать и полезный предмет, и опасность</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: тёмный коридор, единственное освещённое пятно — дверной проём в дальнем конце, стены по бокам тонут в темноте]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Связать с уроками 11, 15 и 24: там игрока вели ориентир, ширина дорожки и маяк — в темноте тот же приём работает сильнее всего, потому что других ориентиров просто не остаётся. Спросить группу: если в комнате два одинаково ярких пятна, куда пойдёт игрок? Правильный ответ — наугад, и это ошибка разработчика.</aside>
+</div>
+<div class="slide" id="25-t-7">
+<h3 class="slide-title">Почему от первого лица <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Обзор третьего лица шире: видно и персонажа, и то, что происходит вокруг него</li><li>Обзор от первого лица — угол зрения самого персонажа, около 70 градусов</li><li>Всё, что вне этого угла, для игрока не существует, пока он не повернётся</li><li>Меньше информации у игрока — больше тревоги: что позади, узнаешь, только обернувшись</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Объяснить коротко: обзор третьего лица физически шире — камера за спиной показывает и персонажа, и то, что происходит вокруг него, включая то, что позади. Обзор от первого лица — это угол зрения самого персонажа, около 70 градусов, и всё, что вне этого конуса, для игрока просто не существует, пока он не повернётся. В обычной игре это было бы неудобством, а в тёмной комнате — приём: меньше информации у игрока означает больше тревоги.</aside>
+</div>
+<div class="slide" id="25-t-8">
+<h3 class="slide-title">Граница страха: страшно, но не жутко <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>При публикации Roblox спрашивает о страшном содержимом — это опрос Questionnaire</li><li>Мягкий уровень — темнота, тревожный звук, ожидание, неожиданный испуг: доступ с 9 лет</li><li>Умеренный уровень — реалистичная кровь и раны: доступ только с 16 лет</li><li>Наша граница — темнота и звук</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Полторы минуты, разговор про ответственность автора. Опрос о содержимом группа уже проходила в домашнем задании прошлого урока — здесь та же анкета, только раздел про страшное. Главный аргумент не «так нельзя», а простой расчёт: перешагнули границу — и Roblox поднимет возрастной доступ до шестнадцати лет. Спросить, чем пугает хорошая страшная игра: ожиданием, звуком и темнотой, а не показом крови.</aside>
+</div>
+<div class="slide" id="25-t-9">
+<h3 class="slide-title">Частые ошибки со светом <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Изменили только ClockTime — фоновый свет остался светлым, и ночи не получилось</li><li>Сделали абсолютную темноту — идти некуда, играть невозможно</li><li>Поставили свет внутрь незакреплённой детали — факел падает вместе со светом</li><li>Ждали тени от факела, а LightingStyle остался на Soft</li><li>Поставили десяток ярких источников света подряд — темнота исчезла вместе с приёмом</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Первую ошибку показать вживую — она же самая частая: ClockTime 0 при светлом фоновом свете. Третью проговорить как правило: свет живёт внутри детали, и незакреплённая деталь уносит его с собой. Пятую свести к счёту: в сегодняшней комнате ярких точек ровно две, и это не случайность.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="25-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Поставили ночь, а в комнате всё видно. Что осталось нетронутым?</p><ol class="content-item content-quiz-options"><li>Range у факела</li><li data-correct="true">Ambient и OutdoorAmbient ✓</li><li>Density у Atmosphere</li></ol>
+<p class="content-item content-question">Факел горит, а тени от него нет. Что проверяем?</p><ol class="content-item content-quiz-options"><li>Цвет света у факела</li><li>Значение Range</li><li data-correct="true">Значение LightingStyle ✓</li></ol>
+<p class="content-item content-question">Какое место в твоей будущей игре ты оставишь тёмным нарочно и зачем?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про две самые частые поломки сегодняшней практики, их стоит разобрать до перерыва. Третий открытый: попросить двух-трёх участников назвать место, которое они оставят тёмным нарочно, и объяснить зачем — это заготовка к лабиринту следующего занятия.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="25-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Отдыхаем пять минут. После перерыва собираем комнату и гасим в ней свет.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва у каждого должен быть открыт новый пустой плейс Baseplate: с него начинается седьмая игра курса.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем комнату страха <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="25-p-1">
+<h3 class="slide-title">Шаг 1: комната для опытов <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой новый пустой плейс Baseplate — с него начинается седьмая игра курса</li><li>Собери вокруг стартовой площадки пол и четыре закреплённые стены, потолок не нужен</li><li>В одной стене оставь проём — будущий выход</li><li>Test → при дневном ClockTime 14 в комнате видно все четыре угла</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: комната из пола и четырёх каменных стен с проёмом, вид сверху под углом, в центре стартовая площадка]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, и это единственная стройка за занятие. Комната ставится вокруг стартовой площадки, иначе Test будет начинаться снаружи сцены; если SpawnLocation в плейсе не нашлась — + у Workspace → SpawnLocation. Потолок сегодня не нужен: сверху удобнее работать камерой, а фоновый свет неба понадобится для опыта на шаге 2. Ориентир по размеру: пол примерно 40 × 40 студов, стены высотой 15 студов, проём шириной 6 студов. Все детали закрепить, иначе стены разъедутся при первом запуске. Обязательный минимум занятия — комната, темнота, один факел, свет у выхода и взгляд от первого лица (это одна минута через Properties); всё остальное можно доделать дома.</aside>
+</div>
+<div class="slide" id="25-p-2">
+<h3 class="slide-title">Шаг 2: гасим свет <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>В Lighting задай ClockTime 0 и убедись, что комната всё ещё просматривается</li><li>Затемни Ambient до 15, 15, 15, OutdoorAmbient до 10, 10, 10, Brightness до 0.2</li><li>Проверь LightingStyle: он должен стоять на Realistic</li><li>Test → встань в дальнем углу: противоположной стены уже не видно</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, самый показательный шаг занятия. Порядок пунктов важен: сначала ClockTime, чтобы каждый своими глазами увидел, что ночь сама по себе темноты не даёт, и только потом фоновый свет. Ориентиры значений: Ambient 15, 15, 15, OutdoorAmbient 10, 10, 10, Brightness 0.2 — не чёрный экран, а тёмная комната, где угадываются очертания. Если после этого пол всё равно светлый — это луна: убавляем Brightness дальше. LightingStyle лежит в Properties самой службы Lighting; при значении Soft шаг 4 не даст теней, поэтому проверяем его сейчас, а не потом.</aside>
+</div>
+<div class="slide" id="25-p-3">
+<h3 class="slide-title">Шаг 3: дымка <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Найди внутри Lighting готовый объект Atmosphere и выдели его</li><li>Подними Density до 0.8</li><li>Задай Haze 0.7, Color 10, 10, 10 (тёмно-серый) и Offset 0.25</li><li>Test → выгляни в проём наружу: дальнего края площадки уже не видно</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Atmosphere лежит внутри Lighting с самого начала — его не создают, а выделяют и правят; если объекта в плейсе всё же не оказалось, его добавляют кнопкой + у службы Lighting. Проверку делаем через проём наружу — это важно: внутри комнаты дымка почти не читается, она набирает силу с расстоянием. Рабочее значение 0.8 — дымка чувствуется и заметно гуще, но не превращает даль в чёрную стену. Цвет дымки берём тёмный и приглушённый: яркий превращает ночь в цветной туман.</aside>
+</div>
+<div class="slide" id="25-p-4">
+<h3 class="slide-title">Шаг 4: факел на стене <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь у стены закреплённую деталь-рукоять, внутрь неё добавь PointLight</li><li>Задай Color 255, 179, 73, Brightness 2, Range 18 и включи Shadows</li><li>В ту же деталь добавь Fire — на рукояти загорится пламя</li><li>Test → обойди факел кругом: на полу круг света, на стене тень</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: горящий факел на стене тёмной комнаты, тёплый круг света на полу вокруг персонажа]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, самый заметный результат занятия. Порядок такой: деталь → + → PointLight → свойства → + → Fire. Числа взяты из официального примера костра и подходят для комнаты: цвет 255, 179, 73, Brightness 2, Range 18. Shadows включается у самого PointLight, а не у детали. Частая поломка: свет вставили в деталь, а деталь не закрепили — при запуске факел падает. Если тени так и не появились, LightingStyle остался на Soft.</aside>
+</div>
+<div class="slide" id="25-p-5">
+<h3 class="slide-title">Шаг 5: свет у выхода <span class="slide-duration">(2 мин)</span></h3>
+<ol class="content-item content-steps"><li>Над проёмом, у самого верхнего края (не у потолка), поставь закреплённую деталь, внутрь неё добавь SpotLight</li><li>Задай Face Bottom, Angle 140, Range 24 и Brightness 4</li><li>Проверь счёт: ярких точек в комнате ровно две — факел и выход</li><li>Test → из дальнего угла посмотри на проём: понятно, куда идти</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Здесь свет из украшения превращается в подсказку: выход должен читаться из любой точки комнаты. Числа: Angle 140, Range 24, Brightness 4 — Range взят с запасом от официального примера настольной лампы (там 12), чтобы свет уверенно доставал до пола с любой разумной высоты крепления. Деталь всё равно крепится сразу над верхним краем проёма, а не под потолком: так свет ложится на порог, а не теряется в стороне. Face Bottom — свет выходит из нижней грани детали, то есть вниз, на проём; если деталь повёрнута, грань подбирают на глаз по результату. Счёт ярких точек проговорить вслух: их ровно две, факел и выход, и именно поэтому выход заметен.</aside>
+</div>
+<div class="slide" id="25-p-6">
+<h3 class="slide-title">Шаг 6: взгляд от первого лица <span class="slide-duration">(1 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой StarterPlayer, в Properties найди CameraMode</li><li>Поставь LockFirstPerson вместо Classic</li><li>Test → камера сразу на уровне глаз, вид со стороны исчез</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен StarterPlayer, в Properties подсвечено свойство CameraMode со значением LockFirstPerson]</p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Свойство лежит в самом StarterPlayer, скрипт не нужен: CameraMode на LockFirstPerson — и обзора со стороны больше нет ни у кого. Опция общая на всю игру, точечно одному персонажу её не выключить. Проверка быстрая: Test, глаза сразу на уровне персонажа, вида через плечо больше нет.</aside>
+</div>
+<div class="slide" id="25-p-7">
+<h3 class="slide-title">Шаг 7: день и ночь рядом <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Переключи ClockTime на 14 и пройди комнату — это дневная версия сцены</li><li>Верни ClockTime на 0, пройди ещё раз и назови, что изменилось</li><li>Проверь границу: видно на три шага, а крови и ран в сцене нет</li><li>Сохрани проект: File → Publish to Roblox — комната нужна на уроке 26</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: персонаж стоит в тёмной комнате у горящего факела, впереди светится проём выхода под направленным светом, дальние углы тонут в дымке]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, финал маршрута. Сравнение делаем одним свойством: ClockTime 14 и обратно 0, остальное не трогаем — тогда разница видна честно. Две границы проверяем вслух: видно на три шага (иначе комната непроходима) и в сцене нет ни крови, ни ран — только темнота, свет и тени. Публикация сегодня первая для этого плейса: File → Publish to Roblox откроет окно создания игры, где нужно задать имя, — дальше это будет обновление. Комната нужна на уроке 26: лабиринт вырастет прямо из неё.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="25-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Факел освещает только пятно у самой стены. Что увеличиваем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Range у PointLight ✓</li><li>ClockTime</li><li>Density у Atmosphere</li></ol>
+<p class="content-item content-question">В комнате три одинаково ярких пятна. Чем это плохо?</p><ol class="content-item content-quiz-options"><li>Игра станет ярче нужного</li><li data-correct="true">Игрок не поймёт, куда идти ✓</li><li>Тени станут мягкими</li></ol>
+<p class="content-item content-question">Что в твоей комнате пугает сильнее — тёмный участок или тень на стене? Объясни почему.</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про то, что группа сегодня видела на своих проектах. Третий открытый: он готовит домашнее задание, где к темноте добавится звук. Ожидаемый ответ на третий — чаще называют тень: движущаяся тень читается как чужое присутствие, а просто тёмный угол пугает только ожиданием.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="25-c-1">
+<h3 class="slide-title">Комната получила настроение <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы не добавили в комнату ни одной новой стены, а сцена стала другой: те же пять деталей днём выглядят пустой коробкой, а ночью — местом, куда страшновато заходить.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Дальше — лабиринт: тупики, петли, развилки и ориентиры внутри</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Итог урока одной фразой: мы не построили сегодня почти ничего, а сцена изменилась полностью — значит, свет и правда инструмент. Анонс урока 26: комната станет входом в лабиринт, и появится вторая сложность — не потеряться в темноте.</aside>
+</div>
+<div class="slide" id="25-c-2">
+<h3 class="slide-title">Домашнее задание: добавить звук и второй факел <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Добавь тревожный звук: Sound внутри детали у выхода, Playing и Looped</li><li>Поставь второй факел так, чтобы между ним и первым остался тёмный участок</li><li>Пройди комнату и заметь, где стало страшнее, а где просто ничего не видно</li><li>Если играть стало невозможно — убавь Density у Atmosphere</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Про второй факел сказать главное: важен не он сам, а тёмный участок между ним и первым — именно этот промежуток делает проход тревожным. Звук берём в Toolbox, вкладка Audio: подойдёт любой короткий фоновый шум. В режиме редактирования звука не слышно, проверяем только в Test. Последний пункт — страховка: если после домашних правок комната перестала проходиться, дымки стало слишком много.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/environment/lighting.md">Global lighting — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Lighting.md">Lighting — API Reference</a></li><li><a href="https://create.roblox.com/docs/en-us/environment/atmosphere.md">Atmospheric effects — Roblox Creator Hub</a></li><li><a href="https://robloxapi.github.io/ref/class/Atmosphere.html">Atmosphere — Roblox API Reference</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/light-sources.md">Light sources — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/use-case-tutorials/lighting/enhance-indoor-environments.md">Enhance indoor environments — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/use-case-tutorials/lighting/enhance-outdoor-environments.md">Enhance outdoor environments — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/customize-global-lighting.md">Customize global lighting — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/promotion/content-maturity.md">Content maturity and compliance — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/let-there-be-unified-light-unified-lighting-is-fully-live/3401512">Unified Lighting is Fully Live — Roblox DevForum</a></li><li><a href="https://devforum.roblox.com/t/extended-light-ranges-doubling-the-limit-to-120/3954367">Extended Light Ranges: Doubling the Limit to 120 — Roblox DevForum</a></li><li><a href="https://www.youtube.com/watch?v=q9E_3lw0x0w">How to Make a PITCH BLACK ROOM in Roblox Studio</a></li><li><a href="https://www.youtube.com/watch?v=iUAgwO11t88">How to Make HORROR LIGHTING | Roblox Studio</a></li></ul></section>
+</article>
+</body>
+</html>
