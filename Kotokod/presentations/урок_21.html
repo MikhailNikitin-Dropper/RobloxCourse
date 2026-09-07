@@ -252,7 +252,7 @@ a:hover{color:#50DCFE}
 <div class="content-wrap">
   <h2 class="head">Сегодня ты — <span class="role-chip">Physics Explorer</span></h2>
   <div class="head-rule"></div>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--blue"><p class="welcome-card-text">Двадцать уроков всё, что мы строили, стояло на месте: ездили только машины на готовом шасси. Сегодня снимем закрепление — и окружение становится интерактивной частью игры, а не просто декорациями.</p></div><div class="welcome-card welcome-card--cyan"><p class="welcome-card-text"><b>Physics Explorer</b> (физик-испытатель) — это тот, кто проверяет мир опытом: предсказывает, запускает и превращает результат в испытание для игрока.</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--blue"><p class="welcome-card-text">Двадцать уроков всё, что мы строили, стояло на месте: ездили только машины на готовом шасси. Сегодня снимем закрепление — и окружение становится интерактивной частью игры, а не просто декорациями.</p></div><div class="welcome-card welcome-card--cyan"><p class="welcome-card-text"><b>Physics Explorer</b> (физик-испытатель) проверяет мир опытом: предсказывает, запускает и превращает результат в испытание для игрока.</p></div></div>
 </div></section><section class="slide s-light s-qa">
 <div class="qa-strip"></div>
 <div class="qa-main">
@@ -709,7 +709,17 @@ function shrinkEl(el){
   if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
   var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
   el.style.fontSize='';
-  while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  if(el.scrollHeight>el.clientHeight+1){
+    while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  }else{
+    /* разреженный слайд: подращиваем кегль, пока не подойдём к нижнему краю
+       (потолок 1.25 базового — чтобы кегль не расходился сильно между слайдами) */
+    while(k<1.249&&guard<10){
+      var nk=k+0.05;el.style.fontSize=(base*nk)+'px';
+      if(el.scrollHeight>el.clientHeight+1){el.style.fontSize=(base*k)+'px';break;}
+      k=nk;guard++;
+    }
+  }
 }
 /* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
    наружу — после раскладки чип задвигается внутрь картинки (margin поверх

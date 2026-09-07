@@ -234,7 +234,7 @@ a:hover{color:var(--ek-violet-deep)}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Сегодня ты — <span class="role-chip">Maze Designer</span></h2>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Комната из прошлого урока получила настроение. Сегодня у неё появляется продолжение — коридоры, которые запутывают нарочно.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text"><b class="def">Maze Designer</b> (дизайнер лабиринта) — это тот, кто решает, где игрок свернёт не туда, а где — правильно.</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Комната из прошлого урока получила настроение. Сегодня у неё появляется продолжение — коридоры, которые запутывают нарочно.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text"><b class="def">Maze Designer</b> (дизайнер лабиринта) решает, где игрок свернёт не туда, а где — правильно.</p></div></div>
 </div>
 <div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
   <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -630,7 +630,7 @@ a:hover{color:var(--ek-violet-deep)}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Лабиринт вырос из одной комнаты</h2>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Один сегмент коридора, скопированный много раз по плану — и получился целый лабиринт с развилками, тупиком-приманкой и ориентирами, которые помогают не заблудиться навсегда.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Сохрани проект в конце занятия: File → Save to Roblox</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Дальше — монстр: Rig Builder, свой облик и анимации ходьбы и атаки</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Один сегмент коридора, скопированный много раз по плану — и получился целый лабиринт с развилками, тупиком-приманкой и ориентирами, которые помогают не заблудиться навсегда.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Сохрани проект в конце занятия: File → Save to Roblox</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Дальше — монстр: Rig Generator, свой облик и анимации ходьбы и атаки</p></div></div>
 </div>
 <div class="sl-pagenum">29</div></section><section class="slide slide--white"><div class="sl-orbit">
 <svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
@@ -727,7 +727,17 @@ function shrinkEl(el){
   if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
   var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
   el.style.fontSize='';
-  while(el.scrollHeight>el.clientHeight+1&&k>0.801&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  if(el.scrollHeight>el.clientHeight+1){
+    while(el.scrollHeight>el.clientHeight+1&&k>0.801&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  }else{
+    /* разреженный слайд: подращиваем кегль, пока не подойдём к нижнему краю
+       (потолок 1.25 базового — чтобы кегль не расходился сильно между слайдами) */
+    while(k<1.249&&guard<10){
+      var nk=k+0.05;el.style.fontSize=(base*nk)+'px';
+      if(el.scrollHeight>el.clientHeight+1){el.style.fontSize=(base*k)+'px';break;}
+      k=nk;guard++;
+    }
+  }
 }
 /* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
    наружу — после раскладки чип задвигается внутрь картинки (margin поверх

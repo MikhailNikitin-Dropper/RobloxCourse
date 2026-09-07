@@ -234,7 +234,7 @@ a:hover{color:var(--ek-violet-deep)}
 </div>
 <div class="content-wrap">
   <h2 class="sl-h2">Сегодня ты — <span class="role-chip">Physics Explorer</span></h2>
-  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Двадцать уроков всё, что мы строили, стояло на месте: ездили только машины на готовом шасси. Сегодня снимем закрепление — и окружение становится интерактивной частью игры, а не просто декорациями.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text"><b class="def">Physics Explorer</b> (физик-испытатель) — это тот, кто проверяет мир опытом: предсказывает, запускает и превращает результат в испытание для игрока.</p></div></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Двадцать уроков всё, что мы строили, стояло на месте: ездили только машины на готовом шасси. Сегодня снимем закрепление — и окружение становится интерактивной частью игры, а не просто декорациями.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text"><b class="def">Physics Explorer</b> (физик-испытатель) проверяет мир опытом: предсказывает, запускает и превращает результат в испытание для игрока.</p></div></div>
 </div>
 <div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
   <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -741,7 +741,17 @@ function shrinkEl(el){
   if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
   var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
   el.style.fontSize='';
-  while(el.scrollHeight>el.clientHeight+1&&k>0.801&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  if(el.scrollHeight>el.clientHeight+1){
+    while(el.scrollHeight>el.clientHeight+1&&k>0.801&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  }else{
+    /* разреженный слайд: подращиваем кегль, пока не подойдём к нижнему краю
+       (потолок 1.25 базового — чтобы кегль не расходился сильно между слайдами) */
+    while(k<1.249&&guard<10){
+      var nk=k+0.05;el.style.fontSize=(base*nk)+'px';
+      if(el.scrollHeight>el.clientHeight+1){el.style.fontSize=(base*k)+'px';break;}
+      k=nk;guard++;
+    }
+  }
 }
 /* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
    наружу — после раскладки чип задвигается внутрь картинки (margin поверх
