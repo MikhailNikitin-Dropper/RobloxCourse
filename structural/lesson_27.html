@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 27. Монстр и его анимации</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="27">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 27. Монстр и его анимации</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Character Animator</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="27-w-1">
+<h3 class="slide-title">Сегодня ты — Character Animator <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">У лабиринта наконец-то будет хозяин. Сегодня мы соберём его тело и научим его двигаться.</p>
+<p class="content-item content-paragraph"><b>Character Animator</b> (аниматор персонажа) собирает скелет персонажа и задаёт ему позы для ходьбы и атаки.</p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Коротко: сегодня в лабиринте появится живой обитатель — со своим обликом и собственными движениями.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="27-r-1">
+<h3 class="slide-title">Что мы узнали на уроке 26? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Между копиями модуля коридора нет щели. Почему?</p><ol class="content-item content-quiz-options"><li>Копии специально сдвинуты друг к другу вручную</li><li>Забыли объединить обе копии в одну Model</li><li data-correct="true">Длина модуля кратна шагу привязки Move ✓</li></ol>
+<p class="content-item content-question">Один тупик в лабиринте шире и ярче остальных развилок. Зачем?</p><ol class="content-item content-quiz-options"><li>Так короче путь до правильного выхода</li><li data-correct="true">Это приманка, которая манит не туда ✓</li><li>Здесь стоит точка возрождения</li></ol>
+<p class="content-item content-question">На предыдущем уроке вы решали, где в лабиринте лучше спрятать будущего монстра. Какое место выбрали вы — и почему именно там?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про лабиринт, третий возвращает группу к открытому вопросу прошлого занятия: где прячется монстр.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Скелет, облик и первое движение <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="27-t-1">
+<h3 class="slide-title">Что делаем сегодня <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Скелет монстра — заготовка с готовыми суставами</li><li>Свой облик — размер, цвет и самодельные детали</li><li>Движения — ClipEditor: зацикленная ходьба и разовая атака</li><li>Публикация — у каждой анимации появляется свой уникальный ID-номер</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Обзор всего пути: от голого скелета до готовых движений с номером, по которому игра найдёт анимацию.</aside>
+</div>
+<div class="slide" id="27-t-2">
+<h3 class="slide-title">Rig Generator: готовый скелет одной кнопкой <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Rig Generator</b> (генератор рига) — инструмент Studio, кнопка Character на вкладке Avatar</li><li>R15 — 15 подвижных частей тела, R6 — только 6: берём R15, движений больше</li><li>Результат — готовая Model с именем Rig: суставы уже расставлены и работают</li></ul>
+<p class="content-item content-image-prompt">[изображение: Панель Rig Generator открыта на вкладке Avatar, курсор наведён на кнопку Character; Explorer ещё без вставленного рига — панель показывает выбор стиля до создания]</p>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Кнопка Character стоит на вкладке Avatar (и на Home). Сразу выбрать R15 — про разницу с R6 сказать одной фразой: у R15 частей больше и движения разнообразнее, но одевать в слои можно только его.</aside>
+</div>
+<div class="slide" id="27-t-3">
+<h3 class="slide-title">Риг — это детали на подвижных суставах <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Риг</b> — это части, соединённые подвижными суставами</li><li>Каждый сустав знает две детали: какая стоит на месте и какая от неё поворачивается</li><li>ClipEditor умеет позировать любой риг — не только человекоподобный</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Термин риг вводим один раз и чётко: это не человечек, это принцип сборки — и он же лежит в основе колеса обозрения (мотор крутит вал) и машины (Motor крутит колесо), просто здесь суставов много и они складываются в целое тело. Название конкретного вида сустава на слайде не называем — у разных типов рига оно разное, а для урока это не важно.</aside>
+</div>
+<div class="slide" id="27-t-4">
+<h3 class="slide-title">Как добавить свою деталь, не разбирая риг <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Размер и материал любой части рига меняются в Properties без риска</li><li>Цвет тела — только через <b>BodyColors</b>: обычный Color в игре не отображается</li><li>Декоративную деталь (рог, шип, коготь) готовим отдельно от рига</li><li>Скрепляем через <b>WeldConstraint</b>: касание необязательно, порядок Part0/Part1 не важен</li><li>Деталей несколько — складываем в одну папку (<b>Decor</b>) внутри рига</li></ul>
+<p class="content-item content-image-prompt">[изображение: Explorer: папка Decor внутри рига с несколькими деталями декора, у каждой свой WeldConstraint; Properties одного WeldConstraint показывает Part0 и Part1]</p>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Ключевая идея: декор — ОТДЕЛЬНАЯ готовая деталь, а не переделка рига. Крепим её WeldConstraint — тогда исходная деталь рига остаётся собой, и сустав ничего не теряет; физически касаться друг друга деталям не обязательно, важны только Part0 и Part1, а какая деталь из них какая — роли не играет. Цвет — отдельная ловушка: обычный Color части в игре сбрасывается, красим только через BodyColors (уже знакомый приём — им же в уроке 6 красили Хранителя, если Tabby не ставился). Деталей декора несколько — сложи их в одну папку внутри рига, чтобы Explorer не превращался в кашу.</aside>
+</div>
+<div class="slide" id="27-t-5">
+<h3 class="slide-title">ClipEditor: поза за позой <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ClipEditor</b> (редактор анимаций) — вкладка Avatar, работает с выделенным ригом</li><li>Двигаешь бегунок на нужный момент, поворачиваешь или двигаешь часть тела — редактор сам ставит ключевой кадр</li><li>Между кадрами поза плавно перетекает в следующую — вручную прорисовывать каждый миг не нужно</li></ul>
+<p class="content-item content-image-prompt">[изображение: Окно ClipEditor: шкала времени с несколькими ключевыми кадрами, риг застыл в промежуточной позе шага]</p>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Открывается тоже со вкладки Avatar, но нужен выделенный риг. Механика: бегунок времени + поворот детали = готовый ключевой кадр, между кадрами редактор сам плавно доводит позу.</aside>
+</div>
+<div class="slide" id="27-t-6">
+<h3 class="slide-title">Цикл ходьбы и разовая атака — разная настройка <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Looping</b> (зацикливание) в панели воспроизведения — включаем для ходьбы, оставляем выключенным для атаки</li><li>Чтобы цикл не выглядел рваным на стыке начала и конца анимации, последний ключевой кадр делаем точной копией первого</li><li>Атака — короче: несколько кадров замаха и удара, без повтора</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Ключевая мысль: зацикленная и разовая анимация отличаются одной галочкой Looping плюс приёмом с дублированным кадром для гладкого цикла.</aside>
+</div>
+<div class="slide" id="27-t-7">
+<h3 class="slide-title">Публикация: у анимации появляется номер <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Publish to Roblox</b> (опубликовать в Roblox) — кнопка в панели ClipEditor</li><li>После публикации у анимации появляется свой числовой ID</li><li>Номер понадобится на следующем занятии: по нему готовый скрипт монстра найдёт нужную анимацию</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Публикация — тот же приём, что уже был с игрой (Publish to Roblox) и с моделями-модулями курса: жмём кнопку, вводим название, получаем номер ассета. Записываем номер — на следующем уроке готовый скрипт монстра найдёт анимацию именно по нему.</aside>
+</div>
+<div class="slide" id="27-t-8">
+<h3 class="slide-title">Частые ошибки <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Покрасили деталь через обычный Color — в редакторе видно, а после запуска игры цвет пропадает: тело красим только через BodyColors</li><li>У WeldConstraint не указали Part0 или Part1 — декор ни к чему не подключён и остаётся на месте, пока риг движется</li><li>Забыли включить Looping у ходьбы — анимация играет один раз и замирает</li><li>Не продублировали первый кадр в конец цикла — на стыке анимация ходьбы выглядит дёрганой</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Четыре конкретных ловушки, каждая — реальная причина «монстр не двигается», «монстр развалился» или «монстр вдруг стал серым».</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="27-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что делает риг ригом?</p><ol class="content-item content-quiz-options"><li>Человекоподобная форма тела</li><li data-correct="true">Части, соединённые подвижными суставами ✓</li><li>Наличие декоративных деталей на теле</li></ol>
+<p class="content-item content-question">Чем анимация ходьбы отличается по настройке от анимации атаки?</p><ol class="content-item content-quiz-options"><li data-correct="true">У ходьбы включён Looping ✓</li><li>У атаки больше ключевых кадров, чем у ходьбы</li><li>Атаку нельзя опубликовать, только ходьбу</li></ol>
+<p class="content-item content-question">Нужно ли декоративной детали физически касаться нужной части рига, чтобы WeldConstraint соединил их?</p><ol class="content-item content-quiz-options"><li>Да, иначе WeldConstraint не создастся</li><li>Да, но только если детали одного размера</li><li data-correct="true">Нет — важны только Part0 и Part1, расстояние значения не имеет ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Второй вопрос: дублирование первого кадра в конце — тоже часть гладкого цикла, отдельно от Looping. Третий закрепляет решение слайда 27-t-4: WeldConstraint не требует, чтобы детали касались друг друга.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="27-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут отдыха. После перерыва открой плейс лабиринта — сегодня в нём поселится хозяин.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва должен быть открыт плейс лабиринта из урока 26 — сразу приступаем к сборке монстра.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем и оживляем монстра <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="27-p-1">
+<h3 class="slide-title">Шаг 1: место для монстра <span class="slide-duration">(1.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой плейс лабиринта</li><li>Выбери развилку или комнату, где будет жить монстр — по итогам прошлого обсуждения</li><li>Запомни координаты места: сюда встанет риг</li></ol>
+<aside class="speaker-notes">Заметка ведущего: 1.5 минуты. Открываем плейс урока 26. Место выбираем вместе с обсуждённым на прошлом уроке ответом — развилка или тупик, который сегодня получит хозяина.</aside>
+</div>
+<div class="slide" id="27-p-2">
+<h3 class="slide-title">Шаг 2: вставляем риг <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Avatar → Character → выбери R15</li><li>Переименуй вставленную Model «Rig» → например, Monster</li><li>Перетащи модель на выбранное в шаге 1 место</li></ol>
+<p class="content-item content-image-prompt">[изображение: Explorer: Model Monster (бывший Rig) стоит на нужном месте лабиринта, дерево частей раскрыто]</p>
+<aside class="speaker-notes">Заметка ведущего: 3 минуты. Rig Generator → Character → R15. Риг встаёт у камеры, а не в лабиринте, — сразу переименовать Model из «Rig» во что-то узнаваемое, например Monster, и перетащить (или через Position) на выбранное место.</aside>
+</div>
+<div class="slide" id="27-p-3">
+<h3 class="slide-title">Шаг 3: свой облик <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Найди BodyColors у рига (или добавь: + → BodyColors) и задай цвета — HeadColor3, TorsoColor3, LeftArmColor3 и так далее</li><li>У отдельных частей поменяй Size или Material в Properties — по вкусу</li><li>Суставы не трогай — меняются только BodyColors и свойства самих частей</li></ol>
+<p class="content-item content-image-prompt">[изображение: Панель Properties объекта BodyColors: подсвечены поля HeadColor3, TorsoColor3, LeftArmColor3 с заданными цветами]</p>
+<aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Цвет — только через BodyColors (обычный Color части в игре сбрасывается); Size и Material можно менять прямо у частей в Properties. Суставы не трогаем — это самый безопасный слой правок.</aside>
+</div>
+<div class="slide" id="27-p-4">
+<h3 class="slide-title">Шаг 4: рога или шипы <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Возьми или создай небольшую декоративную деталь (рог, шип, коготь) — форму и размер настрой в Properties</li><li>Помести её рядом с нужной частью рига — вплотную необязательно</li><li>Добавь WeldConstraint (+ → WeldConstraint) и укажи в Properties Part0 и Part1 — часть рига и свою деталь, порядок не важен</li><li>Готовишь не одну деталь, а несколько — сложи их в отдельную папку (например, <b>Decor</b>) внутри рига</li></ol>
+<aside class="speaker-notes">Заметка ведущего: 3 минуты. Декор — отдельная готовая деталь, ригом её не трогаем: крепим WeldConstraint (Part0/Part1) к нужной части, физически касаться необязательно, порядок Part0/Part1 роли не играет. Суставы вообще не задеты — проверять нечего. Готовит не одну деталь, а сразу несколько (рог и коготь, например) — предложи сложить их в папку Decor внутри рига, Explorer не захламится. Кто уверенно пользуется Tabby с урока 6 и хочет более богатый образ, а не только рога/шипы, — можно вместо декоративной детали одеть рига нарядом из Tabby: инструмент уже установлен, разрешения даны на уроке 6, лишнего времени это не просит.</aside>
+</div>
+<div class="slide" id="27-p-5">
+<h3 class="slide-title">Шаг 5: анимация ходьбы <span class="slide-duration">(5.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Выдели ригу целиком, открой ClipEditor</li><li>Поставь 4–6 ключевых кадров на анимацию длиной около 1–1.5 секунды: нейтральная поза → шаг левой ногой → нейтральная → шаг правой ногой</li><li>Продублируй первый кадр и перенеси копию в конец шкалы — включи Looping</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея: ClipEditor с реальной анимацией «Monster Walk» в трёх позах ходьбы (нейтральная, шаг левой ногой, шаг правой ногой), кнопка Looping включена (подсвечена)]</p>
+<aside class="speaker-notes">Заметка ведущего: 5.5 минуты. ClipEditor → выделить риг → создать анимацию длиной около 1–1.5 секунды. 4–6 ключевых кадров: нейтральная поза, шаг левой ногой, снова нейтральная, шаг правой ногой — и в конце дублируем самый первый кадр. Это первая анимация в жизни группы — не торопить.</aside>
+</div>
+<div class="slide" id="27-p-6">
+<h3 class="slide-title">Шаг 6: атака, публикация, номер <span class="slide-duration">(4.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Создай вторую анимацию длиной около 0.5–0.8 секунды — замах и удар, без Looping</li><li>Опубликуй обе анимации (Publish to Roblox) — запиши номера</li><li>В Properties → Attributes добавь у Model монстра WalkAnimationId и AttackAnimationId со своими номерами</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея: 1) готовая анимация атаки с ключевыми кадрами в ClipEditor; 2) меню «…» с пунктом Publish to Roblox; 3) диалог Asset Configuration с названием анимации и кнопкой Save]</p>
+<aside class="speaker-notes">Заметка ведущего: 4.5 минуты. Вторая анимация — новый файл в ClipEditor, короче ходьбы (около 0.5–0.8 секунды), без Looping. После Publish обеих анимаций — записать номера в атрибуты монстра: WalkAnimationId и AttackAnimationId, Properties → Attributes → +.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="27-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Почему цвет тела монстра задавали через BodyColors, а не через Color самой детали?</p><ol class="content-item content-quiz-options"><li data-correct="true">Color в игре при запуске сбрасывается, а BodyColors сохраняется ✓</li><li>Color вообще нельзя менять у частей рига</li><li>BodyColors красит только голову, а Color — все остальные части</li></ol>
+<p class="content-item content-question">Почему для атаки не включили Looping?</p><ol class="content-item content-quiz-options"><li>Looping недоступен для коротких анимаций</li><li>Publish не пропускает зацикленные анимации</li><li data-correct="true">Атака должна сыграть один раз, а не повторяться по кругу ✓</li></ol>
+<p class="content-item content-question">На уроке 28 монстру дадут готовый скрипт, который читает атрибуты WalkAnimationId и AttackAnimationId. Как ты думаешь, в какой момент игры монстр должен переключаться с ходьбы на атаку?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два — про то, что группа только что делала руками. Третий открытый готовит урок 28: там появится готовый скрипт, который прочитает записанные сегодня атрибуты.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="27-c-1">
+<h3 class="slide-title">У лабиринта появился хозяин <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Сегодня лабиринт получил живого обитателя: свой облик, свою походку и свою атаку — записанные под собственными номерами.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Домашнее задание: добавь монстру ещё декоративных деталей — шипы, клыки, когти (удобно сложить их в папку Decor)</li><li>Урок 28: готовый скрипт монстра проиграет записанные анимации по их номерам — соберём весь ночной лабиринт в игру</li></ul>
+<aside class="speaker-notes">Заметка ведущего: 2 минуты. Итог: собрали риг, дали ему облик, оживили двумя анимациями и записали их номера — на следующем уроке эти номера оживут в готовом скрипте. Сохранить проект обязательно.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/reference/engine/classes/BodyColors">BodyColors — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/store/asset/14025724075/Tabby-Outfit-Marketplace-Importer-Loader">Tabby — Outfit &amp; Marketplace Importer &amp; Loader — Creator Store</a></li><li><a href="https://create.roblox.com/docs/studio/rig-builder">Rig Generator — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/animation/editor.md">Animation Editor (в актуальной Studio UI — ClipEditor) — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/WeldConstraint">WeldConstraint — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/Motor6D">Motor6D — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/how-do-i-have-the-animate-script-work-with-my-custom-monster-rig/1841516">How do I have the Animate script work with my custom monster rig? — DevForum</a></li></ul></section>
+</article>
+</body>
+</html>
