@@ -262,7 +262,7 @@ a:hover{color:#50DCFE}
 <div class="qa-strip"></div>
 <div class="qa-main">
   <h2 class="head">Что мы делали на уроке 10?</h2><div class="qa-counter">Вопрос 2 из 3</div>
-  <div class="qa-body fit"><div class="quiz"><div class="quiz-q">Почему опасные зоны мы красили в красный?</div><div class="quiz-options" role="group"><button type="button" class="quiz-opt" data-correct="true" data-expl="Верно! Игрок видит опасность с одного взгляда — каждая гибель остаётся честной."><span class="quiz-chip">А</span><span class="quiz-opt-text">Красное — общий цветовой код опасности, он читается без слов</span></button><button type="button" class="quiz-opt" data-correct="false" data-expl="Скользкость задаёт материал Ice, а не цвет."><span class="quiz-chip">Б</span><span class="quiz-opt-text">Красный цвет делает деталь скользкой</span></button><button type="button" class="quiz-opt" data-correct="false" data-expl="В Explorer детали ищут по именам — цвет там вообще не виден."><span class="quiz-chip">В</span><span class="quiz-opt-text">Красные детали легче найти в Explorer</span></button></div><div class="quiz-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="quiz-reset" disabled>Заново</button></div></div></div>
+  <div class="qa-body fit"><div class="quiz"><div class="quiz-q">Почему kill-блоки мы красили в красный?</div><div class="quiz-options" role="group"><button type="button" class="quiz-opt" data-correct="true" data-expl="Верно! Игрок видит опасность с одного взгляда — каждая гибель остаётся честной."><span class="quiz-chip">А</span><span class="quiz-opt-text">Красное — общий цветовой код опасности, он читается без слов</span></button><button type="button" class="quiz-opt" data-correct="false" data-expl="Скользкость задаёт материал Ice, а не цвет."><span class="quiz-chip">Б</span><span class="quiz-opt-text">Красный цвет делает деталь скользкой</span></button><button type="button" class="quiz-opt" data-correct="false" data-expl="В Explorer детали ищут по именам — цвет там вообще не виден."><span class="quiz-chip">В</span><span class="quiz-opt-text">Красные детали легче найти в Explorer</span></button></div><div class="quiz-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="quiz-reset" disabled>Заново</button></div></div></div>
 </div></section><section class="slide s-light s-qa">
 <div class="qa-strip"></div>
 <div class="qa-main">
@@ -673,7 +673,17 @@ function shrinkEl(el){
   if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
   var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
   el.style.fontSize='';
-  while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  if(el.scrollHeight>el.clientHeight+1){
+    while(el.scrollHeight>el.clientHeight+1&&k>0.45&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  }else{
+    /* разреженный слайд: подращиваем кегль, пока не подойдём к нижнему краю
+       (потолок 1.25 базового — чтобы кегль не расходился сильно между слайдами) */
+    while(k<1.249&&guard<10){
+      var nk=k+0.05;el.style.fontSize=(base*nk)+'px';
+      if(el.scrollHeight>el.clientHeight+1){el.style.fontSize=(base*k)+'px';break;}
+      k=nk;guard++;
+    }
+  }
 }
 /* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
    наружу — после раскладки чип задвигается внутрь картинки (margin поверх
