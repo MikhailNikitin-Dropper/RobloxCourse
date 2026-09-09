@@ -2,32 +2,41 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXB0CA0B3D70474895930EE97CC50DA835">
+	<Item class="Folder" referent="RBX8A8AECB70CCF43198287EF5DC133AAA0">
 		<Properties>
 			<string name="Name">ExitPortal</string>
 		</Properties>
-		<Item class="Script" referent="RBX7A72E67E63BF4E478190AFF11BB14F66">
+		<Item class="Script" referent="RBX90720CB2CF26488FB4AFE1BCAE9B15A0">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ExitPortal.PortalServer — выход из лабиринта, который открывает награда.
 --
--- КАК ПОЛЬЗОВАТЬСЯ: положить папку ExitPortal целиком внутрь модели портала
--- (той, где лежит деталь-полотно Gate) — и всё. Больше ничего расставлять не
--- нужно: модуль сам создаёт RemoteEvent в ReplicatedStorage и сам раздаёт
--- клиентскую часть игрокам.
+-- КАК ПОЛЬЗОВАТЬСЯ: положить папку ExitPortal целиком внутрь модели портала —
+-- и всё. Больше ничего расставлять не нужно: модуль сам создаёт RemoteEvent в
+-- ReplicatedStorage и сам раздаёт клиентскую часть игрокам.
 --
--- Что должно быть у модели портала: одна деталь-полотно. По умолчанию она
--- ищется по имени Gate; нет такой — модуль берёт самую крупную деталь модели
--- и пишет об этом в Output.
+-- ПРАВИЛО ПОРТАЛА — ОДНО, И ОНО НЕ МЕНЯЕТСЯ:
+--   собрал нужное число артефактов → портал светится → вошёл → ты снаружи.
+--   не собрал → портал тёмный → вошёл → ничего не происходит, на экране
+--   написано, сколько ещё нужно.
 --
--- НАСТРОЙКИ — атрибуты на самой модели портала (Properties → Attributes),
--- скрипт не трогаем:
+-- Полотно НИКОГДА не бывает стеной. Раньше закрытый портал был твёрдым, а
+-- открытый — нет, и это путало: игрок то упирался в портал, то проваливался
+-- сквозь, а в игре на двоих одна и та же деталь была твёрдой для одного и
+-- проходимой для другого (счёт-то у каждого свой). Теперь сквозь полотно
+-- проходят всегда, а разницу видно глазами: тёмное оно или светится.
+--
+-- НАСТРОЙКИ — атрибуты на САМОЙ ПАПКЕ ExitPortal (выделить папку в Explorer,
+-- Properties → Attributes). Заводить их руками не нужно, они уже в модуле:
 --   RequiredArtifacts  3            сколько артефактов открывают портал
---   CounterAttribute   "Artifacts"   имя атрибута игрока, где лежит счёт
---   GateName           "Gate"       имя детали-полотна внутри модели
---   TargetName         "VictoryPad" деталь, на которую портал переносит
---   OpenColor          Color3       цвет открытого полотна
---   ClosedColor        Color3       цвет закрытого полотна
+--   TargetName         "VictoryPad" деталь, на которую портал выносит
 --   CelebrateTime      5            сколько секунд идёт салют на площадке
+--   CounterAttribute   "Artifacts"  имя атрибута игрока, где лежит счёт
+--
+-- Всё остальное модуль решает сам: полотно — деталь по имени Gate, а если
+-- такой нет, самая крупная деталь модели; цвета закрытого и открытого
+-- портала фиксированы (закрытый остаётся таким, каким его покрасил ученик,
+-- открытый светится). Раньше и это были настройки — семь атрибутов на модели
+-- вместо четырёх понятных.
 --
 -- ДОГОВОР С МОДУЛЕМ АРТЕФАКТОВ (ArtifactCollector, урок 28): тот на каждую
 -- находку пишет игроку атрибут Artifacts — сколько собрано. Этот модуль только
@@ -56,6 +65,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local EVENT_NAME = "PortalState"
 local CLIENT_NAME = "PortalScreen"
+local GATE_NAME = "Gate"
 
 local package = script.Parent
 local portal = package.Parent
@@ -69,19 +79,33 @@ local function problem(text)
 end
 
 -- НАСТРОЙКИ -------------------------------------------------------------------
+-- Живут атрибутами на самой папке модуля: так их видно в Properties сразу
+-- после того, как папку положили в модель, и ученику не приходится заводить
+-- ни одного атрибута руками — только менять значения. Если папка пришла без
+-- атрибутов (например, файлом .rbxmx), модуль заводит их сам.
 
 local DEFAULTS = {
 	RequiredArtifacts = 3,
-	CounterAttribute = "Artifacts",
-	GateName = "Gate",
 	TargetName = "VictoryPad",
 	CelebrateTime = 5,
-	OpenColor = Color3.fromRGB(120, 220, 255),
-	ClosedColor = Color3.fromRGB(38, 40, 48),
+	CounterAttribute = "Artifacts",
 }
 
+local ORDER = { "RequiredArtifacts", "TargetName", "CelebrateTime", "CounterAttribute" }
+
+for _, name in ipairs(ORDER) do
+	if package:GetAttribute(name) == nil then
+		package:SetAttribute(name, DEFAULTS[name])
+	end
+end
+
+-- Значение берём с папки; на модели смотрим только ради старых сборок, где
+-- атрибуты стояли на самой модели портала.
 local function setting(name)
-	local value = portal:GetAttribute(name)
+	local value = package:GetAttribute(name)
+	if value == nil then
+		value = portal:GetAttribute(name)
+	end
 	if value == nil then
 		return DEFAULTS[name]
 	end
@@ -96,7 +120,7 @@ if not portal:IsA("Model") then
 end
 
 local function findGate()
-	local named = portal:FindFirstChild(setting("GateName"))
+	local named = portal:FindFirstChild(GATE_NAME)
 	if named and named:IsA("BasePart") then
 		return named
 	end
@@ -113,7 +137,7 @@ local function findGate()
 		end
 	end
 	if best then
-		problem("v modeli portala net detali s imenem '" .. tostring(setting("GateName")) ..
+		problem("v modeli portala net detali s imenem '" .. GATE_NAME ..
 			"' - beru samuyu bolshuyu: " .. best.Name)
 	end
 	return best
@@ -126,10 +150,10 @@ if not gate then
 end
 
 gate.Anchored = true
--- Полотно остаётся стеной: в закрытый портал упираешься, а не проходишь
--- сквозь него. Открытый портал уносит по касанию раньше, чем в него
--- успеваешь упереться.
-gate.CanCollide = true
+-- Сквозь полотно проходят всегда — и когда портал открыт, и когда закрыт.
+-- Одно правило вместо двух, и никакой разницы между игроками: твёрдость
+-- детали общая на всех, а счёт артефактов у каждого свой.
+gate.CanCollide = false
 gate.CanTouch = true
 
 -- ОБЩЕНИЕ С КЛИЕНТОМ ----------------------------------------------------------
@@ -193,8 +217,6 @@ local function tellClient(player)
 		open = have >= required,
 		have = have,
 		required = required,
-		openColor = setting("OpenColor"),
-		closedColor = setting("ClosedColor"),
 	})
 end
 
@@ -220,7 +242,7 @@ Players.PlayerAdded:Connect(function(player)
 	task.spawn(watch, player)
 end)
 
--- ПЕРЕНОС НА ПЛОЩАДКУ ПОБЕДЫ --------------------------------------------------
+-- ВЫХОД ИЗ ЛАБИРИНТА ----------------------------------------------------------
 
 local function findTarget()
 	local name = setting("TargetName")
@@ -325,10 +347,17 @@ gate.Touched:Connect(function(hit)
 	end
 
 	busy[player] = true
+	-- Экран гасим ДО переноса и зажигаем после: без этого игрока просто
+	-- дёргает через пол-лабиринта, и он не понимает, что произошло.
+	stateEvent:FireClient(player, { leaving = true })
+	task.wait(0.35)
+
 	local moved = sendHome(player, character)
 	if moved then
 		stateEvent:FireClient(player, { won = true })
 		report(player.Name .. " proshel portal")
+	else
+		stateEvent:FireClient(player, { won = false })
 	end
 	task.delay(3, function()
 		busy[player] = nil
@@ -349,18 +378,22 @@ end)
 task.delay(5, function()
 	local required = setting("RequiredArtifacts")
 	local artifacts = 0
-	for _, part in ipairs(CollectionService:GetTagged("Artifact")) do
-		if part:IsA("BasePart") and part:IsDescendantOf(workspace) then
+	for _, item in ipairs(CollectionService:GetTagged("Artifact")) do
+		if (item:IsA("BasePart") or item:IsA("Model")) and item:IsDescendantOf(workspace) then
 			artifacts = artifacts + 1
 		end
 	end
 	if artifacts == 0 then
-		problem("v pleise net ni odnoi detali s tegom Artifact - portal ne otkroetsya")
+		problem("v pleise net ni odnogo obekta s tegom Artifact - portal ne otkroetsya")
 	elseif artifacts < required then
 		problem("artefaktov v pleise " .. artifacts .. ", a portal trebuet " ..
 			required .. " - sobrat stolko nevozmozhno")
 	else
 		report("gotov: artefaktov " .. artifacts .. ", dlya vyhoda nuzhno " .. required)
+	end
+	if not findTarget() then
+		problem("net detali '" .. tostring(setting("TargetName")) ..
+			"' - vynosit budet na tochku vozrozhdeniya")
 	end
 end)
 ]]></ProtectedString>
@@ -369,10 +402,10 @@ end)
 				<string name="Name">PortalServer</string>
 			</Properties>
 		</Item>
-		<Item class="LocalScript" referent="RBXA919DEFDFBA84BEBBFFFA2FDE371F1D1">
+		<Item class="LocalScript" referent="RBXE21C5D5D0DFE43C38E893E5B965B97DD">
 			<Properties>
-				<ProtectedString name="Source"><![CDATA[-- ExitPortal.PortalScreen — экранная часть модуля портала: подсветка полотна
--- и подсказка, когда игрок подошёл близко.
+				<ProtectedString name="Source"><![CDATA[-- ExitPortal.PortalScreen — экранная часть модуля портала: подсветка полотна,
+-- подсказка вблизи и затемнение на время выхода.
 --
 -- ЛЕЖИТ В ПАПКЕ МОДУЛЯ ВЫКЛЮЧЕННОЙ (Disabled) и работает не оттуда: серверная
 -- часть копирует этот скрипт каждому игроку в PlayerGui и там включает.
@@ -383,15 +416,20 @@ end)
 -- Почему вид портала — здесь, а не на сервере: счёт артефактов у каждого
 -- игрока свой, значит и открыт портал у каждого свой. Цвет и свет полотна
 -- меняются только на своём экране (как модуль артефактов прячет собранный
--- артефакт только у нашедшего), а сам проход через портал разрешает сервер.
+-- артефакт только у нашедшего), а сам выход разрешает сервер.
+--
+-- ЗАТЕМНЕНИЕ. Выход — это перенос через весь лабиринт, и без затемнения он
+-- читается как сбой: игрока просто дёргает в другое место. Сервер шлёт
+-- leaving, экран гаснет, происходит перенос, приходит won — экран
+-- открывается уже снаружи, с надписью.
 --
 -- WaitForChild на верхнем уровне уводит в бесконечное ожидание всё, что ниже,
 -- поэтому ожидание события — внутри task.spawn, а само событие живёт в
 -- ReplicatedStorage: он реплицируется всегда и стримингом не выгружается.
 --
--- Панели собраны в манере самого Roblox: тёмная плашка со скруглением, шрифт
--- Builder Sans, белый заголовок и серая строка под ним — как в модуле
--- артефактов урока 24, чтобы два модуля не выглядели из разных игр.
+-- Панели собраны в манере самого Roblox: чёрная плашка на половину
+-- прозрачности, скругление 8, тонкая белая обводка, шрифт Builder Sans —
+-- как в модуле артефактов, чтобы два модуля не выглядели из разных игр.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -425,10 +463,11 @@ end
 local FONT_BOLD = fontOf({ "BuilderSansBold", "GothamBold" })
 local FONT_TEXT = fontOf({ "BuilderSansMedium", "GothamMedium", "Gotham" })
 
-local PANEL = Color3.fromRGB(25, 27, 31)
+local PANEL = Color3.fromRGB(0, 0, 0)
+local PANEL_TRANSPARENCY = 0.45
 local TEXT = Color3.fromRGB(255, 255, 255)
-local MUTED = Color3.fromRGB(178, 182, 190)
-local ACCENT = Color3.fromRGB(120, 220, 255)
+local MUTED = Color3.fromRGB(200, 203, 209)
+local OPEN_COLOR = Color3.fromRGB(120, 220, 255)
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "PortalGui"
@@ -436,91 +475,71 @@ gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- Подсказка у портала: узкая плашка внизу по центру.
-local hint = Instance.new("Frame")
-hint.Name = "Hint"
-hint.AnchorPoint = Vector2.new(0.5, 1)
-hint.Position = UDim2.new(0.5, 0, 1, -110)
-hint.Size = UDim2.fromOffset(320, 62)
-hint.BackgroundColor3 = PANEL
-hint.BackgroundTransparency = 0.15
-hint.Visible = false
-hint.Parent = gui
+local function corner(object, radius)
+	local item = Instance.new("UICorner")
+	item.CornerRadius = UDim.new(0, radius)
+	item.Parent = object
+end
 
-local hintCorner = Instance.new("UICorner")
-hintCorner.CornerRadius = UDim.new(0, 12)
-hintCorner.Parent = hint
+local function stroke(object)
+	local line = Instance.new("UIStroke")
+	line.Color = Color3.fromRGB(255, 255, 255)
+	line.Transparency = 0.88
+	line.Thickness = 1
+	line.Parent = object
+end
 
-local mark = Instance.new("Frame")
-mark.Name = "Mark"
-mark.Position = UDim2.fromOffset(0, 0)
-mark.Size = UDim2.new(0, 5, 1, 0)
-mark.BackgroundColor3 = ACCENT
-mark.BorderSizePixel = 0
-mark.Parent = hint
+local function panel(name, size, position)
+	local frame = Instance.new("Frame")
+	frame.Name = name
+	frame.AnchorPoint = Vector2.new(0.5, 0.5)
+	frame.Position = position
+	frame.Size = size
+	frame.BackgroundColor3 = PANEL
+	frame.BackgroundTransparency = PANEL_TRANSPARENCY
+	frame.BorderSizePixel = 0
+	frame.Visible = false
+	frame.Parent = gui
+	corner(frame, 8)
+	stroke(frame)
+	return frame
+end
 
-local markCorner = Instance.new("UICorner")
-markCorner.CornerRadius = UDim.new(0, 12)
-markCorner.Parent = mark
+local function line(parent, font, size, color, offsetY, height)
+	local label = Instance.new("TextLabel")
+	label.BackgroundTransparency = 1
+	label.Position = UDim2.new(0, 0, 0, offsetY)
+	label.Size = UDim2.new(1, 0, 0, height)
+	label.Font = font
+	label.TextColor3 = color
+	label.TextSize = size
+	label.Text = ""
+	label.Parent = parent
+	return label
+end
 
-local hintTitle = Instance.new("TextLabel")
-hintTitle.Name = "Title"
-hintTitle.BackgroundTransparency = 1
-hintTitle.Position = UDim2.fromOffset(20, 10)
-hintTitle.Size = UDim2.new(1, -32, 0, 24)
-hintTitle.Font = FONT_BOLD
-hintTitle.TextSize = 20
-hintTitle.TextColor3 = TEXT
-hintTitle.TextXAlignment = Enum.TextXAlignment.Left
-hintTitle.Text = ""
-hintTitle.Parent = hint
+-- Подсказка у портала
+local hint = panel("Hint", UDim2.new(0, 320, 0, 74), UDim2.new(0.5, 0, 1, -110))
+local hintTitle = line(hint, FONT_BOLD, 19, TEXT, 14, 24)
+local hintNote = line(hint, FONT_TEXT, 15, MUTED, 40, 22)
 
-local hintNote = Instance.new("TextLabel")
-hintNote.Name = "Note"
-hintNote.BackgroundTransparency = 1
-hintNote.Position = UDim2.fromOffset(20, 34)
-hintNote.Size = UDim2.new(1, -32, 0, 20)
-hintNote.Font = FONT_TEXT
-hintNote.TextSize = 16
-hintNote.TextColor3 = MUTED
-hintNote.TextXAlignment = Enum.TextXAlignment.Left
-hintNote.Text = ""
-hintNote.Parent = hint
+-- Поздравление после выхода
+local win = panel("Win", UDim2.new(0, 380, 0, 96), UDim2.new(0.5, 0, 0.4, 0))
+local winTitle = line(win, FONT_BOLD, 26, TEXT, 22, 32)
+local winNote = line(win, FONT_TEXT, 16, MUTED, 56, 22)
+winTitle.Text = "Ты выбрался"
+winNote.Text = "Лабиринт пройден — все артефакты у тебя"
 
--- Поздравление: широкая плашка по центру экрана.
-local win = Instance.new("Frame")
-win.Name = "Win"
-win.AnchorPoint = Vector2.new(0.5, 0.5)
-win.Position = UDim2.new(0.5, 0, 0.42, 0)
-win.Size = UDim2.fromOffset(420, 96)
-win.BackgroundColor3 = PANEL
-win.BackgroundTransparency = 0.1
-win.Visible = false
-win.Parent = gui
-
-local winCorner = Instance.new("UICorner")
-winCorner.CornerRadius = UDim.new(0, 16)
-winCorner.Parent = win
-
-local winTitle = Instance.new("TextLabel")
-winTitle.BackgroundTransparency = 1
-winTitle.Position = UDim2.fromOffset(0, 18)
-winTitle.Size = UDim2.new(1, 0, 0, 34)
-winTitle.Font = FONT_BOLD
-winTitle.TextSize = 30
-winTitle.TextColor3 = TEXT
-winTitle.Text = "Ты выбрался!"
-winTitle.Parent = win
-
-local winNote = Instance.new("TextLabel")
-winNote.BackgroundTransparency = 1
-winNote.Position = UDim2.fromOffset(0, 54)
-winNote.Size = UDim2.new(1, 0, 0, 24)
-winNote.Font = FONT_TEXT
-winNote.TextSize = 18
-winNote.TextColor3 = MUTED
-winNote.Text = "Артефакты собраны, лабиринт пройден"
-winNote.Parent = win
+-- Затемнение на время переноса
+local fade = Instance.new("Frame")
+fade.Name = "Fade"
+fade.Size = UDim2.new(1, 0, 1, 0)
+fade.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+fade.BackgroundTransparency = 1
+fade.BorderSizePixel = 0
+fade.Visible = false
+fade.ZIndex = 10
+fade.Parent = gui
 
 -- ВИД ПОЛОТНА -----------------------------------------------------------------
 
@@ -535,10 +554,13 @@ local function remember(part)
 	original = { part = part, color = part.Color, material = part.Material }
 end
 
-local function paint(part, open, openColor, closedColor)
+-- Открытый портал светится, закрытый выглядит ровно так, как его покрасил
+-- ученик. Цвета настройками больше не задаются: одна пара состояний вместо
+-- двух атрибутов, которые всё равно ставили в те же два цвета.
+local function paint(part, open)
 	remember(part)
 	if open then
-		part.Color = openColor or ACCENT
+		part.Color = OPEN_COLOR
 		part.Material = Enum.Material.Neon
 		if not glow or glow.Parent ~= part then
 			if glow then
@@ -546,16 +568,15 @@ local function paint(part, open, openColor, closedColor)
 			end
 			glow = Instance.new("PointLight")
 			glow.Name = "PortalGlow"
-			glow.Color = openColor or ACCENT
+			glow.Color = OPEN_COLOR
 			glow.Brightness = 2
 			glow.Range = 18
 			glow.Parent = part
 		else
-			glow.Color = openColor or ACCENT
 			glow.Enabled = true
 		end
 	else
-		part.Color = closedColor or original.color
+		part.Color = original.color
 		part.Material = original.material
 		if glow then
 			glow.Enabled = false
@@ -587,12 +608,10 @@ local function updateHint()
 	if state.open then
 		hintTitle.Text = "Портал открыт"
 		hintNote.Text = "Войди в свет — и ты снаружи"
-		mark.BackgroundColor3 = state.openColor or ACCENT
 	else
 		local left = math.max(0, (state.required or 0) - (state.have or 0))
 		hintTitle.Text = "Портал закрыт"
 		hintNote.Text = "Нужно ещё артефактов: " .. left
-		mark.BackgroundColor3 = Color3.fromRGB(200, 90, 90)
 	end
 	hint.Visible = true
 end
@@ -612,11 +631,28 @@ end)
 
 -- СОБЫТИЯ ОТ СЕРВЕРА ----------------------------------------------------------
 
-local function showWin()
+local function showLeaving()
 	hint.Visible = false
+	fade.Visible = true
+	fade.BackgroundTransparency = 1
+	TweenService:Create(fade, TweenInfo.new(0.3), { BackgroundTransparency = 0 }):Play()
+end
+
+local function showWin(moved)
+	-- Экран открывается уже снаружи: сначала гасим затемнение, потом надпись.
+	local lift = TweenService:Create(fade, TweenInfo.new(0.5), { BackgroundTransparency = 1 })
+	lift:Play()
+	lift.Completed:Connect(function()
+		fade.Visible = false
+	end)
+
+	if not moved then
+		return
+	end
+
 	win.Visible = true
 	win.BackgroundTransparency = 1
-	TweenService:Create(win, TweenInfo.new(0.25), { BackgroundTransparency = 0.1 }):Play()
+	TweenService:Create(win, TweenInfo.new(0.3), { BackgroundTransparency = PANEL_TRANSPARENCY }):Play()
 	task.delay(WIN_TIME, function()
 		win.Visible = false
 	end)
@@ -629,8 +665,12 @@ task.spawn(function()
 		if type(message) ~= "table" then
 			return
 		end
-		if message.won then
-			showWin()
+		if message.leaving then
+			showLeaving()
+			return
+		end
+		if message.won ~= nil then
+			showWin(message.won)
 			return
 		end
 
@@ -638,7 +678,7 @@ task.spawn(function()
 		local gate = message.gate
 		if gate and gate:IsA("BasePart") then
 			local ok, err = pcall(function()
-				paint(gate, message.open, message.openColor, message.closedColor)
+				paint(gate, message.open)
 			end)
 			if not ok then
 				warn("[ExitPortal] " .. tostring(err))

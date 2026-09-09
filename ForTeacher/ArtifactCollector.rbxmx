@@ -2,24 +2,26 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXAC8E79A8B91740E9B6F5401876F84470">
+	<Item class="Folder" referent="RBX698617C58135466AB88C62A9D72213E8">
 		<Properties>
 			<string name="Name">ArtifactCollector</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX6C0CCC65FED44F2899946A3C917A08D0">
+		<Item class="RemoteEvent" referent="RBX8BDD1C9C18CD4AAB95953BD1BDE86FA9">
 			<Properties>
 				<string name="Name">Collected</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX64089B405BD94FEBA6B24CA813E8E3EA">
+		<Item class="Script" referent="RBX387C265E50FE4A9E9AED394209EDA658">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — серверная часть, урок 28.
 --
 -- Что делает: считает артефакты, собранные игроком, и сообщает его экрану
 -- о каждой находке. Больше ничего: деталей не строит, мир не меняет.
 --
--- Артефакт — это ЛЮБАЯ закреплённая деталь с тегом Artifact. Внутри артефакта
--- может лежать StringValue — записка, её текст игрок увидит в момент находки.
+-- Артефакт — это ЛЮБАЯ закреплённая деталь с тегом Artifact ИЛИ целая модель
+-- с этим тегом: артефакт редко бывает одним кубиком, обычно это кристалл с
+-- подставкой и свечением. Внутри артефакта может лежать StringValue — записка,
+-- её текст игрок увидит в момент находки.
 --
 -- Счёт у каждого игрока свой: гость, зашедший в игру позже хозяина, собирает
 -- артефакты сам, чужие находки его счётчик не трогают. Число собранного
@@ -37,32 +39,37 @@ local collected = folder:WaitForChild("Collected")
 local taken = {} -- [Player] = { [деталь] = true }
 local count = {} -- [Player] = сколько артефактов собрано
 
+-- Артефактом считаем и деталь, и модель — лишь бы стояла в Workspace.
+local function isArtifact(item)
+	return (item:IsA("BasePart") or item:IsA("Model")) and item:IsDescendantOf(workspace)
+end
+
 local function total()
 	local n = 0
-	for _, part in ipairs(CollectionService:GetTagged(TAG)) do
-		if part:IsA("BasePart") and part:IsDescendantOf(workspace) then
+	for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+		if isArtifact(item) then
 			n = n + 1
 		end
 	end
 	return n
 end
 
-local function noteOf(part)
-	local value = part:FindFirstChildWhichIsA("StringValue")
+local function noteOf(item)
+	local value = item:FindFirstChildWhichIsA("StringValue", true)
 	return value and value.Value or ""
 end
 
-local function collect(player, part)
+local function collect(player, item)
 	local mine = taken[player]
-	if not mine or mine[part] then
+	if not mine or mine[item] then
 		return
 	end
-	mine[part] = true
+	mine[item] = true
 	count[player] = count[player] + 1
 	-- Атрибут игрока: по нему артефакты видит любой другой скрипт в игре —
 	-- портал-выход, финальная награда.
 	player:SetAttribute("Artifacts", count[player])
-	collected:FireClient(player, part, part.Name, noteOf(part), count[player], total())
+	collected:FireClient(player, item, item.Name, noteOf(item), count[player], total())
 end
 
 local function playerOf(hit)
@@ -74,22 +81,34 @@ local function playerOf(hit)
 	return Players:GetPlayerFromCharacter(character)
 end
 
-local function watch(part)
-	if not part:IsA("BasePart") then
+-- Ловим касание каждой детали артефакта, а засчитываем находку целиком:
+-- у модели-кристалла деталей несколько, а артефакт один.
+local function watch(item)
+	if not isArtifact(item) then
 		return
 	end
-	-- Артефакт — награда, а не стена: сквозь него проходят.
-	part.CanCollide = false
-	part.Touched:Connect(function(hit)
-		local player = playerOf(hit)
-		if player then
-			collect(player, part)
+	local pieces = item:IsA("BasePart") and { item } or {}
+	if item:IsA("Model") then
+		for _, child in ipairs(item:GetDescendants()) do
+			if child:IsA("BasePart") then
+				table.insert(pieces, child)
+			end
 		end
-	end)
+	end
+	for _, piece in ipairs(pieces) do
+		-- Артефакт — награда, а не стена: сквозь него проходят.
+		piece.CanCollide = false
+		piece.Touched:Connect(function(hit)
+			local player = playerOf(hit)
+			if player then
+				collect(player, item)
+			end
+		end)
+	end
 end
 
-for _, part in ipairs(CollectionService:GetTagged(TAG)) do
-	watch(part)
+for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+	watch(item)
 end
 CollectionService:GetInstanceAddedSignal(TAG):Connect(watch)
 
@@ -123,24 +142,35 @@ end
 				<string name="Name">ArtifactServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXCC397CDDCE9A4E8AB28EDBD620B8A3EE">
+		<Item class="Script" referent="RBX8AC6C880D010448A83E499ABFEF64FA5">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — экранная часть, урок 28.
 --
--- Что делает: рисует счётчик артефактов, показывает записку из найденного артефакта
--- и разыгрывает саму находку — артефакт подпрыгивает, закручивается, уменьшается
--- и улетает к игроку, растворяясь на лету.
+-- Что делает: показывает находку тем же уведомлением, которым Roblox
+-- показывает свои собственные («друг зашёл в игру», «получен значок»),
+-- держит счётчик артефактов вверху экрана и разыгрывает саму находку —
+-- артефакт подпрыгивает, закручивается, уменьшается и улетает к игроку.
 --
 -- Всё это происходит только на экране игрока: артефакт, который забрал один
 -- игрок, остальные по-прежнему видят на месте.
 --
--- Панели собраны в манере самого Roblox: тёмная плашка со скруглением, шрифт
--- Builder Sans, белый заголовок и серая строка под ним. Ни обводок, ни рамок:
--- в интерфейсе Roblox их нет, а на тёмном фоне лабиринта они выглядят наклейкой.
+-- ПОЧЕМУ УВЕДОМЛЕНИЕ РОДНОЕ, А НЕ СВОЁ. StarterGui:SetCore("SendNotification")
+-- рисует настоящую панель Roblox — ту же, что и системные сообщения игры.
+-- Своя панель, как её ни крась, выглядит наклейкой поверх чужого интерфейса;
+-- родная сама встаёт на нужное место, сама держит стиль и сама выстраивает
+-- очередь, если находок сразу несколько. Если вызов почему-то не сработал
+-- (старая сборка клиента), включается запасная плашка — собранная в той же
+-- манере: чёрный полупрозрачный прямоугольник со скруглением 8 и шрифтом
+-- Builder Sans, как панели Roblox.
+--
+-- Артефактом может быть и одна деталь, и целая модель (кристалл с подставкой
+-- и свечением) — модуль работает с обоими: у модели двигается пивот, у детали
+-- CFrame.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
 local TweenService = game:GetService("TweenService")
 
 local TAG = "Artifact"
@@ -173,15 +203,16 @@ end
 local FONT_BOLD = fontOf({ "BuilderSansBold", "GothamBold" })
 local FONT_TEXT = fontOf({ "BuilderSansMedium", "GothamMedium", "Gotham" })
 
-local PANEL = Color3.fromRGB(25, 27, 31)
+-- Числа взяты с собственных панелей Roblox: чёрный фон на половину
+-- прозрачности, скругление 8, тонкая белая обводка почти в ноль видимости.
+local PANEL = Color3.fromRGB(0, 0, 0)
+local PANEL_TRANSPARENCY = 0.45
 local TEXT = Color3.fromRGB(255, 255, 255)
-local MUTED = Color3.fromRGB(178, 182, 190)
--- Текст записки светлее приглушённого: её читают, а не просматривают
-local NOTE = Color3.fromRGB(232, 235, 240)
+local MUTED = Color3.fromRGB(200, 203, 209)
 local ACCENT = Color3.fromRGB(120, 220, 255)
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "TicketGui"
+gui.Name = "ArtifactGui"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = player:WaitForChild("PlayerGui")
@@ -190,28 +221,35 @@ local function corner(object, radius)
 	local item = Instance.new("UICorner")
 	item.CornerRadius = UDim.new(0, radius)
 	item.Parent = object
-	return item
 end
 
--- Счётчик: тёмная плашка вверху по центру, слово серым, число белым.
--- Раскладка задана вручную: UIListLayout выстроил бы в тот же ряд и полоску
--- прогресса — она ребёнок той же плашки.
+local function stroke(object)
+	local line = Instance.new("UIStroke")
+	line.Color = Color3.fromRGB(255, 255, 255)
+	line.Transparency = 0.88
+	line.Thickness = 1
+	line.Parent = object
+end
+
+-- СЧЁТЧИК. Своего счётчика у Roblox нет, поэтому рисуем сами — но ровно в том
+-- же виде, что его панели: тёмная плашка, серая подпись, белое число.
 local counter = Instance.new("Frame")
 counter.Name = "Counter"
 counter.AnchorPoint = Vector2.new(0.5, 0)
-counter.Position = UDim2.new(0.5, 0, 0, 12)
-counter.Size = UDim2.new(0, 176, 0, 44)
+counter.Position = UDim2.new(0.5, 0, 0, 10)
+counter.Size = UDim2.new(0, 168, 0, 40)
 counter.BackgroundColor3 = PANEL
-counter.BackgroundTransparency = 0.15
+counter.BackgroundTransparency = PANEL_TRANSPARENCY
 counter.BorderSizePixel = 0
 counter.Parent = gui
-corner(counter, 10)
+corner(counter, 8)
+stroke(counter)
 
 local counterName = Instance.new("TextLabel")
 counterName.Name = "Label"
 counterName.BackgroundTransparency = 1
 counterName.Position = UDim2.new(0, 14, 0, 0)
-counterName.Size = UDim2.new(0, 60, 0, 34)
+counterName.Size = UDim2.new(0, 70, 0, 32)
 counterName.Font = FONT_TEXT
 counterName.TextColor3 = MUTED
 counterName.TextSize = 15
@@ -224,22 +262,21 @@ counterValue.Name = "Value"
 counterValue.AnchorPoint = Vector2.new(1, 0)
 counterValue.BackgroundTransparency = 1
 counterValue.Position = UDim2.new(1, -14, 0, 0)
-counterValue.Size = UDim2.new(0, 74, 0, 34)
+counterValue.Size = UDim2.new(0, 70, 0, 32)
 counterValue.Font = FONT_BOLD
 counterValue.TextColor3 = TEXT
-counterValue.TextSize = 20
+counterValue.TextSize = 19
 counterValue.TextXAlignment = Enum.TextXAlignment.Right
 counterValue.Text = "0 / 0"
 counterValue.Parent = counter
 
--- Полоска прогресса по нижнему краю плашки — как в панелях Roblox
 local track = Instance.new("Frame")
 track.Name = "Track"
 track.AnchorPoint = Vector2.new(0.5, 1)
-track.Position = UDim2.new(0.5, 0, 1, -8)
+track.Position = UDim2.new(0.5, 0, 1, -7)
 track.Size = UDim2.new(1, -28, 0, 3)
-track.BackgroundColor3 = Color3.fromRGB(60, 64, 72)
-track.BackgroundTransparency = 0.2
+track.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+track.BackgroundTransparency = 0.75
 track.BorderSizePixel = 0
 track.Parent = counter
 corner(track, 2)
@@ -252,134 +289,74 @@ fill.BorderSizePixel = 0
 fill.Parent = track
 corner(fill, 2)
 
--- Уведомление о находке: тёмная карточка снизу по центру
+-- ЗАПАСНАЯ ПЛАШКА. Нужна, только если родное уведомление не отозвалось.
 local toast = Instance.new("Frame")
-toast.Name = "Note"
-toast.AnchorPoint = Vector2.new(0.5, 1)
-toast.Position = UDim2.new(0.5, 0, 1, -48)
-toast.Size = UDim2.new(0, 420, 0, 96)
+toast.Name = "Fallback"
+toast.AnchorPoint = Vector2.new(1, 1)
+toast.Position = UDim2.new(1, -16, 1, -16)
+toast.Size = UDim2.new(0, 300, 0, 84)
 toast.BackgroundColor3 = PANEL
-toast.BackgroundTransparency = 1
+toast.BackgroundTransparency = PANEL_TRANSPARENCY
 toast.BorderSizePixel = 0
 toast.Visible = false
 toast.Parent = gui
-corner(toast, 10)
-
--- Полоска слева вместо значка: у Roblox уведомление тоже начинается с метки
-local mark = Instance.new("Frame")
-mark.Name = "Mark"
-mark.AnchorPoint = Vector2.new(0, 0.5)
-mark.Position = UDim2.new(0, 14, 0.5, 0)
-mark.Size = UDim2.new(0, 3, 0, 60)
-mark.BackgroundColor3 = ACCENT
-mark.BackgroundTransparency = 1
-mark.BorderSizePixel = 0
-mark.Parent = toast
-corner(mark, 2)
+corner(toast, 8)
+stroke(toast)
 
 local toastTitle = Instance.new("TextLabel")
-toastTitle.Name = "Title"
 toastTitle.BackgroundTransparency = 1
-toastTitle.Position = UDim2.new(0, 28, 0, 12)
-toastTitle.Size = UDim2.new(1, -44, 0, 24)
+toastTitle.Position = UDim2.new(0, 14, 0, 10)
+toastTitle.Size = UDim2.new(1, -28, 0, 22)
 toastTitle.Font = FONT_BOLD
 toastTitle.TextColor3 = TEXT
-toastTitle.TextSize = 19
+toastTitle.TextSize = 17
 toastTitle.TextXAlignment = Enum.TextXAlignment.Left
 toastTitle.Text = ""
 toastTitle.Parent = toast
 
 local toastText = Instance.new("TextLabel")
-toastText.Name = "Text"
 toastText.BackgroundTransparency = 1
-toastText.Position = UDim2.new(0, 28, 0, 38)
-toastText.Size = UDim2.new(1, -44, 0, 48)
+toastText.Position = UDim2.new(0, 14, 0, 32)
+toastText.Size = UDim2.new(1, -28, 0, 42)
 toastText.Font = FONT_TEXT
-toastText.TextColor3 = NOTE
-toastText.TextSize = 18
+toastText.TextColor3 = MUTED
+toastText.TextSize = 15
 toastText.TextWrapped = true
 toastText.TextXAlignment = Enum.TextXAlignment.Left
 toastText.TextYAlignment = Enum.TextYAlignment.Top
 toastText.Text = ""
 toastText.Parent = toast
 
--- Финальное окно
-local finale = Instance.new("Frame")
-finale.Name = "Finale"
-finale.AnchorPoint = Vector2.new(0.5, 0.5)
-finale.Position = UDim2.new(0.5, 0, 0.4, 0)
-finale.Size = UDim2.new(0, 380, 0, 104)
-finale.BackgroundColor3 = PANEL
-finale.BackgroundTransparency = 1
-finale.BorderSizePixel = 0
-finale.Visible = false
-finale.Parent = gui
-corner(finale, 12)
-
-local finaleTitle = Instance.new("TextLabel")
-finaleTitle.BackgroundTransparency = 1
-finaleTitle.Position = UDim2.new(0, 0, 0, 26)
-finaleTitle.Size = UDim2.new(1, 0, 0, 30)
-finaleTitle.Font = FONT_BOLD
-finaleTitle.TextColor3 = TEXT
-finaleTitle.TextSize = 24
-finaleTitle.TextTransparency = 1
-finaleTitle.Text = "Все артефакты собраны"
-finaleTitle.Parent = finale
-
-local finaleText = Instance.new("TextLabel")
-finaleText.BackgroundTransparency = 1
-finaleText.Position = UDim2.new(0, 0, 0, 58)
-finaleText.Size = UDim2.new(1, 0, 0, 22)
-finaleText.Font = FONT_TEXT
-finaleText.TextColor3 = MUTED
-finaleText.TextSize = 15
-finaleText.TextTransparency = 1
-finaleText.Text = "Портал открыт"
-finaleText.Parent = finale
-
-local QUICK = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-local SLOW = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-
 local toastToken = 0
 
-local function showNote(title, text)
+local function showFallback(title, text, seconds)
 	toastToken = toastToken + 1
 	local token = toastToken
 	toastTitle.Text = title
 	toastText.Text = text
 	toast.Visible = true
-	toast.Position = UDim2.new(0.5, 0, 1, -34)
-	toast.BackgroundTransparency = 1
-	toastTitle.TextTransparency = 1
-	toastText.TextTransparency = 1
-	mark.BackgroundTransparency = 1
-
-	TweenService:Create(toast, QUICK, {
-		Position = UDim2.new(0.5, 0, 1, -48),
-		BackgroundTransparency = 0.05,
-	}):Play()
-	TweenService:Create(toastTitle, QUICK, { TextTransparency = 0 }):Play()
-	TweenService:Create(toastText, QUICK, { TextTransparency = 0 }):Play()
-	TweenService:Create(mark, QUICK, { BackgroundTransparency = 0 }):Play()
-
-	-- Шесть секунд: столько нужно, чтобы прочитать записку, и столько же
-	-- держится уведомление в самом Roblox.
-	task.delay(6, function()
-		if token ~= toastToken then
-			return
-		end
-		local fade = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-		TweenService:Create(toast, fade, { BackgroundTransparency = 1 }):Play()
-		TweenService:Create(toastTitle, fade, { TextTransparency = 1 }):Play()
-		TweenService:Create(toastText, fade, { TextTransparency = 1 }):Play()
-		TweenService:Create(mark, fade, { BackgroundTransparency = 1 }):Play()
-		task.wait(0.35)
+	task.delay(seconds, function()
 		if token == toastToken then
 			toast.Visible = false
 		end
 	end)
 end
+
+-- Родное уведомление Roblox.
+local function notify(title, text, seconds)
+	local ok = pcall(function()
+		StarterGui:SetCore("SendNotification", {
+			Title = title,
+			Text = text,
+			Duration = seconds,
+		})
+	end)
+	if not ok then
+		showFallback(title, text, seconds)
+	end
+end
+
+local SLOW = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
 
 local function setCount(mine, all)
 	counterValue.Text = string.format("%d / %d", mine, all)
@@ -388,38 +365,55 @@ local function setCount(mine, all)
 end
 
 local function bumpCounter()
-	counterValue.TextSize = 24
+	counterValue.TextSize = 23
 	TweenService:Create(counterValue, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-		TextSize = 20,
+		TextSize = 19,
 	}):Play()
 end
 
-local function showFinale()
-	finale.Visible = true
-	finale.Position = UDim2.new(0.5, 0, 0.4, 0.014)
-	TweenService:Create(finale, SLOW, {
-		BackgroundTransparency = 0.1,
-		Position = UDim2.new(0.5, 0, 0.4, 0),
-	}):Play()
-	TweenService:Create(finaleTitle, SLOW, { TextTransparency = 0 }):Play()
-	TweenService:Create(finaleText, SLOW, { TextTransparency = 0 }):Play()
-	task.delay(5, function()
-		local fade = TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-		TweenService:Create(finale, fade, { BackgroundTransparency = 1 }):Play()
-		TweenService:Create(finaleTitle, fade, { TextTransparency = 1 }):Play()
-		TweenService:Create(finaleText, fade, { TextTransparency = 1 }):Play()
-	end)
+-- САМИ АРТЕФАКТЫ -------------------------------------------------------------
+-- Артефакт — деталь или модель. Разница ровно в трёх действиях (взять пивот,
+-- поставить пивот, перебрать детали), дальше код один и тот же.
+
+local function isArtifact(item)
+	return item ~= nil and (item:IsA("BasePart") or item:IsA("Model"))
 end
 
--- САМИ БИЛЕТЫ ---------------------------------------------------------------
+local function pivotOf(item)
+	if item:IsA("Model") then
+		return item:GetPivot()
+	end
+	return item.CFrame
+end
 
-local home = {} -- [деталь] = место, где артефакт висит на самом деле
-local busy = {} -- [деталь] = артефакт сейчас летит к игроку
-local gone = {} -- [деталь] = артефакт уже собран, его не видно
+local function setPivot(item, cframe)
+	if item:IsA("Model") then
+		item:PivotTo(cframe)
+	else
+		item.CFrame = cframe
+	end
+end
 
-local function effectsOf(part)
+local function partsOf(item)
+	if item:IsA("BasePart") then
+		return { item }
+	end
 	local list = {}
-	for _, child in ipairs(part:GetDescendants()) do
+	for _, child in ipairs(item:GetDescendants()) do
+		if child:IsA("BasePart") then
+			table.insert(list, child)
+		end
+	end
+	return list
+end
+
+local home = {} -- [артефакт] = место, где он висит на самом деле
+local busy = {} -- [артефакт] = сейчас летит к игроку
+local gone = {} -- [артефакт] = уже собран, его не видно
+
+local function effectsOf(item)
+	local list = {}
+	for _, child in ipairs(item:GetDescendants()) do
 		if child:IsA("Light") or child:IsA("Sparkles") or child:IsA("ParticleEmitter") then
 			table.insert(list, child)
 		end
@@ -429,20 +423,33 @@ end
 
 -- Находка: артефакт подпрыгивает, а потом с разгоном летит к игроку,
 -- уменьшаясь и растворяясь на лету.
-local function fly(part)
-	if not part or not part:IsA("BasePart") or busy[part] or gone[part] then
+local function fly(item)
+	if not isArtifact(item) or busy[item] or gone[item] then
 		return
 	end
-	busy[part] = true
+	busy[item] = true
 
-	local base = home[part] or part.CFrame
-	local size = part.Size
-	local clear = part.Transparency
-	local effects = effectsOf(part)
+	local base = home[item] or pivotOf(item)
+	local pieces = partsOf(item)
+	local sizes, clears = {}, {}
+	for index, piece in ipairs(pieces) do
+		sizes[index] = piece.Size
+		clears[index] = piece.Transparency
+	end
+	local effects = effectsOf(item)
 	local bright = {}
 	for index, effect in ipairs(effects) do
 		if effect:IsA("Light") then
 			bright[index] = effect.Brightness
+		end
+	end
+
+	-- Размер и прозрачность меняем деталь за деталью: Model:ScaleTo двигает
+	-- ещё и пивот модели, а он у нас в это время сам летит к игроку.
+	local function shape(factor, fade)
+		for index, piece in ipairs(pieces) do
+			piece.Size = sizes[index] * factor
+			piece.Transparency = clears[index] + (1 - clears[index]) * fade
 		end
 	end
 
@@ -453,8 +460,8 @@ local function fly(part)
 		passed = passed + step
 		if passed <= POP then
 			local a = passed / POP
-			part.CFrame = base * CFrame.new(0, a * 1.6, 0) * CFrame.Angles(0, a * math.pi, 0)
-			part.Size = size * (1 + 0.4 * math.sin(a * math.pi))
+			setPivot(item, base * CFrame.new(0, a * 1.6, 0) * CFrame.Angles(0, a * math.pi, 0))
+			shape(1 + 0.35 * math.sin(a * math.pi), 0)
 			return
 		end
 
@@ -464,9 +471,8 @@ local function fly(part)
 		local head = character and character:FindFirstChild("Head")
 		local from = base.Position + Vector3.new(0, 1.6, 0)
 		local to = head and (head.Position + Vector3.new(0, 0.6, 0)) or from
-		part.CFrame = CFrame.new(from:Lerp(to, speed)) * CFrame.Angles(0, a * math.pi * 6, 0)
-		part.Size = size:Lerp(size * 0.05, speed)
-		part.Transparency = clear + (1 - clear) * speed
+		setPivot(item, CFrame.new(from:Lerp(to, speed)) * CFrame.Angles(0, a * math.pi * 6, 0))
+		shape(1 - 0.95 * speed, speed)
 		for index, effect in ipairs(effects) do
 			if bright[index] then
 				effect.Brightness = bright[index] * (1 - a)
@@ -475,15 +481,18 @@ local function fly(part)
 
 		if a >= 1 then
 			link:Disconnect()
-			busy[part] = nil
-			gone[part] = true
-			-- Артефакт возвращается на своё место — уже невидимым. Иначе деталь
-			-- остаётся там, куда прилетела: в Team Create такой сдвиг оседает
+			busy[item] = nil
+			gone[item] = true
+			-- Артефакт возвращается на своё место — уже невидимым. Иначе он
+			-- остаётся там, куда прилетел: в Team Create такой сдвиг оседает
 			-- в плейсе, и на следующем занятии артефакт висит посреди лабиринта.
-			part.CFrame = base
-			part.Transparency = 1
-			part.CanCollide = false
-			part.CanTouch = false
+			setPivot(item, base)
+			for index, piece in ipairs(pieces) do
+				piece.Size = sizes[index]
+				piece.Transparency = 1
+				piece.CanCollide = false
+				piece.CanTouch = false
+			end
 			for _, effect in ipairs(effects) do
 				effect.Enabled = false
 			end
@@ -492,34 +501,43 @@ local function fly(part)
 end
 
 -- Пока артефакт не найден, он покачивается и медленно крутится: так его видно
--- издалека и понятно, что деталь можно взять.
+-- издалека и понятно, что его можно взять.
 RunService.RenderStepped:Connect(function()
 	local clock = os.clock()
-	for _, part in ipairs(CollectionService:GetTagged(TAG)) do
-		if part:IsA("BasePart") and not gone[part] and not busy[part] then
-			local base = home[part]
+	for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+		if isArtifact(item) and not gone[item] and not busy[item] then
+			local base = home[item]
 			if not base then
-				base = part.CFrame
-				home[part] = base
+				base = pivotOf(item)
+				home[item] = base
 			end
 			local phase = (base.Position.X + base.Position.Z) * 0.1
-			part.CFrame = base
+			setPivot(item, base
 				* CFrame.new(0, math.sin(clock * 1.8 + phase) * 0.35, 0)
-				* CFrame.Angles(0, clock * 1.1, 0)
+				* CFrame.Angles(0, clock * 1.1, 0))
 		end
 	end
 end)
 
-collected.OnClientEvent:Connect(function(part, name, note, mine, all)
+collected.OnClientEvent:Connect(function(item, name, note, mine, all)
 	setCount(mine, all)
-	if not part then
+	if not item then
 		return -- пустая находка: это просто первое известие о числе артефактов
 	end
 	bumpCounter()
-	fly(part)
-	showNote(name, note ~= "" and note or "Артефакт найден")
+	fly(item)
+	-- В заголовке не имя объекта: в Explorer артефакты называют как удобно
+	-- строителю (Artifact_Fork), и такое имя в уведомлении выглядит отладкой.
+	-- Имя приходит с сервера и остаётся доступным тем, кому оно нужно.
+	local body = note
+	if body == "" then
+		body = string.format("Собрано %d из %d", mine, all)
+	end
+	notify("Артефакт найден", body, 5)
 	if mine >= all and all > 0 then
-		task.delay(0.9, showFinale)
+		task.delay(1.2, function()
+			notify("Все артефакты собраны", "Портал открыт — возвращайся к выходу", 5)
+		end)
 	end
 end)
 ]]></ProtectedString>

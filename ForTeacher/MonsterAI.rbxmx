@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX7EF603A8A08B49568F46AB107F3581A5">
+	<Item class="Folder" referent="RBX0D48260527D14D2D80059170106297C4">
 		<Properties>
 			<string name="Name">MonsterAI</string>
 		</Properties>
-		<Item class="Script" referent="RBX165916FA14F64447B144451DD7CD8FC8">
+		<Item class="Script" referent="RBX6F02CA738542473289112FBC845EC6C8">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterServer — мозг обитателя лабиринта: патруль, погоня, удар.
 --
@@ -19,34 +19,49 @@
 -- Что должно быть у модели монстра: Humanoid, HumanoidRootPart, Head.
 -- Всё остальное — необязательно, модуль подстраивается (см. ниже).
 --
--- НАСТРОЙКИ — атрибуты на самой модели монстра (Properties → Attributes),
--- скрипт не трогаем:
---   WalkAnimationId    число — анимация ходьбы (ID после Publish в ClipEditor)
---   AttackAnimationId  число — анимация удара
+-- НАСТРОЙКИ — атрибуты на САМОЙ ПАПКЕ MonsterAI (выделить папку в Explorer,
+-- Properties → Attributes). Заводить их руками не нужно: они уже лежат в
+-- модуле, ученик только меняет значения.
+--   WalkAnimationId    0     анимация ходьбы (ID после Publish в ClipEditor)
+--   AttackAnimationId  0     анимация удара
 --   PatrolSpeed        6     скорость шага в патруле
 --   ChaseSpeed         20    скорость в погоне
 --   SightRange         24    на сколько студов видит игрока
 --   CatchRange         5     с какой дистанции бьёт
 --   CatchCooldown      5     сколько секунд не трогает того же игрока снова
 --   AttackHoldTime     1     запасная длина удара, если у клипа её не узнать
---   NodePause          0.6   пауза между отрезками пути (даёт игроку манёвр)
+--   ArrivePause        1.2   пауза в конце маршрута патруля
 --   RetreatGrace       10    сколько секунд уходит прочь после поимки
---   LegDistance        12    длина отрезка пути до пересчёта
 --   ReplanDistance     8     насколько игрок должен уйти, чтобы пересчитать
 --   MazeFolder         "Maze" имя папки лабиринта в Workspace (если она есть)
 --
--- ДВИЖЕНИЕ. Путь считает PathfindingService, монстр идёт по его виртуальным
--- точкам — это просто список позиций в памяти, живущий один отрезок пути.
+-- Оба ID анимаций модуль читает и с модели монстра тоже — договор урока 27
+-- («ученик записывает ID в атрибуты модели») продолжает работать: значение
+-- в папке главнее, ноль в папке означает «смотри на модели».
+--
+-- ДВИЖЕНИЕ. Путь считает PathfindingService, монстр идёт по его точкам —
+-- это просто список позиций в памяти. Маршрут проходится ЦЕЛИКОМ, а не
+-- кусками по 12 студов с пересчётом: пересчёт на ходу и был причиной того,
+-- что монстр дёргался и топтался на месте. К очередной точке он не
+-- «доезжает» до полной остановки — точка считается пройденной за ARRIVE_RADIUS
+-- студов до неё, и цель сразу переносится на следующую. Отсюда непрерывный
+-- ход вместо череды разгонов и торможений.
+--
 -- Если в Workspace есть папка лабиринта (MazeFolder), модуль дополнительно
 -- строит по ней граф: каждая комната/коридор — узел, связь между парой
 -- узлов, выровненных по одной оси и не дальше MAX_EDGE_DISTANCE,
 -- подтверждается рейкастом (иначе соседи через стену считались бы
 -- соединёнными просто по расстоянию). Граф нужен для двух вещей: цели
--- патруля (случайный узел — так монстр обходит весь лабиринт, включая
--- тупики и петли) и запасной маршрут там, где ComputeAsync отдаёт NoPath —
--- на стыках комната-коридор это случается. Нет папки лабиринта — модуль
--- работает и так: патруль бродит по случайным точкам вокруг места, где
--- монстра поставили.
+-- патруля (узел не ближе PATROL_MIN_STEPS переходов — монстр идёт через
+-- половину лабиринта, а не топчется у соседней стены) и запасной маршрут
+-- там, где ComputeAsync отдаёт NoPath — на стыках комната-коридор это
+-- случается. Нет папки лабиринта — модуль работает и так: патруль бродит
+-- по случайным точкам вокруг места, где монстра поставили.
+--
+-- ЗАТЫК. Если монстр за STUCK_WINDOW секунд сдвинулся меньше чем на
+-- STUCK_DISTANCE — маршрут признаётся негодным и считается заново. Без этого
+-- он упирался в угол и тёрся о стену до конца таймаута: именно это выглядело
+-- как «регулярно ударяется о стенки».
 --
 -- ПРЕРЫВАНИЕ ДВИЖЕНИЯ МГНОВЕННОЕ: пока монстр идёт, условие остановки
 -- проверяется каждый кадр (Heartbeat), а не раз в десятую секунды, и при
@@ -156,32 +171,84 @@ else
 end
 
 -- НАСТРОЙКИ --------------------------------------------------------------------
+-- Живут атрибутами на самой папке модуля: так их видно в Properties сразу
+-- после того, как папку положили в модель, и ученику не приходится заводить
+-- ни одного атрибута руками — только менять значения. Если папка пришла без
+-- атрибутов (например, файлом .rbxmx), модуль заводит их сам значениями по
+-- умолчанию при первом запуске.
 
-local function setting(name, default)
-	local value = monster:GetAttribute(name)
-	if typeof(value) == "number" then
-		return value
+local DEFAULTS = {
+	WalkAnimationId = 0,
+	AttackAnimationId = 0,
+	PatrolSpeed = 6,
+	ChaseSpeed = 20,
+	SightRange = 24,
+	CatchRange = 5,
+	CatchCooldown = 5,
+	AttackHoldTime = 1,
+	ArrivePause = 1.2,
+	RetreatGrace = 10,
+	ReplanDistance = 8,
+	MazeFolder = "Maze",
+}
+
+-- Порядок важен только для читаемости панели Properties: она показывает
+-- атрибуты в том порядке, в котором они заведены.
+local ORDER = {
+	"WalkAnimationId", "AttackAnimationId",
+	"PatrolSpeed", "ChaseSpeed", "SightRange", "CatchRange",
+	"CatchCooldown", "AttackHoldTime", "ArrivePause", "RetreatGrace",
+	"ReplanDistance", "MazeFolder",
+}
+
+for _, name in ipairs(ORDER) do
+	if package:GetAttribute(name) == nil then
+		package:SetAttribute(name, DEFAULTS[name])
 	end
-	return default
 end
 
-local PATROL_SPEED = setting("PatrolSpeed", 6)
-local CHASE_SPEED = setting("ChaseSpeed", 20)
-local SIGHT_RANGE = setting("SightRange", 24)
-local CATCH_RANGE = setting("CatchRange", 5)
-local CATCH_COOLDOWN = setting("CatchCooldown", 5)
-local ATTACK_HOLD_DEFAULT = setting("AttackHoldTime", 1)
-local NODE_PAUSE = setting("NodePause", 0.6)
-local RETREAT_GRACE = setting("RetreatGrace", 10)
-local LEG_DISTANCE = setting("LegDistance", 12)
-local REPLAN_DISTANCE = setting("ReplanDistance", 8)
-local DIRECT_CHASE_RANGE = setting("DirectChaseRange", 15)
+-- Значение берём с папки; на модели смотрим только ради старых сборок и
+-- договора урока 27 (ID анимаций ученик записывал в атрибуты модели).
+local function setting(name)
+	local value = package:GetAttribute(name)
+	if value == nil then
+		value = monster:GetAttribute(name)
+	end
+	if value == nil then
+		return DEFAULTS[name]
+	end
+	return value
+end
+
+local PATROL_SPEED = setting("PatrolSpeed")
+local CHASE_SPEED = setting("ChaseSpeed")
+local SIGHT_RANGE = setting("SightRange")
+local CATCH_RANGE = setting("CatchRange")
+local CATCH_COOLDOWN = setting("CatchCooldown")
+local ATTACK_HOLD_DEFAULT = setting("AttackHoldTime")
+local ARRIVE_PAUSE = setting("ArrivePause")
+local RETREAT_GRACE = setting("RetreatGrace")
+local REPLAN_DISTANCE = setting("ReplanDistance")
 
 -- АНИМАЦИИ И ЗВУК ---------------------------------------------------------------
 
 local animate = monster:FindFirstChild("Animate")
 if animate then
 	animate.Enabled = false
+end
+
+-- ID анимации: сначала папка модуля (там его и меняют), потом модель —
+-- договор урока 27, где ученик записывал ID прямо в атрибуты монстра.
+local function animationId(name)
+	local value = package:GetAttribute(name)
+	if typeof(value) == "number" and value > 0 then
+		return value
+	end
+	value = monster:GetAttribute(name)
+	if typeof(value) == "number" and value > 0 then
+		return value
+	end
+	return 0
 end
 
 local walkTrack
@@ -192,9 +259,10 @@ local function applyWalkAnimation()
 		walkTrack:Destroy()
 		walkTrack = nil
 	end
-	local id = monster:GetAttribute("WalkAnimationId")
-	if not id or id == 0 then
-		problem("net atributa WalkAnimationId - hodit budet bez animacii")
+	local id = animationId("WalkAnimationId")
+	if id == 0 then
+		problem("WalkAnimationId ne zapolnen (atribut papki MonsterAI) - " ..
+			"hodit budet bez animacii")
 		return
 	end
 	local anim = Instance.new("Animation")
@@ -212,6 +280,7 @@ local function applyWalkAnimation()
 end
 
 applyWalkAnimation()
+package:GetAttributeChangedSignal("WalkAnimationId"):Connect(applyWalkAnimation)
 monster:GetAttributeChangedSignal("WalkAnimationId"):Connect(applyWalkAnimation)
 
 local attackTrack
@@ -222,8 +291,8 @@ local function applyAttackAnimation()
 		attackTrack:Destroy()
 		attackTrack = nil
 	end
-	local id = monster:GetAttribute("AttackAnimationId")
-	if not id or id == 0 then
+	local id = animationId("AttackAnimationId")
+	if id == 0 then
 		return
 	end
 	local anim = Instance.new("Animation")
@@ -240,6 +309,7 @@ local function applyAttackAnimation()
 end
 
 applyAttackAnimation()
+package:GetAttributeChangedSignal("AttackAnimationId"):Connect(applyAttackAnimation)
 monster:GetAttributeChangedSignal("AttackAnimationId"):Connect(applyAttackAnimation)
 
 -- Звук шагов — встроенный ассет Roblox (rbxasset, всегда доступен без
@@ -306,7 +376,7 @@ local function playAttack(holdTime)
 	if attackTrack then
 		attackTrack:Play()
 	else
-		problem("net atributa AttackAnimationId - udar bez animacii")
+		problem("AttackAnimationId ne zapolnen - udar bez animacii")
 	end
 
 	task.wait(holdTime)
@@ -325,7 +395,7 @@ end
 local NODE_HEIGHT = 4
 local MAX_EDGE_DISTANCE = 15
 
-local mazeName = monster:GetAttribute("MazeFolder")
+local mazeName = setting("MazeFolder")
 if typeof(mazeName) ~= "string" or mazeName == "" then
 	mazeName = "Maze"
 end
@@ -487,14 +557,20 @@ end
 
 -- РАСЧЁТ ПУТИ ------------------------------------------------------------------
 
--- AgentRadius меньше видимой ширины рига (~1.6 стада от центра): на стыках
--- комната-коридор кромки стен сходятся не идеально ровно, и агент с
--- радиусом 2 там местами не находит путь вообще.
+-- AgentRadius. Персонаж Roblox шириной около двух студов, то есть от центра
+-- до плеча — стад. При радиусе 1.2 маршрут проходил в двух десятых стада от
+-- стены: монстр всю дорогу тёрся о неё плечом, и это читалось как «бьётся о
+-- стенки». 1.8 отводит маршрут почти на стад от стены и при этом пролезает в
+-- коридоры лабиринта: они шириной 6 студов, значит от осевой линии до стены
+-- три стада, и полоса, по которой агент считает путь, остаётся шириной 2.4
+-- стада. Больше брать нельзя — на поворотах путь просто перестанет считаться.
+-- WaypointSpacing мельче — на поворотах точки идут чаще, и угол срезается не
+-- так грубо.
 local agentParams = {
-	AgentRadius = 1.2,
-	AgentHeight = 6,
+	AgentRadius = 1.8,
+	AgentHeight = 5,
 	AgentCanJump = false,
-	WaypointSpacing = 6,
+	WaypointSpacing = 4,
 }
 
 -- Виртуальные точки пути от монстра до цели: просто список позиций,
@@ -538,47 +614,51 @@ end
 
 -- ДВИЖЕНИЕ ----------------------------------------------------------------------
 
--- Проходит по виртуальным точкам, пока не одолеет LEG_DISTANCE студов или
--- пока точки не кончатся. Условие остановки проверяется КАЖДЫЙ КАДР, и при
--- срабатывании снимается сама задача движения — иначе Humanoid продолжал бы
--- дошагивать до последней точки, куда его послали.
--- Возвращает "arrived", "leg" (пора пересчитать путь) или "interrupted".
-local function walkLeg(points, stopNow, speed)
-	local travelled = 0
-	local lastPosition = root.Position
+-- За сколько студов до точки она считается пройденной. Humanoid тормозит
+-- перед целью MoveTo, поэтому останавливаться на каждой точке маршрута
+-- нельзя — цель переносится на следующую заранее, и ход выходит непрерывным.
+local ARRIVE_RADIUS = 3.5
+-- Последнюю точку проходим до конца: это и есть место, куда шли.
+local FINAL_RADIUS = 2
+-- Затык: сдвинулись меньше чем на STUCK_DISTANCE за STUCK_WINDOW секунд.
+-- На PATROL_SPEED = 6 за 0.8 секунды нормальный ход даёт больше четырёх
+-- студов, так что порог в полтора студа срабатывает только на настоящем
+-- упоре в стену или в угол.
+local STUCK_WINDOW = 0.8
+local STUCK_DISTANCE = 1.5
 
-	for index, point in ipairs(points) do
+-- Проходит маршрут целиком. Возвращает "arrived", "interrupted" (сработало
+-- условие остановки) или "stuck" (упёрлись — маршрут надо считать заново).
+local function followPath(points, stopNow, speed)
+	humanoid.WalkSpeed = speed
+
+	local index = 1
+	local checkPosition = root.Position
+	local checkClock = os.clock()
+
+	while index <= #points do
 		if stopNow() then
 			humanoid:MoveTo(root.Position)
 			return "interrupted"
 		end
 
-		humanoid:MoveTo(point)
+		local point = points[index]
+		local flat = Vector3.new(point.X - root.Position.X, 0, point.Z - root.Position.Z)
+		local radius = (index == #points) and FINAL_RADIUS or ARRIVE_RADIUS
+		if flat.Magnitude <= radius then
+			index = index + 1
+			checkPosition, checkClock = root.Position, os.clock()
+		else
+			humanoid:MoveTo(point)
+			RunService.Heartbeat:Wait()
 
-		local finished = false
-		local conn = humanoid.MoveToFinished:Connect(function()
-			finished = true
-		end)
-
-		local distance = (point - root.Position).Magnitude
-		local timeout = math.max(distance / math.max(speed, 1) * 2, 1.5)
-		local waited = 0
-
-		while not finished and waited < timeout do
-			waited = waited + RunService.Heartbeat:Wait()
-			if stopNow() then
-				conn:Disconnect()
-				humanoid:MoveTo(root.Position)
-				return "interrupted"
+			if os.clock() - checkClock >= STUCK_WINDOW then
+				if (root.Position - checkPosition).Magnitude < STUCK_DISTANCE then
+					humanoid:MoveTo(root.Position)
+					return "stuck"
+				end
+				checkPosition, checkClock = root.Position, os.clock()
 			end
-		end
-		conn:Disconnect()
-
-		travelled = travelled + (root.Position - lastPosition).Magnitude
-		lastPosition = root.Position
-
-		if travelled >= LEG_DISTANCE and index < #points then
-			return "leg"
 		end
 	end
 
@@ -681,21 +761,47 @@ end
 
 local homePosition = root.Position
 
--- Цель патруля: случайный узел графа, а если графа нет — случайная точка
--- вокруг места, где монстра поставили.
+-- Цель патруля выбирается не среди всех узлов подряд, а среди дальних:
+-- маршрут длиной в три и больше перехода читается как обход лабиринта.
+-- Случайный сосед в двух шагах давал ту самую картину «мечется по углу».
+local PATROL_MIN_STEPS = 3
+
+local lastPatrolIndex = nil
+
 local function pickPatrolDestination()
 	if hasGraph then
-		return nodes[math.random(1, #nodes)].position
+		local fromIndex = nearestNode(root.Position)
+		local far = {}
+		for i in ipairs(nodes) do
+			if i ~= fromIndex and i ~= lastPatrolIndex then
+				local path = bfsPath(fromIndex, i)
+				if path and #path >= PATROL_MIN_STEPS then
+					table.insert(far, i)
+				end
+			end
+		end
+		if #far == 0 then
+			-- Лабиринт крошечный или мы в тупике: годится любой другой узел.
+			for i in ipairs(nodes) do
+				if i ~= fromIndex then
+					table.insert(far, i)
+				end
+			end
+		end
+		if #far > 0 then
+			local chosen = far[math.random(1, #far)]
+			lastPatrolIndex = chosen
+			return nodes[chosen].position
+		end
 	end
 	local angle = math.random() * math.pi * 2
 	local radius = math.random(20, 60)
 	return homePosition + Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
 end
 
+-- Один маршрут патруля целиком: выбрали дальний узел — дошли — постояли.
+-- Пересчёта на полпути больше нет, поэтому и рывков на ровном месте нет.
 local function patrolStep()
-	startWalking()
-	humanoid.WalkSpeed = PATROL_SPEED
-
 	if not patrolDestination then
 		patrolDestination = pickPatrolDestination()
 	end
@@ -703,46 +809,63 @@ local function patrolStep()
 	local points = routeTo(patrolDestination)
 	if not points then
 		patrolDestination = nil
-		task.wait(0.5)
+		task.wait(0.3)
 		return
 	end
 
-	local result = walkLeg(points, function()
+	local result = followPath(points, function()
 		return findTarget() ~= nil
 	end, PATROL_SPEED)
 
 	if result == "interrupted" then
 		return
 	end
-	if result == "arrived" then
+	if result == "stuck" then
+		-- Маршрут негодный (узел за стеной, дверь закрылась) — берём другой.
 		patrolDestination = nil
+		task.wait(0.2)
+		return
 	end
-	task.wait(NODE_PAUSE)
+
+	patrolDestination = nil
+	-- Пауза в конце маршрута, а не на каждой точке: монстр приходит в комнату,
+	-- оглядывается и уходит дальше. Игроку это даёт окно на манёвр. Пауза
+	-- прерывается появлением игрока — иначе монстр «не замечал» подошедшего
+	-- целую секунду с лишним.
+	stopWalking()
+	humanoid.WalkSpeed = 0
+	local waited = 0
+	while waited < ARRIVE_PAUSE do
+		if findTarget() then
+			return
+		end
+		waited = waited + task.wait(0.1)
+	end
 end
 
--- Один отрезок погони: если игрок уже близко и виден — идти прямо на него;
--- иначе посчитать путь и пройти по нему LEG_DISTANCE студов. Пересчёт на
--- каждом отрезке сразу учитывает, что игрок мог побежать в другую сторону.
+-- Погоня. Видим игрока — идём прямо на него: между нами нет стены, и путь
+-- считать незачем (а пересчёт как раз и стопорил монстра каждые пару шагов).
+-- Не видим — считаем маршрут до места, где видели, и идём по нему, пока
+-- игрок не покажется снова или не уйдёт далеко от этого места.
 local function chaseStep(target)
 	startWalking()
-	humanoid.WalkSpeed = CHASE_SPEED
 
-	local targetPosition = target.Position
-
-	if (root.Position - targetPosition).Magnitude <= DIRECT_CHASE_RANGE and canSee(target) then
-		humanoid:MoveTo(targetPosition)
-		task.wait(0.1)
+	if canSee(target) then
+		humanoid.WalkSpeed = CHASE_SPEED
+		humanoid:MoveTo(target.Position)
+		RunService.Heartbeat:Wait()
 		return
 	end
 
-	local points = routeTo(targetPosition)
+	local lastSeen = target.Position
+	local points = routeTo(lastSeen)
 	if not points then
-		humanoid:MoveTo(targetPosition)
+		humanoid:MoveTo(lastSeen)
 		task.wait(0.1)
 		return
 	end
 
-	local result = walkLeg(points, function()
+	local result = followPath(points, function()
 		local stillTarget = findTarget()
 		if not stillTarget then
 			return true
@@ -750,17 +873,14 @@ local function chaseStep(target)
 		if inCatchRange(stillTarget) then
 			return true
 		end
-		-- Игрок ушёл далеко от точки, куда строился путь — пора пересчитать.
-		return (stillTarget.Position - targetPosition).Magnitude > REPLAN_DISTANCE
+		if canSee(stillTarget) then
+			return true -- увидели снова: дальше идём прямо
+		end
+		return (stillTarget.Position - lastSeen).Magnitude > REPLAN_DISTANCE
 	end, CHASE_SPEED)
 
-	-- Пауза на конце отрезка — но не тогда, когда шаг оборвался, потому что
-	-- игрок уже в CatchRange: там нужен удар без промедления.
-	if result ~= "interrupted" then
-		local afterTarget = findTarget()
-		if not (afterTarget and inCatchRange(afterTarget)) then
-			task.wait(NODE_PAUSE)
-		end
+	if result == "stuck" then
+		task.wait(0.15)
 	end
 end
 
@@ -791,7 +911,7 @@ report("zapushen")
 				<string name="Name">MonsterServer</string>
 			</Properties>
 		</Item>
-		<Item class="LocalScript" referent="RBXF25B2EA52A8F4FB4B76F3B5E15C00190">
+		<Item class="LocalScript" referent="RBXACC6BEA3E2E849C590BEAF45E3576EE3">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterCamera — клиентская часть модуля: плавно разворачивает
 -- камеру пойманного игрока на монстра.
