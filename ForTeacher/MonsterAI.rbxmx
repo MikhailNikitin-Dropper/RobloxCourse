@@ -1,0 +1,877 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX7EF603A8A08B49568F46AB107F3581A5">
+		<Properties>
+			<string name="Name">MonsterAI</string>
+		</Properties>
+		<Item class="Script" referent="RBX165916FA14F64447B144451DD7CD8FC8">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterServer — мозг обитателя лабиринта: патруль, погоня, удар.
+--
+-- КАК ПОЛЬЗОВАТЬСЯ: положить папку MonsterAI целиком внутрь модели монстра
+-- (рядом с Humanoid и HumanoidRootPart) — и всё. Больше ничего расставлять
+-- не нужно: модуль сам создаёт RemoteEvent в ReplicatedStorage и сам
+-- раздаёт клиентскую часть игрокам. В плейсе не остаётся ни одной точки,
+-- ни одного вспомогательного Part'а.
+--
+-- Что должно быть у модели монстра: Humanoid, HumanoidRootPart, Head.
+-- Всё остальное — необязательно, модуль подстраивается (см. ниже).
+--
+-- НАСТРОЙКИ — атрибуты на самой модели монстра (Properties → Attributes),
+-- скрипт не трогаем:
+--   WalkAnimationId    число — анимация ходьбы (ID после Publish в ClipEditor)
+--   AttackAnimationId  число — анимация удара
+--   PatrolSpeed        6     скорость шага в патруле
+--   ChaseSpeed         20    скорость в погоне
+--   SightRange         24    на сколько студов видит игрока
+--   CatchRange         5     с какой дистанции бьёт
+--   CatchCooldown      5     сколько секунд не трогает того же игрока снова
+--   AttackHoldTime     1     запасная длина удара, если у клипа её не узнать
+--   NodePause          0.6   пауза между отрезками пути (даёт игроку манёвр)
+--   RetreatGrace       10    сколько секунд уходит прочь после поимки
+--   LegDistance        12    длина отрезка пути до пересчёта
+--   ReplanDistance     8     насколько игрок должен уйти, чтобы пересчитать
+--   MazeFolder         "Maze" имя папки лабиринта в Workspace (если она есть)
+--
+-- ДВИЖЕНИЕ. Путь считает PathfindingService, монстр идёт по его виртуальным
+-- точкам — это просто список позиций в памяти, живущий один отрезок пути.
+-- Если в Workspace есть папка лабиринта (MazeFolder), модуль дополнительно
+-- строит по ней граф: каждая комната/коридор — узел, связь между парой
+-- узлов, выровненных по одной оси и не дальше MAX_EDGE_DISTANCE,
+-- подтверждается рейкастом (иначе соседи через стену считались бы
+-- соединёнными просто по расстоянию). Граф нужен для двух вещей: цели
+-- патруля (случайный узел — так монстр обходит весь лабиринт, включая
+-- тупики и петли) и запасной маршрут там, где ComputeAsync отдаёт NoPath —
+-- на стыках комната-коридор это случается. Нет папки лабиринта — модуль
+-- работает и так: патруль бродит по случайным точкам вокруг места, где
+-- монстра поставили.
+--
+-- ПРЕРЫВАНИЕ ДВИЖЕНИЯ МГНОВЕННОЕ: пока монстр идёт, условие остановки
+-- проверяется каждый кадр (Heartbeat), а не раз в десятую секунды, и при
+-- срабатывании снимается сама задача движения (humanoid:MoveTo в текущую
+-- точку) — иначе Humanoid продолжал бы дошагивать до старой цели.
+--
+-- УДАР. На дистанции CatchRange монстр останавливается и играет свой трек.
+-- Пойманного на это время замораживает (WalkSpeed/JumpPower в ноль,
+-- AutoRotate выключен) и разворачивает лицом к себе: HumanoidRootPart крутит
+-- сервер твином (это видят остальные игроки), а СОБСТВЕННЫЙ вид пойманного
+-- разворачивает его же клиент — клиентская часть модуля (MonsterCamera).
+-- После удара пойманного переносит на SpawnLocation (если он есть в плейсе),
+-- потом монстр на RetreatGrace секунд уходит на самый дальний от входа узел
+-- и никого не замечает — иначе он мог оказаться прямо у точки возрождения
+-- в момент, когда игрок только-только возвращается.
+--
+-- ПРО АНИМАЦИИ, ЧТОБЫ НЕ ИСКАТЬ ЗАНОВО: анимации играет ЭТОТ серверный
+-- скрипт напрямую (Humanoid:LoadAnimation + Play/Stop), а штатный Animate
+-- внутри модели выключается. Он всё равно никогда не работал: LocalScript
+-- внутри Workspace не выполняется вообще — Roblox запускает их только в
+-- Player.Character, PlayerGui, PlayerScripts, Backpack и ReplicatedFirst,
+-- причём молча, без ошибки. По той же причине клиентская часть модуля не
+-- работает "на месте", а копируется каждому игроку в PlayerGui.
+--
+-- Вывод в Output — латиницей: кириллица в консоли Studio ломается.
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PathfindingService = game:GetService("PathfindingService")
+local RunService = game:GetService("RunService")
+
+local EVENT_NAME = "MonsterCaught"
+local CLIENT_NAME = "MonsterCamera"
+
+local package = script.Parent
+local monster = package.Parent
+
+local function report(text)
+	print("[MonsterAI] " .. text)
+end
+
+local function problem(text)
+	warn("[MonsterAI] " .. text)
+end
+
+-- Проверка "модуль положили куда надо" — понятная ошибка вместо молчания.
+local humanoid = monster:FindFirstChildOfClass("Humanoid")
+local root = monster:FindFirstChild("HumanoidRootPart")
+local head = monster:FindFirstChild("Head")
+if not (humanoid and root and head) then
+	problem("papku MonsterAI nado polozhit VNUTR modeli monstra " ..
+		"(ryadom s Humanoid, HumanoidRootPart i Head). Seichas ona lezhit v: " ..
+		monster:GetFullName())
+	return
+end
+
+-- СТРИМИНГ. При включённом Workspace.StreamingEnabled клиент игрока, стоящего
+-- у точки возрождения, вообще не подгружает модель монстра в глубине
+-- лабиринта, пока не подойдёт вплотную — монстр выглядит дёргающимся и
+-- «неанимированным», хотя сервер ведёт его всё это время ровно. Модуль
+-- лечит это сам, чтобы ученику не пришлось знать про стриминг: раньше
+-- строчка стояла в сборочном скрипте плейса, и у любого, кто просто вставил
+-- папку, баг возвращался.
+pcall(function()
+	monster.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
+end)
+
+-- ОБЩЕНИЕ С КЛИЕНТОМ ----------------------------------------------------------
+-- RemoteEvent живёт в ReplicatedStorage, а не внутри монстра: там он
+-- реплицируется всегда, а модель монстра при StreamingEnabled клиент может
+-- и не иметь под рукой.
+local caughtEvent = ReplicatedStorage:FindFirstChild(EVENT_NAME)
+if not caughtEvent then
+	caughtEvent = Instance.new("RemoteEvent")
+	caughtEvent.Name = EVENT_NAME
+	caughtEvent.Parent = ReplicatedStorage
+end
+
+-- Клиентская часть раздаётся копией каждому игроку в PlayerGui: там
+-- LocalScript действительно запускается и переживает возрождение персонажа.
+local clientTemplate = package:FindFirstChild(CLIENT_NAME)
+if clientTemplate then
+	local function installFor(player)
+		local playerGui = player:FindFirstChildOfClass("PlayerGui")
+			or player:WaitForChild("PlayerGui", 10)
+		if not playerGui then
+			return
+		end
+		local old = playerGui:FindFirstChild(CLIENT_NAME)
+		if old then
+			old:Destroy()
+		end
+		local copy = clientTemplate:Clone()
+		copy.Disabled = false
+		copy.Parent = playerGui
+	end
+
+	Players.PlayerAdded:Connect(function(player)
+		task.spawn(installFor, player)
+	end)
+	for _, player in ipairs(Players:GetPlayers()) do
+		task.spawn(installFor, player)
+	end
+else
+	problem("v papke modulya net " .. CLIENT_NAME .. " - kamera pri poimke ne razvernetsya")
+end
+
+-- НАСТРОЙКИ --------------------------------------------------------------------
+
+local function setting(name, default)
+	local value = monster:GetAttribute(name)
+	if typeof(value) == "number" then
+		return value
+	end
+	return default
+end
+
+local PATROL_SPEED = setting("PatrolSpeed", 6)
+local CHASE_SPEED = setting("ChaseSpeed", 20)
+local SIGHT_RANGE = setting("SightRange", 24)
+local CATCH_RANGE = setting("CatchRange", 5)
+local CATCH_COOLDOWN = setting("CatchCooldown", 5)
+local ATTACK_HOLD_DEFAULT = setting("AttackHoldTime", 1)
+local NODE_PAUSE = setting("NodePause", 0.6)
+local RETREAT_GRACE = setting("RetreatGrace", 10)
+local LEG_DISTANCE = setting("LegDistance", 12)
+local REPLAN_DISTANCE = setting("ReplanDistance", 8)
+local DIRECT_CHASE_RANGE = setting("DirectChaseRange", 15)
+
+-- АНИМАЦИИ И ЗВУК ---------------------------------------------------------------
+
+local animate = monster:FindFirstChild("Animate")
+if animate then
+	animate.Enabled = false
+end
+
+local walkTrack
+
+local function applyWalkAnimation()
+	if walkTrack then
+		walkTrack:Stop()
+		walkTrack:Destroy()
+		walkTrack = nil
+	end
+	local id = monster:GetAttribute("WalkAnimationId")
+	if not id or id == 0 then
+		problem("net atributa WalkAnimationId - hodit budet bez animacii")
+		return
+	end
+	local anim = Instance.new("Animation")
+	anim.AnimationId = "rbxassetid://" .. tostring(id)
+	local ok, track = pcall(function()
+		return humanoid:LoadAnimation(anim)
+	end)
+	if ok then
+		track.Looped = true
+		track.Priority = Enum.AnimationPriority.Movement
+		walkTrack = track
+	else
+		problem("ne zagruzilas walk animatsiya " .. tostring(id) .. ": " .. tostring(track))
+	end
+end
+
+applyWalkAnimation()
+monster:GetAttributeChangedSignal("WalkAnimationId"):Connect(applyWalkAnimation)
+
+local attackTrack
+
+local function applyAttackAnimation()
+	if attackTrack then
+		attackTrack:Stop()
+		attackTrack:Destroy()
+		attackTrack = nil
+	end
+	local id = monster:GetAttribute("AttackAnimationId")
+	if not id or id == 0 then
+		return
+	end
+	local anim = Instance.new("Animation")
+	anim.AnimationId = "rbxassetid://" .. tostring(id)
+	local ok, track = pcall(function()
+		return humanoid:LoadAnimation(anim)
+	end)
+	if ok then
+		track.Priority = Enum.AnimationPriority.Action
+		attackTrack = track
+	else
+		problem("ne zagruzilas attack animatsiya " .. tostring(id) .. ": " .. tostring(track))
+	end
+end
+
+applyAttackAnimation()
+monster:GetAttributeChangedSignal("AttackAnimationId"):Connect(applyAttackAnimation)
+
+-- Звук шагов — встроенный ассет Roblox (rbxasset, всегда доступен без
+-- загрузки), слышный издалека: игрок слышит монстра раньше, чем видит.
+-- Скорость воспроизведения растёт вместе со скоростью: на погоне шаги
+-- звучат чаще, это тоже подсказка "он бежит, а не бродит".
+local footstepSound = root:FindFirstChild("Footsteps")
+if not footstepSound then
+	footstepSound = Instance.new("Sound")
+	footstepSound.Name = "Footsteps"
+	footstepSound.SoundId = "rbxasset://sounds/action_footsteps_plastic.mp3"
+	footstepSound.Looped = true
+	footstepSound.Volume = 1
+	footstepSound.RollOffMaxDistance = 150
+	footstepSound.Parent = root
+end
+
+local function startWalking()
+	if walkTrack and not walkTrack.IsPlaying then
+		walkTrack:Play()
+	end
+	if not footstepSound.IsPlaying then
+		footstepSound:Play()
+	end
+end
+
+local function stopWalking()
+	if walkTrack and walkTrack.IsPlaying then
+		walkTrack:Stop()
+	end
+	if footstepSound.IsPlaying then
+		footstepSound:Stop()
+	end
+end
+
+-- Ходьба включается по факту движения, а не по тому, что "должен" делать
+-- ИИ в эту секунду: иначе на паузах трек продолжал крутиться, пока риг
+-- физически стоял на месте. Реальная скорость надёжнее предположений.
+task.spawn(function()
+	while monster.Parent do
+		local speed = root.AssemblyLinearVelocity.Magnitude
+		if speed > 1 then
+			startWalking()
+			footstepSound.PlaybackSpeed = math.clamp(speed / PATROL_SPEED, 0.8, 2.2)
+		else
+			stopWalking()
+		end
+		task.wait(0.15)
+	end
+end)
+
+local function attackHoldTime()
+	if attackTrack and attackTrack.Length and attackTrack.Length > 0.05 then
+		return math.min(attackTrack.Length, 4)
+	end
+	return ATTACK_HOLD_DEFAULT
+end
+
+local function playAttack(holdTime)
+	stopWalking()
+	humanoid.WalkSpeed = 0
+	humanoid:MoveTo(root.Position)
+
+	if attackTrack then
+		attackTrack:Play()
+	else
+		problem("net atributa AttackAnimationId - udar bez animacii")
+	end
+
+	task.wait(holdTime)
+
+	if attackTrack then
+		attackTrack:Stop()
+	end
+end
+
+-- ГРАФ ЛАБИРИНТА (необязательный) ----------------------------------------------
+
+-- Соседство НЕ считается по фиксированному шагу сетки: обычные модули стоят
+-- через 10 студов, но развилки и цель бывают крупнее (в лабиринте курса
+-- Goal — комната 16x16, её центр отстоит от соседа на все 13 студов), и
+-- поиск соседа строго "в 10 студах" такой узел вообще не находил.
+local NODE_HEIGHT = 4
+local MAX_EDGE_DISTANCE = 15
+
+local mazeName = monster:GetAttribute("MazeFolder")
+if typeof(mazeName) ~= "string" or mazeName == "" then
+	mazeName = "Maze"
+end
+local maze = workspace:FindFirstChild(mazeName)
+
+local nodes = {}
+local adjacency = {}
+
+if maze then
+	for _, child in ipairs(maze:GetChildren()) do
+		if child:IsA("Model") then
+			local ok, pivot = pcall(function()
+				return child:GetPivot()
+			end)
+			if ok then
+				table.insert(nodes, {
+					position = Vector3.new(pivot.Position.X, NODE_HEIGHT, pivot.Position.Z),
+					name = child.Name,
+				})
+			end
+		end
+	end
+
+	local mazeRaycastParams = RaycastParams.new()
+	mazeRaycastParams.FilterType = Enum.RaycastFilterType.Include
+	mazeRaycastParams.FilterDescendantsInstances = { maze }
+
+	local function isOpenBetween(posA, posB)
+		local result = workspace:Raycast(posA, posB - posA, mazeRaycastParams)
+		if not result then
+			return true
+		end
+		return (result.Position - posB).Magnitude < 1
+	end
+
+	for i in ipairs(nodes) do
+		adjacency[i] = {}
+	end
+	for i = 1, #nodes do
+		for j = i + 1, #nodes do
+			local a, b = nodes[i].position, nodes[j].position
+			local sameX = math.abs(a.X - b.X) < 1
+			local sameZ = math.abs(a.Z - b.Z) < 1
+			if (sameX or sameZ) and not (sameX and sameZ) then
+				if (a - b).Magnitude <= MAX_EDGE_DISTANCE and isOpenBetween(a, b) then
+					adjacency[i][j] = true
+					adjacency[j][i] = true
+				end
+			end
+		end
+	end
+
+	report("graf labirinta iz " .. mazeName .. ": " .. #nodes .. " uzlov")
+else
+	report("papki " .. mazeName .. " net - patrul budet brodit vokrug tochki starta")
+end
+
+local hasGraph = #nodes >= 2
+
+local function nearestNode(pos)
+	local bestIndex, bestDist = 1, math.huge
+	for i, node in ipairs(nodes) do
+		local dist = (node.position - pos).Magnitude
+		if dist < bestDist then
+			bestIndex, bestDist = i, dist
+		end
+	end
+	return bestIndex
+end
+
+-- Кратчайший путь по числу переходов (BFS, все рёбра равны по длине клетки).
+local function bfsPath(fromIndex, toIndex)
+	if fromIndex == toIndex then
+		return { fromIndex }
+	end
+	local visited = { [fromIndex] = true }
+	local cameFrom = {}
+	local queue, queueHead = { fromIndex }, 1
+	local found = false
+	while queueHead <= #queue do
+		local current = queue[queueHead]
+		queueHead = queueHead + 1
+		if current == toIndex then
+			found = true
+			break
+		end
+		for neighbor in pairs(adjacency[current]) do
+			if not visited[neighbor] then
+				visited[neighbor] = true
+				cameFrom[neighbor] = current
+				table.insert(queue, neighbor)
+			end
+		end
+	end
+	if not found then
+		return nil
+	end
+	local path = { toIndex }
+	local step = toIndex
+	while step ~= fromIndex do
+		step = cameFrom[step]
+		table.insert(path, 1, step)
+	end
+	return path
+end
+
+-- Куда отступать после поимки: узел, самый дальний по числу переходов от
+-- входа (за вход берём ближайший к точке возрождения узел графа).
+local spawnPoint = workspace:FindFirstChildOfClass("SpawnLocation")
+local retreatPosition = nil
+if hasGraph and spawnPoint then
+	local entranceIndex = nearestNode(spawnPoint.Position)
+	local farthestIndex, farthestLen = entranceIndex, 0
+	for i in ipairs(nodes) do
+		local path = bfsPath(entranceIndex, i)
+		if path and #path > farthestLen then
+			farthestIndex, farthestLen = i, #path
+		end
+	end
+	retreatPosition = nodes[farthestIndex].position
+	report("otstuplenie posle poimki: uzel " .. nodes[farthestIndex].name ..
+		" (" .. farthestLen .. " shagov ot vhoda)")
+end
+
+-- ПОИСК ИГРОКА -----------------------------------------------------------------
+
+local raycastParams = RaycastParams.new()
+raycastParams.FilterDescendantsInstances = { monster }
+raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+
+local function canSee(hrp)
+	local origin = root.Position + Vector3.new(0, 1, 0)
+	local result = workspace:Raycast(origin, hrp.Position - origin, raycastParams)
+	if not result then
+		return true
+	end
+	return result.Instance:IsDescendantOf(hrp.Parent)
+end
+
+local function findTarget()
+	local best, bestDist = nil, SIGHT_RANGE
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		local hum = character and character:FindFirstChildOfClass("Humanoid")
+		local hrp = character and character:FindFirstChild("HumanoidRootPart")
+		if hum and hrp and hum.Health > 0 then
+			local dist = (hrp.Position - root.Position).Magnitude
+			if dist <= bestDist and canSee(hrp) then
+				best, bestDist = hrp, dist
+			end
+		end
+	end
+	return best
+end
+
+local function inCatchRange(target)
+	return (root.Position - target.Position).Magnitude <= CATCH_RANGE
+end
+
+-- РАСЧЁТ ПУТИ ------------------------------------------------------------------
+
+-- AgentRadius меньше видимой ширины рига (~1.6 стада от центра): на стыках
+-- комната-коридор кромки стен сходятся не идеально ровно, и агент с
+-- радиусом 2 там местами не находит путь вообще.
+local agentParams = {
+	AgentRadius = 1.2,
+	AgentHeight = 6,
+	AgentCanJump = false,
+	WaypointSpacing = 6,
+}
+
+-- Виртуальные точки пути от монстра до цели: просто список позиций,
+-- живущий ровно один отрезок пути. Никаких Part'ов в плейсе.
+local function pathfindPoints(destinationPosition)
+	local path = PathfindingService:CreatePath(agentParams)
+	local ok = pcall(function()
+		path:ComputeAsync(root.Position, destinationPosition)
+	end)
+	if not ok or path.Status ~= Enum.PathStatus.Success then
+		return nil
+	end
+	local points = {}
+	for _, waypoint in ipairs(path:GetWaypoints()) do
+		table.insert(points, waypoint.Position)
+	end
+	return points
+end
+
+-- Запасной маршрут по графу: центры комнат по дороге плюс сама цель.
+-- Нужен там, где ComputeAsync отдаёт NoPath (стыки комната-коридор).
+local function graphPoints(destinationPosition)
+	if not hasGraph then
+		return nil
+	end
+	local path = bfsPath(nearestNode(root.Position), nearestNode(destinationPosition))
+	if not path then
+		return nil
+	end
+	local points = {}
+	for i = 2, #path do
+		table.insert(points, nodes[path[i]].position)
+	end
+	table.insert(points, destinationPosition)
+	return points
+end
+
+local function routeTo(destinationPosition)
+	return pathfindPoints(destinationPosition) or graphPoints(destinationPosition)
+end
+
+-- ДВИЖЕНИЕ ----------------------------------------------------------------------
+
+-- Проходит по виртуальным точкам, пока не одолеет LEG_DISTANCE студов или
+-- пока точки не кончатся. Условие остановки проверяется КАЖДЫЙ КАДР, и при
+-- срабатывании снимается сама задача движения — иначе Humanoid продолжал бы
+-- дошагивать до последней точки, куда его послали.
+-- Возвращает "arrived", "leg" (пора пересчитать путь) или "interrupted".
+local function walkLeg(points, stopNow, speed)
+	local travelled = 0
+	local lastPosition = root.Position
+
+	for index, point in ipairs(points) do
+		if stopNow() then
+			humanoid:MoveTo(root.Position)
+			return "interrupted"
+		end
+
+		humanoid:MoveTo(point)
+
+		local finished = false
+		local conn = humanoid.MoveToFinished:Connect(function()
+			finished = true
+		end)
+
+		local distance = (point - root.Position).Magnitude
+		local timeout = math.max(distance / math.max(speed, 1) * 2, 1.5)
+		local waited = 0
+
+		while not finished and waited < timeout do
+			waited = waited + RunService.Heartbeat:Wait()
+			if stopNow() then
+				conn:Disconnect()
+				humanoid:MoveTo(root.Position)
+				return "interrupted"
+			end
+		end
+		conn:Disconnect()
+
+		travelled = travelled + (root.Position - lastPosition).Magnitude
+		lastPosition = root.Position
+
+		if travelled >= LEG_DISTANCE and index < #points then
+			return "leg"
+		end
+	end
+
+	return "arrived"
+end
+
+-- ПОИМКА -------------------------------------------------------------------------
+
+local cooldownUntil = {}
+local patrolDestination = nil
+-- До этого момента (tick()) главный цикл игнорирует всех игроков — так
+-- монстр гарантированно уходит в отступление после поимки, а не бросается
+-- в погоню за тем же игроком на полпути.
+local retreatUntil = 0
+
+local FACE_TURN_TIME = 0.25
+
+-- Поворачивает пойманного лицом к монстру через Tween его HumanoidRootPart.
+-- SetNetworkOwner(nil) забирает у клиента физику на время поворота — иначе
+-- клиент мог реплицировать свой CFrame поверх ещё не долетевшего твина.
+local function turnCaughtToFace(character, hrp)
+	local caughtHumanoid = character:FindFirstChildOfClass("Humanoid")
+	local savedAutoRotate = caughtHumanoid and caughtHumanoid.AutoRotate
+	if caughtHumanoid then
+		caughtHumanoid.AutoRotate = false
+	end
+
+	local ownershipOk = pcall(function()
+		hrp:SetNetworkOwner(nil)
+	end)
+
+	local lookAt = Vector3.new(head.Position.X, hrp.Position.Y, head.Position.Z)
+	local tween = TweenService:Create(
+		hrp,
+		TweenInfo.new(FACE_TURN_TIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		{ CFrame = CFrame.new(hrp.Position, lookAt) }
+	)
+	tween:Play()
+	tween.Completed:Wait()
+
+	return caughtHumanoid, savedAutoRotate, ownershipOk
+end
+
+local function tryCatch(hrp)
+	local character = hrp.Parent
+	local player = Players:GetPlayerFromCharacter(character)
+	if player and cooldownUntil[player] and tick() < cooldownUntil[player] then
+		return
+	end
+
+	root.CFrame = CFrame.lookAt(root.Position, Vector3.new(hrp.Position.X, root.Position.Y, hrp.Position.Z))
+
+	-- Замораживаем пойманного на время удара: без этого он успевал уйти
+	-- в сторону или спрыгнуть, пока играется анимация атаки монстра.
+	local caughtHumanoid = character:FindFirstChildOfClass("Humanoid")
+	local savedWalkSpeed, savedJumpPower
+	if caughtHumanoid then
+		savedWalkSpeed = caughtHumanoid.WalkSpeed
+		savedJumpPower = caughtHumanoid.JumpPower
+		caughtHumanoid.WalkSpeed = 0
+		caughtHumanoid.JumpPower = 0
+	end
+
+	local _, savedAutoRotate, ownershipTaken = turnCaughtToFace(character, hrp)
+
+	local holdTime = attackHoldTime()
+	if player then
+		-- Шлём и длину удара, и позицию головы: так клиенту не нужна сама
+		-- модель монстра, которой у него при стриминге может не оказаться.
+		caughtEvent:FireClient(player, holdTime, head.Position)
+	end
+
+	playAttack(holdTime)
+
+	if spawnPoint and character.Parent then
+		character:PivotTo(spawnPoint.CFrame + Vector3.new(0, 5, 0))
+	end
+
+	if caughtHumanoid then
+		caughtHumanoid.WalkSpeed = savedWalkSpeed
+		caughtHumanoid.JumpPower = savedJumpPower
+		caughtHumanoid.AutoRotate = savedAutoRotate
+	end
+	if ownershipTaken then
+		pcall(function()
+			hrp:SetNetworkOwnershipAuto()
+		end)
+	end
+	if player then
+		cooldownUntil[player] = tick() + CATCH_COOLDOWN
+	end
+
+	if retreatPosition then
+		patrolDestination = retreatPosition
+		retreatUntil = tick() + RETREAT_GRACE
+	end
+end
+
+-- ПАТРУЛЬ И ПОГОНЯ ---------------------------------------------------------------
+
+local homePosition = root.Position
+
+-- Цель патруля: случайный узел графа, а если графа нет — случайная точка
+-- вокруг места, где монстра поставили.
+local function pickPatrolDestination()
+	if hasGraph then
+		return nodes[math.random(1, #nodes)].position
+	end
+	local angle = math.random() * math.pi * 2
+	local radius = math.random(20, 60)
+	return homePosition + Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+end
+
+local function patrolStep()
+	startWalking()
+	humanoid.WalkSpeed = PATROL_SPEED
+
+	if not patrolDestination then
+		patrolDestination = pickPatrolDestination()
+	end
+
+	local points = routeTo(patrolDestination)
+	if not points then
+		patrolDestination = nil
+		task.wait(0.5)
+		return
+	end
+
+	local result = walkLeg(points, function()
+		return findTarget() ~= nil
+	end, PATROL_SPEED)
+
+	if result == "interrupted" then
+		return
+	end
+	if result == "arrived" then
+		patrolDestination = nil
+	end
+	task.wait(NODE_PAUSE)
+end
+
+-- Один отрезок погони: если игрок уже близко и виден — идти прямо на него;
+-- иначе посчитать путь и пройти по нему LEG_DISTANCE студов. Пересчёт на
+-- каждом отрезке сразу учитывает, что игрок мог побежать в другую сторону.
+local function chaseStep(target)
+	startWalking()
+	humanoid.WalkSpeed = CHASE_SPEED
+
+	local targetPosition = target.Position
+
+	if (root.Position - targetPosition).Magnitude <= DIRECT_CHASE_RANGE and canSee(target) then
+		humanoid:MoveTo(targetPosition)
+		task.wait(0.1)
+		return
+	end
+
+	local points = routeTo(targetPosition)
+	if not points then
+		humanoid:MoveTo(targetPosition)
+		task.wait(0.1)
+		return
+	end
+
+	local result = walkLeg(points, function()
+		local stillTarget = findTarget()
+		if not stillTarget then
+			return true
+		end
+		if inCatchRange(stillTarget) then
+			return true
+		end
+		-- Игрок ушёл далеко от точки, куда строился путь — пора пересчитать.
+		return (stillTarget.Position - targetPosition).Magnitude > REPLAN_DISTANCE
+	end, CHASE_SPEED)
+
+	-- Пауза на конце отрезка — но не тогда, когда шаг оборвался, потому что
+	-- игрок уже в CatchRange: там нужен удар без промедления.
+	if result ~= "interrupted" then
+		local afterTarget = findTarget()
+		if not (afterTarget and inCatchRange(afterTarget)) then
+			task.wait(NODE_PAUSE)
+		end
+	end
+end
+
+task.spawn(function()
+	while monster.Parent do
+		local target = tick() >= retreatUntil and findTarget() or nil
+
+		if target then
+			patrolDestination = nil
+			chaseStep(target)
+
+			local caught = findTarget()
+			if caught and inCatchRange(caught) then
+				tryCatch(caught)
+			end
+		else
+			patrolStep()
+		end
+
+		task.wait(0.05)
+	end
+end)
+
+report("zapushen")
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">MonsterServer</string>
+			</Properties>
+		</Item>
+		<Item class="LocalScript" referent="RBXF25B2EA52A8F4FB4B76F3B5E15C00190">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterCamera — клиентская часть модуля: плавно разворачивает
+-- камеру пойманного игрока на монстра.
+--
+-- ЛЕЖИТ В ПАПКЕ МОДУЛЯ ВЫКЛЮЧЕННЫМ (Disabled) и работает не отсюда:
+-- серверная часть копирует этот скрипт каждому игроку в PlayerGui и там
+-- включает. Так надо, потому что LocalScript внутри Workspace не
+-- выполняется ВООБЩЕ — Roblox запускает их только в Player.Character,
+-- PlayerGui, PlayerScripts, Backpack и ReplicatedFirst, причём молча, без
+-- ошибки и предупреждения. На этом в своё время сгорело четыре захода
+-- "камера не поворачивается": чинилось не то, код просто не исполнялся.
+-- Той же причиной объясняется и то, что штатный Animate внутри модели
+-- монстра никогда не проигрывал анимации.
+--
+-- Второй урок оттуда же: любой WaitForChild НА ВЕРХНЕМ УРОВНЕ клиентского
+-- скрипта может увести в бесконечное ожидание всё, что написано ниже. При
+-- включённом StreamingEnabled ждать чего-либо внутри Workspace с клиента —
+-- риск: пока регион не подгрузился, WaitForChild просто висит. Поэтому
+-- ожидание здесь — внутри task.spawn, а сам RemoteEvent живёт в
+-- ReplicatedStorage: он реплицируется всегда и стримингом не выгружается.
+--
+-- Сервер не может подвинуть чужую камеру, это чисто клиентская вещь,
+-- поэтому на момент поимки он присылает сюда сигнал с двумя аргументами:
+-- сколько секунд держать разворот (та же длина, что идёт анимация удара) и
+-- позицию головы монстра — так клиенту не нужна сама модель монстра.
+--
+-- Если в плейсе включён режим первого лица (StarterPlayer.CameraMode =
+-- LockFirstPerson), он держится жёстче обычного и игнорирует прямую запись
+-- в Camera, пока включён. Поэтому на время разворота режим временно
+-- переключается на Classic, камера ставится Scriptable и твином доводится
+-- до взгляда на монстра, а по окончании всё возвращается обратно. Разворот
+-- именно твином, а не подстановкой CFrame: рывок в первом лице читается
+-- как сбой картинки, а плавный доворот — как "тебя заставили посмотреть".
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
+local EVENT_NAME = "MonsterCaught"
+local TURN_TIME = 0.35
+
+local player = Players.LocalPlayer
+
+task.spawn(function()
+	local caughtEvent = ReplicatedStorage:WaitForChild(EVENT_NAME)
+
+	caughtEvent.OnClientEvent:Connect(function(duration, monsterPosition)
+		local camera = workspace.CurrentCamera
+		if not camera or not monsterPosition then
+			return
+		end
+
+		local originalCameraMode = player.CameraMode
+		player.CameraMode = Enum.CameraMode.Classic
+		camera.CameraType = Enum.CameraType.Scriptable
+
+		local eyePosition = camera.CFrame.Position
+		local lookCFrame = CFrame.new(
+			eyePosition,
+			Vector3.new(monsterPosition.X, eyePosition.Y, monsterPosition.Z)
+		)
+
+		local holdTime = duration or 1
+		local tween = TweenService:Create(
+			camera,
+			TweenInfo.new(math.min(TURN_TIME, holdTime), Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ CFrame = lookCFrame }
+		)
+		tween:Play()
+
+		task.wait(holdTime)
+
+		camera.CameraType = Enum.CameraType.Custom
+		player.CameraMode = originalCameraMode
+	end)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">true</bool>
+				<string name="Name">MonsterCamera</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

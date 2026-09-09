@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 28. ПРОЕКТ 7: ночной лабиринт</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="28">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 28. ПРОЕКТ 7: ночной лабиринт</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер приключения</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="28-w-1">
+<h3 class="slide-title">Сегодня ты — Продюсер приключения <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">За три занятия мы сделали тёмную комнату, вырастили из неё лабиринт и поселили в нём монстра. Сегодня три постройки станут одной игрой — той, в которую можно позвать друга.</p>
+<p class="content-item content-paragraph"><b>Продюсер приключения</b> собирает готовые части в игру: даёт игроку цель, опасность на пути и выход, который нужно заслужить.</p>
+<aside class="speaker-notes">Заметка ведущего: 60 секунд. Сразу назвать результат занятия: к концу урока игра проходится целиком — от лагеря до портала — и уходит в облако публикацией. Ничего нового с нуля сегодня не строим: работаем с тем, что уже стоит в плейсе.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="28-r-1">
+<h3 class="slide-title">Что мы делали на уроке 27? <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Чем задают цвет тела монстра?</p><ol class="content-item content-quiz-options"><li data-correct="true">Объектом BodyColors ✓</li><li>Свойством Color каждой части</li><li>Свойством Material</li></ol>
+<p class="content-item content-question">Что делает включённый Looping у анимации ходьбы?</p><ol class="content-item content-quiz-options"><li>Анимация проигрывается один раз и замирает</li><li data-correct="true">Анимация повторяется по кругу ✓</li><li>Анимация публикуется в аккаунт автоматически</li></ol>
+<p class="content-item content-question">Зачем анимации нужен числовой ID после публикации?</p><ol class="content-item content-quiz-options"><li>Чтобы анимация стала длиннее</li><li>Чтобы её увидели друзья в профиле</li><li data-correct="true">Чтобы игра нашла нужную анимацию по номеру ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса вслух. Третий вопрос — прямой мостик к сегодняшней практике: попросить участников открыть Attributes своей модели монстра и убедиться, что оба номера на месте. У кого их нет, тот не сможет пройти шаг 3 — лучше выяснить это сейчас, а не в середине занятия.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Как из частей собирается игра <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="28-t-1">
+<h3 class="slide-title">Что собираем сегодня <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Лагерь у входа — светлое место, откуда игрок уходит в темноту</li><li>Три артефакта — то, ради чего игрок идёт в лабиринт</li><li>Монстр оживает — модуль даёт ему походку, слух и погоню</li><li>Портал-выход — открывается, когда артефакты собраны</li><li>Проверка на живом игроке и публикация игры</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Полторы минуты. Показать список как план занятия и сразу сказать: всё, кроме публикации, делается в одном плейсе — том самом, что растёт с урока 25. Публикация в конце превращает его в игру, доступную по ссылке.</aside>
+</div>
+<div class="slide" id="28-t-2">
+<h3 class="slide-title">Игре нужны цель, опасность и выход <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Цель отвечает на вопрос «зачем я сюда пришёл»</li><li>Опасность отвечает на вопрос «почему это интересно»</li><li>Выход отвечает на вопрос «когда я победил»</li></ul>
+<p class="content-item content-paragraph">Лабиринт без цели, опасности и выхода — просто тёмные коридоры: ходить можно, а играть не во что.</p>
+<aside class="speaker-notes">Заметка ведущего: Полторы минуты. Это главная мысль занятия, к ней возвращаемся на каждом шаге практики. Спросить группу: чего не хватало вашему лабиринту на прошлом уроке больше всего? Обычно называют цель — и это верный ответ.</aside>
+</div>
+<div class="slide" id="28-t-3">
+<h3 class="slide-title">Лагерь: место, куда возвращаются <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Костёр и тёплый свет у точки возрождения: сюда игрок возвращается после неудачи</li><li>Вход в лабиринт виден от костра, а дальше входа не видно ничего</li><li>Контраст важнее украшений: шаг в темноту — решение игрока, а не случайность</li></ul>
+<p class="content-item content-paragraph">Если страшно всегда и везде, страх перестаёт работать: игрок просто устаёт.</p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: ночная комната-лагерь, горящий костёр даёт тёплый круг света, за ним чёрный проём входа в лабиринт, дальше проёма ничего не видно]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Приём известен по хоррор-играм: безопасные места-передышки между напряжёнными участками (DevForum, Guide to Making Better Horror Experiences). Сказать вслух: лагерь — это ещё и место, куда монстр отправляет пойманного, поэтому оно должно выглядеть спасением, а не наказанием.</aside>
+</div>
+<div class="slide" id="28-t-4">
+<h3 class="slide-title">Артефакт — это цель и ориентир сразу <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Артефакт</b> — светящаяся деталь, которую игрок ищет и забирает</li><li>Считает артефакты модуль курса: любая закреплённая деталь с тегом Artifact становится собираемой</li><li>Счётчик «Артефакты» появляется на экране сам, и счёт у каждого игрока свой</li><li>Светящийся артефакт виден издалека — заодно он говорит, что эта ветка не пустая</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль артефактов: <a href="https://create.roblox.com/store/asset/100539789220834/ArtifactCollector" target="_blank" rel="noopener">https://create.roblox.com/store/asset/100539789220834/ArtifactCollector</a></p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица с фонарём: светящийся артефакт-кристалл в тёмном коридоре лабиринта, вверху экрана счётчик собранных артефактов]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Модуль собран из того же кода, что считал билеты в парке урока 24, но с другим тегом и своими подписями — повторно использовать готовое решение и есть работа продюсера. Про свой счёт у каждого игрока сказать отдельно: гость, зашедший в игру позже автора, собирает артефакты сам, а не бродит по пустому лабиринту.</aside>
+</div>
+<div class="slide" id="28-t-5">
+<h3 class="slide-title">Где прятать артефакты <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>По одному артефакту на разные ветки — не три подряд на главном пути</li><li>Пути к ним разной длины: один близко, один в тупике, один за петлёй</li><li>Тупик-ловушку урока 26 не награждаем: иначе она перестанет обманывать</li><li>Рядом с выходом артефакт не прячем: к порталу игрок должен вернуться</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Правило про ловушку — прямое продолжение прошлого урока: если наградить самый заманчивый тупик, лабиринт перестанет обманывать. Спросить у группы, где в их лабиринте есть ветка, куда игрок обычно не сворачивает, — туда и просится артефакт.</aside>
+</div>
+<div class="slide" id="28-t-6">
+<h3 class="slide-title">Одна папка внутрь модели — и монстр оживает <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Модуль курса «Обитатель лабиринта» — папка MonsterAI, которую кладут ВНУТРЬ модели монстра</li><li>Монстр начинает бродить по лабиринту сам, замечает игрока, догоняет и бьёт</li><li>Анимации он берёт по номерам из атрибутов WalkAnimationId и AttackAnimationId</li><li>Пойманного монстр возвращает в лагерь и на несколько секунд уходит прочь</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль монстра: <a href="https://create.roblox.com/store/asset/127951163033608/MonsterAI" target="_blank" rel="noopener">https://create.roblox.com/store/asset/127951163033608/MonsterAI</a></p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio, панель Explorer: папка MonsterAI внутри модели Monster, рядом с Humanoid и HumanoidRootPart, внутри папки видны два скрипта]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Главное, что нужно проговорить дважды: папка кладётся ВНУТРЬ модели, а не рядом с ней. Если положить рядом, монстр останется стоять, а модуль напишет об этом в Output — это самая частая ошибка шага 3. Про отступление после поимки сказать, зачем оно: без него монстр оставался у точки возрождения и ловил игрока сразу же.</aside>
+</div>
+<div class="slide" id="28-t-7">
+<h3 class="slide-title">Честный страх: у игрока должен быть шанс <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>SightRange 24 — с какого расстояния монстр замечает игрока</li><li>ChaseSpeed 20 против обычной скорости персонажа 16: догоняет, но не сразу</li><li>PatrolSpeed 6 — пока монстр никого не увидел, он бродит медленно</li><li>Все числа — атрибуты модели монстра: правим их, а не модуль</li></ul>
+<p class="content-item content-paragraph">Игра пугает, когда убежать трудно, но возможно. Пойманного монстр возвращает в лагерь: найденное остаётся при игроке, а вот дорогу назад придётся пройти заново — этого хватает, чтобы поимки боялись.</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Числа называть как точку отсчёта, а не догму: их и будем подбирать на шаге 4 практики. Обычная скорость персонажа в Roblox — 16 студов в секунду, поэтому ChaseSpeed 20 даёт монстру перевес примерно на четверть. Совет из руководств по хоррор-играм ровно об этом: мгновенная смерть без шанса злит, а «чуть не поймал» запоминается.</aside>
+</div>
+<div class="slide" id="28-t-8">
+<h3 class="slide-title">Портал: выход открывает награда <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Портал</b> — рамка с полотном (деталь Gate) в зале победы, в конце лабиринта</li><li>Пока артефактов мало, полотно тёмное и не пропускает</li><li>Модуль курса «Портал» — папка ExitPortal внутрь модели портала</li><li>Собрано столько, сколько стоит в RequiredArtifacts, — портал загорается и переносит игрока в лагерь</li></ul>
+<p class="content-item content-paragraph">Ссылка на модуль портала: <a href="https://create.roblox.com/store/asset/97743211352966/ExitPortal" target="_blank" rel="noopener">https://create.roblox.com/store/asset/97743211352966/ExitPortal</a></p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: тёмное полотно закрытого портала между двумя каменными стойками в зале победы, внизу экрана подсказка о нехватке артефактов]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Сказать, как два модуля разговаривают друг с другом: модуль артефактов записывает игроку число собранного, модуль портала его читает — и всё, другой связи между ними нет. Тот же приём был на уроке 20: бластер записывал попадания, дисплей счёта их показывал. Это и есть способ соединять готовые части, не заглядывая внутрь них.</aside>
+</div>
+<div class="slide" id="28-t-9">
+<h3 class="slide-title">Проверяем игру на живом игроке <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Смотрим не на экран, а на игрока: где растерялся, где вздрогнул, где стало однообразно</li><li>Растерялся — не хватает ориентира или света: это ошибка разработчика, а не игрока</li><li>Вздрогнул — приём сработал, повторяем его в другом месте</li><li>Однообразно — длинный проход без событий, его стоит укоротить</li></ul>
+<p class="content-item content-paragraph">За один запуск меняем одно место, иначе непонятно, что именно помогло.</p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица: игрок в тёмном коридоре лабиринта, впереди в свете фонаря виден силуэт монстра]</p>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Правило одного изменения за запуск знакомо с урока 21. Подчеркнуть разницу между обычной проверкой и сегодняшней: обычная отвечает «работает ли», сегодняшняя — «что чувствует игрок». Автор своей игры её не боится, поэтому смотреть лучше на соседа.</aside>
+</div>
+<div class="slide" id="28-t-10">
+<h3 class="slide-title">Игра выходит в мир <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>С урока 25 проект сохранялся в облако, но игроки его ещё не видели</li><li>Публикация: File → Publish to Roblox — с этого момента у игры есть страница</li><li>Новая игра закрыта: зайти может только автор</li><li>Доступ открывается на сайте: Configure → Settings → Audience, и только после опроса о содержимом</li><li>Иконка — квадратная картинка не меньше 512×512, лучше всего кадр из своей игры</li></ul>
+<p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<aside class="speaker-notes">Заметка ведущего: Полторы минуты. Важное различие, которое стоит проговорить: сохранение в облако (Save to Roblox) держит проект на серверах Roblox, но игроки видят только опубликованную версию — поэтому до сегодняшнего дня игры для них не существовало. Дальше делим работу: публикация из Studio — на занятии, страница игры и опрос о содержимом — в домашнем задании, там на них есть время. Иконку берём из своей игры: картинка из интернета не пройдёт проверку.</aside>
+</div>
+<div class="slide" id="28-t-11">
+<h3 class="slide-title">Частые ошибки при сборке <span class="slide-duration">(1.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Положили папку модуля рядом с моделью монстра, а не внутрь — монстр стоит на месте</li><li>Артефактов в лабиринте меньше, чем требует портал, — выход не открыть никогда</li><li>Разложили все артефакты на главном пути — лабиринт проходится, ни разу не свернув</li><li>Поставили монстра у самого входа — игрок не успевает даже войти</li><li>Опубликовали игру и позвали друзей, забыв открыть доступ, — зайти никто не сможет</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Полторы минуты. Первую и вторую ошибки модули ловят сами и пишут об этом в Output — показать, где он находится, и сказать, что читать его полезно: там прямо написано, чего не хватает. Пятую ошибку проверим только после домашнего задания, поэтому о ней говорим сейчас.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="28-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Куда кладут папку модуля монстра?</p><ol class="content-item content-quiz-options"><li data-correct="true">Внутрь модели монстра ✓</li><li>Рядом с моделью, в Workspace</li><li>В ReplicatedStorage</li></ol>
+<p class="content-item content-question">Артефактов в лабиринте два, а портал требует три. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Портал откроется на втором артефакте</li><li data-correct="true">Портал не откроется никогда ✓</li><li>Портал откроется, но перенесёт не туда</li></ol>
+<p class="content-item content-question">Где в твоём лабиринте лучше всего спрятать самый дальний артефакт и почему именно там?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый: попросить двух-трёх участников показать место на своём плане лабиринта. Хороший ответ звучит как «за петлёй, потому что туда сворачивают редко», слабый — «в самом дальнем углу», потому что дальний угол обычно и есть зал победы.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="28-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут отдыха. Возвращаемся и собираем игру целиком.</p>
+<aside class="speaker-notes">Заметка ведущего: Пять минут. За перерыв стоит проверить у всех наличие двух номеров анимаций в Attributes модели монстра — без них шаг 3 встанет.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем ночной лабиринт <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="28-p-1">
+<h3 class="slide-title">Шаг 1: лагерь и площадка победы <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>У точки возрождения собери костёр: закреплённая деталь, внутрь Fire и PointLight потеплее</li><li>Поставь два факела по краям проёма в лабиринт — вход должен быть виден от костра</li><li>Рядом с костром положи закреплённую площадку и назови её VictoryPad: сюда портал вернёт победителя</li><li>Test → от костра виден вход, а дальше входа ничего не видно</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: лагерь у точки возрождения — костёр с огнём, два факела по краям проёма и светлая площадка VictoryPad рядом; в Explorer выделена деталь VictoryPad]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Имя VictoryPad важно писать в точности — по нему портал найдёт площадку на шаге 5. Если кто-то назовёт иначе, модуль честно скажет об этом в Output и вернёт игрока на точку возрождения. Костёр ставим у самой точки возрождения: пойманного монстр отправляет именно туда. Первым делом открываем плейс урока 27 — тот, где уже стоят лабиринт и монстр, а не новый Baseplate.</aside>
+</div>
+<div class="slide" id="28-p-2">
+<h3 class="slide-title">Шаг 2: три артефакта <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Положи папку модуля артефактов в Workspace</li><li>Собери три светящиеся детали (Material — Neon, внутрь PointLight) и закрепи их</li><li>Расставь их по разным веткам лабиринта и каждой поставь тег Ticket — раздел Tags в Properties</li><li>Test → подойди к одному артефакту: счётчик на экране показывает первую находку</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен артефакт, в Properties раздел Tags с тегом Artifact, в Explorer видна папка Artifacts с тремя деталями]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Тег пишется одним словом с большой буквы — Ticket; опечатка в теге означает, что деталь просто не соберётся. Напомнить про ловушку прошлого урока: самый заманчивый тупик остаётся без награды. Кто успевает — раскрашивает артефакты в разные цвета, так их проще различать в пересказе. Ссылка на модуль артефактов остаётся на слайде теории — показать её ещё раз, пока группа ставит модуль.</aside>
+</div>
+<div class="slide" id="28-p-3">
+<h3 class="slide-title">Шаг 3: монстр оживает <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Положи папку MonsterAI ВНУТРЬ модели монстра — рядом с Humanoid</li><li>Проверь в Attributes модели номера WalkAnimationId и AttackAnimationId</li><li>Отодвинь монстра вглубь лабиринта: ни у входа, ни в зале победы ему не место</li><li>Test → монстр пошёл сам, при ходьбе играет твоя анимация</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица с фонарём: монстр идёт по тёмному коридору лабиринта, видна поза шага из анимации ходьбы]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Если монстр стоит — девять раз из десяти папка лежит рядом с моделью, а не внутри; второй по частоте случай — пустые атрибуты с номерами анимаций. И то, и другое модуль пишет в Output открытым текстом. Ходьба без анимации (монстр скользит) означает, что номер анимации указан не тот. Про зал победы сказать отдельно: монстр, живущий у портала, не даёт закончить игру — выход обязан быть безопасным.</aside>
+</div>
+<div class="slide" id="28-p-4">
+<h3 class="slide-title">Шаг 4: настраиваем честный страх <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>В Attributes модели монстра проверь SightRange 24, ChaseSpeed 20, PatrolSpeed 6</li><li>Test → дай себя заметить и попробуй убежать</li><li>Убежать невозможно — уменьши SightRange или ChaseSpeed на пару единиц</li><li>Монстр не догоняет вообще — прибавь ChaseSpeed</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Ориентир для проверки: убежать должно получаться примерно в половине попыток. Числа менять маленькими шагами — по одному-два, иначе непонятно, что подействовало. Скорость самого персонажа не трогаем: она общая для всей игры. Числа менять маленькими шагами и по одному за запуск, иначе непонятно, что подействовало.</aside>
+</div>
+<div class="slide" id="28-p-5">
+<h3 class="slide-title">Шаг 5: портал в зале победы <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>В комнате-цели собери портал: две стойки, перекладина и тёмное полотно между ними</li><li>Полотно назови Gate, выдели детали портала и объедини в Model с именем Portal</li><li>Положи папку ExitPortal внутрь модели и задай атрибут RequiredArtifacts со значением 3</li><li>Test → подойди к порталу без артефактов: он тёмный, не пускает и показывает, сколько нужно</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра игры Roblox: 1) тёмный закрытый портал в зале победы; 2) тот же портал светится после сбора артефактов; 3) площадка победы у костра с искрами салюта]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, самый длинный шаг занятия. Проверяем здесь только закрытый портал: чтобы увидеть открытый, нужно собрать все три артефакта, а это целый проход лабиринта — он идёт следующим шагом. Имя полотна Gate модуль ищет первым; если детали названы иначе, он возьмёт самую крупную и скажет об этом в Output. Число в RequiredArtifacts должно совпадать с числом артефактов в лабиринте — проверено живым прогоном: при двух артефактах из трёх портал не пропускает.</aside>
+</div>
+<div class="slide" id="28-p-6">
+<h3 class="slide-title">Шаг 6: проверка и публикация <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → пройди игру целиком: три артефакта, портал, площадка победы</li><li>Отметь три места: где растерялся, где вздрогнул, где стало однообразно</li><li>Исправь одно самое неудобное место и пройди этот участок ещё раз</li><li>Опубликуй игру: File → Publish to Roblox, короткое понятное имя</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: окно Publish Experience с заполненными полями Name и Description, выбранным Creator и кнопкой Create]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Этот проход — заодно проверка портала целиком: три артефакта, открытый портал, перенос на площадку победы. Публикация сегодня первая: плейс рос с урока 25, а игрой для других он становится сейчас. На сайт с занятия не уходим — страница и опрос о содержимом лежат в домашнем задании. Кто успевает — пересаживается к соседу и смотрит, как тот играет: автор своей игры не боится. Если группа занимается по сети, роль тестера берёт ведущий, а автор смотрит на демонстрацию своего экрана и молчит. В конце шага снимаем кадр своей игры — из него после урока делается иконка, потом его будет негде взять.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="28-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Игрок дошёл до портала с тремя артефактами, а портал не открылся. Что проверяем первым?</p><ol class="content-item content-quiz-options"><li>Цвет полотна портала</li><li data-correct="true">Число в RequiredArtifacts ✓</li><li>Скорость монстра</li></ol>
+<p class="content-item content-question">Монстр после установки модуля стоит на месте. Где искать причину?</p><ol class="content-item content-quiz-options"><li data-correct="true">В сообщении модуля в Output ✓</li><li>В свойствах точки возрождения</li><li>В настройках освещения</li></ol>
+<p class="content-item content-question">Какое место своей игры ты бы показал другу первым — и что в нём должно случиться в первые тридцать секунд?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый и работает на домашнее задание: первые тридцать секунд решают, останется ли гость в игре. Если участник называет место, где ничего не происходит, вместе придумать, что там добавить — свет, звук или артефакт на виду.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="28-c-1">
+<h3 class="slide-title">Седьмая игра курса готова <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Четыре занятия назад здесь была пустая тёмная комната. Сегодня в ней есть лагерь, лабиринт, живой обитатель, цель и выход — то есть игра.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Дальше — первые скрипты: посмотрим, что за инструкции работают внутри готовых модулей</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить масштаб: игра собрана из четырёх занятий, и каждое видно в готовом результате. Анонс урока 29: до сих пор мы ставили готовые модули целиком, дальше начнём заглядывать внутрь и разбираться, из чего они сделаны.</aside>
+</div>
+<div class="slide" id="28-c-2">
+<h3 class="slide-title">Домашнее задание: открыть игру для гостей <span class="slide-duration">(1 мин)</span></h3>
+<ol class="content-item content-steps"><li>Оформи страницу игры: короткое имя, описание и иконку — кадр из своего лабиринта</li><li>Пройди опрос о содержимом и открой доступ к игре</li><li>Позови двух гостей и посмотри, куда они пойдут от костра</li><li>Добавь свет или ориентир там, где гость растерялся</li></ol>
+<p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Порядок пунктов важен: сначала опрос о содержимом и доступ, иначе гости в игру просто не зайдут. Про гостей сказать главное: смотреть надо не на похвалу, а на первые тридцать секунд — куда человек пошёл без подсказки. Последнее действие занятия — сохранение: File → Publish to Roblox (повторно — Alt+P); несохранённый проект — это следующий урок с пустого места.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-experiences-and-places.md">Publish experiences and places — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/projects/configure-experiences.md">Configure experiences and places — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/production/promotion/content-maturity">Content maturity and compliance — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/production/publishing/experience-icons">Icons — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/guide-to-making-better-horror-experiences/2212571">Guide to Making Better Horror Experiences — DevForum, Community Tutorials</a></li><li><a href="https://devforum.roblox.com/t/how-to-make-a-good-horror-game-i-guess-for-beginners/1908703">How to make a good horror game (for beginners) — DevForum, Community Tutorials</a></li><li><a href="https://create.roblox.com/store/asset/100539789220834/ArtifactCollector">Модуль курса «Артефакты» (ArtifactCollector) — Creator Store</a></li><li><a href="https://create.roblox.com/store/asset/127951163033608/MonsterAI">Модуль курса «Обитатель лабиринта» (MonsterAI) — Creator Store</a></li><li><a href="https://create.roblox.com/store/asset/97743211352966/ExitPortal">Модуль курса «Портал» (ExitPortal) — Creator Store</a></li><li><a href="https://devforum.roblox.com/t/publish-vs-save-updating-a-game/2806495">Publish VS save (updating a game) — DevForum</a></li></ul></section>
+</article>
+</body>
+</html>
