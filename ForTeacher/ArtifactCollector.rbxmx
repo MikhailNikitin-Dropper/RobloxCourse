@@ -2,16 +2,16 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX698617C58135466AB88C62A9D72213E8">
+	<Item class="Folder" referent="RBXF78C265A4DA14B29BA8935A46B54D36D">
 		<Properties>
 			<string name="Name">ArtifactCollector</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX8BDD1C9C18CD4AAB95953BD1BDE86FA9">
+		<Item class="RemoteEvent" referent="RBXE676DD7BE2D84AA48A77FBBEBAB9DFBB">
 			<Properties>
 				<string name="Name">Collected</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX387C265E50FE4A9E9AED394209EDA658">
+		<Item class="Script" referent="RBX5271154231684B8D8CDB20B2CB522334">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — серверная часть, урок 28.
 --
@@ -22,6 +22,26 @@
 -- с этим тегом: артефакт редко бывает одним кубиком, обычно это кристалл с
 -- подставкой и свечением. Внутри артефакта может лежать StringValue — записка,
 -- её текст игрок увидит в момент находки.
+--
+-- ДОМАШНЕЕ МЕСТО АРТЕФАКТА СЕРВЕР ЗАПИСЫВАЕТ В АТРИБУТ ArtifactHome. Экранная
+-- часть покачивает артефакт и потому обязана знать, откуда его качать, — но
+-- спрашивать место у самой модели она не может. При включённом
+-- Workspace.StreamingEnabled модель приезжает клиенту РАНЬШЕ своих деталей, и
+-- GetPivot() у пустой ещё модели отдаёт нули; клиент запоминал этот ноль как
+-- «дом» и тащил артефакт в начало координат. Отсюда были две беды сразу:
+-- артефакты пропадали из лабиринта и переставали засчитываться (деталь, по
+-- которой клиент считает касания, лежала за сто студов от игрока). Сервер
+-- видит мир целиком, поэтому место пишет он — один раз, в атрибут.
+--
+-- НАХОДКА ЗАСЧИТЫВАЕТСЯ ПО РАССТОЯНИЮ, А НЕ ПО КАСАНИЮ (Touched). Проверка
+-- расстояния на сервере не зависит ни от стриминга, ни от того, что клиент
+-- делает с видом артефакта: раз в PICKUP_STEP секунд модуль сравнивает
+-- позицию игрока с позицией артефакта. Замер 09.09.2026 показал, насколько
+-- это важнее: пока клиент держал артефакт не на месте, Touched не срабатывал
+-- вообще — ни у модуля, ни у пробника, повешенного руками.
+--
+-- НАСТРОЙКИ — атрибуты на самой папке модуля (заводить руками не нужно):
+--   PickupRange  5   с какого расстояния артефакт считается найденным
 --
 -- Счёт у каждого игрока свой: гость, зашедший в игру позже хозяина, собирает
 -- артефакты сам, чужие находки его счётчик не трогают. Число собранного
@@ -35,6 +55,23 @@ local TAG = "Artifact"
 
 local folder = script.Parent
 local collected = folder:WaitForChild("Collected")
+
+local DEFAULTS = { PickupRange = 5 }
+for name, value in pairs(DEFAULTS) do
+	if folder:GetAttribute(name) == nil then
+		folder:SetAttribute(name, value)
+	end
+end
+
+local function setting(name)
+	local value = folder:GetAttribute(name)
+	if value == nil then
+		return DEFAULTS[name]
+	end
+	return value
+end
+
+local PICKUP_STEP = 0.2 -- как часто сервер сверяет расстояния
 
 local taken = {} -- [Player] = { [деталь] = true }
 local count = {} -- [Player] = сколько артефактов собрано
@@ -72,45 +109,86 @@ local function collect(player, item)
 	collected:FireClient(player, item, item.Name, noteOf(item), count[player], total())
 end
 
-local function playerOf(hit)
-	local character = hit and hit.Parent
-	local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
-	if not humanoid or humanoid.Health <= 0 then
-		return nil
+-- Где находится артефакт. Сначала записанный дом, потом уже сама модель:
+-- дом не сдвинется, даже если артефакт кто-то анимирует.
+local function positionOf(item)
+	local home = item:GetAttribute("ArtifactHome")
+	if typeof(home) == "CFrame" then
+		return home.Position
 	end
-	return Players:GetPlayerFromCharacter(character)
+	if item:IsA("Model") then
+		local ok, pivot = pcall(function()
+			return item:GetPivot()
+		end)
+		return ok and pivot.Position or nil
+	end
+	return item.Position
 end
 
--- Ловим касание каждой детали артефакта, а засчитываем находку целиком:
--- у модели-кристалла деталей несколько, а артефакт один.
-local function watch(item)
+local HOME_ATTRIBUTE = "ArtifactHome"
+
+-- Где артефакт стоит на самом деле. Записываем один раз: дальше это правда
+-- и для экранной части, и для нас самих.
+local function rememberHome(item)
+	if item:GetAttribute(HOME_ATTRIBUTE) ~= nil then
+		return
+	end
+	local ok, place = pcall(function()
+		if item:IsA("Model") then
+			return item:GetPivot()
+		end
+		return item.CFrame
+	end)
+	if ok and typeof(place) == "CFrame" then
+		item:SetAttribute(HOME_ATTRIBUTE, place)
+	end
+end
+
+-- Артефакт — награда, а не стена: сквозь него проходят.
+local function prepare(item)
 	if not isArtifact(item) then
 		return
 	end
-	local pieces = item:IsA("BasePart") and { item } or {}
-	if item:IsA("Model") then
-		for _, child in ipairs(item:GetDescendants()) do
-			if child:IsA("BasePart") then
-				table.insert(pieces, child)
-			end
-		end
+	rememberHome(item)
+	if item:IsA("BasePart") then
+		item.CanCollide = false
+		return
 	end
-	for _, piece in ipairs(pieces) do
-		-- Артефакт — награда, а не стена: сквозь него проходят.
-		piece.CanCollide = false
-		piece.Touched:Connect(function(hit)
-			local player = playerOf(hit)
-			if player then
-				collect(player, item)
-			end
-		end)
+	for _, child in ipairs(item:GetDescendants()) do
+		if child:IsA("BasePart") then
+			child.CanCollide = false
+		end
 	end
 end
 
 for _, item in ipairs(CollectionService:GetTagged(TAG)) do
-	watch(item)
+	prepare(item)
 end
-CollectionService:GetInstanceAddedSignal(TAG):Connect(watch)
+CollectionService:GetInstanceAddedSignal(TAG):Connect(prepare)
+
+-- Главный цикл: подошёл ближе PickupRange — артефакт твой.
+task.spawn(function()
+	while true do
+		task.wait(PICKUP_STEP)
+		local range = setting("PickupRange")
+		for _, player in ipairs(Players:GetPlayers()) do
+			local mine = taken[player]
+			local character = player.Character
+			local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+			local root = character and character:FindFirstChild("HumanoidRootPart")
+			if mine and root and humanoid and humanoid.Health > 0 then
+				for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+					if not mine[item] and isArtifact(item) then
+						local pos = positionOf(item)
+						if pos and (pos - root.Position).Magnitude <= range then
+							collect(player, item)
+						end
+					end
+				end
+			end
+		end
+	end
+end)
 
 local function ready(player)
 	taken[player] = taken[player] or {}
@@ -142,7 +220,7 @@ end
 				<string name="Name">ArtifactServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX8AC6C880D010448A83E499ABFEF64FA5">
+		<Item class="Script" referent="RBX10619463DB954DF1B22A251107AF93E3">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — экранная часть, урок 28.
 --
@@ -166,6 +244,13 @@ end
 -- Артефактом может быть и одна деталь, и целая модель (кристалл с подставкой
 -- и свечением) — модуль работает с обоими: у модели двигается пивот, у детали
 -- CFrame.
+--
+-- ОТКУДА ЭКРАН ЗНАЕТ, ГДЕ АРТЕФАКТ СТОИТ. Из атрибута ArtifactHome, который
+-- пишет серверная часть, а НЕ из GetPivot самой модели. При включённом
+-- Workspace.StreamingEnabled модель приезжает клиенту раньше своих деталей, и
+-- пивот пустой модели равен нулю; запомнив этот ноль как «дом», покачивание
+-- утаскивало артефакт в начало координат — он пропадал из лабиринта и
+-- переставал засчитываться. Пока атрибута нет, артефакт не трогаем вовсе.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -407,6 +492,18 @@ local function partsOf(item)
 	return list
 end
 
+local HOME_ATTRIBUTE = "ArtifactHome"
+
+-- Дом артефакта: только то, что записал сервер. Своей догадке про место
+-- доверять нельзя — см. шапку про стриминг.
+local function homeOf(item)
+	local place = item:GetAttribute(HOME_ATTRIBUTE)
+	if typeof(place) == "CFrame" then
+		return place
+	end
+	return nil
+end
+
 local home = {} -- [артефакт] = место, где он висит на самом деле
 local busy = {} -- [артефакт] = сейчас летит к игроку
 local gone = {} -- [артефакт] = уже собран, его не видно
@@ -429,7 +526,7 @@ local function fly(item)
 	end
 	busy[item] = true
 
-	local base = home[item] or pivotOf(item)
+	local base = home[item] or homeOf(item) or pivotOf(item)
 	local pieces = partsOf(item)
 	local sizes, clears = {}, {}
 	for index, piece in ipairs(pieces) do
@@ -506,15 +603,16 @@ RunService.RenderStepped:Connect(function()
 	local clock = os.clock()
 	for _, item in ipairs(CollectionService:GetTagged(TAG)) do
 		if isArtifact(item) and not gone[item] and not busy[item] then
-			local base = home[item]
-			if not base then
-				base = pivotOf(item)
+			local base = home[item] or homeOf(item)
+			-- Дома ещё нет — значит, серверная часть до этого артефакта не
+			-- дошла или он не догрузился. Трогать его нельзя: сдвинем не туда.
+			if base then
 				home[item] = base
+				local phase = (base.Position.X + base.Position.Z) * 0.1
+				setPivot(item, base
+					* CFrame.new(0, math.sin(clock * 1.8 + phase) * 0.35, 0)
+					* CFrame.Angles(0, clock * 1.1, 0))
 			end
-			local phase = (base.Position.X + base.Position.Z) * 0.1
-			setPivot(item, base
-				* CFrame.new(0, math.sin(clock * 1.8 + phase) * 0.35, 0)
-				* CFrame.Angles(0, clock * 1.1, 0))
 		end
 	end
 end)

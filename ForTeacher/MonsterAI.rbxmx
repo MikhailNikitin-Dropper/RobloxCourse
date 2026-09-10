@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX0D48260527D14D2D80059170106297C4">
+	<Item class="Folder" referent="RBXBA23C11EA7A14FE781CC6FB0F9EE08E9">
 		<Properties>
 			<string name="Name">MonsterAI</string>
 		</Properties>
-		<Item class="Script" referent="RBX6F02CA738542473289112FBC845EC6C8">
+		<Item class="Script" referent="RBX330EACFE917940E58B34162CFC6F7F76">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterServer — мозг обитателя лабиринта: патруль, погоня, удар.
 --
@@ -17,7 +17,9 @@
 -- ни одного вспомогательного Part'а.
 --
 -- Что должно быть у модели монстра: Humanoid, HumanoidRootPart, Head.
--- Всё остальное — необязательно, модуль подстраивается (см. ниже).
+-- Всё остальное — необязательно, модуль подстраивается (см. ниже). Имя над
+-- головой модуль прячет сам — подпись «Monster» в тёмном коридоре видно
+-- раньше самого монстра.
 --
 -- НАСТРОЙКИ — атрибуты на САМОЙ ПАПКЕ MonsterAI (выделить папку в Explorer,
 -- Properties → Attributes). Заводить их руками не нужно: они уже лежат в
@@ -118,6 +120,13 @@ if not (humanoid and root and head) then
 		monster:GetFullName())
 	return
 end
+
+-- ИМЯ НАД ГОЛОВОЙ МОДУЛЬ ПРЯЧЕТ. Roblox по умолчанию подписывает всякую модель
+-- с Humanoid её именем: над монстром висело слово «Monster», и оно выбивало из
+-- игры — в темноте подпись видно раньше самого монстра, и весь испуг пропадает.
+-- Humanoid.DisplayDistanceType = None убирает и подпись, и полоску здоровья
+-- сразу; ученику для этого ничего делать не нужно.
+humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 
 -- СТРИМИНГ. При включённом Workspace.StreamingEnabled клиент игрока, стоящего
 -- у точки возрождения, вообще не подгружает модель монстра в глубине
@@ -911,7 +920,7 @@ report("zapushen")
 				<string name="Name">MonsterServer</string>
 			</Properties>
 		</Item>
-		<Item class="LocalScript" referent="RBXACC6BEA3E2E849C590BEAF45E3576EE3">
+		<Item class="LocalScript" referent="RBXC5967F82A3F24410A150D28571BD9C06">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterCamera — клиентская часть модуля: плавно разворачивает
 -- камеру пойманного игрока на монстра.

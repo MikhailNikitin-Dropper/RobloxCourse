@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX8A8AECB70CCF43198287EF5DC133AAA0">
+	<Item class="Folder" referent="RBX59415E4E9CEC48999EDF108FB8FC17D7">
 		<Properties>
 			<string name="Name">ExitPortal</string>
 		</Properties>
-		<Item class="Script" referent="RBX90720CB2CF26488FB4AFE1BCAE9B15A0">
+		<Item class="Script" referent="RBX1FD08DE2057A41C8BDDD22216C75B2C2">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ExitPortal.PortalServer — выход из лабиринта, который открывает награда.
 --
@@ -15,9 +15,9 @@
 -- ReplicatedStorage и сам раздаёт клиентскую часть игрокам.
 --
 -- ПРАВИЛО ПОРТАЛА — ОДНО, И ОНО НЕ МЕНЯЕТСЯ:
---   собрал нужное число артефактов → портал светится → вошёл → ты снаружи.
---   не собрал → портал тёмный → вошёл → ничего не происходит, на экране
---   написано, сколько ещё нужно.
+--   собрал нужное число артефактов → портал светится → подошёл → ты снаружи.
+--   не собрал → портал тёмный → подходи сколько хочешь, ничего не произойдёт,
+--   на экране написано, сколько ещё нужно.
 --
 -- Полотно НИКОГДА не бывает стеной. Раньше закрытый портал был твёрдым, а
 -- открытый — нет, и это путало: игрок то упирался в портал, то проваливался
@@ -25,11 +25,18 @@
 -- проходимой для другого (счёт-то у каждого свой). Теперь сквозь полотно
 -- проходят всегда, а разницу видно глазами: тёмное оно или светится.
 --
+-- ВЫХОД СЧИТАЕТСЯ ПО РАССТОЯНИЮ, А НЕ ПО КАСАНИЮ (Touched) — как и находка
+-- артефакта в модуле ArtifactCollector. На касании портал срабатывал не
+-- всегда: замер 10.09.2026 показал, что игрок, оказавшийся у полотна не шагом,
+-- а рывком, события касания не рождает вовсе. Расстояние надёжнее и понятнее
+-- ученику: «подошёл к светящемуся порталу — вышел».
+--
 -- НАСТРОЙКИ — атрибуты на САМОЙ ПАПКЕ ExitPortal (выделить папку в Explorer,
 -- Properties → Attributes). Заводить их руками не нужно, они уже в модуле:
 --   RequiredArtifacts  3            сколько артефактов открывают портал
 --   TargetName         "VictoryPad" деталь, на которую портал выносит
 --   CelebrateTime      5            сколько секунд идёт салют на площадке
+--   EnterRange         5            с какого расстояния портал выносит наружу
 --   CounterAttribute   "Artifacts"  имя атрибута игрока, где лежит счёт
 --
 -- Всё остальное модуль решает сам: полотно — деталь по имени Gate, а если
@@ -88,10 +95,14 @@ local DEFAULTS = {
 	RequiredArtifacts = 3,
 	TargetName = "VictoryPad",
 	CelebrateTime = 5,
+	EnterRange = 5,
 	CounterAttribute = "Artifacts",
 }
 
-local ORDER = { "RequiredArtifacts", "TargetName", "CelebrateTime", "CounterAttribute" }
+local ORDER = { "RequiredArtifacts", "TargetName", "CelebrateTime", "EnterRange",
+	"CounterAttribute" }
+
+local ENTER_STEP = 0.2 -- как часто сервер сверяет расстояние
 
 for _, name in ipairs(ORDER) do
 	if package:GetAttribute(name) == nil then
@@ -220,6 +231,15 @@ local function tellClient(player)
 	})
 end
 
+-- Клиент сам просит состояние, когда подписался на событие: иначе первая
+-- посылка уходит в пустоту. Порядок тут не гарантирован — серверная часть
+-- копирует клиентский скрипт игроку и в тот же миг шлёт ему состояние, а
+-- скрипт в PlayerGui успевает подключиться позже. Из-за этой гонки подсказка
+-- «Портал закрыт» не появлялась вовсе (поймано на съёмке кадров 10.09.2026).
+stateEvent.OnServerEvent:Connect(function(player)
+	tellClient(player)
+end)
+
 local function watch(player)
 	tellClient(player)
 	player:GetAttributeChangedSignal(setting("CounterAttribute")):Connect(function()
@@ -321,31 +341,11 @@ local function sendHome(player, character)
 	return true
 end
 
--- КАСАНИЕ ПОЛОТНА -------------------------------------------------------------
+-- ПОДХОД К ПОЛОТНУ ------------------------------------------------------------
 
 local busy = {} -- [Player] = true, пока идёт перенос
 
-local function playerOf(hit)
-	local character = hit and hit.Parent
-	local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
-	if not humanoid or humanoid.Health <= 0 then
-		return nil, nil
-	end
-	return Players:GetPlayerFromCharacter(character), character
-end
-
-gate.Touched:Connect(function(hit)
-	local player, character = playerOf(hit)
-	if not player or busy[player] then
-		return
-	end
-
-	if not isOpenFor(player) then
-		-- Закрытый портал молчит в Output, но не молчит на экране: подсказку
-		-- «нужно ещё N» рисует клиентская часть, ей достаточно состояния.
-		return
-	end
-
+local function leadOut(player, character)
 	busy[player] = true
 	-- Экран гасим ДО переноса и зажигаем после: без этого игрока просто
 	-- дёргает через пол-лабиринта, и он не понимает, что произошло.
@@ -362,6 +362,24 @@ gate.Touched:Connect(function(hit)
 	task.delay(3, function()
 		busy[player] = nil
 	end)
+end
+
+task.spawn(function()
+	while gate.Parent do
+		task.wait(ENTER_STEP)
+		local range = setting("EnterRange")
+		for _, player in ipairs(Players:GetPlayers()) do
+			if not busy[player] and isOpenFor(player) then
+				local character = player.Character
+				local humanoid = character and character:FindFirstChildWhichIsA("Humanoid")
+				local root = character and character:FindFirstChild("HumanoidRootPart")
+				if humanoid and root and humanoid.Health > 0
+					and (root.Position - gate.Position).Magnitude <= range then
+					task.spawn(leadOut, player, character)
+				end
+			end
+		end
+	end
 end)
 
 Players.PlayerRemoving:Connect(function(player)
@@ -402,7 +420,7 @@ end)
 				<string name="Name">PortalServer</string>
 			</Properties>
 		</Item>
-		<Item class="LocalScript" referent="RBXE21C5D5D0DFE43C38E893E5B965B97DD">
+		<Item class="LocalScript" referent="RBXBA8CE446CD3A46C1AAD8E7C54749496E">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ExitPortal.PortalScreen — экранная часть модуля портала: подсветка полотна,
 -- подсказка вблизи и затемнение на время выхода.
@@ -518,8 +536,11 @@ local function line(parent, font, size, color, offsetY, height)
 	return label
 end
 
--- Подсказка у портала
-local hint = panel("Hint", UDim2.new(0, 320, 0, 74), UDim2.new(0.5, 0, 1, -110))
+-- Подсказка у портала. Не у самого низа экрана, а в нижней трети: внизу
+-- Roblox держит свои панели (чат, рюкзак), и подсказка с ними спорит. Заодно
+-- она попадает в кадр — съёмка кадров урока берёт верхнюю часть вьюпорта, и
+-- панель, прижатая к низу, в снимок не входила вовсе (поймано 10.09.2026).
+local hint = panel("Hint", UDim2.new(0, 320, 0, 74), UDim2.new(0.5, 0, 0.55, 0))
 local hintTitle = line(hint, FONT_BOLD, 19, TEXT, 14, 24)
 local hintNote = line(hint, FONT_TEXT, 15, MUTED, 40, 22)
 
@@ -660,6 +681,19 @@ end
 
 task.spawn(function()
 	local stateEvent = ReplicatedStorage:WaitForChild(EVENT_NAME)
+
+	-- Просим состояние сами, как только подписались: серверная посылка при
+	-- входе в игру уходит раньше, чем этот скрипт успевает подключиться.
+	-- Повторяем, пока не ответят, — но не бесконечно.
+	task.spawn(function()
+		for _ = 1, 10 do
+			if state then
+				return
+			end
+			stateEvent:FireServer()
+			task.wait(1)
+		end
+	end)
 
 	stateEvent.OnClientEvent:Connect(function(message)
 		if type(message) ~= "table" then
