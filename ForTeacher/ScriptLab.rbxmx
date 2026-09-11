@@ -1,0 +1,162 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXF8E53B40FC4F406DBA01FB232E512B59">
+		<Properties>
+			<string name="Name">ScriptLab</string>
+		</Properties>
+		<Item class="Script" referent="RBXFA517B4FEB98404C983CD0C865111634">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- BlinkScript — заставляет деталь мигать светом. Модуль курса «Лаборатория
+-- скриптов», урок 29.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали и три числа. Их можно менять. Всё, что ниже второго
+-- ряда, — логика: её не трогаем.
+--
+-- Свет модуль добавляет сам, если его в детали ещё нет.
+
+-- ============================ НАСТРОЙКИ ============================
+local PART = "Blinker" -- имя детали-маяка (в кавычках!)
+local EVERY = 0.8 -- как часто мигает: раз в столько секунд
+local RANGE = 12 -- далеко ли видно свет, в студах
+local BRIGHT = 2 -- насколько ярко светит
+-- ===================================================================
+
+-- Папка модуля лежит внутри модели, поэтому деталь ищем в ней.
+local model = script.Parent.Parent
+local part = model:FindFirstChild(PART)
+
+if not part then
+	return
+end
+
+local light = part:FindFirstChildOfClass("PointLight")
+if not light then
+	light = Instance.new("PointLight")
+	light.Color = part.Color
+	light.Parent = part
+end
+
+light.Range = RANGE
+light.Brightness = BRIGHT
+
+while true do
+	light.Enabled = not light.Enabled
+	part.Material = light.Enabled and Enum.Material.Neon or Enum.Material.SmoothPlastic
+	task.wait(EVERY)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">BlinkScript</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX163EFDBA8AA54CB9AEC0100F873BFF57">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- PulseScript — деталь дышит: становится больше и снова меньше.
+-- Модуль курса «Лаборатория скриптов», урок 29.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали и три числа. Их можно менять. Всё, что ниже второго
+-- ряда, — логика: её не трогаем.
+--
+-- Числа с точкой писать через точку, а не через запятую: 1.5, а не 1,5.
+
+-- ============================ НАСТРОЙКИ ============================
+local PART = "Pulser" -- имя детали, которая дышит (в кавычках!)
+local SMALL = 3 -- размер в студах, когда деталь сжалась
+local BIG = 7 -- размер в студах, когда деталь раздулась
+local SECONDS = 1.5 -- сколько секунд занимает одно движение
+-- ===================================================================
+
+local RunService = game:GetService("RunService")
+
+-- Папка модуля лежит внутри модели, поэтому деталь ищем в ней.
+local model = script.Parent.Parent
+local part = model:FindFirstChild(PART)
+
+if not part then
+	return
+end
+
+part.Anchored = true
+
+local center = part.Position
+
+-- Раздуть или сжать деталь за SECONDS секунд.
+local function breathe(from, to)
+	local passed = 0
+	while passed < SECONDS do
+		passed = passed + RunService.Heartbeat:Wait()
+		local share = math.clamp(passed / SECONDS, 0, 1)
+		local side = from + (to - from) * share
+		part.Size = Vector3.new(side, side, side)
+		part.Position = center
+	end
+	part.Size = Vector3.new(to, to, to)
+	part.Position = center
+end
+
+while true do
+	breathe(SMALL, BIG)
+	breathe(BIG, SMALL)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">PulseScript</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX2CDC63626A9142978E7D501ADE24E747">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- GhostScript — мост-призрак: то держит игрока, то пропускает его насквозь.
+-- Модуль курса «Лаборатория скриптов», урок 29.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали и три числа. Их можно менять. Всё, что ниже второго
+-- ряда, — логика: её не трогаем.
+--
+-- Призрак остаётся видимым: правило курса — сквозные детали должны быть
+-- заметны, иначе испытание превращается в лотерею. Поэтому в призрачном
+-- состоянии деталь полупрозрачная, а не невидимая.
+
+-- ============================ НАСТРОЙКИ ============================
+local PART = "Ghost" -- имя детали-моста (в кавычках!)
+local SOLID = 3 -- сколько секунд мост держит игрока
+local GHOST = 2 -- сколько секунд он пропускает насквозь
+local FADE = 0.7 -- насколько призрак прозрачный: от 0 до 0.9
+-- ===================================================================
+
+-- Папка модуля лежит внутри модели, поэтому деталь ищем в ней.
+local model = script.Parent.Parent
+local part = model:FindFirstChild(PART)
+
+if not part then
+	return
+end
+
+part.Anchored = true
+
+while true do
+	-- твёрдый мост
+	part.CanCollide = true
+	part.Transparency = 0
+	part.Material = Enum.Material.WoodPlanks
+	task.wait(SOLID)
+
+	-- призрак: видно, но насквозь
+	part.CanCollide = false
+	part.Transparency = math.clamp(FADE, 0, 0.9)
+	part.Material = Enum.Material.Glass
+	task.wait(GHOST)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">GhostScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

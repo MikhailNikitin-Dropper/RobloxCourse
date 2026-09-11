@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 29. Что такое скрипт (и почему мы его не пишем)</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="29">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 29. Что такое скрипт (и почему мы его не пишем)</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Technical Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="29-w-1">
+<h3 class="slide-title">Сегодня открываем редактор скриптов <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Все прошлые уроки детали стояли на месте, пока их не двигал игрок. Сегодня соберём стенд, который двигается сам.</p>
+<p class="content-item content-paragraph">Роль на сегодня — <b>Technical Designer</b> (технический дизайнер): тот, кто читает готовый скрипт и настраивает его под свою игру.</p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Роль дня — Technical Designer: настраивает готовую механику и умеет читать её изнутри. Сказать прямо, что сегодня впервые откроется окно с кодом, и сразу снять напряжение: писать код не будем, будем менять в нём числа. Замысел занятия — стенд из трёх деталей, у каждой свой короткий скрипт.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="29-r-1">
+<h3 class="slide-title">Вспомним ночной лабиринт <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Куда кладут папку модуля, чтобы он заработал?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью, в Workspace</li><li data-correct="true">Внутрь модели, которой модуль управляет ✓</li><li>В любое место — модуль сам себя найдёт</li></ol>
+<p class="content-item content-question">Откуда портал узнавал, сколько артефактов собрал игрок?</p><ol class="content-item content-quiz-options"><li>Считал касания игрока о полотно</li><li data-correct="true">Читал атрибут игрока, который ведёт модуль артефактов ✓</li><li>Спрашивал у ведущего в окне настроек</li></ol>
+<p class="content-item content-question">Что ученик вписывал в атрибуты WalkAnimationId и AttackAnimationId?</p><ol class="content-item content-quiz-options"><li data-correct="true">Номера своих анимаций из урока 27 ✓</li><li>Скорость и радиус монстра</li><li>Имя модели монстра</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, по минуте с небольшим на вопрос. Все три ведут к теме занятия: механику давал модуль, а внутри модуля — скрипт, который сегодня наконец откроем.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Скрипт и его настройки <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="29-t-1">
+<h3 class="slide-title">Скрипт заставляет детали работать <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Script</b> (скрипт) — объект в Explorer с инструкцией для игры</li><li>Деталь сама ничего не делает: она лежит там, где её поставили</li><li>Скрипт заставляет детали мигать, расти и пропускать сквозь себя</li><li>Монстр, портал и карусель работали именно так</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Главная мысль: деталь сама ничего не делает, она лежит. Спросить группу, что в прошлых играх двигалось само — монстр, портал, карусель, вращающееся препятствие. Всё это делали скрипты. Сегодня стенды нарочно другие: мигание, изменение размера и проходимость в курсе ещё не встречались.</aside>
+</div>
+<div class="slide" id="29-t-2">
+<h3 class="slide-title">Три стенда — три коротких скрипта <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>В папке ScriptLab три скрипта, у каждого свой стенд</li><li>BlinkScript зажигает маяк, PulseScript раздувает куб, GhostScript открывает мост</li><li>Каждый скрипт короткий: помещается на экране целиком</li><li>Стенды независимы: один скрипт остановился — остальные работают</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer раскрыта модель Lab — внутри детали Blinker, Pulser, Ghost и папка ScriptLab с тремя скриптами BlinkScript, PulseScript, GhostScript]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Показать на экране готовую лабораторию: модель Lab, внутри три детали и папка ScriptLab с тремя скриптами по 40, 49 и 42 строки — каждый виден целиком, без прокрутки. Независимость проверена замером: с выключенным PulseScript куб изменился на 0.00 студа, а маяк продолжал мигать.</aside>
+</div>
+<div class="slide" id="29-t-3">
+<h3 class="slide-title">Настройки — это переменные в начале файла <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Переменная</b> — строка вида «имя = значение», скрипт читает её и работает по ней</li><li>В модуле курса настройки отбиты сверху и снизу рядами знаков «равно»</li><li>Числа: EVERY — частота мигания, BIG — размер куба, SOLID — секунды моста</li><li>Имя детали — тоже настройка, оно стоит в кавычках</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открытое окно скрипта BlinkScript, в начале файла между рядами знаков равно видны переменные PART, EVERY, RANGE и BRIGHT с пояснениями]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, ключевой слайд занятия. Открыть BlinkScript на экране и показать пальцем: между двумя рядами знаков «равно» — настройки, ниже — логика. Объяснить строку «имя = значение»: это и есть переменная, скрипт читает её и работает по ней. Правило курса: меняем настройки, логику не трогаем. Отдельно показать имя детали в кавычках — менять можно и его.</aside>
+</div>
+<div class="slide" id="29-t-4">
+<h3 class="slide-title">Строки с двумя дефисами игра не читает <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Пояснение</b> — строка, которая начинается с двух дефисов</li><li>Игра такие строки не читает: они написаны для человека</li><li>В модуле курса ими подписана каждая настройка</li><li>Поставили два дефиса перед рабочей строкой — она выключилась</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Показать на экране пояснения рядом с каждой настройкой. Проговорить, что их пишут для человека, который откроет файл, и что именно по ним понятно, какое число за что отвечает. Полезная обратная сторона: два дефиса перед рабочей строкой выключают её — это пригодится в шаге 6, где маяк гасят именно так.</aside>
+</div>
+<div class="slide" id="29-t-5">
+<h3 class="slide-title">Поменял число — перезапусти Test <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Скрипт читает свои переменные один раз — при запуске игры</li><li>Поменяли число во время Test — стенд работает по-старому</li><li>Останови Test и запусти снова: новое число подхватится</li><li>Так же ведёт себя любой готовый скрипт, не только наш</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель вкладки Test с кнопками Play и Stop, рядом открытое окно скрипта с изменённым числом в переменной]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты, важнейший практический момент занятия. Переменные скрипт читает один раз при запуске, поэтому правка подхватывается только при новом запуске. Замер: при EVERY 0.8 маяк даёт 5 переключений за четыре секунды, после правки на 0.2 и перезапуска — 18. Показать это вживую, чтобы дети не ждали изменений во время запущенного Test.</aside>
+</div>
+<div class="slide" id="29-t-6">
+<h3 class="slide-title">Две ошибки правки: тихая и громкая <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Меняем только то, что стоит между рядами знаков «равно»</li><li>Запятая вместо точки ошибки не даёт: число тихо теряет дробную часть</li><li>Потерянная кавычка — ошибка громкая: скрипт не запустится совсем</li><li>Случайную правку отменяем: Edit → Undo</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты, слайд про цену ошибки. Замеры этого модуля: строка «local EVERY = 0,8» ошибки не даёт — Luau читает её как присваивание двух значений, дробная часть отбрасывается, и число становится нулём; маяк тогда мигает каждый кадр, замер дал 58 переключений в секунду. Вторая ошибка ведёт себя иначе: если потерять кавычку у имени детали, скрипт вообще не запустится — компилятор отвечает «Malformed string». Отсюда правило для группы: странное поведение ищем в числах, а полностью замерший стенд — в кавычках. Случайную правку возвращает Edit → Undo (Ctrl+Z).</aside>
+</div>
+<div class="slide" id="29-t-7">
+<h3 class="slide-title">Галочка Enabled выключает скрипт <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>У каждого скрипта в Properties есть галочка <b>Enabled</b> (включён)</li><li>Снимаем галочку — скрипт не работает, возвращаем — работает снова</li><li>Выключили SpinScript: крыло замерло, платформа поехала как раньше</li><li>Ничего не удаляется: это выключатель, а не удаление</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer выделен скрипт PulseScript, в Properties подсвечена снятая галочка Enabled, в окне вьюпорта видна лаборатория со стендами]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. У Script галочка Enabled включена по умолчанию. Показать вживую: снимаем её у PulseScript, Test — куб замер, маяк мигает по-прежнему. Замер подтверждает: куб изменился на 0.00 студа, маяк дал те же 5 переключений. Предупредить: галочку после проверки обязательно вернуть.</aside>
+</div>
+<div class="slide" id="29-t-8">
+<h3 class="slide-title">Дизайнер настраивает механику, а не пишет её <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Technical Designer настраивает готовую механику и ставит задачу программисту</li><li>Чужой скрипт может делать не то, что обещает: курс находил в модели бэкдор</li><li>Частая ошибка: деталь названа не так, как написано в настройке</li><li>Ещё одна: сняли галочку Enabled для проверки и забыли вернуть</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты, слайд про роль и частые ошибки сразу. Две причины назвать прямо: код мало написать, его нужно отладить; чужой скрипт может делать не то, что обещает — курс находил в модели шасси бэкдор. Из ошибок показать первую вживую: переименовать деталь Pulser и убедиться, что куб замер, а остальные стенды работают.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="29-qt-1">
+<h3 class="slide-title">Проверим себя <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что можно менять в скрипте модуля?</p><ol class="content-item content-quiz-options"><li>Любую строку: скрипт всё равно разберётся</li><li data-correct="true">Только настройки между рядами знаков «равно» ✓</li><li>Ничего: скрипт открывают, чтобы посмотреть</li></ol>
+<p class="content-item content-question">Поменяли число во время запущенного Test. Что увидит игрок?</p><ol class="content-item content-quiz-options"><li data-correct="true">Стенд будет работать по-старому, пока Test не перезапустить ✓</li><li>Стенд сразу поедет по-новому</li><li>Игра остановится с ошибкой</li></ol>
+<p class="content-item content-question">Как проверить, какой скрипт отвечает за стенд, ничего не удаляя?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса с вариантами, третий открытый. Ожидаемый ответ на третий: снять галочку Enabled и запустить Test — если стенд замер, отвечает этот скрипт. Именно этот приём дети применят в практике.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="29-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Пять минут отдыха. После перерыва создаём новый проект — в нём соберём лабораторию из трёх стендов.</p>
+<aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва должно быть готово: у каждого создан новый пустой проект (File → New), ссылка на модуль «Лаборатория скриптов» под рукой.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Практика: своя лаборатория скриптов <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="29-p-1">
+<h3 class="slide-title">Шаг 1: комната лаборатории <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Создай новый проект: File → New, пустой Baseplate</li><li>Собери помост из двух частей, между ними оставь проём 8 студов</li><li>Поставь точку возрождения на ближней части помоста</li><li>Test → подойди к проёму: перепрыгнуть его нельзя</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Обязательный минимум шага — две части помоста с проёмом и точка возрождения. Помост поднят над землёй, чтобы провал в проём был заметным, а рядом стоит пандус для возврата. Лаборатория светлая нарочно: важно видеть, что делают стенды. Это новый отдельный проект — игра про лабиринт остаётся в облаке и сегодня не нужна.</aside>
+</div>
+<div class="slide" id="29-p-2">
+<h3 class="slide-title">Шаг 2: три стенда с точными именами <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Blinker — шар на столбе за проёмом: будет мигать светом</li><li>Pulser — куб на подставке: будет расти и сжиматься</li><li>Ghost — настил через проём: будет то твёрдым, то сквозным</li><li>Выдели детали и собери в модель, назови её Lab</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: светлая лаборатория на помосте с проёмом посередине — фиолетовый светящийся куб на подставке, синий настил через проём и жёлтый шар-маяк на столбе за ним, вид сверху под углом]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, самый длинный шаг. Имена деталей записаны в настройках скриптов, поэтому опечатка означает неработающий стенд. Размеры для ориентира: куб 3 студа на подставке, настил 10 на 10 студов ровно по проёму, шар маяка 3 студа на столбе высотой 6. Все детали закрепить. Маяк ставим за проёмом нарочно: до него придётся пройти по мосту.</aside>
+</div>
+<div class="slide" id="29-p-3">
+<h3 class="slide-title">Шаг 3: вставь модуль и посмотри, что он делает <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Получи модуль по ссылке и перетащи папку ScriptLab внутрь модели Lab</li><li>Test → маяк мигает, куб дышит, настил то твёрдый, то прозрачный</li><li>Перейди по мосту, пока он твёрдый, и дойди до маяка</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/92380259326172/ScriptLab" target="_blank" rel="noopener">https://create.roblox.com/store/asset/92380259326172/ScriptLab</a></p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок стоит на синем настиле над проёмом, рядом дышащий куб, за проёмом горит маяк]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Путь получения модуля: по ссылке → Get Model → Inventory → перетащить в Workspace, оттуда папку внутрь модели Lab. Проверить глазами, что папка лежит внутри модели. Замер провала: на призрачном мосту игрок падает с высоты 11 студов на землю — это безопасно, обратно он поднимается по пандусу. Прозрачность призрака 0.7: он остаётся виден, и это правило курса — у игрока должен быть шанс заметить подвох.</aside>
+</div>
+<div class="slide" id="29-p-4">
+<h3 class="slide-title">Шаг 4: первая правка в редакторе <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Двойным щелчком открой BlinkScript и прочитай настройки</li><li>Поменяй число в EVERY: было 0.8, поставь своё</li><li>Останови Test и запусти снова — маяк мигает по-новому</li><li>Не понравилось — верни прежнее число тем же способом</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: окно скрипта BlinkScript с изменённым числом в переменной EVERY, курсор стоит в этой строке]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты, главный шаг занятия. Порядок жёсткий: сначала прочитать настройки вслух, потом поменять одно число, потом остановить и снова запустить Test. Ориентир: EVERY от 0.2 до 2 секунд. Замер: при 0.8 маяк даёт 5 переключений за четыре секунды, при 0.2 — 18. Напомнить про точку в дробных числах. Случайную правку отменяет Edit → Undo (Ctrl+Z).</aside>
+</div>
+<div class="slide" id="29-p-5">
+<h3 class="slide-title">Шаг 5: настрой платформу и маяк <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой PulseScript и поменяй SMALL, BIG и SECONDS</li><li>Открой GhostScript и поменяй SOLID и GHOST</li><li>После каждой правки перезапускай Test</li><li>Подбери числа так, чтобы мост успевать проходить</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Ориентиры: SMALL от 1 до 4, BIG от 5 до 12, SECONDS от 0.5 до 3, SOLID от 2 до 6 секунд, GHOST от 1 до 4. Цель шага — подобрать числа так, чтобы мост успевать проходить: это первое собственное решение дизайнера внутри скрипта. Кто поставит SOLID меньше секунды, сам увидит, что испытание стало нечестным.</aside>
+</div>
+<div class="slide" id="29-p-6">
+<h3 class="slide-title">Шаг 6: выключатели и сохранение <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>В BlinkScript поставь два дефиса перед строкой light.Enabled = not light.Enabled</li><li>Убери дефисы, перезапусти Test — маяк снова мигает</li><li>Сними Enabled у PulseScript: куб замер, маяк мигает</li><li>Верни галочку и сохрани проект: File → Publish to Roblox</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: лаборатория после настройки — фиолетовый куб раздут до большого размера, настил над проёмом стал стеклянным и сквозным, маяк горит и освещает стену]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты, финал маршрута. Строку показать на экране и назвать вслух, чтобы никто не закомментировал строку с while: замер подтверждает, что при закомментированной строке света скрипт живёт, а маяк перестаёт мигать. Два выключателя рядом: два дефиса гасят одну строку, галочка Enabled — весь скрипт. Обязательно проследить, чтобы дефисы и галочки вернулись: незакрытый выключатель — самая частая поломка после этого занятия.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="29-qp-1">
+<h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Маяк после правки замигал как сумасшедший. Что искать?</p><ol class="content-item content-quiz-options"><li data-correct="true">Запятую вместо точки в дробном числе ✓</li><li>Потерянную кавычку у имени детали</li><li>Ошибку в логике ниже настроек</li></ol>
+<p class="content-item content-question">Деталь назвали Pulser2, а в настройке скрипта осталось Pulser. Что произойдёт?</p><ol class="content-item content-quiz-options"><li data-correct="true">Куб не заработает, маяк и мост будут работать ✓</li><li>Остановятся все три стенда</li><li>Скрипт сам найдёт деталь по новому имени</li></ol>
+<p class="content-item content-question">Какие числа сделают мост нечестным для игрока и почему?</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса с вариантами, третий открытый. Ожидаемый ответ на третий: слишком короткий SOLID — мост исчезает раньше, чем игрок успевает пройти, и пройти лабораторию становится делом случая. Если группа предложит другие способы сломать стенд числами, записать: пригодится на уроке 30.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="29-c-1">
+<h3 class="slide-title">Домашнее задание и что дальше <span class="slide-duration">(2 мин)</span></h3>
+<p class="content-item content-paragraph">Мы открыли редактор скриптов, прочитали готовую механику и настроили её числами — это работа Technical Designer.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: подбери числа для быстрого маяка и медленного моста</li><li>Запиши, какие значения тебе понравились и почему</li><li>Проверь, что галочки Enabled вернулись на место</li><li>На следующем уроке начинаем комнату побега: кнопки и двери</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Домашнее задание проверяется одним вопросом на следующем занятии: какие числа ты подобрал и почему. Анонс урока 30: начинаем новую игру — комнату побега, и первое, что в ней появится, — кнопка, которая открывает дверь. Напомнить, что лаборатория сохранена и её можно использовать как площадку для опытов.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/scripting/scripts.md">Scripts | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Script.md">Script | Roblox Creator Hub (API Reference)</a></li><li><a href="https://create.roblox.com/docs/en-us/luau/comments.md">Comments | Roblox Creator Hub (Luau)</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/RunService.md">RunService | Roblox Creator Hub (API Reference)</a></li></ul></section>
+</article>
+</body>
+</html>

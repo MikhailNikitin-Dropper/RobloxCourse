@@ -2,16 +2,16 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXF78C265A4DA14B29BA8935A46B54D36D">
+	<Item class="Folder" referent="RBXB8F3A6D4C4A14FEEA36591697FF0CA6C">
 		<Properties>
 			<string name="Name">ArtifactCollector</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBXE676DD7BE2D84AA48A77FBBEBAB9DFBB">
+		<Item class="RemoteEvent" referent="RBX42F05D0AFDA34C4D89CF53DFB5C65965">
 			<Properties>
 				<string name="Name">Collected</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX5271154231684B8D8CDB20B2CB522334">
+		<Item class="Script" referent="RBX7465353F6F824601A19E6C9E2261DB46">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — серверная часть, урок 28.
 --
@@ -220,7 +220,7 @@ end
 				<string name="Name">ArtifactServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX10619463DB954DF1B22A251107AF93E3">
+		<Item class="Script" referent="RBXC611F9C069E543E7974BE1AA60950EBE">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- Модуль курса «Артефакты» (ArtifactCollector) — экранная часть, урок 28.
 --
