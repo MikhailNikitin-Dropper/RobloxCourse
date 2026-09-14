@@ -1,0 +1,92 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX44529E06C609441EA3C7525E0BFF8224">
+		<Properties>
+			<string name="Name">ButtonDoor</string>
+		</Properties>
+		<Item class="Script" referent="RBXFCCB9E4CF0A847E5808F938DE3D686FC">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- DoorScript — кнопка открывает дверь.
+-- Модуль курса «Кнопка и дверь», урок 30.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имена двух деталей и два числа. Их можно менять. Всё, что ниже
+-- второго ряда, — логика: её не трогаем.
+--
+-- Подсказку «нажми E» настраивают не здесь, а в Properties: это объект
+-- ProximityPrompt внутри кнопки. Если его нет, скрипт поставит свой.
+
+-- ============================ НАСТРОЙКИ ============================
+local DOOR = "Door" -- имя детали-двери (в кавычках!)
+local BUTTON = "Button" -- имя детали-кнопки (в кавычках!)
+local OPEN_TIME = 0.8 -- за сколько секунд дверь уезжает вверх
+local STAY_OPEN = 4 -- сколько секунд дверь открыта; 0 — не закрывается
+-- ===================================================================
+
+local TweenService = game:GetService("TweenService")
+
+-- Папка модуля лежит внутри модели, поэтому детали ищем в ней.
+local model = script.Parent.Parent
+local door = model:FindFirstChild(DOOR)
+local button = model:FindFirstChild(BUTTON)
+
+if not (door and button) then
+	return
+end
+
+door.Anchored = true
+
+local prompt = button:FindFirstChildOfClass("ProximityPrompt")
+if not prompt then
+	prompt = Instance.new("ProximityPrompt")
+	prompt.ActionText = "Открыть"
+	prompt.ObjectText = "Дверь"
+	prompt.Parent = button
+end
+
+-- Дверь уезжает вверх ровно на свою высоту.
+local closed = door.CFrame
+local opened = closed + Vector3.new(0, door.Size.Y, 0)
+
+local function move(goal)
+	local tween = TweenService:Create(door, TweenInfo.new(OPEN_TIME), { CFrame = goal })
+	tween:Play()
+	tween.Completed:Wait()
+end
+
+-- Стоит ли кто-нибудь в проёме: на игроке дверь не закрывается.
+local function someoneInDoorway()
+	for _, part in ipairs(workspace:GetPartBoundsInBox(closed, door.Size)) do
+		local character = part.Parent
+		if part ~= door and character and character:FindFirstChildOfClass("Humanoid") then
+			return true
+		end
+	end
+	return false
+end
+
+prompt.Triggered:Connect(function()
+	-- Пока дверь едет или открыта, подсказка спрятана: второе нажатие не
+	-- дёрнет полотно на полпути.
+	prompt.Enabled = false
+	move(opened)
+	if STAY_OPEN <= 0 then
+		return
+	end
+	task.wait(STAY_OPEN)
+	while someoneInDoorway() do
+		task.wait(0.5)
+	end
+	move(closed)
+	prompt.Enabled = true
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">DoorScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
