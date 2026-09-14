@@ -1,0 +1,79 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX4EF333C2AB7643AD9CE09799D96DC71F">
+		<Properties>
+			<string name="Name">Trampoline</string>
+		</Properties>
+		<Item class="Script" referent="RBXCC6A4E4DE8474DBD8DC3C53780B5EA7E">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- JumpScript — батут: подбрасывает игрока, который на нём стоит.
+-- Модуль курса «Батут», домашнее задание урока 29.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали и два числа. Их можно менять. Всё, что ниже второго
+-- ряда, — логика: её не трогаем.
+
+-- ============================ НАСТРОЙКИ ============================
+local PART = "Pad" -- имя детали-батута (в кавычках!)
+local POWER = 25 -- сила подброса вверх: чем больше, тем выше
+local COOLDOWN = 1 -- сколько секунд батут отдыхает между подбросами
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+
+-- Папка модуля лежит внутри модели, поэтому деталь ищем в ней.
+local model = script.Parent.Parent
+local pad = model:FindFirstChild(PART)
+
+if not pad then
+	return
+end
+
+pad.Anchored = true
+
+-- Когда кого подбросили в последний раз.
+local lastJump = setmetatable({}, { __mode = "k" })
+
+-- Стоит ли персонаж на батуте: ноги на опоре, корпус прямо над деталью.
+local function standsOnPad(humanoid, root)
+	if humanoid.FloorMaterial == Enum.Material.Air then
+		return false
+	end
+	local p = pad.CFrame:PointToObjectSpace(root.Position)
+	local half = pad.Size / 2
+	return math.abs(p.X) <= half.X and math.abs(p.Z) <= half.Z
+		and p.Y > half.Y and p.Y < half.Y + 4
+end
+
+while true do
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local attachment = root and root:FindFirstChild("RootAttachment")
+		local rested = not lastJump[player] or os.clock() - lastJump[player] >= COOLDOWN
+		if attachment and humanoid.Health > 0 and rested and standsOnPad(humanoid, root) then
+			lastJump[player] = os.clock()
+			-- Персонажем двигает компьютер игрока, поэтому даём короткий толчок:
+			-- LinearVelocity на пятую долю секунды.
+			local push = Instance.new("LinearVelocity")
+			push.Attachment0 = attachment
+			push.MaxForce = math.huge
+			push.VectorVelocity = Vector3.new(0, POWER, 0)
+			push.Parent = root
+			Debris:AddItem(push, 0.2)
+		end
+	end
+	task.wait(0.05)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">JumpScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
