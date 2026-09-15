@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="19-r-1">
-<h3 class="slide-title">Что мы делали на уроке 18? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 18 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Как мы получили вторую половину арены?</p><ol class="content-item content-quiz-options"><li>Построили её заново по чертежу первой</li><li data-correct="true">Собрали в Model, скопировали и развернули на 180 градусов ✓</li><li>Растянули первую половину на всю карту</li></ol>
 <p class="content-item content-question">Почему награду положили в открытый центр, а укрытия — по краям площадки?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы игрок сам решал, стоит ли награда риска ✓</li><li>Чтобы награду было проще охранять</li><li>Открытое место ускоряет бег персонажа</li></ol>
 <p class="content-item content-question">Что мы сверяли в тесте Server &amp; Clients в конце урока?</p><ol class="content-item content-quiz-options"><li>Сколько деталей в каждой половине</li><li>Число клиентов в симуляции</li><li data-correct="true">Одинаковое ли время от базы до центра ✓</li></ol>
@@ -54,7 +54,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-theory">
 <h2 class="block-title" style="color:#006600;">Оружие игрока <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="19-t-1">
-<h3 class="slide-title">Снаряжение решает не меньше карты <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Снаряжение решает <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Равная карта и неравное оружие — игра стала нечестной</li><li>Оружие задаёт дистанцию боя</li><li>Дизайнер отвечает на три вопроса: как оружие выглядит, как лежит в руке и откуда игрок его берёт</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Спросить группу: в какой знакомой игре оружие решало исход сильнее, чем карта? Ответы приведут к мысли, что снаряжение — такая же часть баланса.</aside>
 </div>
@@ -70,21 +70,21 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Здесь Anchored работает наоборот привычного: всю арену мы закрепляли, а оружие закреплять нельзя — иначе персонаж прирастает к месту. Показать вживую: закрепить рукоять и попробовать взять предмет.</aside>
 </div>
 <div class="slide" id="19-t-4">
-<h3 class="slide-title">Grip: как оружие лежит в руке <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Grip: оружие в руке <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Grip (хват)</b> — это свойство Tool: как предмет повёрнут и сдвинут в руке</li><li>Числа хвата подбирать вслепую долго, поэтому используем плагин — редактор хвата прямо в окне Studio</li><li>Хват отвечает только за вид оружия в руке</li></ul>
 <p class="content-item content-paragraph">Ссылка на плагин: <a href="https://create.roblox.com/store/asset/16651031857/Tool-Grip-Visual-Editor" target="_blank" rel="noopener">https://create.roblox.com/store/asset/16651031857/Tool-Grip-Visual-Editor</a></p>
 <p class="content-item content-image-prompt">[изображение: Roblox Studio с открытым редактором хвата: слева панель плагина, в ней рука держит собранный бластер, а в окне сцены на хвате стоят стрелки перемещения и поворота]</p>
 <aside class="speaker-notes">Заметка ведущего: Плагин ставится со своей страницы кнопкой установки — Studio подхватывает его сама, дальше он живёт на вкладке Plugins. Показать вживую: выделяем Tool, тянем стрелку — оружие поворачивается в руке. Устно: на меткость хват не влияет, за точность отвечает система.</aside>
 </div>
 <div class="slide" id="19-t-5">
-<h3 class="slide-title">Система стрельбы: отдельно от оружия <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Система стрельбы <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Стрелять оружие само не умеет: этим занимается система — отдельная папка в мире</li><li>Внутри оружия нет ни одного скрипта, только твои детали</li><li>Система узнаёт оружие по двум приметам: рукоять <b>Handle</b> и метка <b>TipAttachment</b> в срезе ствола</li><li>Сила, скорость и пауза между выстрелами — в атрибутах Tool</li></ul>
 <p class="content-item content-paragraph">Ссылка на систему: <a href="https://create.roblox.com/store/asset/83440701618994/ArenaBlaster" target="_blank" rel="noopener">https://create.roblox.com/store/asset/83440701618994/ArenaBlaster</a></p>
 <p class="content-item content-image-prompt">[изображение: Окно Explorer в Roblox Studio: рядом лежат папка системы ArenaBlaster со скриптами и Tool игрока, внутри которого только детали и метка TipAttachment]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Explorer рядом: папку системы со скриптами и Tool, внутри которого скриптов нет ни одного. Проговорить, зачем так: система одна на весь мир, а оружия может быть сколько угодно, и каждое новое заводится само — достаточно двух меток. Устно: числа боя лежат в атрибутах Tool, их видно в панели Properties, в разделе Attributes, открывать скрипт не нужно.</aside>
 </div>
 <div class="slide" id="19-t-6">
-<h3 class="slide-title">StarterPack: снаряжение с самого начала <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">StarterPack: снаряжение <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>StarterPack</b> — это служебный контейнер: всё, что в нём лежит, игрок получает при появлении</li><li>Контейнер один на всю игру — значит, наборы у команд совпадают сами собой</li><li>Это самый простой способ сделать снаряжение честным</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: раскрыт StarterPack, внутри Tool с деталью Handle и меткой TipAttachment, рядом панель Properties с полем ToolTip]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Explorer: StarterPack лежит рядом с Workspace и Teams. Устно: контейнер общий, отдельного StarterPack у команды не бывает — разное снаряжение командам настройками не выдать.</aside>
@@ -144,7 +144,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Восемь минут — это самый творческий шаг урока, подгонять не нужно. Ограничение одно: размер по руке. Кто закончил раньше — помогает соседу, а не начинает вторую модель. Подсказка для тех, кому тесно в мелких деталях: собирать удобнее крупно, а готовую модель уменьшить целиком — выделить все детали и потянуть за маркер масштаба.</aside>
 </div>
 <div class="slide" id="19-p-3">
-<h3 class="slide-title">Шаг 3: модель становится оружием <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Шаг 3: модель — оружие <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выдели все детали бластера и свари их: вкладка Model → Weld</li><li>Рукоять переименуй в Handle — по этому имени рука найдёт оружие</li><li>В срез ствола вставь Attachment (вкладка Model, рядом с Weld) и назови его TipAttachment</li><li>Перетащи детали внутрь Blaster из папки системы и проверь в Test: оружие в руке</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Сварка вместо объединения — осознанный выбор: Union схлопнул бы всю модель в один материал и цвет, а сваренное оружие остаётся разноцветным. Порядок важен: сначала сварка, потом перенос. Blaster — это готовый Tool из папки системы, числа боя в нём уже стоят. Метку ставим в саму деталь ствола и двигаем к торцу: она поедет вместе со стволом при любом повороте. Проверить у каждого: рукоять называется Handle, метка TipAttachment на месте, ни одна деталь не закреплена.</aside>
 </div>
@@ -154,7 +154,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Самый кропотливый шаг урока: заложить на него всё время и не подгонять. Напомнить: на стрельбу хват не влияет — снаряд летит туда, куда смотрит персонаж. Хват решает, как оружие выглядит в руке. Если редактор хвата не встал или не открывается — шаг не теряем: хват правится числами у самого Tool в Properties. Сначала поворот — GripForward, GripRight, GripUp, потом сдвиг — GripPos; менять по одному числу и смотреть в Test. Дольше и вслепую, но результат тот же. На слайд это не выносим: у большинства плагин встаёт с первого раза.</aside>
 </div>
 <div class="slide" id="19-p-5">
-<h3 class="slide-title">Шаг 5: выдай оружие обеим командам <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Шаг 5: оружие командам <span class="slide-duration">(2 мин)</span></h3>
 <ol class="content-item content-steps"><li>Перетащи готовый Blaster в StarterPack</li><li>Проверь, что детали оружия не закреплены</li><li>Test → персонаж появляется на базе уже с бластером</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Самая частая заминка шага: предмет уехал не в StarterPack, а в StarterGui или Workspace. Проверить у каждого по Explorer.</aside>
 </div>
@@ -181,7 +181,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Команды вооружены <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">У каждого своё оружие, а сила у всех одна: внешний вид свободный, числа общие. Арена осталась честной.</p>
 <ul class="content-item content-bullets"><li>Домашнее задание: положи усиленный бластер на центральную площадку арены — один на всю карту — и опубликуй игру: Public плюс опрос о возрастном ограничении</li><li>На следующем уроке — большой проект: две крепости, прицеливание из-за плеча и матч между командами в твоей опубликованной игре</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Про домашнее задание: усиленный бластер уже готов — это Tool с именем BlasterPro в папке системы: урон вдвое больше, но и пауза между выстрелами длиннее. Класть его нужно в Workspace, а не в StarterPack, и не закреплять. Проговорить, почему честность не ломается: усиленный один на всю карту, и достаётся он тому, кто добежал первым. Предупредить сразу: бластер в центре живёт до первой гибели того, кто его подобрал — рюкзак после гибели наполняется только из StarterPack. После каждого матча награду в центр кладут заново, иначе площадка снова пустая. Про публикацию сказать отдельно и настойчиво: после опроса рейтинг подтверждается не сразу, может уйти несколько часов, поэтому выложить игру нужно дома — на уроке 20 матч идёт уже в опубликованной. Кто не успеет, будет играть на плейсе преподавателя. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<aside class="speaker-notes">Заметка ведущего: Про домашнее задание: усиленный бластер уже готов — это Tool с именем BlasterPro в папке системы: урон вдвое больше, но и пауза между выстрелами длиннее. Класть его нужно в Workspace, а не в StarterPack, и не закреплять. Проговорить, почему честность не ломается: усиленный один на всю карту, и достаётся он тому, кто добежал первым. Предупредить сразу: бластер в центре живёт до первой гибели того, кто его подобрал — рюкзак после гибели наполняется только из StarterPack. После каждого матча награду в центр кладут заново, иначе площадка снова пустая. Про публикацию сказать отдельно и настойчиво: после опроса рейтинг подтверждается не сразу, может уйти несколько часов, поэтому выложить игру нужно дома — на уроке 20 матч идёт уже в опубликованной. Кто не успеет, будет играть на плейсе преподавателя. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Tool.md">Tool — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/players/tools.md">In-game tools — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/WeldConstraint.md">WeldConstraint — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/physics/assemblies.md">Assemblies — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/store/asset/16651031857/Tool-Grip-Visual-Editor">Tool Grip Visual Editor — плагин для Roblox Studio</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/StarterPack.md">StarterPack — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Backpack.md">Backpack — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/production/promotion/content-maturity.md">Content maturity — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/combat/balance">Map balance — The Level Design Book</a></li><li><a href="https://www.ongamedesign.net/designing-fps-multiplayer-maps-part-1/">Designing FPS Multiplayer Maps, Part 1 — On Game Design</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Attachment.md">Attachment — Roblox Engine API</a></li></ul></section>

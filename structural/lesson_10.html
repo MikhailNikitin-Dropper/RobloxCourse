@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="10-r-1">
-<h3 class="slide-title">Что мы делали на уроке 9? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 9 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Платформа выглядит обычной, но персонаж проваливается сквозь неё. Какая настройка так работает?</p><ol class="content-item content-quiz-options"><li data-correct="true">CanCollide = false ✓</li><li>Anchored = false</li><li>Transparency = 1</li></ol>
 <p class="content-item content-question">Как мы делали мост-силуэт — едва заметный, но проходимый?</p><ol class="content-item content-quiz-options"><li>Transparency = 0.9, CanCollide выключен</li><li data-correct="true">Transparency = 0.9, CanCollide включён ✓</li><li>Transparency = 1, CanCollide включён</li></ol>
 <p class="content-item content-question">Почему дистанцию прыжка мы проверяли тест-стендом, а не считали заранее?</p><ol class="content-item content-quiz-options"><li>В Studio нет калькулятора</li><li>Так требуют правила публикации Roblox</li><li data-correct="true">Расчёт по формуле сильно расходится с тем, что происходит в игре ✓</li></ol>
@@ -52,26 +52,26 @@ body { font-family: Arial, sans-serif; }
 </div>
 </section>
 <section class="block block-theory">
-<h2 class="block-title" style="color:#006600;">Честные ловушки: kill-блоки, вращающиеся препятствия и баланс <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#006600;">Честные ловушки <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="10-t-1">
-<h3 class="slide-title">Честная ловушка испытывает, а не обманывает <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Ловушка испытывает игрока <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Ловушка</b> — это участок маршрута, который наказывает за невнимательность или неточный прыжок</li><li>Жанровое правило обби: игрок видит опасность до того, как прыгнет</li><li>Скрытая опасность без предупреждения ощущается как нечестная смерть, а не как ошибка игрока</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Ключевая мысль урока: гибель в честной игре понятна игроку — «я видел опасность и ошибся сам». Спросить группу: в каких играх ловушки казались нечестными и почему.</aside>
 </div>
 <div class="slide" id="10-t-2">
-<h3 class="slide-title">Kill-блок: касание возвращает на точку возрождения <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Kill-блок возвращает назад <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Kill-блок</b> — это деталь, при касании которой персонаж теряет всё здоровье и возвращается на точку возрождения</li><li>Из таких деталей собирают ямы, озёра лавы и любые «смертельные» зоны</li><li>Для создания Kill-блоков мы будем использовать <b>KillScript</b>: вставляем его в модель — и все её детали становятся смертельными</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/75269316315197/UniversalKillScript" target="_blank" rel="noopener">https://create.roblox.com/store/asset/75269316315197/UniversalKillScript</a></p>
 <p class="content-item content-image-prompt">[изображение: Скриншот участка обби в Roblox Studio: между двумя серыми платформами яма, закрытая ярко-красными светящимися kill-блоками, персонаж прыгает через неё]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: KillScript — готовый скрипт курса, мы его не пишем и не меняем. Внутри — обработчик касания: любая деталь модели, в которой лежит скрипт, обнуляет здоровье персонажа.</aside>
 </div>
 <div class="slide" id="10-t-3">
-<h3 class="slide-title">Подключаем модули курса по ссылке <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Модули курса по ссылке <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Модуль</b> — это готовая модель или скрипт, который мы добавляем в игру и настраиваем под себя</li><li>Открываем ссылку на модуль и нажимаем «Получить» (Get) — модуль попадает в наш инвентарь</li><li>В Studio вставляем модуль со вкладки Inventory (Инвентарь) в Toolbox, а после вставки осматриваем его в Explorer — полезно понимать, из чего он состоит</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать вживую: открыть ссылку на UniversalKillScript, нажать Get, в Studio вставить модуль со вкладки Inventory. Ссылки на оба модуля урока продублированы на слайдах практики.</aside>
 </div>
 <div class="slide" id="10-t-4">
-<h3 class="slide-title">Красное — опасно: цветовой код жанра <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Красное — значит опасно <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Опасные детали в обби красят в красный и оранжевый и делают яркими</li><li>Игрок узнаёт опасность с одного взгляда, не читая надписей</li><li>Каждая гибель должна быть понятна игроку: опасность была видна, ошибка — его</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Аналогия для устного рассказа: светофор — красный цвет читается без слов. Проверочный вопрос группе: почему kill-блок нельзя красить в цвет обычных платформ.</aside>
 </div>
@@ -87,19 +87,19 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Устно: у шипов и лавы логика одна — внутри модели лежит тот же KillScript, меняется только внешний вид.</aside>
 </div>
 <div class="slide" id="10-t-7">
-<h3 class="slide-title">Вращающееся препятствие: модуль SpinningObstacle <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Модуль SpinningObstacle <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Вращающееся препятствие</b> — это крутящийся стержень, через который нужно перепрыгивать в нужный момент</li><li>Мы будем использовать готовый <b>SpinningObstacle</b>: закреплённая ось, вращающийся стержень и смертельная часть с KillScript внутри</li><li>Скорость задаёт объект <b>AngularVelocity</b> внутри модели: меняем в нём число Y — радианы в секунду, полный оборот ≈ 6.28</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/135190764471982/SpinningObstacle" target="_blank" rel="noopener">https://create.roblox.com/store/asset/135190764471982/SpinningObstacle</a></p>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: на круглой платформе вращающийся стержень модуля SpinningObstacle, в Explorer выделен объект AngularVelocity, в панели Properties — его свойство AngularVelocity с вектором скорости]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: меняем только число — логика вращения остаётся готовой. Показать в Explorer состав модуля: ось, KillPart, объект AngularVelocity. Слишком быстрое препятствие делает участок непроходимым, это уже нечестно. Если спросят, почему здесь KillScript лежит в одной детали, хотя нас учили класть его в модель: это два разных скрипта с одним именем — внутри модуля свой, он делает смертельной ровно ту деталь, в которой лежит.</aside>
 </div>
 <div class="slide" id="10-t-8">
-<h3 class="slide-title">Баланс: чередуем напряжение и передышку <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Напряжение и передышка <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Старт — лёгкий, сложность растёт постепенно</li><li>После трудного участка игроку дают передышку: несколько простых платформ без опасностей</li><li>Типы препятствий чередуем — однообразная трасса утомляет даже при идеальной сложности</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Аналогия для устного рассказа: музыка — в хорошей мелодии громкие и тихие места чередуются. Трасса из одних сложных прыжков выматывает, из одних простых — усыпляет.</aside>
 </div>
 <div class="slide" id="10-t-9">
-<h3 class="slide-title">Частые ошибки при расстановке ловушек <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Частые ошибки с ловушками <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Kill-блок покрашен в цвет обычных платформ — гибель ощущается как нечестность</li><li>Вращающееся препятствие раскручено слишком сильно — участок не проходится вовсе</li><li>Ловушки стоят подряд без передышек — игрок устаёт и выходит из игры</li><li>KillScript положили в одну деталь, а не в модель — соседние детали ямы не убивают (у модуля SpinningObstacle скрипт свой, ему одна деталь и нужна)</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Все четыре ошибки находятся одним способом — плейтестом. Особо выделить последнюю: KillScript действует на детали внутри своего родителя, поэтому опасные детали сначала группируем в модель, а скрипт кладём в неё.</aside>
 </div>
@@ -131,7 +131,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Деталь ямы удобно растянуть на всю ширину инструментом Scale. Группировка в модель — правый клик → Group или Ctrl+G. Про Get теперь сказано на слайде — на обходе достаточно проверить, что модуль появился во вкладке Inventory у всех. Частая заминка: KillScript остался лежать в Workspace рядом с моделью — тогда яма не убивает; проверить в Explorer, что скрипт лежит внутри модели с деталями.</aside>
 </div>
 <div class="slide" id="10-p-2">
-<h3 class="slide-title">Шаг 2: преврати яму в озеро лавы <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Шаг 2: озеро лавы <span class="slide-duration">(4 мин)</span></h3>
 <ol class="content-item content-steps"><li>Поставь kill-блокам Material = CrackedLava или Neon с ярко-красным цветом</li><li>Добавь внутрь детали PointLight: + → PointLight, цвет — красноватый</li><li>Test → проверь, что зона выглядит опасной и издалека</li></ol>
 <p class="content-item content-image-prompt">[изображение: Два скриншота одной и той же ямы с лавой рядом: слева kill-блоки без оформления, серые; справа — с материалом Neon, красным цветом и PointLight, зона ярко светится]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: сравнение «до и после» — та же ловушка, но теперь она предупреждает о себе сама. PointLight добавляется через + рядом с деталью в Explorer.</aside>
@@ -143,7 +143,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Если стержень не крутится — проверить в Explorer, что объект AngularVelocity на месте и у него включено Enabled, а ось осталась Anchored. Ориентир — заводское значение 3: полный оборот за две секунды, конец стержня идёт 18 студов в секунду, то есть быстрее бега персонажа (16) — обогнать стержень нельзя, участок проходится только прыжком. Правило трёх прохождений: препятствие честное, если автор проходит его стабильно.</aside>
 </div>
 <div class="slide" id="10-p-4">
-<h3 class="slide-title">Шаг 4: передышка после каждого испытания <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 4: передышки <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Расставь ловушки по трассе так, чтобы сложные участки не шли подряд</li><li>После каждого испытания добавь передышку: 2–3 широкие платформы без опасностей</li><li>Проверь кривую сложности: старт — самый лёгкий участок, финал — самый сложный</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ходить по группе и смотреть раскладку трасс сверху: чередование видно даже без запуска игры — по расстановке красных зон.</aside>
 </div>
@@ -167,10 +167,10 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-closing">
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="10-c-1">
-<h3 class="slide-title">Трасса стала опасной — и осталась честной <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Опасная и честная трасса <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы добавили на трассу лаву, вращающееся препятствие и выстроили чередование испытаний и передышек. Каждая опасность видна игроку заранее — это и есть работа дизайнера ловушек.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь на трассу ещё одну ловушку любого типа и пройди её сам три раза подряд</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>На следующем уроке — чекпоинты: научим трассу запоминать прогресс игрока</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Похвалить за плейтесты: сегодня каждый проверял трассу собственным персонажем — так и работают настоящие дизайнеры ловушек. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь на трассу ещё одну ловушку любого типа и пройди её сам три раза подряд</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>На следующем уроке — чекпоинты: научим трассу запоминать прогресс игрока</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить за плейтесты: сегодня каждый проверял трассу собственным персонажем — так и работают настоящие дизайнеры ловушек. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/store/asset/75269316315197/UniversalKillScript">UniversalKillScript — Creator Store (модуль курса)</a></li><li><a href="https://create.roblox.com/store/asset/135190764471982/SpinningObstacle">SpinningObstacle — Creator Store (модуль курса)</a></li><li><a href="https://create.roblox.com/docs/en-us/parts/materials.md">Materials — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/use-case-tutorials/physics/create-spinning-objects.md">Create spinning objects — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/make-a-simple-kill-brick-in-roblox-studio/1189804">Make A Simple Kill Brick In Roblox Studio — DevForum</a></li><li><a href="https://devforum.roblox.com/t/everything-about-neon-shader-in-roblox/4053408">Everything about Neon shader in Roblox — DevForum</a></li><li><a href="https://www.creation.dev/blog/roblox-obby-design-guide">How to Build an Obby on Roblox That Players Love — creation.dev</a></li><li><a href="https://devforum.roblox.com/t/the-guide-to-making-a-difficulty-chartpart-1/1135152">The Guide To Making A Difficulty Chart — DevForum</a></li></ul></section>

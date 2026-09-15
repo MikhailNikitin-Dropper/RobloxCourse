@@ -35,7 +35,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-welcome">
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="5-w-1">
-<h3 class="slide-title">Сегодня ты — VFX &amp; Lighting Artist <span class="slide-duration">(1 мин)</span></h3>
+<h3 class="slide-title">Ты — VFX &amp; Lighting Artist <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">У тебя уже есть настоящая игра — охота за сокровищами. Но пока в ней всегда полдень: ни заката, ни огней, ни магии.</p>
 <p class="content-item content-paragraph">Художник по эффектам и свету не строит новое — он делает так, чтобы игрок почувствовал мир: закат, туманную даль, живой огонь факела, магическое сияние кристалла. Сегодня твой мир оживёт.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: показать два скриншота одного и того же места — «плоский полдень» и «вечер, туман, огни» — и спросить, в какую игру хочется играть. Обещание: к концу урока мир будет выглядеть как настоящая игра.</aside>
@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="5-r-1">
-<h3 class="slide-title">Что мы делали на уроке 4? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 4 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Как мы добавляли модуль PropHunter в свой проект?</p><ol class="content-item content-quiz-options"><li>Искали случайный модуль в поиске Toolbox</li><li>Писали скрипт на Lua</li><li data-correct="true">По ссылке → Get Model → инвентарь → My Models → в Workspace ✓</li></ol>
 <p class="content-item content-question">Что нужно предмету, чтобы он стал сокровищем охоты?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тег Prop Hunt, записка StringValue и уникальное имя ✓</li><li>Золотой цвет и материал Neon</li><li>Размер не меньше 10 студов</li></ol>
 <p class="content-item content-question">Где по правилам левел-дизайна лежало самое ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у точки возрождения</li><li data-correct="true">В самом опасном или дальнем месте карты ✓</li><li>За пределами карты</li></ol>
@@ -52,52 +52,52 @@ body { font-family: Arial, sans-serif; }
 </div>
 </section>
 <section class="block block-theory">
-<h2 class="block-title" style="color:#006600;">Свет, туман и эффекты: как задать игре атмосферу <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#006600;">Свет, туман и эффекты <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="5-t-1">
-<h3 class="slide-title">Свет и небо задают настроение игре <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Настроение от света и неба <span class="slide-duration">(2.5 мин)</span></h3>
 <p class="content-item content-paragraph">Один и тот же мир на ярком полудне — весёлая прогулка, а в синих сумерках с туманом — тревожная тайна. Ни одна деталь не изменилась — изменилось настроение.</p>
 <ul class="content-item content-bullets"><li>Свет и небо часто управляют эмоциями игрока сильнее, чем постройки</li><li>Все главные настройки освещения живут в сервисе Lighting в Explorer</li><li>Сегодня — глобальный свет и локальные эффекты освещения</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Быстрый опрос: «вспомни страшный момент из игры или мультика — как там выглядел мир?» Ученики сами называют темноту, туман, мрачные цвета — значит, инструменты урока они уже чувствуют интуитивно.</aside>
 </div>
 <div class="slide" id="5-t-2">
-<h3 class="slide-title">Properties: панель управления любым объектом <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Properties: панель свойств <span class="slide-duration">(2.5 мин)</span></h3>
 <p class="content-item content-paragraph">У каждого объекта в Roblox Studio — детали, света, тумана, даже целого сервиса — есть свой список настроек. Он называется <b>Properties (свойства)</b>.</p>
 <ul class="content-item content-bullets"><li>Выдели любой объект — окно Properties покажет все его свойства: имя, цвет, размер, поведение</li><li>Мы уже пользовались этим: Color, Material и Anchored у деталей, Value у записки, Tags у сокровищ</li><li>Изменили свойство — мир меняется мгновенно</li><li>Сегодня те же правила — для света и воздуха: у освещения и эффектов просто свои свойства</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделена деталь, рядом окно Properties со свойствами Name, Color, Material, Anchored — подписи-стрелки к главным строчкам]</p>
 <aside class="speaker-notes">Заметка ведущего: Метафора: Properties — панель управления. У телевизора кнопки громкости и каналов, у каждого объекта Studio — своя панель, и она всегда в одном месте. Показать вживую: выделить деталь → окно показывает её свойства; выделить Lighting → окно перестроилось под свет. Общий закон Studio: научился читать Properties — умеешь настраивать всё. Устно: показать смену 3–4 свойств Part на практике, без фанатизма — не нужно запоминать все свойства, главное, чтобы отложилась идея «Properties = настройки объекта».</aside>
 </div>
 <div class="slide" id="5-t-3">
-<h3 class="slide-title">Lighting: время суток и цвет мира <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Lighting: время и цвет <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ClockTime</b> — время суток 0–24: 12 — полдень, 18 — закат, 0 — полночь</li><li><b>Brightness</b> — сила солнца и контраст теней</li><li><b>Ambient</b> — подсветка всего мира, включая тени и помещения</li><li><b>OutdoorAmbient</b> — подсветка мест под открытым небом</li><li><b>ColorShift_Top</b> — оттенок поверхностей под солнцем или луной</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer с выделенным сервисом Lighting и окна Properties со свойствами ClockTime, Brightness, Ambient, OutdoorAmbient, ColorShift_Top]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать вживую: медленно крутить ClockTime от 6 до 20 — группа увидит рассвет, полдень и закат за 20 секунд. Термины: Lighting (освещение), Ambient (окружающая подсветка). Тёмный Ambient красит тени, OutdoorAmbient — места под небом. Устно: все перечисленные параметры — обычные свойства сервиса Lighting в окне Properties (видно на скриншоте).</aside>
 </div>
 <div class="slide" id="5-t-4">
-<h3 class="slide-title">Atmosphere: воздух и туманная даль <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Atmosphere: туманная даль <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Atmosphere (атмосфера)</b> находится внутри Lighting</li><li><b>Density</b> — густота воздуха: значение больше — даль тонет в дымке</li><li><b>Offset</b> — силуэт горизонта: значение меньше — горизонт сливается с небом</li><li><b>Color и Haze</b> — цвет и сила дымки: задают настроение целой сцены</li><li><b>Glare</b> — сияние вокруг солнца (работает только при Haze больше 0)</li></ul>
 <p class="content-item content-image-prompt">[изображение: Один и тот же пейзаж с горами до и после добавления Atmosphere: слева ясная даль, справа — глубокая туманная дымка на горизонте]</p>
 <aside class="speaker-notes">Заметка ведущего: Метафора: Density — «сколько тумана налили в воздух». Показать до/после на своей карте: с Density ≈ 0.4 горы урока 2 тонут в дымке и мир кажется огромным. Ориентиры значений: Density ≈ 0.4, Offset ≈ 0.2.</aside>
 </div>
 <div class="slide" id="5-t-5">
-<h3 class="slide-title">Локальные источники света: PointLight, SpotLight, SurfaceLight <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Локальные источники света <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Вставляются в деталь: выделить → «+» → источник</li><li><b>PointLight</b> — светит шаром во все стороны: лампа, факел, кристалл</li><li><b>SpotLight</b> — конус света: фонарик, прожектор; Face — направление, Angle — ширина</li><li><b>SurfaceLight</b> — светится вся грань детали: экраны, вывески</li><li>Общие свойства: Color, Brightness, Range (дальность в студах), Shadows (тени)</li></ul>
 <p class="content-item content-image-prompt">[изображение: Три детали в тёмной сцене рядом: сфера с PointLight светит во все стороны, деталь со SpotLight светит конусом, панель с SurfaceLight светится гранью]</p>
 <aside class="speaker-notes">Заметка ведущего: Главный слайд для практики. Показать вживую: тёмная сцена (ClockTime 0), вставить PointLight в сферу — лампа; SpotLight в куб — фонарик. Про Neon напомнить: материал светится сам, но не освещает соседей — освещают только источники света.</aside>
 </div>
 <div class="slide" id="5-t-6">
-<h3 class="slide-title">Огонь, дым и частицы: готовые спецэффекты <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Огонь, дым и частицы <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Fire</b> — готовый огонь одним объектом: вставь в деталь, настрой Size и Color</li><li><b>SecondaryColor</b> — цвет сердцевины пламени: синий или зелёный огонь — легко</li><li><b>Sparkles</b> — искры магии для кристаллов, посохов и волшебных шаров</li><li><b>Smoke</b> — дым и туман в выбранном месте</li><li>У всех эффектов настраиваются цвет и размер</li></ul>
 <p class="content-item content-image-prompt">[изображение: Факел из деталей с эффектом Fire и рядом кристалл с магическим сиянием частиц в тёмной сцене]</p>
 <aside class="speaker-notes">Заметка ведущего: Fire — готовый эффект огня. Важно: сам Fire не освещает — свет даёт PointLight рядом, это связка из практики. Все настройки эффектов — тоже обычные Properties: слайд про «панель» работает и здесь. Устно: показать свойства всех трёх эффектов интерактивно — меняем число и смотрим, что изменилось.</aside>
 </div>
 <div class="slide" id="5-t-7">
-<h3 class="slide-title">Настроение зон: свет ведёт игрока <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Свет ведёт игрока <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>У каждой зоны — своё настроение: безопасная = тёплый свет костра, опасная = полумрак и холодные цвета</li><li>Свет — навигация: игрок идёт «на огонёк», расставляем огни-маяки по маршруту охоты</li><li>Цепочка огней видна издалека — это дорога без единого указателя</li><li>Контраст усиливает историю: после тёплого лагеря тёмное ущелье пугает по-настоящему</li></ul>
 <p class="content-item content-image-prompt">[изображение: Схема карты сверху: тёплый освещённый лагерь у точки старта, цепочка огней-маяков вдоль маршрута сокровищ и тёмная опасная зона с одним тревожным красным огоньком]</p>
 <aside class="speaker-notes">Заметка ведущего: Связка с уроками 2 и 4: рельеф задал зоны, сокровища задали маршрут — теперь свет делает их ощутимыми. Вопрос группе: «почему в страшной зоне не надо ставить уютный костёр?» — тёплый свет обещает безопасность, обманывать игрока нельзя.</aside>
 </div>
 <div class="slide" id="5-t-8">
-<h3 class="slide-title">Частые ошибки при работе со светом <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Частые ошибки со светом <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Сделали полночь (ClockTime 0) без единого огня — игрок ничего не видит и выходит</li><li>Поставили Density на максимум — мир утонул в дымке</li><li>Neon-материал вместо источника света: светится сам, но не освещает вокруг</li><li>Fire без PointLight рядом — пламя красивое, а света от него нет</li><li>Десять разноцветных источников света в одном месте — дискотека вместо настроения</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Первую ошибку показать вживую: полночь без огней — чёрный экран. Правило вкуса: «одна зона — одно настроение — 1–2 цвета света». Про Neon повторить: это материал, а не источник света.</aside>
 </div>
@@ -121,7 +121,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 </section>
 <section class="block block-practice">
-<h2 class="block-title" style="color:#cc0000;">Оживляем мир: закат, огни и магия <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#cc0000;">Закат, огни и магия <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="5-p-1">
 <h3 class="slide-title">Шаг 1: вечер и воздух <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Открой мир охоты. Lighting в Explorer → ClockTime ≈ 17–18: предзакатный вечер</li><li>Ambient — тёмно-серый, ColorShift_Top — тёплый оранжевый: закатные краски</li><li>«+» у Lighting → Atmosphere: Density ≈ 0.35–0.4, Offset ≈ 0.2</li><li>Пролети по миру камерой: даль тонет в дымке, мир стал глубже и загадочнее</li></ol>
@@ -139,13 +139,13 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Разрешить свободу: цвет света и искр — под цвет кристалла каждого. Подсказать: свет кристалла должен быть виден игроку издалека — он показывает, куда идти.</aside>
 </div>
 <div class="slide" id="5-p-4">
-<h3 class="slide-title">Шаг 4: тёплый лагерь и тёмное ущелье <span class="slide-duration">(4.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 4: лагерь и ущелье <span class="slide-duration">(4.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>У точки возрождения собери «лагерь»: костёр из деталей + Fire + тёплый PointLight</li><li>Вдоль маршрута охоты расставь 2–3 огня-маяка: игрок идёт «на огонёк»</li><li>В опасной зоне — никаких тёплых огней: один тусклый холодный или красный PointLight у сокровища</li><li>Пролети камерой весь маршрут: зоны читаются по свету?</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Главный дизайнерский шаг урока — здесь проявляется роль. Обойти группу с вопросом «где у тебя безопасно, а где страшно — и видно ли это без слов?». Контраст: чем уютнее лагерь, тем страшнее ущелье.</aside>
 </div>
 <div class="slide" id="5-p-5">
-<h3 class="slide-title">Шаг 5: прогулка-проверка и публикация <span class="slide-duration">(4.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → пройди весь маршрут охоты от точки возрождения до последнего сокровища</li><li>Чек-лист: у сокровищ не слишком темно? огни-маяки ведут по маршруту? настроение зон читается?</li><li>Поправь самое тёмное место — добавь маяк или подними Brightness огня</li><li>Опубликуй обновление: File → Publish to Roblox</li></ol>
+<h3 class="slide-title">Шаг 5: прогулка и сохранение <span class="slide-duration">(4.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → пройди весь маршрут охоты от точки возрождения до последнего сокровища</li><li>Чек-лист: у сокровищ не слишком темно? огни-маяки ведут по маршруту? настроение зон читается?</li><li>Поправь самое тёмное место — добавь маяк или подними Brightness огня</li><li>Сохрани проект: File → Save to Roblox</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Плейтест теперь проверяет не механику, а чувства — для группы это новый тип теста. Пусть 2–3 ученика посмотрят, как автор проходит свой мир, и скажут одним словом настроение каждой зоны — если слова совпали с задумкой автора, свет работает.</aside>
 </div>
 </section>
@@ -164,8 +164,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="5-c-1">
 <h3 class="slide-title">Мир стал атмосфернее <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Сегодня мы поработали в роли VFX &amp; Lighting Artist: закат и туманная даль, живые огни, магия кристалла — и всё это свойствами в Properties.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: подбери освещение для своего домашнего предмета из урока 3 и пройди маршрут ещё раз сам: добавь маяк там, где пришлось искать дорогу</li><li>Понаблюдай в любимой игре: каким светом тебя ведут и пугают?</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Следующий урок — «NPC и диалоги»: в игре появятся персонажи, с которыми можно поговорить</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самое атмосферное место, самый смелый цвет огня. Анонс урока 6 — эмоциональный: «мир красив, но пока безлюден — в следующий раз в нём появятся жители». Напомнить про публикацию, если кто-то не успел (Alt+P или через меню). Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: подбери освещение для своего домашнего предмета из урока 3 и пройди маршрут ещё раз сам: добавь маяк там, где пришлось искать дорогу</li><li>Понаблюдай в любимой игре: каким светом тебя ведут и пугают?</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок — «NPC и диалоги»: в игре появятся персонажи, с которыми можно поговорить</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самое атмосферное место, самый смелый цвет огня. Анонс урока 6 — эмоциональный: «мир красив, но пока безлюден — в следующий раз в нём появятся жители». Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/environment/lighting.md">Lighting — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/tutorials/curriculums/core/building/customize-global-lighting.md">Customize global lighting — официальный туториал Roblox</a></li><li><a href="https://create.roblox.com/docs/en-us/environment/atmosphere.md">Atmosphere — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/light-sources.md">Light sources — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Fire.md">Fire — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/particle-emitters.md">Particle emitters — Roblox Creator Hub</a></li><li><a href="https://www.youtube.com/watch?v=UlvSrWHESwA">How I Do Lighting &amp; Atmosphere in Roblox — Fives, 02.2026</a></li><li><a href="https://www.youtube.com/watch?v=aq0Fi0R2FAY">THE Ultimate Lighting Tutorial [ADVANCED] — eleyes, 12.2024</a></li></ul></section>

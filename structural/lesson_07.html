@@ -35,7 +35,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-welcome">
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="7-w-1">
-<h3 class="slide-title">Сегодня ты — UX / Systems Designer <span class="slide-duration">(1 мин)</span></h3>
+<h3 class="slide-title">Ты — UX / Systems Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">В твоём мире уже есть закат, огни и живой Хранитель подземелья. С урока 4 там же работает поиск сокровищ — но интерфейс списка пока довольно простой и непроработанный.</p>
 <p class="content-item content-paragraph">Такой специалист берёт готовую систему и строит интерфейс заново, по чёткому алгоритму: контейнер, панель, карточка предмета, иконки. Сегодня журнал квеста в твоей игре ты соберёшь с нуля сам.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «поиск сокровищ уже считает расстояние и ставит галочки — а вот интерфейс для этого мы сегодня построим заново, начисто». Обещание: к концу урока на экране будет журнал, который ученик собрал сам, объект за объектом.</aside>
@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-r-1">
-<h3 class="slide-title">Что мы делали на уроке 6? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 6 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Куда вставляли Dialog, чтобы над NPC появилось облако для начала диалога?</p><ol class="content-item content-quiz-options"><li data-correct="true">В деталь NPC, обычно в Head ✓</li><li>В сервис Lighting</li><li>В SpawnLocation</li></ol>
 <p class="content-item content-question">Как игрок выбирал, что ответить NPC?</p><ol class="content-item content-quiz-options"><li>Второй Dialog в голове персонажа</li><li data-correct="true">Объекты DialogChoice внутри Dialog ✓</li><li>Это работает только с кодом</li></ol>
 <p class="content-item content-question">Что означала иконка «!» над Хранителем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Purpose = Quest — здесь задание ✓</li><li>Tone = Enemy — персонаж опасен</li><li>У NPC закончились реплики</li></ol>
@@ -60,12 +60,12 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Спросить: «в любимой игре — список заданий выглядит как таблица или как оформленные карточки? что удобнее читать?» Подвести к идее: хороший интерфейс не занимает много места, но экономит внимание игрока.</aside>
 </div>
 <div class="slide" id="7-t-2">
-<h3 class="slide-title">Модуль меняем на расширенный, интерфейс собираем сами <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Расширенный модуль <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Поиск, расстояние до предмета и его сбор считает код в PropHunter — эту часть не трогаем</li><li>Модуль урока 4 заменяем на расширенную версию: теги и записки на предметах при этом сохраняются</li><li>Интерфейс к нему собираем сами, объект за объектом, по алгоритму с этого урока</li><li>Имя итогового ScreenGui должно остаться прежним — PropHunterGui, по нему его находит стартовый скрипт</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Ключевая рамка урока: логика — чужая и готовая, оформление — полностью работа ученика. Проговорить прямо, что меняется весь модуль, а не только окно: заменить его не страшно, потому что тег Prop Hunt и записки StringValue лежат на самих предметах, а не внутри модуля, — замену они переживают.</aside>
 </div>
 <div class="slide" id="7-t-3">
-<h3 class="slide-title">ScreenGui: контейнер для всего интерфейса <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">ScreenGui: контейнер <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ScreenGui</b> — объект-контейнер: в нём живут все элементы интерфейса игрока</li><li>Создаём его в StarterGui — и он появится у каждого игрока при заходе в игру</li><li>Studio сама копирует ScreenGui в PlayerGui каждого игрока при старте</li><li>Внутри ScreenGui обычно лежит Frame — контейнер для остальных элементов окна</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: StarterGui пуст после удаления старого журнала, внутрь только что вставлен новый ScreenGui «PropHunterGui» с Frame «MainFrame» внутри]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать как создаём ScreenGui через «+», переименовать. Связка со старым материалом: Properties снова «панель управления объектом».</aside>
@@ -81,28 +81,28 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Показать вживую: вставить готовую иконку в ImageLabel, поменять ImageColor3. Это тот же rbxassetid, что и Sound/Fire раньше — просто ссылка на готовый ресурс Roblox.</aside>
 </div>
 <div class="slide" id="7-t-6">
-<h3 class="slide-title">Уникальная иконка предмета через Decal <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Иконка предмета через Decal <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выдели в Workspace предмет с тегом Prop Hunt</li><li>Вставь в него объект Decal (+ → Decal)</li><li>В Properties впиши ColorMapContent = rbxassetid:// нужной картинки из библиотеки</li><li>Готово: при запуске игры иконка в карточке журнала возьмётся с этого Decal сама</li></ol>
 <p class="content-item content-image-prompt">[изображение: Explorer и Properties рядом: внутри детали предмета вставлен Decal, в поле ColorMapContent стоит rbxassetid картинки; на предмете в мире видна эта же иконка-текстура]</p>
 <aside class="speaker-notes">Заметка ведущего: Это тот же приём, что со StringValue-запиской в уроке 4 — прячем данные внутри модели предмета, скрипт сам их находит. Face у Decal можно не менять, для иконки в журнале это не важно. Так одна карточка-шаблон подхватывает свою картинку у каждого предмета — рисовать отдельную карточку под каждый тип не нужно.</aside>
 </div>
 <div class="slide" id="7-t-7">
-<h3 class="slide-title">Один шаблон вместо сотни похожих карточек <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Один шаблон карточки <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Список сокровищ может пополняться на ходу — заранее не известно, сколько строк понадобится</li><li><b>Шаблон (ItemTemplate)</b> — одна оформленная карточка-образец, которую мы собираем один раз вручную</li><li>На каждый найденный предмет скрипт делает копию шаблона и подставляет в неё имя, расстояние и иконку с Decal</li><li>Оформили шаблон один раз — одинаково аккуратными получаются все копии сразу</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Ключевая идея урока. Провести аналогию: «одна форма для печенья — сколько угодно одинаковых печений, но с разной начинкой». Сказать, что имена объектов внутри шаблона важны буквально — скрипт ищет их по имени.</aside>
 </div>
 <div class="slide" id="7-t-8">
-<h3 class="slide-title">ScrollingFrame: когда список не помещается <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">ScrollingFrame: прокрутка <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ScrollingFrame</b> — контейнер вроде Frame, но умеет прокручиваться: показывает часть содержимого, а остальное открывается прокруткой</li><li>Карточек-копий шаблона может стать больше, чем помещается в панель — поэтому они живут именно в ScrollingFrame, а не в обычном Frame</li><li>AutomaticCanvasSize вместе с UIListLayout сами увеличивают область прокрутки под новые карточки</li><li>ScrollBarThickness задаёт толщину полосы прокрутки в пикселях; 0 прячет её совсем, если прокрутка нужна без видимой полосы</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Аналогия: список сообщений в чате — экран показывает только последние, а остальные открываются прокруткой. Показать вживую: включить AutomaticCanvasSize у ScrollingFrame и добавить несколько карточек — область прокрутки вырастет сама, без ручной настройки CanvasSize.</aside>
 </div>
 <div class="slide" id="7-t-9">
-<h3 class="slide-title">Красивая рамка: UICorner, UIStroke, UIGradient <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Красивая рамка окна <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>UICorner</b> скругляет углы рамки — просто вставляется внутрь Frame</li><li><b>UIStroke</b> добавляет цветную обводку заданной толщины</li><li><b>UIGradient</b> красит фон плавным переходом между двумя и более цветами</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Можно показать быстро: вставить UICorner в Frame — углы round мгновенно. Это украшение, а не обязательный шаг — дать это как опцию, а не как задание.</aside>
 </div>
 <div class="slide" id="7-t-10">
-<h3 class="slide-title">Алгоритм сборки: шесть объектов по порядку <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Сборка: шесть объектов <span class="slide-duration">(2 мин)</span></h3>
 <ol class="content-item content-steps"><li>ScreenGui PropHunterGui — в StarterGui</li><li>Frame MainFrame — внутрь ScreenGui, это сама панель</li><li>ScrollingFrame — внутрь MainFrame</li><li>Frame ItemTemplate (Icon, NameLabel, DistanceLabel, CheckIcon) — внутрь ScrollingFrame</li><li>Frame WinFrame и Frame InfoFrame — рядом с MainFrame, на одном уровне</li></ol>
 <p class="content-item content-image-prompt">[изображение: Схема-дерево Explorer: пять уровней вложенности сверху вниз от ScreenGui PropHunterGui до ItemTemplate с подписанными именами объектов]</p>
 <aside class="speaker-notes">Заметка ведущего: Именно в этом порядке ученики будут собирать интерфейс на практике. Объектов шесть, последние два — WinFrame и InfoFrame — ставятся парой рядом с MainFrame, поэтому на слайде они в одном пункте; внутри InfoFrame нужен TextLabel. Частая ошибка — перепутать вложенность, например поставить ItemTemplate рядом со ScrollingFrame, а не внутрь него; или ошибиться в имени объекта — тогда скрипт его не найдёт.</aside>
@@ -129,13 +129,13 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-practice">
 <h2 class="block-title" style="color:#cc0000;">Практика: журнал квеста <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="7-p-1">
-<h3 class="slide-title">Шаг 1: подключаем новый модуль PropHunter <span class="slide-duration">(2.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Перед удалением опубликуй текущую версию мира — это твоя точка возврата</li><li>Найди в Workspace старый PropHunter из урока 4 и удали его целиком</li><li>Возьми по ссылке расширенную версию модуля — с ней и будем собирать свой интерфейс</li></ol>
+<h3 class="slide-title">Шаг 1: новый PropHunter <span class="slide-duration">(2.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Перед удалением сохрани текущую версию мира — это твоя точка возврата</li><li>Найди в Workspace старый PropHunter из урока 4 и удали его целиком</li><li>Возьми по ссылке расширенную версию модуля — с ней и будем собирать свой интерфейс</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/124750353863575/PropHunterAdvancedGui" target="_blank" rel="noopener">https://create.roblox.com/store/asset/124750353863575/PropHunterAdvancedGui</a></p>
 <aside class="speaker-notes">Заметка ведущего: Отправить ссылку на модуль и проверить, что он добавился у всех. Уточнить: по ссылке лежит расширенная версия модуля урока 4 (PropHunterAdvancedGui) — логика охоты в ней та же, добавлено то, что нужно для своего интерфейса. Тег Prop Hunt и записки на предметах при замене не теряются, поэтому сокровища переносить заново не придётся.</aside>
 </div>
 <div class="slide" id="7-p-2">
-<h3 class="slide-title">Шаг 2: создаём контейнер интерфейса <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 2: контейнер интерфейса <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Создай новый ScreenGui в папке StarterGui, назови ровно PropHunterGui</li><li>Внутри создай Frame, назови MainFrame, размести в углу экрана</li><li>Оформи фон: BackgroundColor3, BackgroundTransparency ≈ 0.3–0.4, добавь UICorner и UIStroke</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Помочь с созданием основного фрейма, если у кого-то не получается.</aside>
 </div>
@@ -145,25 +145,25 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Имена объектов — точь-в-точь как на слайде теории. Опечатка в имени — самая частая причина ошибки на следующих шагах.</aside>
 </div>
 <div class="slide" id="7-p-4">
-<h3 class="slide-title">Шаг 4: карточка-шаблон ItemTemplate <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Шаг 4: шаблон ItemTemplate <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Внутри ScrollingFrame собери карточку ItemTemplate: Icon, NameLabel, DistanceLabel, CheckIcon</li><li>Добавь картинку галочки в свойство Image у CheckIcon</li><li>Оставь ItemTemplate видимым — прятать его при старте будет скрипт</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот практики: собранная карточка ItemTemplate внутри нового ScrollingFrame — иконка, имя предмета, расстояние и место под галочку, подписи имён объектов рядом]</p>
 <aside class="speaker-notes">Заметка ведущего: Имена объектов — точь-в-точь как на слайде теории: NameLabel, DistanceLabel, CheckIcon, Icon. Опечатка в имени — самая частая причина ошибки на следующих шагах.</aside>
 </div>
 <div class="slide" id="7-p-5">
-<h3 class="slide-title">Шаг 5: уникальная иконка на предмете <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 5: иконка предмета <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выбери 2–3 предмета урока 4 (тег Prop Hunt) в Workspace</li><li>В модель каждого вставь Decal, впиши ColorMapContent = rbxassetid:// своей картинки</li><li>У разных предметов возьми разные картинки — так карточки не будут одинаковыми</li><li>Test пока не запускали — иконки подтянутся автоматически на следующем шаге</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Properties для Decal, вставленного в деталь предмета в Workspace: заполненное поле ColorMapContent, рядом сам предмет с этой же текстурой]</p>
 <aside class="speaker-notes">Заметка ведущего: Тот же приём, что со StringValue-запиской в уроке 4: данные лежат прямо на предмете. Кто не успевает — можно вставить Decal только в один предмет и продолжить дома.</aside>
 </div>
 <div class="slide" id="7-p-6">
-<h3 class="slide-title">Шаг 6: подключаем систему и оформляем окна <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Шаг 6: система и окна <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Добавь рядом с MainFrame ещё Frame WinFrame и Frame InfoFrame (с TextLabel внутри), оформи в одном стиле</li><li>Спрячь WinFrame и InfoFrame через свойство Visible — они появятся только в нужный момент игры</li><li>Test → пройди рядом с предметами: список заполнится карточками с твоими иконками</li><li>Собери предмет — расстояние прячется, появляется галочка и всплывающая подсказка</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Самый напряжённый момент урока: у части учеников список не заполнится с первого раза — сверяем имена объектов по алгоритму со слайда теории.</aside>
 </div>
 <div class="slide" id="7-p-7">
-<h3 class="slide-title">Шаг 7: финальная проверка и публикация <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Чек-лист: имена объектов совпадают с алгоритмом, у предметов разные иконки, панель не мешает игре</li><li>Test → пройди весь маршрут ещё раз: окно «Победа!» появляется при сборе всех предметов</li><li>Покажи соседу свой журнал на экране — пусть угадает, что ещё нужно найти</li><li>Опубликуй обновление: File → Publish to Roblox</li></ol>
+<h3 class="slide-title">Шаг 7: проверка и сохранение <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Чек-лист: имена объектов совпадают с алгоритмом, у предметов разные иконки, панель не мешает игре</li><li>Test → пройди весь маршрут ещё раз: окно «Победа!» появляется при сборе всех предметов</li><li>Покажи соседу свой журнал на экране — пусть угадает, что ещё нужно найти</li><li>Сохрани проект: File → Save to Roblox</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Плейтест снова новый: теперь проверяем, не мешает ли интерфейс самой игре. Сосед смотрит журнал на экране и говорит, было ли понятно, что уже собрано, а что ещё искать. Ссылка на полностью проработанный интерфейс: https://create.roblox.com/store/asset/134497698996210/PropHunterGui</aside>
 </div>
 </section>
@@ -182,8 +182,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="7-c-1">
 <h3 class="slide-title">Журнал квеста собран с нуля <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Сегодня мы поработали в роли UX / Systems Designer: собрали интерфейс журнала квеста заново, объект за объектом, и подключили его к уже готовой системе PropHunter — у каждого предмета теперь своя иконка.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь Decal с уникальной иконкой ещё нескольким предметам в своём мире</li><li>Понаблюдай, как оформлены списки предметов в любимой игре — что в них удобно читать</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Следующий урок — «ПРОЕКТ 2: квест-лобби»: соберём всё вместе в цельную игру с несколькими заданиями подряд</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самую аккуратную карточку, самое удачное сочетание иконок и цветов. Анонс урока 8: финальный проект блока — все механики (блокаут, рельеф, предметы, охота, свет, NPC, интерфейс) соединяются в одну игру. Напомнить о публикации (Alt+P или через меню) тем, кто не успел. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь Decal с уникальной иконкой ещё нескольким предметам в своём мире</li><li>Понаблюдай, как оформлены списки предметов в любимой игре — что в них удобно читать</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок — «ПРОЕКТ 2: квест-лобби»: соберём всё вместе в цельную игру с несколькими заданиями подряд</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самую аккуратную карточку, самое удачное сочетание иконок и цветов. Анонс урока 8: финальный проект блока — все механики (блокаут, рельеф, предметы, охота, свет, NPC, интерфейс) соединяются в одну игру. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/ui/on-screen-containers.md">On-screen UI containers — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/TextLabel.md">TextLabel — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/ImageLabel.md">ImageLabel — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/Decal.md">Decal — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/ScrollingFrame.md">ScrollingFrame — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/tutorials/curriculums/user-interface-design/implement-designs-in-studio.md">Implement designs in Studio — официальный туториал Roblox</a></li><li><a href="https://roblox.fandom.com/wiki/Tutorial:Absolute_Beginners_Guide_to_GUIs">Absolute Beginners Guide to GUIs — Roblox Wiki</a></li><li><a href="https://www.youtube.com/watch?v=cKaA2uU56L8">How To Make A Quests UI In Roblox Studio — GFXcomet</a></li></ul></section>

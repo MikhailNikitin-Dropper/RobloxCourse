@@ -2,25 +2,25 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX44529E06C609441EA3C7525E0BFF8224">
+	<Item class="Folder" referent="RBX5C34E380F6B34905B5C8358DEA3855BF">
 		<Properties>
 			<string name="Name">ButtonDoor</string>
 		</Properties>
-		<Item class="Script" referent="RBXFCCB9E4CF0A847E5808F938DE3D686FC">
+		<Item class="Script" referent="RBX0EAE4AAB0FAA4D9990C3039EBBE6F6BA">
 			<Properties>
-				<ProtectedString name="Source"><![CDATA[-- DoorScript — кнопка открывает дверь.
+				<ProtectedString name="Source"><![CDATA[-- DoorScript — кнопки открывают дверь.
 -- Модуль курса «Кнопка и дверь», урок 30.
 --
 -- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
--- настройки: имена двух деталей и два числа. Их можно менять. Всё, что ниже
--- второго ряда, — логика: её не трогаем.
+-- настройки: имя двери, список кнопок и два числа. Их можно менять. Всё, что
+-- ниже второго ряда, — логика: её не трогаем.
 --
 -- Подсказку «нажми E» настраивают не здесь, а в Properties: это объект
--- ProximityPrompt внутри кнопки. Если его нет, скрипт поставит свой.
+-- ProximityPrompt внутри каждой кнопки. Если его нет, скрипт поставит свой.
 
 -- ============================ НАСТРОЙКИ ============================
 local DOOR = "Door" -- имя детали-двери (в кавычках!)
-local BUTTON = "Button" -- имя детали-кнопки (в кавычках!)
+local BUTTONS = { "Button" } -- кнопки в том порядке, в каком их нажимать
 local OPEN_TIME = 0.8 -- за сколько секунд дверь уезжает вверх
 local STAY_OPEN = 4 -- сколько секунд дверь открыта; 0 — не закрывается
 -- ===================================================================
@@ -30,20 +30,49 @@ local TweenService = game:GetService("TweenService")
 -- Папка модуля лежит внутри модели, поэтому детали ищем в ней.
 local model = script.Parent.Parent
 local door = model:FindFirstChild(DOOR)
-local button = model:FindFirstChild(BUTTON)
 
-if not (door and button) then
+if not door then
+	warn("ButtonDoor: в модели " .. model.Name .. " нет детали " .. DOOR)
 	return
 end
 
 door.Anchored = true
 
-local prompt = button:FindFirstChildOfClass("ProximityPrompt")
-if not prompt then
-	prompt = Instance.new("ProximityPrompt")
-	prompt.ActionText = "Открыть"
-	prompt.ObjectText = "Дверь"
-	prompt.Parent = button
+-- Кнопки по списку. Одно имя дважды — ошибка: одна кнопка не может стоять
+-- в коде на двух местах.
+local buttons = {}
+local prompts = {}
+local seen = {}
+for i, name in ipairs(BUTTONS) do
+	local button = model:FindFirstChild(name)
+	if not button then
+		warn("ButtonDoor: в модели " .. model.Name .. " нет кнопки " .. name)
+		return
+	end
+	if seen[name] then
+		warn("ButtonDoor: кнопка " .. name .. " записана в BUTTONS дважды")
+		return
+	end
+	seen[name] = true
+
+	local prompt = button:FindFirstChildOfClass("ProximityPrompt")
+	if not prompt then
+		prompt = Instance.new("ProximityPrompt")
+		prompt.ActionText = #BUTTONS > 1 and "Нажать" or "Открыть"
+		prompt.ObjectText = #BUTTONS > 1 and "" or "Дверь"
+		prompt.Parent = button
+	end
+
+	-- Нажатая кнопка светится: игрок видит, сколько кода он уже набрал.
+	local light = Instance.new("PointLight")
+	light.Name = "ButtonDoorLight"
+	light.Color = button.Color
+	light.Range = 8
+	light.Brightness = 3
+	light.Enabled = false
+	light.Parent = button
+
+	buttons[i] = { part = button, prompt = prompt, light = light, material = button.Material }
 end
 
 -- Дверь уезжает вверх ровно на свою высоту.
@@ -67,10 +96,27 @@ local function someoneInDoorway()
 	return false
 end
 
-prompt.Triggered:Connect(function()
-	-- Пока дверь едет или открыта, подсказка спрятана: второе нажатие не
+local function glow(entry, on)
+	entry.light.Enabled = on
+	entry.part.Material = on and Enum.Material.Neon or entry.material
+end
+
+-- Сброс кода: все кнопки гаснут, все подсказки снова включены.
+local nextButton = 1
+local function reset()
+	nextButton = 1
+	for _, entry in ipairs(buttons) do
+		glow(entry, false)
+		entry.prompt.Enabled = true
+	end
+end
+
+local function openDoor()
+	-- Пока дверь едет или открыта, подсказки спрятаны: второе нажатие не
 	-- дёрнет полотно на полпути.
-	prompt.Enabled = false
+	for _, entry in ipairs(buttons) do
+		entry.prompt.Enabled = false
+	end
 	move(opened)
 	if STAY_OPEN <= 0 then
 		return
@@ -80,8 +126,24 @@ prompt.Triggered:Connect(function()
 		task.wait(0.5)
 	end
 	move(closed)
-	prompt.Enabled = true
-end)
+	reset()
+end
+
+for i, entry in ipairs(buttons) do
+	entry.prompt.Triggered:Connect(function()
+		if i ~= nextButton then
+			-- Не та кнопка: код набирают сначала.
+			reset()
+			return
+		end
+		glow(entry, true)
+		entry.prompt.Enabled = false
+		nextButton = nextButton + 1
+		if nextButton > #buttons then
+			openDoor()
+		end
+	end)
+end
 ]]></ProtectedString>
 				<bool name="Disabled">false</bool>
 				<token name="RunContext">1</token>

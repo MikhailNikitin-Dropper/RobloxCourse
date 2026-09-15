@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="20-r-1">
-<h3 class="slide-title">Что мы делали на уроке 19? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 19 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Где лежат скрипты, которые заставляют оружие стрелять?</p><ol class="content-item content-quiz-options"><li>Внутри каждого оружия</li><li data-correct="true">В отдельной папке системы ✓</li><li>В свойствах детали Handle</li></ol>
 <p class="content-item content-question">Зачем оружию метка TipAttachment?</p><ol class="content-item content-quiz-options"><li>Она держит детали вместе вместо сварки</li><li>Она задаёт цвет заряда</li><li data-correct="true">Из неё вылетает заряд ✓</li></ol>
 <p class="content-item content-question">Почему оружие кладут именно в StarterPack?</p><ol class="content-item content-quiz-options"><li data-correct="true">Так его получает каждый игрок при появлении ✓</li><li>Так оно становится сильнее</li><li>Так его видно в Explorer</li></ol>
@@ -65,7 +65,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Спросить группу: чем крепость отличается от просто стены вокруг базы? Подвести к ответу: у крепости есть вход, и он один. Вход — это место, где встречаются атака и защита, вокруг него и строится бой.</aside>
 </div>
 <div class="slide" id="20-t-3">
-<h3 class="slide-title">Ворота — это проём, а не дверь <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Ворота — проём, не дверь <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Дверь пришлось бы открывать скриптом — нам хватит проёма в стене</li><li>Ширина проёма решает всё: узкий держит один защитник, широкий не держит никто</li><li>Проверяем размером персонажа: в ворота должны спокойно пройти двое</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Устно: проём делается не удалением стены, а из двух коротких кусков и перемычки сверху — так остаётся арка, а не дыра. Ширину проверяем в Test персонажем, а не на глаз.</aside>
 </div>
@@ -75,7 +75,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Это разговор про баланс, а не про постройку. Показать на схеме: сильная позиция обязана иметь слабость, иначе игра сводится к «кто первым занял башню». Спросить группу, чем ещё можно уравновесить высоту — принимаются ответы про долгий подъём и один вход.</aside>
 </div>
 <div class="slide" id="20-t-5">
-<h3 class="slide-title">Почему обычная камера не годится для боя <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Камера для боя <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Обычная камера смотрит персонажу в затылок — целиться в такой некуда</li><li><b>Камера из-за плеча</b> сдвинута вбок: спина не закрывает цель</li><li>Смотрит она параллельно прицелу, поэтому центр экрана — и есть точка, куда ты целишься</li></ul>
 <p class="content-item content-image-prompt">[изображение: Два кадра игры Roblox рядом: слева обычный вид со спины, персонаж закрывает цель; справа вид из-за правого плеча, цель видна полностью]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать оба вида вживую и дать группе самой назвать разницу. Устно: в шутерах вид из-за плеча стал стандартом именно поэтому — не ради красоты, а чтобы игрок видел то, во что целится.</aside>
@@ -88,7 +88,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Главное, что стоит проговорить: модуль не целится за игрока и не помогает попадать. Он лишь сводит в одну точку три направления — куда смотрит камера, куда смотрит прицел и куда летит заряд. Настраивать модуль под себя на уроке не нужно: он приходит готовым. Про настройки — показать четвёртый пункт и кадр: всего у папки шестнадцать атрибутов, на слайде четыре понятных. Ещё один стоит держать в голове: AimAnimation — та самая анимация наводки, из-за которой пистолет держат двумя руками.</aside>
 </div>
 <div class="slide" id="20-t-7">
-<h3 class="slide-title">Оружие и модуль не мешают друг другу <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Оружие и модуль вместе <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Оружие остаётся твоим: детали, хват и числа никто не трогает</li><li>Модуль не лезет внутрь Tool — он только сообщает точку прицела</li><li>Убрал оружие из рук — рука опускается, персонаж ходит в обычной позе</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Ответ на вопрос, который обязательно возникнет: «а мой хват не собьётся?» Нет. Хват — единственное, чем ученик решает, как оружие лежит в руке, и модуль его не переписывает. Уточнить, если спросят про камеру: она остаётся за плечом всё время, пока модуль включён, — от оружия в руках зависит только поза руки.</aside>
 </div>
@@ -104,7 +104,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Правила проговариваем ДО матча: сколько длится раунд и что считается победой. Сам счёт ведёт модуль — об этом следующий слайд, поэтому здесь договариваемся только о длине раунда и о честной игре. Роль преподавателя в матче — комментатор, как на Гран-при урока 16.</aside>
 </div>
 <div class="slide" id="20-t-9b">
-<h3 class="slide-title">Счёт ведёт игра, а не спор <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Счёт ведёт игра <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Модуль счёта ведёт таблицу по всем игрокам: попадания, поражения и разница между ними</li><li>Таблица открыта всем и обновляется в бою — спорить о победителе не о чем</li><li>Побеждает команда, у которой к концу раунда сумма попаданий больше</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/110150627810658/ArenaScore" target="_blank" rel="noopener">https://create.roblox.com/store/asset/110150627810658/ArenaScore</a></p>
 <aside class="speaker-notes">Заметка ведущего: Зачем модуль: считать попадания двух команд на глаз за пять минут преподаватель не сможет, а спор о победителе съедает половину практики. Модуль ставится как остальные — ссылкой, ничего настраивать не нужно. Устно: сама по себе таблица никого не усиливает, она только показывает то, что уже произошло. Оговорка на будущее: таблица считает за всю сессию, а не за раунд — как перезапустить счёт перед вторым раундом, сказано в пометке шага 6.</aside>
@@ -152,7 +152,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Тот же приём, что с половинами арены на уроке 18: копия повторяет постройку точь-в-точь, поэтому крепости равны по определению. Проверить у каждого: копия развёрнута, а не просто сдвинута.</aside>
 </div>
 <div class="slide" id="20-p-3">
-<h3 class="slide-title">Шаг 3: включи прицеливание и счёт <span class="slide-duration">(3 мин)</span></h3>
+<h3 class="slide-title">Шаг 3: прицел и счёт <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Получи по ссылкам два модуля — ShoulderCam и ArenaScore — и вставь их из Inventory</li><li>Обе папки лежат прямо в мире, рядом с системой стрельбы</li><li>Test → камера встала за правое плечо, персонаж поворачивается за ней</li></ol>
 <p class="content-item content-paragraph">Ссылки на модули: <a href="https://create.roblox.com/store/asset/127840981761174/ShoulderCam" target="_blank" rel="noopener">https://create.roblox.com/store/asset/127840981761174/ShoulderCam</a> и <a href="https://create.roblox.com/store/asset/110150627810658/ArenaScore" target="_blank" rel="noopener">https://create.roblox.com/store/asset/110150627810658/ArenaScore</a></p>
 <aside class="speaker-notes">Заметка ведущего: Самая частая заминка: папку затащили внутрь оружия или внутрь крепости. Модуль должен лежать в мире сам по себе. Если камера не встала за плечо — проверить, что модуль вставился целиком, а не одним скриптом. Оба модуля берём подряд, пока группа уже в Inventory. Счёту настройка не нужна — вставили, и таблица появляется у всех сама.</aside>
@@ -163,7 +163,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Это проверка, ради которой затевался модуль. Если выстрела нет совсем — метки TipAttachment на оружии нет вовсе, система не признаёт сборку оружием. А если заряд летит, но мимо, — метка стоит не в срезе ствола, а осталась в центре детали или на другой детали: заряд честно летит в точку прицела, только стартует не оттуда, откуда ждёт глаз. Проверять по Explorer, глазами на экране метку не видно.</aside>
 </div>
 <div class="slide" id="20-p-5">
-<h3 class="slide-title">Шаг 5: атмосфера и обновление игры <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 5: атмосфера <span class="slide-duration">(1.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Добавь флаги команд, огонь у ворот и музыку в SoundService</li><li>Опубликуй обновление: File → Publish to Roblox — игру ты выложил вне урока, здесь одно действие</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Публикация тут быстрая: сама игра выложена домашним заданием урока 19, рейтинг уже подтверждён, поэтому обновление уходит в одно действие: File → Publish to Roblox (кому удобнее с клавиатуры — Alt+P). У кого игра не опубликована — идут в матч на плейсе преподавателя, свою публикацию доделают вне урока.</aside>
 </div>
@@ -188,8 +188,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="20-c-1">
 <h3 class="slide-title">Пятая игра портфолио готова <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Две крепости, честная карта, своё оружие и прицел, который не обманывает. Игра опубликована — в неё уже можно позвать друзей.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: оформи страницу игры — название, описание и иконку (красивый кадр из своей игры), — позови двух друзей и проведи матч</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>Дальше — механизмы и физика: качели, карусели и подъёмники на готовых шарнирах и моторах Studio</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Про домашнее задание: важны не победы, а первое действие нового игрока — по нему видно, понятна ли игра без объяснений. Отметить главное: проект собран из четырёх уроков блока, и каждый из них был нужен. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: оформи страницу игры — название, описание и иконку (красивый кадр из своей игры), — позови двух друзей и проведи матч</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Дальше — механизмы и физика: качели, карусели и подъёмники на готовых шарнирах и моторах Studio</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Про домашнее задание: важны не победы, а первое действие нового игрока — по нему видно, понятна ли игра без объяснений. Отметить главное: проект собран из четырёх уроков блока, и каждый из них был нужен. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Camera.md">Camera — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Attachment.md">Attachment — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/players/teams.md">Implement teams — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/parts/models.md">Models — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/effects/light-sources.md">Light sources — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/sound/objects.md">Sound objects — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-games-and-places">Create and publish games and places — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/publishing/experience-icons.md">Experience icons — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li><li><a href="https://book.leveldesignbook.com/process/combat/balance">Map balance — The Level Design Book</a></li></ul></section>

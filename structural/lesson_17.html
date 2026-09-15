@@ -44,7 +44,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="17-r-1">
-<h3 class="slide-title">Что мы делали на уроке 16? <span class="slide-duration">(4 мин)</span></h3>
+<h3 class="slide-title">Вспомним урок 16 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Кто на Гран-при давал старт и объявлял победителя?</p><ol class="content-item content-quiz-options"><li data-correct="true">Модуль раунда: он собирает четвёрку, даёт старт и подводит итоги ✓</li><li>Преподаватель — он был судьёй заезда</li><li>Первый доехавший — он объявлял себя сам</li></ol>
 <p class="content-item content-question">Гонщик срезал поворот мимо контрольных ворот. Что сделает модуль?</p><ol class="content-item content-quiz-options"><li>Засчитает круг — важно только время</li><li data-correct="true">Не засчитает круг: ворота проходят по порядку ✓</li><li>Снимет гонщика с заезда</li></ol>
 <p class="content-item content-question">Что нужно, чтобы другой игрок смог зайти в твою игру?</p><ol class="content-item content-quiz-options"><li>Отправить ему файл игры</li><li>Платная подписка у обоих игроков</li><li data-correct="true">Доступ Public и пройденный опрос о возрастном ограничении ✓</li></ol>
@@ -52,41 +52,41 @@ body { font-family: Arial, sans-serif; }
 </div>
 </section>
 <section class="block block-theory">
-<h2 class="block-title" style="color:#006600;">Сервис Teams: делим игроков на команды <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#006600;">Игроки делятся на команды <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="17-t-1">
 <h3 class="slide-title">Зачем игре команды <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Команда на команду — проверенный временем игровой формат: понятно, за кого болеть и с кем ты</li><li>В Roblox команды работают через готовый сервис — настроим всё через Properties</li><li>Название и цвет команды каждый игрок видит в списке игроков</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Спросить группу: какие командные игры они знают и что там делает команду командой? Ответы обычно сводятся к цвету, базе и общей цели — сегодня сделаем первые два, цель — в конце блока.</aside>
 </div>
 <div class="slide" id="17-t-2">
-<h3 class="slide-title">Сервис Teams: команды в два клика <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Сервис Teams <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Teams</b> — это сервис в Explorer, который хранит список команд игры</li><li>«+ → Team» — добавляем команду; у неё два главных свойства: Name и TeamColor</li><li><b>TeamColor (цвет команды)</b> — служебный цвет: по нему игра связывает игроков, точки возрождения и команду</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: раскрыт сервис Teams, внутри две команды — красная и синяя, рядом панель Properties с полями Name и TeamColor выбранной команды]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать вживую: найти Teams в Explorer, добавить Team через «+», переименовать, выбрать TeamColor. Подчеркнуть: цвета команд должны быть разными — по цвету игра и связывает всё остальное.</aside>
 </div>
 <div class="slide" id="17-t-3">
-<h3 class="slide-title">AutoAssignable: игра сама уравнивает команды <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">AutoAssignable <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>AutoAssignable</b> — это свойство команды: новый игрок автоматически попадает туда, где меньше участников</li><li>Включаем у обеих команд — игра делит игроков поровну</li><li>Выключена у всех — новичок останется без команды, и появляться ему будет негде</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Устно: авторазбор — единственный способ раздать команды настройками Studio, и он же держит составы ровными: игра смотрит, где меньше участников. Спросить группу, чем это честнее выбора «кто с кем хочет».</aside>
 </div>
 <div class="slide" id="17-t-4">
-<h3 class="slide-title">Точка возрождения команды: всё решает TeamColor <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Точка команды и TeamColor <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>У SpawnLocation выключаем <b>Neutral</b> — точка возрождения перестаёт пускать всех подряд</li><li>TeamColor у SpawnLocation ставим равным TeamColor команды — теперь здесь появляются только свои</li><li>Внимание: TeamColor — не видимый цвет детали; окрасить саму деталь — отдельное свойство (Color или BrickColor)</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот панели Properties у SpawnLocation: секция Teams с полями AllowTeamChangeOnTouch, Neutral (выключен) и TeamColor, значение TeamColor совпадает с цветом одной из команд]</p>
 <aside class="speaker-notes">Заметка ведущего: Самая частая ошибка урока: красят BrickColor/Color и ждут, что точка возрождения стала командной. Работает только совпадение TeamColor команды и TeamColor у SpawnLocation. Если подходящих точек возрождения несколько — игра выбирает случайную.</aside>
 </div>
 <div class="slide" id="17-t-5">
-<h3 class="slide-title">Neutral: почему он не для командной игры <span class="slide-duration">(2 мин)</span></h3>
+<h3 class="slide-title">Neutral не для команд <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Точка возрождения с включённым <b>Neutral</b> принимает любого игрока — даже того, кто уже в команде</li><li>Поэтому в командной игре Neutral выключаем везде: каждая точка принадлежит своей команде</li><li>Игрок появляется сразу на базе своей команды — искать её не нужно</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Устно: из всех подходящих точек игра выбирает случайную. Одна нейтральная точка посреди карты — и красный после гибели окажется то на базе, то в середине: подходит-то она всем.</aside>
 </div>
 <div class="slide" id="17-t-6">
-<h3 class="slide-title">AllowTeamChangeOnTouch: почему мы его не включаем <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">AllowTeamChangeOnTouch <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>AllowTeamChangeOnTouch</b> — это свойство SpawnLocation: коснулся — перешёл в команду её цвета</li><li>Срабатывает у любого игрока и сколько угодно раз — сторону можно менять посреди матча</li><li>Поэтому в нашей игре оно выключено: команду выдаёт игра, и она не меняется</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать вживую в Test: включить свойство на одной точке, коснуться — команда сменилась, коснуться снова — сменилась обратно. Устно: запретить смену команды настройками Studio нечем, поэтому дизайнер решает задачу иначе — не даёт такой возможности вовсе.</aside>
 </div>
 <div class="slide" id="17-t-7">
-<h3 class="slide-title">Server &amp; Clients: мультиплеер на одном компьютере <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Server &amp; Clients <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Server &amp; Clients</b> — это режим теста: Studio запускает локальный сервер и несколько окон-клиентов</li><li>Число клиентов выбираем в выпадающем списке режима теста</li><li>Каждое окно — отдельный игрок: можно выбрать разные команды и увидеть игру их глазами</li><li>Завершение — кнопка End Session в любом окне</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот панели тестирования Roblox Studio: раскрыт выпадающий список режимов теста с выбранным пунктом Server &amp; Clients и числом клиентов 2]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: обычно хватает двух клиентов, максимум — восемь. Это главный инструмент проверки командных игр: один ученик проверяет обе команды сам, не дожидаясь соседа. Окна клиентов открываются не мгновенно — предупредить, что 10–20 секунд ожидания нормальны.</aside>
@@ -133,7 +133,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Равные базы — не придирка: на следующем уроке из этого вырастет честная арена. Линейки в Studio нет, поэтому равенство проверяется числами в Properties, а не взглядом сверху: Size у обеих баз совпадает, а Position вдоль длинной оси карты отличается знаком, но не величиной — середина ровно посередине. Панель группа знает с первого урока, новых инструментов тут нет.</aside>
 </div>
 <div class="slide" id="17-p-3">
-<h3 class="slide-title">Шаг 3: точки возрождения команд <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 3: точки команд <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>На каждой базе поставь SpawnLocation в центре площадки</li><li>На каждой базе — своя точка возрождения: Neutral выключен, TeamColor команды, смена касанием выключена</li><li>Сверяй не оттенок, а название цвета: у команды и у её точки оно должно совпадать буква в букву</li><li>Test → ты появляешься на базе той команды, в которую тебя определила игра</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Обратить внимание группы: AllowTeamChangeOnTouch выключаем осознанно — иначе игрок сменит сторону одним касанием. TeamColor — единственная связь команды с её точкой, и ошибка тут тихая: в палитре BrickColor десятки близких красных и синих, на глаз «Really red» и «Bright red» не различить, а точка просто перестаёт работать. Поэтому сверяем названия в двух списках, а не оттенки квадратиков.</aside>
 </div>
@@ -149,7 +149,7 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Окна клиентов открываются с задержкой — это нормально. Главная проверка: игра развела клиентов по разным командам, и каждый появился на своей базе. End Session закрывает и сервер, и клиентов.</aside>
 </div>
 <div class="slide" id="17-p-6">
-<h3 class="slide-title">Шаг 6: чек-лист командной карты <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 6: чек-лист карты <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Цвета совпадают по всей цепочке: Team → точка возрождения базы → оформление базы</li><li>С середины карты видно обе базы и цвет каждой</li><li>Базы равноценны: одинаковое расстояние до середины, одинаковый размер</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Пункт о равноценности баз — мостик к следующему уроку про честную арену: преимущества одной команды на уровне карты быть не должно. Спросить, что ещё на карте может дать одной стороне фору.</aside>
 </div>
@@ -169,8 +169,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="17-c-1">
 <h3 class="slide-title">Командная карта готова <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы собрали фундамент командной игры: две команды в сервисе Teams, игра делит игроков поровну, и каждая команда появляется на своей базе.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь третью команду со своей базой и проверь в Server &amp; Clients, что игра делит игроков между тремя командами</li><li>Сохрани проект в конце занятия: File → Publish to Roblox</li><li>На следующем уроке — арена честного боя: симметрия карты, укрытия и маршруты атаки</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Похвалить за первый настоящий мультиплеер-инструмент: Server &amp; Clients теперь — постоянная проверка всех уроков блока. Последнее действие занятия — сохранение: File → Publish to Roblox, повторно — Alt+P. Пройти по группе и убедиться, что проект уехал в облако у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь третью команду со своей базой и проверь в Server &amp; Clients, что игра делит игроков между тремя командами</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>На следующем уроке — арена честного боя: симметрия карты, укрытия и маршруты атаки</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Похвалить за первый настоящий мультиплеер-инструмент: Server &amp; Clients теперь — постоянная проверка всех уроков блока. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/players/teams.md">Implement teams — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/SpawnLocation.md">SpawnLocation — Roblox Engine API</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Studio testing modes — Roblox Creator Hub</a></li><li><a href="https://www.youtube.com/watch?v=EKzANgSd7c4">How to Add Teams in Roblox Studio! (2025) — Syruproot</a></li></ul></section>
