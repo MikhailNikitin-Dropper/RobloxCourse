@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="5-w-1">
 <h3 class="slide-title">Ты — VFX &amp; Lighting Artist <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">У тебя уже есть настоящая игра — охота за сокровищами. Но пока в ней всегда полдень: ни заката, ни огней, ни магии.</p>
-<p class="content-item content-paragraph">Художник по эффектам и свету не строит новое — он делает так, чтобы игрок почувствовал мир: закат, туманную даль, живой огонь факела, магическое сияние кристалла. Сегодня твой мир оживёт.</p>
+<p class="content-item content-paragraph"><b>VFX &amp; Lighting Artist</b> (художник по эффектам и свету) не строит новое — он делает так, чтобы игрок почувствовал мир: закат, туманную даль, живой огонь факела, магическое сияние кристалла.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: показать два скриншота одного и того же места — «плоский полдень» и «вечер, туман, огни» — и спросить, в какую игру хочется играть. Обещание: к концу урока мир будет выглядеть как настоящая игра.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="5-r-1">
 <h3 class="slide-title">Вспомним урок 4 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как мы добавляли модуль PropHunter в свой проект?</p><ol class="content-item content-quiz-options"><li>Искали случайный модуль в поиске Toolbox</li><li>Писали скрипт на Lua</li><li data-correct="true">По ссылке → Get Model → инвентарь → My Models → в Workspace ✓</li></ol>
-<p class="content-item content-question">Что нужно предмету, чтобы он стал сокровищем охоты?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тег Prop Hunt, записка StringValue и уникальное имя ✓</li><li>Золотой цвет и материал Neon</li><li>Размер не меньше 10 студов</li></ol>
-<p class="content-item content-question">Где по правилам левел-дизайна лежало самое ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у точки возрождения</li><li data-correct="true">В самом опасном или дальнем месте карты ✓</li><li>За пределами карты</li></ol>
+<p class="content-item content-question">Как мы добавляли модуль PropHunter в свой проект?</p><ol class="content-item content-quiz-options"><li data-correct="true">По ссылке и из инвентаря Toolbox ✓</li><li>Скопировали похожий модуль из чужого проекта</li><li>Писали свой скрипт на Lua</li></ol>
+<p class="content-item content-question">Что нужно предмету, чтобы он стал сокровищем охоты?</p><ol class="content-item content-quiz-options"><li>Золотой цвет и светящийся материал Neon</li><li data-correct="true">Тег Prop Hunt, записка и уникальное имя ✓</li><li>Размер детали не меньше десяти студов</li></ol>
+<p class="content-item content-question">Где по правилам левел-дизайна лежало самое ценное сокровище?</p><ol class="content-item content-quiz-options"><li>Прямо у точки возрождения игрока</li><li>Далеко за пределами карты</li><li data-correct="true">В самом опасном месте карты ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Разминка-квиз по уроку 4. Ожидаемые ответы: по ссылке через инвентарь; тег + записка + имя; в опасном месте. Третий вопрос — мостик: сегодня «опасность» и «уют» зон сделаем видимыми. Попросить всех открыть мир охоты.</aside>
 </div>
 </section>
@@ -86,13 +86,13 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="5-t-6">
 <h3 class="slide-title">Огонь, дым и частицы <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Fire</b> — готовый огонь одним объектом: вставь в деталь, настрой Size и Color</li><li><b>SecondaryColor</b> — цвет сердцевины пламени: синий или зелёный огонь — легко</li><li><b>Sparkles</b> — искры магии для кристаллов, посохов и волшебных шаров</li><li><b>Smoke</b> — дым и туман в выбранном месте</li><li>У всех эффектов настраиваются цвет и размер</li></ul>
+<ul class="content-item content-bullets"><li><b>Fire</b> — готовый огонь одним объектом: вставь в деталь, настрой Size и Color</li><li><b>SecondaryColor</b> — цвет сердцевины пламени: так получается синий или зелёный огонь</li><li><b>Sparkles</b> — искры магии для кристаллов, посохов и волшебных шаров</li><li><b>Smoke</b> — дым и туман в выбранном месте</li><li>У всех эффектов настраиваются цвет и размер</li></ul>
 <p class="content-item content-image-prompt">[изображение: Факел из деталей с эффектом Fire и рядом кристалл с магическим сиянием частиц в тёмной сцене]</p>
 <aside class="speaker-notes">Заметка ведущего: Fire — готовый эффект огня. Важно: сам Fire не освещает — свет даёт PointLight рядом, это связка из практики. Все настройки эффектов — тоже обычные Properties: слайд про «панель» работает и здесь. Устно: показать свойства всех трёх эффектов интерактивно — меняем число и смотрим, что изменилось.</aside>
 </div>
 <div class="slide" id="5-t-7">
 <h3 class="slide-title">Свет ведёт игрока <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>У каждой зоны — своё настроение: безопасная = тёплый свет костра, опасная = полумрак и холодные цвета</li><li>Свет — навигация: игрок идёт «на огонёк», расставляем огни-маяки по маршруту охоты</li><li>Цепочка огней видна издалека — это дорога без единого указателя</li><li>Контраст усиливает историю: после тёплого лагеря тёмное ущелье пугает по-настоящему</li></ul>
+<ul class="content-item content-bullets"><li>У каждой зоны — своё настроение: безопасная = тёплый свет костра, опасная = полумрак и холодные цвета</li><li>Свет — навигация: игрок идёт «на огонёк», расставляем огни-маяки по маршруту охоты</li><li>Цепочка огней видна издалека — это дорога, которую не нужно подписывать</li><li>Контраст усиливает историю: после тёплого лагеря тёмное ущелье пугает сильнее</li></ul>
 <p class="content-item content-image-prompt">[изображение: Схема карты сверху: тёплый освещённый лагерь у точки старта, цепочка огней-маяков вдоль маршрута сокровищ и тёмная опасная зона с одним тревожным красным огоньком]</p>
 <aside class="speaker-notes">Заметка ведущего: Связка с уроками 2 и 4: рельеф задал зоны, сокровища задали маршрут — теперь свет делает их ощутимыми. Вопрос группе: «почему в страшной зоне не надо ставить уютный костёр?» — тёплый свет обещает безопасность, обманывать игрока нельзя.</aside>
 </div>
@@ -106,9 +106,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="5-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как сделать в игре вечер?</p><ol class="content-item content-quiz-options"><li>Покрасить все детали в тёмные цвета</li><li data-correct="true">Lighting → ClockTime примерно 18 ✓</li><li>Вставить чёрный Atmosphere</li></ol>
-<p class="content-item content-question">Какой источник света выбрать для факела?</p><ol class="content-item content-quiz-options"><li>SurfaceLight — светящаяся грань</li><li>SpotLight — узкий конус</li><li data-correct="true">PointLight — светит шаром во все стороны ✓</li></ol>
-<p class="content-item content-question">Где поменять цвет и дальность у выделенного PointLight?</p><ol class="content-item content-quiz-options"><li data-correct="true">В окне Properties — там свойства Color и Range ✓</li><li>Кнопкой Color в тулбаре — она красит всё</li><li>Никак — свет настраивается только кодом</li></ol>
+<p class="content-item content-question">Как сделать в игре вечер?</p><ol class="content-item content-quiz-options"><li data-correct="true">Lighting → ClockTime примерно 18 ✓</li><li>Покрасить детали в тёмные цвета</li><li>Вставить в Lighting чёрный Atmosphere</li></ol>
+<p class="content-item content-question">Какой источник света выбрать для факела?</p><ol class="content-item content-quiz-options"><li>SurfaceLight, у него светится вся грань</li><li data-correct="true">PointLight, он светит во все стороны ✓</li><li>SpotLight, он светит узким ярким конусом</li></ol>
+<p class="content-item content-question">Где поменять цвет и дальность у выделенного PointLight?</p><ol class="content-item content-quiz-options"><li>Кнопкой Color в тулбаре — она красит всё</li><li>Никак, свет настраивается только кодом скрипта</li><li data-correct="true">В окне Properties: свойства Color и Range ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: ClockTime ≈ 18; PointLight; в окне Properties. После второго вопроса спросить «а для прожектора над сценой?» — SpotLight. Третий вопрос закрепляет принцип «Properties = панель» — при верном ответе попросить назвать ещё пару свойств, которые группа уже меняла (Anchored, Material, Value, Tags).</aside>
 </div>
 </section>
@@ -153,9 +153,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="5-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Fire в факеле есть, а пещеру он не освещает. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Увеличить Size у Fire</li><li data-correct="true">PointLight рядом с пламенем — свет даёт он ✓</li><li>Сменить материал факела на Neon</li></ol>
-<p class="content-item content-question">Как изменилось настроение твоего мира? Какая зона получилась самой атмосферной и почему?</p>
-<p class="content-item content-question">Почему в опасной зоне мы не ставим тёплые уютные огни?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тёплый свет обещает безопасность — а эта зона должна тревожить ✓</li><li>Тёплые огни сильно замедляют игру</li><li>В опасной зоне свет вообще не работает</li></ol>
+<p class="content-item content-question">Fire в факеле есть, а пещеру он не освещает. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Увеличить свойство Size у Fire</li><li data-correct="true">PointLight рядом с пламенем ✓</li><li>Сменить материал факела на Neon</li></ol>
+<p class="content-item content-question">Как свет ведёт игрока по маршруту, если указателей нет?</p><ol class="content-item content-quiz-options"><li data-correct="true">Цепочкой огней-маяков: игрок идёт от огонька к огоньку ✓</li><li>Общей яркостью Brightness: чем она выше, тем понятнее дорога</li><li>Материалом Neon на тропе: он освещает путь вокруг себя</li></ol>
+<p class="content-item content-question">Почему в опасной зоне мы не ставим тёплые уютные огни?</p><ol class="content-item content-quiz-options"><li>Тёплые огни заметно замедляют работу игры</li><li>В опасной зоне свет вообще не работает</li><li data-correct="true">Тёплый свет обещает безопасность, а зона тревожит ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: связка Fire + PointLight; открытый вопрос — 2–3 ученика описывают настроение зон (услышать слова-эмоции: уютно, страшно, таинственно); тёплый свет = обещание безопасности. Открытый вопрос главный — он проверяет мышление художника по эффектам и свету.</aside>
 </div>
 </section>
@@ -164,7 +164,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="5-c-1">
 <h3 class="slide-title">Мир стал атмосфернее <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Сегодня мы поработали в роли VFX &amp; Lighting Artist: закат и туманная даль, живые огни, магия кристалла — и всё это свойствами в Properties.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: подбери освещение для своего домашнего предмета из урока 3 и пройди маршрут ещё раз сам: добавь маяк там, где пришлось искать дорогу</li><li>Понаблюдай в любимой игре: каким светом тебя ведут и пугают?</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок — «NPC и диалоги»: в игре появятся персонажи, с которыми можно поговорить</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: подбери освещение для своего домашнего предмета из урока 3 и пройди маршрут ещё раз сам: добавь маяк там, где пришлось искать дорогу</li><li>Понаблюдай в любимой игре: каким светом тебя ведут и пугают?</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: «NPC и диалоги» — в игре появятся персонажи, с которыми можно поговорить</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самое атмосферное место, самый смелый цвет огня. Анонс урока 6 — эмоциональный: «мир красив, но пока безлюден — в следующий раз в нём появятся жители». Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

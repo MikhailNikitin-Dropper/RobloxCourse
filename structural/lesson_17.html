@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="17-w-1">
 <h3 class="slide-title">Сегодня ты — Multiplayer Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Гран-при показал: игра меняется, когда в ней несколько живых игроков. Открываем большой проект «Командная арена» — четыре урока о честной игре команда на команду.</p>
-<p class="content-item content-paragraph"><b>Multiplayer Designer</b> — это специалист, который проектирует игру сразу для многих игроков: у каждого своя команда, своё место старта и понятные правила.</p>
+<p class="content-item content-paragraph"><b>Multiplayer Designer</b> проектирует игру сразу для многих игроков: у каждого своя команда, своё место старта и понятные правила.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Мостик от Гран-при: там соперничали поодиночке, теперь учимся делить игроков на команды. Сегодня — фундамент блока: сервис Teams.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="17-r-1">
 <h3 class="slide-title">Вспомним урок 16 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Кто на Гран-при давал старт и объявлял победителя?</p><ol class="content-item content-quiz-options"><li data-correct="true">Модуль раунда: он собирает четвёрку, даёт старт и подводит итоги ✓</li><li>Преподаватель — он был судьёй заезда</li><li>Первый доехавший — он объявлял себя сам</li></ol>
-<p class="content-item content-question">Гонщик срезал поворот мимо контрольных ворот. Что сделает модуль?</p><ol class="content-item content-quiz-options"><li>Засчитает круг — важно только время</li><li data-correct="true">Не засчитает круг: ворота проходят по порядку ✓</li><li>Снимет гонщика с заезда</li></ol>
-<p class="content-item content-question">Что нужно, чтобы другой игрок смог зайти в твою игру?</p><ol class="content-item content-quiz-options"><li>Отправить ему файл игры</li><li>Платная подписка у обоих игроков</li><li data-correct="true">Доступ Public и пройденный опрос о возрастном ограничении ✓</li></ol>
+<p class="content-item content-question">Кто на Гран-при давал старт и объявлял победителя?</p><ol class="content-item content-quiz-options"><li data-correct="true">Модуль раунда — он вёл весь заезд ✓</li><li>Преподаватель — он был судьёй заезда</li><li>Первый доехавший — он объявлял себя сам</li></ol>
+<p class="content-item content-question">Гонщик срезал поворот мимо контрольных ворот. Что сделает модуль?</p><ol class="content-item content-quiz-options"><li>Засчитает круг — важно только время</li><li data-correct="true">Не засчитает круг, ворота пропущены ✓</li><li>Снимет гонщика с заезда</li></ol>
+<p class="content-item content-question">Что нужно, чтобы другой игрок смог зайти в твою игру?</p><ol class="content-item content-quiz-options"><li>Отправить ему сам файл игры</li><li>Платная подписка у обоих игроков</li><li data-correct="true">Доступ Public и пройденный опрос ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: раунд ведёт модуль; круг не засчитан; Public + опрос. Третий вопрос — мостик к сегодняшнему мультиплееру.</aside>
 </div>
 </section>
@@ -60,7 +60,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="17-t-2">
 <h3 class="slide-title">Сервис Teams <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Teams</b> — это сервис в Explorer, который хранит список команд игры</li><li>«+ → Team» — добавляем команду; у неё два главных свойства: Name и TeamColor</li><li><b>TeamColor (цвет команды)</b> — служебный цвет: по нему игра связывает игроков, точки возрождения и команду</li></ul>
+<ul class="content-item content-bullets"><li><b>Teams</b> — это сервис в Explorer, который хранит список команд игры</li><li>«+ → Team» — добавляем команду; у неё два главных свойства: Name и TeamColor</li><li><b>TeamColor (цвет команды)</b> — служебный цвет: по нему игра связывает игроков и точки возрождения со своей стороной</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: раскрыт сервис Teams, внутри две команды — красная и синяя, рядом панель Properties с полями Name и TeamColor выбранной команды]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать вживую: найти Teams в Explorer, добавить Team через «+», переименовать, выбрать TeamColor. Подчеркнуть: цвета команд должны быть разными — по цвету игра и связывает всё остальное.</aside>
 </div>
@@ -106,9 +106,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="17-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что делает точку возрождения принадлежащей конкретной команде?</p><ol class="content-item content-quiz-options"><li data-correct="true">Выключенный Neutral и TeamColor, совпадающий с цветом команды ✓</li><li>Видимый цвет детали (Color)</li><li>Имя точки возрождения, совпадающее с названием команды</li></ol>
-<p class="content-item content-question">Игрок коснулся точки возрождения с включённым AllowTeamChangeOnTouch. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Точка возрождения исчезнет</li><li data-correct="true">Игрок перейдёт в команду с цветом этой точки возрождения ✓</li><li>Игрок вернётся на свою базу</li></ol>
-<p class="content-item content-question">Как одному проверить, что обе команды появляются на своих базах?</p><ol class="content-item content-quiz-options"><li>Позвать восемь друзей — иначе никак</li><li>Проверить по очереди обычным Test</li><li data-correct="true">Запустить режим Server &amp; Clients с двумя клиентами ✓</li></ol>
+<p class="content-item content-question">Что делает точку возрождения принадлежащей конкретной команде?</p><ol class="content-item content-quiz-options"><li data-correct="true">Выключенный Neutral и совпадающий TeamColor ✓</li><li>Видимый цвет самой детали (Color)</li><li>Имя точки, совпадающее с названием команды</li></ol>
+<p class="content-item content-question">Игрок коснулся точки возрождения с включённым AllowTeamChangeOnTouch. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Точка возрождения просто исчезнет</li><li>Игрок вернётся на свою базу</li><li data-correct="true">Игрок перейдёт в команду точки ✓</li></ol>
+<p class="content-item content-question">Как одному проверить, что обе команды появляются на своих базах?</p><ol class="content-item content-quiz-options"><li>Позвать восемь друзей — иначе никак</li><li data-correct="true">Запустить режим Server &amp; Clients ✓</li><li>Проверить по очереди обычным Test</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Если группа путает TeamColor и видимый цвет — вернуться к сравнению: TeamColor — служебная связь, Color — краска.</aside>
 </div>
 </section>
@@ -139,7 +139,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="17-p-4">
 <h3 class="slide-title">Шаг 4: цветовое кодирование баз <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Покрась пол базы, стену и флаг в цвет соответствующей команды</li><li>Дорожку от середины к базе тоже покрасим в цвет команды</li><li>Test → с середины карты видно, где чья половина, без единой подписи</li></ol>
+<ol class="content-item content-steps"><li>Покрась пол базы, стену и флаг в цвет соответствующей команды</li><li>Дорожку от середины к базе тоже покрасим в цвет команды</li><li>Test → с середины карты видно, где чья половина, по одним только цветам</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Устно: видимый цвет детали и TeamColor — разное. Красим для игрока, а связывает команду и её точку возрождения игра — по TeamColor.</aside>
 </div>
 <div class="slide" id="17-p-5">
@@ -158,9 +158,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="17-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Почему на точках возрождения баз мы выключили AllowTeamChangeOnTouch?</p><ol class="content-item content-quiz-options"><li>Чтобы точка возрождения работала быстрее</li><li>Так база выглядит аккуратнее</li><li data-correct="true">Чтобы случайное касание чужой точки возрождения не меняло команду игрока ✓</li></ol>
-<p class="content-item content-question">В тесте игра определила игрока в красную команду, но появился он на синей базе. Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Совпадение TeamColor точек возрождения с TeamColor команд ✓</li><li>Размер синей базы</li><li>Число клиентов в симуляции</li></ol>
-<p class="content-item content-question">Какую игру для двух команд интересно построить на этой основе?</p>
+<p class="content-item content-question">Почему на точках возрождения баз мы выключили AllowTeamChangeOnTouch?</p><ol class="content-item content-quiz-options"><li>Чтобы точка возрождения работала быстрее</li><li>Так вся база выглядит аккуратнее</li><li data-correct="true">Чтобы касание не меняло команду ✓</li></ol>
+<p class="content-item content-question">В тесте игра определила игрока в красную команду, но появился он на синей базе. Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Совпадение TeamColor точек и команд ✓</li><li>Размер самой синей базы</li><li>Число клиентов в этом тесте</li></ol>
+<p class="content-item content-question">Почему AllowTeamChangeOnTouch в нашей игре выключен?</p><ol class="content-item content-quiz-options"><li>Иначе новички останутся вообще без команды при входе</li><li data-correct="true">Иначе игрок сменит сторону касанием чужой точки возрождения ✓</li><li>Иначе TeamColor точки перестанет совпадать с цветом команды</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Открытый вопрос — разогрев перед блоком: прозвучат захват флага, прятки, бой — всё это впереди. Ожидаемые ответы на квизы: чтобы сторону нельзя было менять; совпадение TeamColor.</aside>
 </div>
 </section>
@@ -169,7 +169,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="17-c-1">
 <h3 class="slide-title">Командная карта готова <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы собрали фундамент командной игры: две команды в сервисе Teams, игра делит игроков поровну, и каждая команда появляется на своей базе.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь третью команду со своей базой и проверь в Server &amp; Clients, что игра делит игроков между тремя командами</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>На следующем уроке — арена честного боя: симметрия карты, укрытия и маршруты атаки</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь третью команду со своей базой и проверь в Server &amp; Clients, что игра делит игроков между тремя командами</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: арена честного боя — симметрия карты, укрытия и маршруты атаки</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Похвалить за первый настоящий мультиплеер-инструмент: Server &amp; Clients теперь — постоянная проверка всех уроков блока. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

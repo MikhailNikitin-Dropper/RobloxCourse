@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="7-w-1">
 <h3 class="slide-title">Ты — UX / Systems Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">В твоём мире уже есть закат, огни и живой Хранитель подземелья. С урока 4 там же работает поиск сокровищ — но интерфейс списка пока довольно простой и непроработанный.</p>
-<p class="content-item content-paragraph">Такой специалист берёт готовую систему и строит интерфейс заново, по чёткому алгоритму: контейнер, панель, карточка предмета, иконки. Сегодня журнал квеста в твоей игре ты соберёшь с нуля сам.</p>
+<p class="content-item content-paragraph"><b>UX / Systems Designer</b> берёт готовую систему и строит интерфейс заново, по чёткому алгоритму: контейнер, панель, карточка предмета, иконки. Сегодня журнал квеста в твоей игре ты соберёшь сам.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «поиск сокровищ уже считает расстояние и ставит галочки — а вот интерфейс для этого мы сегодня построим заново, начисто». Обещание: к концу урока на экране будет журнал, который ученик собрал сам, объект за объектом.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-r-1">
 <h3 class="slide-title">Вспомним урок 6 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда вставляли Dialog, чтобы над NPC появилось облако для начала диалога?</p><ol class="content-item content-quiz-options"><li data-correct="true">В деталь NPC, обычно в Head ✓</li><li>В сервис Lighting</li><li>В SpawnLocation</li></ol>
-<p class="content-item content-question">Как игрок выбирал, что ответить NPC?</p><ol class="content-item content-quiz-options"><li>Второй Dialog в голове персонажа</li><li data-correct="true">Объекты DialogChoice внутри Dialog ✓</li><li>Это работает только с кодом</li></ol>
-<p class="content-item content-question">Что означала иконка «!» над Хранителем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Purpose = Quest — здесь задание ✓</li><li>Tone = Enemy — персонаж опасен</li><li>У NPC закончились реплики</li></ol>
+<p class="content-item content-question">Куда вставляли Dialog, чтобы над NPC появилось облако для начала диалога?</p><ol class="content-item content-quiz-options"><li>В сервис Lighting</li><li>В деталь SpawnLocation</li><li data-correct="true">В голову NPC (Head) ✓</li></ol>
+<p class="content-item content-question">Как игрок выбирал, что ответить NPC?</p><ol class="content-item content-quiz-options"><li data-correct="true">Объекты DialogChoice внутри Dialog ✓</li><li>Второй Dialog в голове персонажа</li><li>Это работает только с кодом</li></ol>
+<p class="content-item content-question">Что означала иконка «!» над Хранителем?</p><ol class="content-item content-quiz-options"><li>Tone = Enemy — персонаж опасен</li><li data-correct="true">Purpose = Quest — здесь задание ✓</li><li>У NPC закончились реплики</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: в Head; DialogChoice; Purpose = Quest. Мостик к теме: «иконка „!“ уже подсказывала о задании без слов — сегодня соберём целый журнал заданий заново, своими руками».</aside>
 </div>
 </section>
@@ -112,9 +112,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Почему в начале урока старый ScreenGui из урока 4 удаляют целиком?</p><ol class="content-item content-quiz-options"><li data-correct="true">Интерфейс сегодня строим заново по алгоритму, а не донастраиваем заготовку ✓</li><li>Он мешает скрипту работать</li><li>Просто для порядка в Explorer</li></ol>
-<p class="content-item content-question">Как каждый предмет получает свою уникальную иконку в списке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Через Decal, вставленный в деталь предмета — скрипт берёт его ColorMapContent ✓</li><li>Дизайнер рисует отдельную карточку под каждый предмет</li><li>Иконка выбирается случайно при каждом Test</li></ol>
-<p class="content-item content-question">Какое имя обязательно должно быть у нового ScreenGui, чтобы всё заработало?</p><ol class="content-item content-quiz-options"><li data-correct="true">PropHunterGui — по этому имени его ищет стартовый скрипт ✓</li><li>Любое, главное чтобы он лежал в StarterGui</li><li>MainFrame</li></ol>
+<p class="content-item content-question">Почему в начале урока старый ScreenGui из урока 4 удаляют целиком?</p><ol class="content-item content-quiz-options"><li>Он мешает новому скрипту работать</li><li>Просто для порядка в Explorer</li><li data-correct="true">Интерфейс строим заново по алгоритму ✓</li></ol>
+<p class="content-item content-question">Как каждый предмет получает свою уникальную иконку в списке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Через Decal, вставленный в деталь предмета ✓</li><li>Дизайнер рисует отдельную карточку под каждый предмет</li><li>Иконка выбирается случайно при каждом Test</li></ol>
+<p class="content-item content-question">Какое имя обязательно должно быть у нового ScreenGui, чтобы всё заработало?</p><ol class="content-item content-quiz-options"><li>Любое, главное чтобы он лежал в StarterGui</li><li data-correct="true">PropHunterGui — по нему скрипт его находит ✓</li><li>MainFrame, как у главной панели интерфейса</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: логика отдельно от интерфейса; иконка — через Decal на предмете; имя ScreenGui — строго PropHunterGui. Если время осталось — спросить, чем UICorner отличается от UIStroke.</aside>
 </div>
 </section>
@@ -171,9 +171,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">У одного ученика все карточки показывают одинаковую заглушку вместо своих иконок. В чём вероятная причина?</p><ol class="content-item content-quiz-options"><li data-correct="true">Забыли вставить Decal в детали предметов или не заполнили ColorMapContent ✓</li><li>Не добавили UIGradient на панель</li><li>MainFrame назвали неправильно</li></ol>
-<p class="content-item content-question">Что было сложнее — собрать интерфейс с нуля по алгоритму или разобраться с иконками через Decal? Почему?</p>
-<p class="content-item content-question">Почему ItemTemplate можно оставить видимым во время сборки в Studio?</p><ol class="content-item content-quiz-options"><li data-correct="true">Скрипт сам спрячет его первой строкой при старте игры ✓</li><li>Это не имеет значения — Studio всегда прячет шаблоны</li><li>Видимый шаблон обязателен для работы скрипта</li></ol>
+<p class="content-item content-question">Все карточки показывают одинаковую заглушку вместо своих иконок. В чём вероятная причина?</p><ol class="content-item content-quiz-options"><li>Не добавили UIGradient на панель интерфейса</li><li>Панель MainFrame назвали совсем неправильно</li><li data-correct="true">Забыли вставить Decal в детали предметов ✓</li></ol>
+<p class="content-item content-question">Зачем карточку предмета собирают один раз как шаблон?</p><ol class="content-item content-quiz-options"><li>Шаблон уменьшает вес игры и заметно ускоряет её загрузку</li><li data-correct="true">Скрипт копирует шаблон, и карточки выходят одинаково аккуратными ✓</li><li>Без шаблона ScrollingFrame не умеет прокручивать длинный список</li></ol>
+<p class="content-item content-question">Почему ItemTemplate можно оставить видимым во время сборки в Studio?</p><ol class="content-item content-quiz-options"><li data-correct="true">Скрипт спрячет его при старте игры ✓</li><li>Studio сама прячет любые шаблоны интерфейса</li><li>Видимый шаблон обязателен для работы скрипта</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: нет Decal или пустой ColorMapContent; открытый вопрос — сравнить сложность сборки интерфейса и подключения иконок; шаблон прячет сам скрипт при старте. Открытый вопрос — рефлексия роли UX-дизайнера.</aside>
 </div>
 </section>
@@ -182,7 +182,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="7-c-1">
 <h3 class="slide-title">Журнал квеста собран с нуля <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Сегодня мы поработали в роли UX / Systems Designer: собрали интерфейс журнала квеста заново, объект за объектом, и подключили его к уже готовой системе PropHunter — у каждого предмета теперь своя иконка.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь Decal с уникальной иконкой ещё нескольким предметам в своём мире</li><li>Понаблюдай, как оформлены списки предметов в любимой игре — что в них удобно читать</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок — «ПРОЕКТ 2: квест-лобби»: соберём всё вместе в цельную игру с несколькими заданиями подряд</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь Decal с уникальной иконкой ещё нескольким предметам в своём мире</li><li>Понаблюдай: как оформлены списки предметов в любимой игре — что в них удобно читать</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: «ПРОЕКТ 2 — квест-лобби»: соберём всё вместе в цельную игру с несколькими заданиями подряд</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Похвалить конкретное: самую аккуратную карточку, самое удачное сочетание иконок и цветов. Анонс урока 8: финальный проект блока — все механики (блокаут, рельеф, предметы, охота, свет, NPC, интерфейс) соединяются в одну игру. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

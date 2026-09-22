@@ -36,8 +36,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="29-w-1">
 <h3 class="slide-title">Редактор скриптов <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Все прошлые уроки детали стояли на месте, пока их не двигал игрок. Сегодня соберём стенд, который двигается сам.</p>
-<p class="content-item content-paragraph">Роль на сегодня — <b>Technical Designer</b> (технический дизайнер): читает готовый скрипт и настраивает его под свою игру.</p>
+<p class="content-item content-paragraph">До сих пор движение в наших играх задавали физика и готовые модули. Сегодня соберём стенд, который движется по инструкции из скрипта.</p>
+<p class="content-item content-paragraph"><b>Technical Designer</b> (технический дизайнер) читает готовый скрипт и настраивает его под свою игру.</p>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Роль дня — Technical Designer: настраивает готовую механику и умеет читать её изнутри. Сказать прямо, что сегодня впервые откроется окно с кодом, и сразу снять напряжение: писать код не будем, будем менять в нём числа. Замысел занятия — стенд из трёх деталей, у каждой свой короткий скрипт.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="29-r-1">
 <h3 class="slide-title">Вспомним ночной лабиринт <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда клали папку MonsterAI, чтобы монстр ожил?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью монстра, в Workspace</li><li data-correct="true">Внутрь модели монстра ✓</li><li>В любое место — модуль сам себя найдёт</li></ol>
-<p class="content-item content-question">Что нужно было сделать, чтобы портал выпустил игрока из лабиринта?</p><ol class="content-item content-quiz-options"><li data-correct="true">Собрать все три артефакта ✓</li><li>Нажать кнопку рядом с порталом</li><li>Дождаться конца отсчёта</li></ol>
-<p class="content-item content-question">Что мы вписывали в атрибуты WalkAnimationId и AttackAnimationId?</p><ol class="content-item content-quiz-options"><li data-correct="true">Номера своих анимаций из урока 27 ✓</li><li>Скорость и радиус монстра</li><li>Имя модели монстра</li></ol>
+<p class="content-item content-question">Куда клали папку MonsterAI, чтобы монстр ожил?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью монстра</li><li data-correct="true">Внутрь самой модели монстра ✓</li><li>В любое место лабиринта</li></ol>
+<p class="content-item content-question">Что нужно было сделать, чтобы портал выпустил игрока из лабиринта?</p><ol class="content-item content-quiz-options"><li data-correct="true">Собрать все три артефакта ✓</li><li>Нажать кнопку рядом с порталом</li><li>Дождаться конца общего отсчёта</li></ol>
+<p class="content-item content-question">Что мы вписывали в атрибуты WalkAnimationId и AttackAnimationId?</p><ol class="content-item content-quiz-options"><li>Скорость и радиус обзора монстра</li><li>Имя модели самого монстра</li><li data-correct="true">Номера своих анимаций из урока ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, по минуте с небольшим на вопрос. Все три ведут к теме занятия: механику давал модуль, а внутри модуля — скрипт, который сегодня наконец откроем.</aside>
 </div>
 </section>
@@ -102,9 +102,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="29-qt-1">
 <h3 class="slide-title">Проверим себя <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что мы меняем в скрипте модуля на этом уроке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Значения переменных между рядами знаков «равно» ✓</li><li>Строки логики ниже настроек</li><li>Имя скрипта в Explorer</li></ol>
-<p class="content-item content-question">Поменяли число во время запущенного Test. Что увидит игрок?</p><ol class="content-item content-quiz-options"><li data-correct="true">Стенд будет работать по-старому, пока Test не перезапустить ✓</li><li>Стенд сразу поедет по-новому</li><li>Игра остановится с ошибкой</li></ol>
-<p class="content-item content-question">Как проверить, какой скрипт отвечает за стенд, ничего не удаляя?</p><ol class="content-item content-quiz-options"><li data-correct="true">Снять у скрипта галочку Enabled и запустить Test ✓</li><li>Удалить скрипт и посмотреть, что сломается</li><li>Переименовать скрипт и запустить Test</li></ol>
+<p class="content-item content-question">Что мы меняем в скрипте модуля на этом уроке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Значения переменных после знака «равно» ✓</li><li>Строки логики ниже самих настроек</li><li>Имя скрипта в окне Explorer</li></ol>
+<p class="content-item content-question">Поменяли число во время запущенного Test. Что увидит игрок?</p><ol class="content-item content-quiz-options"><li>Стенд сразу поедет совсем по-новому</li><li>Игра сразу остановится с ошибкой</li><li data-correct="true">Стенд работает по-старому до перезапуска ✓</li></ol>
+<p class="content-item content-question">Как проверить, какой скрипт отвечает за стенд, ничего не удаляя?</p><ol class="content-item content-quiz-options"><li>Удалить скрипт и посмотреть, что сломается</li><li data-correct="true">Снять галочку Enabled и запустить Test ✓</li><li>Переименовать скрипт и запустить Test</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса с вариантами. Третий — приём, который дети применят в практике: галочка Enabled показывает, какой скрипт за что отвечает, и ничего при этом не теряется.</aside>
 </div>
 </section>
@@ -159,9 +159,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="29-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Маяк после правки замигал как сумасшедший. Что искать?</p><ol class="content-item content-quiz-options"><li data-correct="true">Запятую вместо точки в дробном числе ✓</li><li>Потерянную кавычку у имени детали</li><li>Ошибку в логике ниже настроек</li></ol>
-<p class="content-item content-question">Деталь назвали Lift2, а в настройке скрипта осталось Lift. Что произойдёт?</p><ol class="content-item content-quiz-options"><li data-correct="true">Лифт не заработает, маяк и мост будут работать ✓</li><li>Остановятся все три стенда</li><li>Скрипт сам найдёт деталь по новому имени</li></ol>
-<p class="content-item content-question">Какие числа сделают мост непроходимым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Совсем маленький SOLID: мост тает раньше, чем игрок успевает пройти ✓</li><li>Большой SOLID: мост слишком долго стоит плотным</li><li>Большой FADE: мост станет слишком прозрачным</li></ol>
+<p class="content-item content-question">Маяк после правки замигал как сумасшедший. Что искать?</p><ol class="content-item content-quiz-options"><li>Потерянную кавычку у имени детали</li><li>Ошибку в логике ниже настроек</li><li data-correct="true">Запятую вместо точки в дробном числе ✓</li></ol>
+<p class="content-item content-question">Деталь назвали Lift2, а в настройке скрипта осталось Lift. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Остановятся сразу все три стенда</li><li data-correct="true">Лифт не заработает, остальное работает ✓</li><li>Скрипт сам найдёт деталь по имени</li></ol>
+<p class="content-item content-question">Какие числа сделают мост непроходимым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Совсем маленький SOLID: мост тает рано ✓</li><li>Большой SOLID: мост слишком долго стоит плотным</li><li>Большой FADE: мост станет слишком прозрачным</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса с вариантами. Третий разбирает главное правило честности: числа можно подобрать так, что полоса станет непроходимой. Если группа предложит другие способы сломать стенд числами, записать: пригодится на уроке 30.</aside>
 </div>
 </section>
@@ -170,12 +170,12 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="29-c-1">
 <h3 class="slide-title">Лаборатория скриптов готова <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Мы открыли редактор скриптов, прочитали готовую механику и настроили её числами — это работа Technical Designer.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Дальше — комната побега: кнопки, двери и ключи</li></ul>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: комната побега — кнопки, двери и ключи</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить главное: сегодня впервые открыли редактор скриптов и настроили готовую механику числами, не трогая логику. Анонс урока 30: начинаем новую игру — комнату побега, и первое, что в ней появится, — кнопка, которая открывает дверь. Последнее действие занятия — сохранение: File → Save to Roblox; пройти по группе и убедиться, что проект сохранён в облаке: лаборатория понадобится для домашнего задания.</aside>
 </div>
 <div class="slide" id="29-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль «Батут» по ссылке и перетащи папку Trampoline внутрь модели Lab</li><li>Поставь деталь Pad на землю перед помостом</li><li>Открой JumpScript и подбери POWER: с разбега батут забрасывает на помост</li><li>Подбери COOLDOWN, чтобы батут не подкидывал без передышки</li></ol>
+<ul class="content-item content-bullets"><li>Модуль «Батут»: получи по ссылке и перетащи папку Trampoline внутрь модели Lab</li><li>Деталь Pad: поставь на землю перед помостом</li><li>POWER в JumpScript: подбери так, чтобы с разбега батут забрасывал на помост</li><li>COOLDOWN: подбери, чтобы батут не подкидывал без передышки</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/77599358305941/Trampoline" target="_blank" rel="noopener">https://create.roblox.com/store/asset/77599358305941/Trampoline</a></p>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Задание проверяется на следующем занятии одним вопросом: кто забрался на помост без лифта и с какими числами. Заводские числа задачу не решают: с POWER 25 игрок подлетает и упирается в стену помоста — силу нужно подобрать самому. Пока игрок стоит на батуте, тот подкидывает его раз в COOLDOWN секунд: при заводской единице замер дал восемь подбросов за восемь секунд. Напомнить правило: меняем числа между рядами знаков «равно», логику ниже не трогаем.</aside>
 </div>

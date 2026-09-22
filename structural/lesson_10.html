@@ -36,8 +36,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="10-w-1">
 <h3 class="slide-title">Сегодня ты — Trap Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">На прошлом уроке мы построили учебную трассу и научились управлять физикой одной детали. Сегодня трасса станет по-настоящему опасной.</p>
-<p class="content-item content-paragraph"><b>Trap Designer (дизайнер ловушек)</b> — это специалист, который придумывает опасности маршрута и следит, чтобы каждая из них оставалась честной по отношению к игроку.</p>
+<p class="content-item content-paragraph">На прошлом уроке мы построили учебную трассу и научились управлять физикой одной детали. Сегодня на трассе появятся опасные места.</p>
+<p class="content-item content-paragraph"><b>Trap Designer (дизайнер ловушек)</b> придумывает опасности маршрута и следит, чтобы каждая оставалась честной по отношению к игроку.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Подчеркнуть слово «честной»: сегодняшний урок не про то, как обмануть игрока, а про то, как заставить его быть внимательным.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="10-r-1">
 <h3 class="slide-title">Вспомним урок 9 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Платформа выглядит обычной, но персонаж проваливается сквозь неё. Какая настройка так работает?</p><ol class="content-item content-quiz-options"><li data-correct="true">CanCollide = false ✓</li><li>Anchored = false</li><li>Transparency = 1</li></ol>
-<p class="content-item content-question">Как мы делали мост-силуэт — едва заметный, но проходимый?</p><ol class="content-item content-quiz-options"><li>Transparency = 0.9, CanCollide выключен</li><li data-correct="true">Transparency = 0.9, CanCollide включён ✓</li><li>Transparency = 1, CanCollide включён</li></ol>
-<p class="content-item content-question">Почему дистанцию прыжка мы проверяли тест-стендом, а не считали заранее?</p><ol class="content-item content-quiz-options"><li>В Studio нет калькулятора</li><li>Так требуют правила публикации Roblox</li><li data-correct="true">Расчёт по формуле сильно расходится с тем, что происходит в игре ✓</li></ol>
+<p class="content-item content-question">Платформа выглядит обычной, но персонаж проваливается сквозь неё. Какая настройка так работает?</p><ol class="content-item content-quiz-options"><li>Anchored = false</li><li data-correct="true">CanCollide = false ✓</li><li>Transparency = 1</li></ol>
+<p class="content-item content-question">Как мы делали мост-силуэт — едва заметный, но проходимый?</p><ol class="content-item content-quiz-options"><li data-correct="true">Transparency = 0.9, CanCollide включён ✓</li><li>Transparency = 0.9, CanCollide выключен</li><li>Transparency = 1, CanCollide включён</li></ol>
+<p class="content-item content-question">Почему дистанцию прыжка мы проверяли тест-стендом, а не считали заранее?</p><ol class="content-item content-quiz-options"><li>В Studio нет своего калькулятора</li><li>Так требуют правила публикации Roblox</li><li data-correct="true">Расчёт сильно расходится с игрой ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: CanCollide = false; Transparency = 0.9 при включённом CanCollide; расчёт расходится с игрой. Свойства из урока 9 сегодня пригодятся при постройке ловушек.</aside>
 </div>
 </section>
@@ -60,7 +60,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="10-t-2">
 <h3 class="slide-title">Kill-блок возвращает назад <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Kill-блок</b> — это деталь, при касании которой персонаж теряет всё здоровье и возвращается на точку возрождения</li><li>Из таких деталей собирают ямы, озёра лавы и любые «смертельные» зоны</li><li>Для создания Kill-блоков мы будем использовать <b>KillScript</b>: вставляем его в модель — и все её детали становятся смертельными</li></ul>
+<ul class="content-item content-bullets"><li><b>Kill-блок</b> — это деталь, при касании которой персонаж теряет всё здоровье и возвращается на точку возрождения</li><li>Из таких деталей собирают ямы, озёра лавы и любые «смертельные» зоны</li><li>Kill-блоки делает <b>KillScript</b>: вставляем его в модель — и все её детали становятся смертельными</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/75269316315197/UniversalKillScript" target="_blank" rel="noopener">https://create.roblox.com/store/asset/75269316315197/UniversalKillScript</a></p>
 <p class="content-item content-image-prompt">[изображение: Скриншот участка обби в Roblox Studio: между двумя серыми платформами яма, закрытая ярко-красными светящимися kill-блоками, персонаж прыгает через неё]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: KillScript — готовый скрипт курса, мы его не пишем и не меняем. Внутри — обработчик касания: любая деталь модели, в которой лежит скрипт, обнуляет здоровье персонажа.</aside>
@@ -88,7 +88,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="10-t-7">
 <h3 class="slide-title">Модуль SpinningObstacle <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Вращающееся препятствие</b> — это крутящийся стержень, через который нужно перепрыгивать в нужный момент</li><li>Мы будем использовать готовый <b>SpinningObstacle</b>: закреплённая ось, вращающийся стержень и смертельная часть с KillScript внутри</li><li>Скорость задаёт объект <b>AngularVelocity</b> внутри модели: меняем в нём число Y — радианы в секунду, полный оборот ≈ 6.28</li></ul>
+<ul class="content-item content-bullets"><li><b>Вращающееся препятствие</b> — это крутящийся стержень, через который нужно перепрыгивать в нужный момент</li><li>Берём готовый <b>SpinningObstacle</b>: закреплённая ось, вращающийся стержень и смертельная часть с KillScript внутри</li><li>Скорость задаёт объект <b>AngularVelocity</b> внутри модели: меняем в нём число Y — радианы в секунду, полный оборот ≈ 6.28</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/135190764471982/SpinningObstacle" target="_blank" rel="noopener">https://create.roblox.com/store/asset/135190764471982/SpinningObstacle</a></p>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: на круглой платформе вращающийся стержень модуля SpinningObstacle, в Explorer выделен объект AngularVelocity, в панели Properties — его свойство AngularVelocity с вектором скорости]</p>
 <aside class="speaker-notes">Заметка ведущего: Устно: меняем только число — логика вращения остаётся готовой. Показать в Explorer состав модуля: ось, KillPart, объект AngularVelocity. Слишком быстрое препятствие делает участок непроходимым, это уже нечестно. Если спросят, почему здесь KillScript лежит в одной детали, хотя нас учили класть его в модель: это два разных скрипта с одним именем — внутри модуля свой, он делает смертельной ровно ту деталь, в которой лежит.</aside>
@@ -108,9 +108,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="10-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что происходит при касании kill-блока?</p><ol class="content-item content-quiz-options"><li data-correct="true">Персонаж теряет всё здоровье и возвращается на точку возрождения ✓</li><li>Персонаж останавливается на месте</li><li>Деталь исчезает, а персонаж идёт дальше</li></ol>
-<p class="content-item content-question">Зачем опасные детали красят в красный?</p><ol class="content-item content-quiz-options"><li>Красный цвет ускоряет загрузку детали</li><li data-correct="true">Чтобы игрок узнавал опасность с одного взгляда ✓</li><li>Красные детали прочнее остальных</li></ol>
-<p class="content-item content-question">Каким свойством настраивается скорость готового вращающегося препятствия?</p><ol class="content-item content-quiz-options"><li>Transparency в Properties</li><li>WalkSpeed персонажа</li><li data-correct="true">AngularVelocity в Properties ✓</li></ol>
+<p class="content-item content-question">Что происходит при касании kill-блока?</p><ol class="content-item content-quiz-options"><li data-correct="true">Персонаж гибнет и возвращается на старт ✓</li><li>Персонаж просто останавливается на месте</li><li>Деталь исчезает, а персонаж идёт дальше</li></ol>
+<p class="content-item content-question">Зачем опасные детали красят в красный?</p><ol class="content-item content-quiz-options"><li>Красный цвет ускоряет загрузку этой детали</li><li>Красные детали заметно прочнее остальных</li><li data-correct="true">Чтобы игрок узнавал опасность сразу ✓</li></ol>
+<p class="content-item content-question">Каким свойством настраивается скорость готового вращающегося препятствия?</p><ol class="content-item content-quiz-options"><li>Transparency в Properties</li><li data-correct="true">AngularVelocity в Properties ✓</li><li>WalkSpeed персонажа</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Если группа путает AngularVelocity и WalkSpeed — уточнить: первое — свойство препятствия, второе — персонажа.</aside>
 </div>
 </section>
@@ -158,9 +158,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="10-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда кладут KillScript, чтобы вся яма из нескольких деталей стала смертельной?</p><ol class="content-item content-quiz-options"><li data-correct="true">В модель, где сгруппированы все детали ямы ✓</li><li>В любую одну деталь ямы</li><li>Прямо в Workspace, рядом с ямой</li></ol>
-<p class="content-item content-question">Вращающееся препятствие на твоей трассе не проходится даже после десяти попыток. Что делаем?</p><ol class="content-item content-quiz-options"><li>Увеличиваем размер стержня</li><li data-correct="true">Уменьшаем AngularVelocity — препятствие крутится медленнее ✓</li><li>Красим стержень в зелёный цвет</li></ol>
-<p class="content-item content-question">Какая ловушка на твоей трассе получилась самой интересной и почему?</p>
+<p class="content-item content-question">Куда кладут KillScript, чтобы вся яма из нескольких деталей стала смертельной?</p><ol class="content-item content-quiz-options"><li data-correct="true">В модель со всеми деталями ямы ✓</li><li>В любую одну деталь этой ямы</li><li>Прямо в Workspace, рядом с ямой</li></ol>
+<p class="content-item content-question">Вращающееся препятствие на твоей трассе не проходится даже после десяти попыток. Что делаем?</p><ol class="content-item content-quiz-options"><li>Увеличиваем размер вращающегося стержня</li><li data-correct="true">Уменьшаем AngularVelocity — препятствие крутится медленнее ✓</li><li>Красим стержень в зелёный цвет</li></ol>
+<p class="content-item content-question">Чем честная ловушка отличается от нечестной?</p><ol class="content-item content-quiz-options"><li>Она собрана из деталей формы wedge, не из кубов</li><li>Она стоит сразу после другой ловушки, без передышки</li><li data-correct="true">Игрок видит опасность до того, как на неё прыгнет ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Третий вопрос — открытый, на рефлексию: попросить 2–3 учеников показать свою любимую ловушку и объяснить, чем она честная. Ожидаемые ответы на квизы: в модель с деталями ямы; уменьшить AngularVelocity.</aside>
 </div>
 </section>
@@ -169,7 +169,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="10-c-1">
 <h3 class="slide-title">Опасная и честная трасса <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы добавили на трассу лаву, вращающееся препятствие и выстроили чередование испытаний и передышек. Каждая опасность видна игроку заранее — это и есть работа дизайнера ловушек.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: добавь на трассу ещё одну ловушку любого типа и пройди её сам три раза подряд</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>На следующем уроке — чекпоинты: научим трассу запоминать прогресс игрока</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: добавь на трассу ещё одну ловушку любого типа и пройди её сам три раза подряд</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: чекпоинты — научим трассу запоминать прогресс игрока</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Похвалить за плейтесты: сегодня каждый проверял трассу собственным персонажем — так и работают настоящие дизайнеры ловушек. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

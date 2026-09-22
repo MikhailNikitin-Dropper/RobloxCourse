@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="30-w-1">
 <h3 class="slide-title">Сегодня строим комнату побега <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Начинаем новую игру — комнату побега: выход откроется только тому, кто решит загадки.</p>
-<p class="content-item content-paragraph">Роль на сегодня — <b>Puzzle Designer</b> (дизайнер загадок): придумывает, как игрок сам догадается, что делать, без подписей и инструкций.</p>
+<p class="content-item content-paragraph"><b>Puzzle Designer</b> (дизайнер загадок) придумывает, как игрок сам догадается, что делать, без подписей и инструкций.</p>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Роль дня — Puzzle Designer: придумывает, как игрок сам догадается, что делать. Замысел занятия — две комнаты: первая дверь открывается кнопкой, вторая — кодом из трёх кнопок, а подсказка к коду спрятана в комнате. За уроки 31–32 комната обрастёт ключами и таймером.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-r-1">
 <h3 class="slide-title">Вспомним урок 29 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Поменяли число в скрипте во время Test. Что сделать, чтобы стенд заработал по-новому?</p><ol class="content-item content-quiz-options"><li data-correct="true">Остановить Test и запустить снова ✓</li><li>Подождать, пока игра подхватит число</li><li>Сохранить проект</li></ol>
-<p class="content-item content-question">Какую строку игра не читает?</p><ol class="content-item content-quiz-options"><li data-correct="true">Строку, которая начинается с двух дефисов ✓</li><li>Строку между рядами знаков «равно»</li><li>Строку с именем детали в кавычках</li></ol>
-<p class="content-item content-question">Что задаёт переменная POWER у батута из домашнего задания?</p><ol class="content-item content-quiz-options"><li data-correct="true">Силу подброса вверх ✓</li><li>Паузу между подбросами</li><li>Имя детали-батута</li></ol>
+<p class="content-item content-question">Поменяли число в скрипте во время Test. Что сделать, чтобы стенд заработал по-новому?</p><ol class="content-item content-quiz-options"><li data-correct="true">Остановить Test и запустить снова ✓</li><li>Подождать, пока игра подхватит число</li><li>Сохранить весь проект заново</li></ol>
+<p class="content-item content-question">Какую строку игра не читает?</p><ol class="content-item content-quiz-options"><li>Строку между рядами знаков «равно»</li><li data-correct="true">Строку, которая начинается с двух дефисов ✓</li><li>Строку с именем детали в кавычках</li></ol>
+<p class="content-item content-question">Что задаёт переменная POWER у батута из домашнего задания?</p><ol class="content-item content-quiz-options"><li>Паузу между подбросами</li><li>Имя детали-батута</li><li data-correct="true">Силу подброса вверх ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, по минуте с небольшим на вопрос. Все три нужны сегодня: у двери тоже есть скрипт с настройками, и правки в нём подхватываются только при новом запуске Test.</aside>
 </div>
 </section>
@@ -103,9 +103,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-qt-1">
 <h3 class="slide-title">Проверим себя <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">MaxActivationDistance = 6, игрок стоит в 8 студах от кнопки. Что он видит?</p><ol class="content-item content-quiz-options"><li data-correct="true">Подсказки нет — нужно подойти ближе ✓</li><li>Подсказку, но нажать нельзя</li><li>Подсказку с любого места комнаты</li></ol>
+<p class="content-item content-question">MaxActivationDistance = 6, игрок стоит в 8 студах от кнопки. Что он видит?</p><ol class="content-item content-quiz-options"><li>Подсказку, но нажать нельзя</li><li data-correct="true">Подсказки нет — нужно подойти ближе ✓</li><li>Подсказку с любого места комнаты</li></ol>
 <p class="content-item content-question">Где меняют слово «Открыть» на подсказке?</p><ol class="content-item content-quiz-options"><li data-correct="true">В Properties подсказки: ActionText ✓</li><li>В настройках DoorScript</li><li>В имени детали Button</li></ol>
-<p class="content-item content-question">BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; }. Игрок нажал Red, потом Green. Что будет?</p><ol class="content-item content-quiz-options"><li data-correct="true">Всё погаснет — начинать с Red ✓</li><li>Дверь откроется</li><li>Загорятся Red и Green</li></ol>
+<p class="content-item content-question">BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; }. Игрок нажал Red, потом Green. Что будет?</p><ol class="content-item content-quiz-options"><li>Дверь сразу откроется</li><li>Загорятся Red и Green</li><li data-correct="true">Всё погаснет, начинать заново ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса с вариантами. Первый опирается на замер дальности, третий — на правило кодовой двери: не та кнопка гасит всё.</aside>
 </div>
 </section>
@@ -158,9 +158,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Подсказка у кнопки не появляется, хотя игрок стоит рядом. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Не загораживает ли кнопку стена или другая деталь ✓</li><li>Включён ли Anchored у двери</li><li>Сохранён ли проект</li></ol>
-<p class="content-item content-question">Во второй двери поставили STAY_OPEN 0. Что стало с первой дверью?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ничего: у неё свой скрипт со своими числами ✓</li><li>Она тоже перестала закрываться</li><li>Она больше не открывается</li></ol>
-<p class="content-item content-question">Кнопки на стене повесили в том же порядке, что и лампы. Что сломалось в загадке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Код разгадывается без улики ✓</li><li>Код перестал работать</li><li>Лампы погасли</li></ol>
+<p class="content-item content-question">Подсказка у кнопки не появляется, хотя игрок стоит рядом. Что проверить первым?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у двери</li><li data-correct="true">Не загораживает ли кнопку деталь ✓</li><li>Сохранён ли весь проект</li></ol>
+<p class="content-item content-question">Во второй двери поставили STAY_OPEN 0. Что стало с первой дверью?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ничего, у неё свой скрипт ✓</li><li>Она тоже перестала закрываться совсем</li><li>Она больше не открывается</li></ol>
+<p class="content-item content-question">Кнопки на стене повесили в том же порядке, что и лампы. Что сломалось в загадке?</p><ol class="content-item content-quiz-options"><li>Код перестал работать совсем</li><li>Лампы совсем погасли</li><li data-correct="true">Код разгадывается без улики ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса с вариантами. Второй — про копии модуля: у каждой двери свой скрипт со своими числами. Третий — главный вопрос Puzzle Designer: улика нужна, только если без неё код не угадать.</aside>
 </div>
 </section>
@@ -169,12 +169,12 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="30-c-1">
 <h3 class="slide-title">Первая комната побега готова <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Мы собрали две комнаты: дверь на кнопке и кодовую дверь, код к которой спрятан в улике, — это работа Puzzle Designer.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Дальше — ключи и замки: дверь, которую откроет только предмет</li></ul>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: ключи и замки — дверь, которую откроет только предмет</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить главное: подсказку настроили в Properties, дверь и код — в скрипте, а подсказку к коду спрятали в комнате, без надписей. Анонс урока 31: дверь, которую не откроет кнопка, — только ключ. Последнее действие занятия — сохранение: File → Save to Roblox; комната понадобится на уроках 31 и 32.</aside>
 </div>
 <div class="slide" id="30-c-2">
 <h3 class="slide-title">Домашнее задание: код длиннее <span class="slide-duration">(1 мин)</span></h3>
-<ol class="content-item content-steps"><li>Добавь в Door2 четвёртую кнопку и впиши её в BUTTONS</li><li>Добавь четвёртую лампу и спрячь улику так, чтобы её нашли не сразу</li><li>Позови друга и засеки, за сколько он выйдет из комнаты</li><li>Не нашёл улику за две минуты — сделай её заметнее</li></ol>
+<ul class="content-item content-bullets"><li>Четвёртая кнопка: добавь в Door2 и впиши её в BUTTONS</li><li>Четвёртая лампа: добавь и спрячь улику так, чтобы её нашли не сразу</li><li>Позови друга: засеки, за сколько он выйдет из комнаты</li><li>Улику не нашли за две минуты: сделай её заметнее</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Задание проверяется на следующем занятии: друг проходит комнату, ученик засекает время. Правило честности: спрятать улику — можно, сделать её незаметной — нельзя. Если друг не нашёл лампы за две минуты, их переносят или делают ярче.</aside>
 </div>
 </section>

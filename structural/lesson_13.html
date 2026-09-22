@@ -36,8 +36,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="13-w-1">
 <h3 class="slide-title">Сегодня ты — Vehicle Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Новый большой проект — «Гоночная мастерская». Начинаем с главного: сегодня у каждого появится собственная машина, которая по-настоящему едет.</p>
-<p class="content-item content-paragraph"><b>Vehicle Designer (дизайнер транспорта)</b> — это специалист, который собирает, настраивает и оформляет игровые машины.</p>
+<p class="content-item content-paragraph">Новый большой проект — «Гоночная мастерская». Начинаем с главного: сегодня у каждого появится собственная машина, которая поедет по трассе.</p>
+<p class="content-item content-paragraph"><b>Vehicle Designer (дизайнер транспорта)</b> собирает, настраивает и оформляет игровые машины.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Интерес к теме обычно высокий — можно сразу пообещать: к концу урока каждый прокатится на машине собственной сборки.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="13-r-1">
 <h3 class="slide-title">Вспомним урок 12 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как мы делили обби на зоны?</p><ol class="content-item content-quiz-options"><li data-correct="true">Поля → тёмный лес → болота, сложность и мрачность растут ✓</li><li>Все зоны одинаковой сложности</li><li>Сначала самая сложная зона, потом легче</li></ol>
-<p class="content-item content-question">Зачем у декоративных объектов мы выключали CanCollide?</p><ol class="content-item content-quiz-options"><li>Чтобы декор меньше весил</li><li data-correct="true">Чтобы декор не мешал прыжкам и не создавал невидимых стен ✓</li><li>Чтобы декор было видно в темноте</li></ol>
-<p class="content-item content-question">По какой формуле мы давали обратную связь на плейтест-карусели?</p><ol class="content-item content-quiz-options"><li>Перечислить все ошибки автора</li><li>Сказать «всё отлично» и не расстраивать</li><li data-correct="true">Одно, что понравилось + одно, что стоит улучшить ✓</li></ol>
+<p class="content-item content-question">Как мы делили обби на зоны?</p><ol class="content-item content-quiz-options"><li data-correct="true">Поля, лес, болота: сложность растёт ✓</li><li>Все зоны были одинаковой сложности</li><li>Сначала самая сложная зона, потом легче</li></ol>
+<p class="content-item content-question">Зачем у декоративных объектов мы выключали CanCollide?</p><ol class="content-item content-quiz-options"><li>Чтобы декор заметно меньше весил</li><li>Чтобы декор было видно в темноте</li><li data-correct="true">Чтобы декор не мешал прыжкам игрока ✓</li></ol>
+<p class="content-item content-question">По какой формуле мы давали обратную связь на плейтест-карусели?</p><ol class="content-item content-quiz-options"><li>Перечислить автору все его ошибки</li><li data-correct="true">Одно понравилось и одно стоит улучшить ✓</li><li>Сказать «всё отлично» и не расстраивать</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: рост сложности по зонам; декор без столкновений; формула «понравилось + улучшить». Формула обратной связи снова пригодится в конце блока — на гоночном турнире.</aside>
 </div>
 </section>
@@ -102,9 +102,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="13-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что делает VehicleSeat, когда персонаж его касается?</p><ol class="content-item content-quiz-options"><li data-correct="true">Сажает персонажа за руль и делает его водителем ✓</li><li>Телепортирует персонажа на точку возрождения</li><li>Меняет цвет машины</li></ol>
+<p class="content-item content-question">Что делает VehicleSeat, когда персонаж его касается?</p><ol class="content-item content-quiz-options"><li data-correct="true">Сажает персонажа за руль ✓</li><li>Телепортирует персонажа на точку возрождения</li><li>Меняет цвет всей машины</li></ol>
 <p class="content-item content-question">Машина не вписывается в повороты. Какой атрибут поднять?</p><ol class="content-item content-quiz-options"><li>MaxSpeed</li><li data-correct="true">TurnAngle ✓</li><li>HeadsUpDisplay</li></ol>
-<p class="content-item content-question">Почему мы строим кузов на готовом шасси, а не собираем машину с нуля?</p><ol class="content-item content-quiz-options"><li>С нуля машина получится слишком красивой</li><li>В Studio нельзя вставить больше одной Part</li><li data-correct="true">В шасси механика уже связана: колёса, моторы и сиденье работают вместе ✓</li></ol>
+<p class="content-item content-question">Почему мы строим кузов на готовом шасси, а не собираем машину с нуля?</p><ol class="content-item content-quiz-options"><li>С нуля машина получится слишком красивой</li><li>В Studio нельзя вставить много Part</li><li data-correct="true">В шасси механика колёс уже собрана ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: сажает персонажа за руль; TurnAngle; готовая механика шасси. Если группа путает атрибуты — вернуться к аналогии: MaxSpeed про мотор, TurnAngle про руль.</aside>
 </div>
 </section>
@@ -126,7 +126,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-p-2">
 <h3 class="slide-title">Шаг 2: первый тест-драйв <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Собери полигон рядом с машиной: четыре детали-столбика в ряд для змейки и одну плоскую плиту-порожек, всё закрепи</li><li>Test → подойди к машине и сядь на DriverSeat</li><li>Проедь по прямой, поверни, сдай назад</li><li>Проверь спидометр: скорость меняется при разгоне и торможении</li></ol>
+<ol class="content-item content-steps"><li>Собери полигон рядом с машиной: четыре детали-столбика в ряд для змейки и одну плоскую плиту-порожек, всё закрепи</li><li>Test → подойди к машине и сядь на DriverSeat</li><li>Проезжай по прямой, поверни, сдай назад</li><li>Проверь спидометр: скорость меняется при разгоне и торможении</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Полигон строится за минуту дублированием одной детали: четыре столбика на расстоянии полутора корпусов друг от друга и низкая плита-порожек рядом — по ним пройдут змейка и проверка устойчивости из теории, и на нём же будет финальный тест-драйв шага 6. Столбики закрепить обязательно, иначе машина их просто снесёт. Машина обязана ехать до любых модификаций: если не едет — заменить модель сразу, не тратить время на исправление чужой механики.</aside>
 </div>
 <div class="slide" id="13-p-3">
@@ -155,9 +155,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="13-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">После добавления спойлера машина перестала двигаться с места. Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Не включён ли Anchored у новой детали ✓</li><li>Хватает ли машине бензина</li><li>Не выключен ли CanCollide у спойлера</li></ol>
-<p class="content-item content-question">Машина хорошо разгоняется, но вылетает с каждого поворота. Что подкрутить?</p><ol class="content-item content-quiz-options"><li>Поднять MaxSpeed</li><li data-correct="true">Снизить MaxSpeed или поднять TurnAngle ✓</li><li>Выключить спидометр</li></ol>
-<p class="content-item content-question">Какой образ ты выбрал для своей машины и какие детали кузова его подчёркивают?</p>
+<p class="content-item content-question">После добавления спойлера машина перестала двигаться с места. Что проверяем первым делом?</p><ol class="content-item content-quiz-options"><li>Хватает ли машине запаса бензина</li><li data-correct="true">Не включён ли Anchored у спойлера ✓</li><li>Не выключен ли CanCollide у спойлера</li></ol>
+<p class="content-item content-question">Машина хорошо разгоняется, но вылетает с каждого поворота. Что подкрутить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Снизить MaxSpeed или поднять TurnAngle ✓</li><li>Ещё поднять атрибут MaxSpeed</li><li>Выключить встроенный спидометр машины</li></ol>
+<p class="content-item content-question">Чем материал и цвет задают характер машины?</p><ol class="content-item content-quiz-options"><li>Тяжёлый материал делает машину медленнее на прямой</li><li>Neon на кузове освещает трассу перед машиной</li><li data-correct="true">Ярко-красный глянец читается как гоночный болид ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Открытый вопрос — короткая презентация машин: 2–3 ученика показывают свою и называют образ. Ожидаемые ответы на квизы: Anchored у новой детали; снизить MaxSpeed или поднять TurnAngle.</aside>
 </div>
 </section>
@@ -166,7 +166,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="13-c-1">
 <h3 class="slide-title">Машина собрана и настроена <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Мы поставили готовое шасси, настроили характер движения атрибутами, построили свой кузов и прошли полный тест-драйв. В гараже каждого — машина собственной сборки.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>Сохрани проект с машиной — она понадобится на уроках 14, 15 и 16: трасса, оформление гонки и Гран-при</li><li>На следующем уроке — создание гоночной трассы: плавные повороты, ограждения и стартовая решётка для наших машин</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: доделай свою машину и собери вторую — с другим образом</li><li>Сохрани проект: машина понадобится на уроках 14, 15 и 16 — трасса, оформление гонки и Гран-при</li><li>Следующий урок: создание гоночной трассы — плавные повороты, ограждения и стартовая решётка для наших машин</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Про сохранение сказать отдельно и проверить у каждого: машина нужна урокам 14, 15 и 16, и её потеря стоит целого занятия. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

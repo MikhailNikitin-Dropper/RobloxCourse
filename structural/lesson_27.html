@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="27-r-1">
 <h3 class="slide-title">Вспомним урок 26 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Между копиями модуля коридора нет щели. Почему?</p><ol class="content-item content-quiz-options"><li>Копии специально сдвинуты друг к другу вручную</li><li>Забыли объединить обе копии в одну Model</li><li data-correct="true">Длина модуля кратна шагу привязки Move ✓</li></ol>
-<p class="content-item content-question">Один тупик в лабиринте шире и ярче остальных развилок. Зачем?</p><ol class="content-item content-quiz-options"><li>Так короче путь до правильного выхода</li><li data-correct="true">Это приманка, которая манит не туда ✓</li><li>Здесь стоит точка возрождения</li></ol>
-<p class="content-item content-question">На предыдущем уроке вы решали, где в лабиринте лучше спрятать будущего монстра. Какое место выбрали вы — и почему именно там?</p>
+<p class="content-item content-question">Между копиями модуля коридора нет щели. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Длина модуля кратна шагу привязки Move ✓</li><li>Копии специально сдвинуты друг к другу вручную</li><li>Забыли объединить обе копии в одну Model</li></ol>
+<p class="content-item content-question">Один тупик в лабиринте шире и ярче остальных развилок. Зачем?</p><ol class="content-item content-quiz-options"><li>Так короче путь до правильного выхода</li><li data-correct="true">Это приманка, которая манит не туда ✓</li><li>Здесь стоит точка возрождения игрока</li></ol>
+<p class="content-item content-question">Чем в лабиринте отмечают крупную развилку?</p><ol class="content-item content-quiz-options"><li>Приманкой, которая обещает игроку награду в тупике</li><li>Модулем стены, который повторён копиями по кругу</li><li data-correct="true">Факелом уникального цвета: свой цвет запоминается ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два вопроса — про лабиринт, третий возвращает группу к открытому вопросу прошлого занятия: где прячется монстр.</aside>
 </div>
 </section>
@@ -77,7 +77,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="27-t-5">
 <h3 class="slide-title">ClipEditor: поза за позой <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ClipEditor</b> (редактор анимаций) — вкладка Avatar, работает с выделенным ригом</li><li>Двигаешь бегунок на нужный момент, поворачиваешь или двигаешь часть тела — редактор сам ставит ключевой кадр</li><li>Между кадрами поза плавно перетекает в следующую — вручную прорисовывать каждый миг не нужно</li></ul>
+<ul class="content-item content-bullets"><li><b>ClipEditor</b> (редактор анимаций) — вкладка Avatar, работает с выделенным ригом</li><li>Двигаем бегунок на нужный момент, поворачиваем или двигаем часть тела — редактор сам ставит ключевой кадр</li><li>Между кадрами поза плавно перетекает в следующую — вручную прорисовывать каждый миг не нужно</li></ul>
 <p class="content-item content-image-prompt">[изображение: Окно ClipEditor: шкала времени с несколькими ключевыми кадрами, риг застыл в промежуточной позе шага]</p>
 <aside class="speaker-notes">Заметка ведущего: 2.5 минуты. Открывается тоже со вкладки Avatar, но нужен выделенный риг. Механика: бегунок времени + поворот детали = готовый ключевой кадр, между кадрами редактор сам плавно доводит позу.</aside>
 </div>
@@ -101,9 +101,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="27-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что делает риг ригом?</p><ol class="content-item content-quiz-options"><li>Человекоподобная форма тела</li><li data-correct="true">Части, соединённые подвижными суставами ✓</li><li>Наличие декоративных деталей на теле</li></ol>
-<p class="content-item content-question">Чем анимация ходьбы отличается по настройке от анимации атаки?</p><ol class="content-item content-quiz-options"><li data-correct="true">У ходьбы включён Looping ✓</li><li>У атаки больше ключевых кадров, чем у ходьбы</li><li>Атаку нельзя опубликовать, только ходьбу</li></ol>
-<p class="content-item content-question">Нужно ли декоративной детали физически касаться нужной части рига, чтобы WeldConstraint соединил их?</p><ol class="content-item content-quiz-options"><li>Да, иначе WeldConstraint не создастся</li><li>Да, но только если детали одного размера</li><li data-correct="true">Нет — важны только Part0 и Part1, расстояние значения не имеет ✓</li></ol>
+<p class="content-item content-question">Что делает риг ригом?</p><ol class="content-item content-quiz-options"><li data-correct="true">Части, соединённые подвижными суставами ✓</li><li>Человекоподобная форма его тела</li><li>Наличие декоративных деталей на теле</li></ol>
+<p class="content-item content-question">Чем анимация ходьбы отличается по настройке от анимации атаки?</p><ol class="content-item content-quiz-options"><li>У атаки больше ключевых кадров</li><li data-correct="true">У ходьбы включён Looping зацикливания ✓</li><li>Атаку нельзя опубликовать, только ходьбу</li></ol>
+<p class="content-item content-question">Нужно ли декоративной детали физически касаться нужной части рига, чтобы WeldConstraint соединил их?</p><ol class="content-item content-quiz-options"><li>Да, иначе WeldConstraint не создастся</li><li>Да, если детали одного размера</li><li data-correct="true">Нет, важны только Part0 и Part1 ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты. Второй вопрос: дублирование первого кадра в конце — тоже часть гладкого цикла, отдельно от Looping. Третий закрепляет решение слайда 27-t-4: WeldConstraint не требует, чтобы детали касались друг друга.</aside>
 </div>
 </section>
@@ -111,7 +111,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
 <div class="slide" id="27-b-1">
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
-<p class="content-item content-paragraph">Пять минут отдыха. После перерыва открой плейс лабиринта — сегодня в нём поселится хозяин.</p>
+<p class="content-item content-paragraph">Пять минут отдыха. После перерыва открываем плейс лабиринта — сегодня в нём поселится хозяин.</p>
 <aside class="speaker-notes">Заметка ведущего: Нажми на таймер — начнётся отсчёт 5 минут. После перерыва должен быть открыт плейс лабиринта из урока 26 — сразу приступаем к сборке монстра.</aside>
 </div>
 </section>
@@ -156,9 +156,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="27-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Почему цвет тела монстра задавали через BodyColors, а не через Color самой детали?</p><ol class="content-item content-quiz-options"><li data-correct="true">Color в игре при запуске сбрасывается, а BodyColors сохраняется ✓</li><li>Color вообще нельзя менять у частей рига</li><li>BodyColors красит только голову, а Color — все остальные части</li></ol>
-<p class="content-item content-question">Почему для атаки не включили Looping?</p><ol class="content-item content-quiz-options"><li>Looping недоступен для коротких анимаций</li><li>Publish не пропускает зацикленные анимации</li><li data-correct="true">Атака должна сыграть один раз, а не повторяться по кругу ✓</li></ol>
-<p class="content-item content-question">На уроке 28 монстру дадут готовый скрипт, который читает атрибуты WalkAnimationId и AttackAnimationId. Как ты думаешь, в какой момент игры монстр должен переключаться с ходьбы на атаку?</p>
+<p class="content-item content-question">Почему цвет тела монстра задавали через BodyColors, а не через Color самой детали?</p><ol class="content-item content-quiz-options"><li data-correct="true">Color при запуске сбрасывается, BodyColors сохраняется ✓</li><li>Color нельзя менять у частей рига</li><li>BodyColors красит только голову рига</li></ol>
+<p class="content-item content-question">Почему для атаки не включили Looping?</p><ol class="content-item content-quiz-options"><li>Looping недоступен для коротких анимаций</li><li>Publish не пропускает зацикленные анимации</li><li data-correct="true">Атака должна сыграть один раз ✓</li></ol>
+<p class="content-item content-question">Откуда берётся номер анимации для атрибутов монстра?</p><ol class="content-item content-quiz-options"><li>Из имени модели монстра в окне Explorer студии</li><li data-correct="true">Из публикации анимации: Publish to Roblox выдаёт номер ✓</li><li>Из свойства BodyColors, которым красили тело рига</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты. Первые два — про то, что группа только что делала руками. Третий открытый готовит урок 28: там появится готовый скрипт, который прочитает записанные сегодня атрибуты.</aside>
 </div>
 </section>

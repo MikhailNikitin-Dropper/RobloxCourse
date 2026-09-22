@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="20-w-1">
 <h3 class="slide-title">Сегодня ты — Продюсер PvP-игры <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Арена честная, команды набраны, оружие у всех в руках. Осталось превратить это в игру, в которую хочется вернуться: две крепости, удобное прицеливание и матч всей группой.</p>
-<p class="content-item content-paragraph"><b>Продюсер</b> отвечает за игру целиком: не за отдельную деталь, а за то, как всё сходится вместе и как игра ощущается для игрока в целом.</p>
+<p class="content-item content-paragraph"><b>Продюсер PvP-игры</b> отвечает за игру целиком: не за отдельную деталь, а за то, как всё сходится вместе и как игра ощущается для игрока в целом.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Мостик: четыре урока блока собирали части — арену, команды, оружие. Сегодня они становятся игрой, и она уходит в мир. Проговорить, что урок проектный: нового материала мало, сборки и проверок много.</aside>
 </div>
 </section>
@@ -46,9 +46,9 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="20-r-1">
 <h3 class="slide-title">Вспомним урок 19 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Где лежат скрипты, которые заставляют оружие стрелять?</p><ol class="content-item content-quiz-options"><li>Внутри каждого оружия</li><li data-correct="true">В отдельной папке системы ✓</li><li>В свойствах детали Handle</li></ol>
-<p class="content-item content-question">Зачем оружию метка TipAttachment?</p><ol class="content-item content-quiz-options"><li>Она держит детали вместе вместо сварки</li><li>Она задаёт цвет заряда</li><li data-correct="true">Из неё вылетает заряд ✓</li></ol>
-<p class="content-item content-question">Почему оружие кладут именно в StarterPack?</p><ol class="content-item content-quiz-options"><li data-correct="true">Так его получает каждый игрок при появлении ✓</li><li>Так оно становится сильнее</li><li>Так его видно в Explorer</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: система отдельно от оружия; метка TipAttachment — точка вылета и признак оружия; StarterPack раздаёт всем. Второй вопрос — мостик к теме дня: сегодня заряд полетит не просто вперёд, а точно в прицел.</aside>
+<p class="content-item content-question">Зачем оружию метка TipAttachment?</p><ol class="content-item content-quiz-options"><li data-correct="true">Из неё вылетает каждый заряд ✓</li><li>Она держит детали вместе вместо сварки</li><li>Она задаёт цвет самого заряда</li></ol>
+<p class="content-item content-question">Почему оружие кладут именно в StarterPack?</p><ol class="content-item content-quiz-options"><li>Так оно становится заметно сильнее</li><li>Так его видно в Explorer</li><li data-correct="true">Так его получает каждый игрок ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: система отдельно от оружия; метка TipAttachment — точка вылета и признак оружия; StarterPack раздаёт всем. Второй вопрос — мостик к теме дня: сегодня заряд летит туда, куда наведён прицел.</aside>
 </div>
 </section>
 <section class="block block-theory">
@@ -66,7 +66,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="20-t-3">
 <h3 class="slide-title">Ворота — проём, не дверь <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Дверь пришлось бы открывать скриптом — нам хватит проёма в стене</li><li>Ширина проёма решает всё: узкий держит один защитник, широкий не держит никто</li><li>Проверяем размером персонажа: в ворота должны спокойно пройти двое</li></ul>
+<ul class="content-item content-bullets"><li>Дверь пришлось бы открывать скриптом — нам хватит проёма в стене</li><li>Ширина проёма решает всё: узкий держит один защитник, широкий не удержит никто</li><li>Проверяем размером персонажа: в ворота должны спокойно пройти двое</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Устно: проём делается не удалением стены, а из двух коротких кусков и перемычки сверху — так остаётся арка, а не дыра. Ширину проверяем в Test персонажем, а не на глаз.</aside>
 </div>
 <div class="slide" id="20-t-4">
@@ -124,9 +124,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="20-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Почему камеру для боя сдвигают вбок, за плечо?</p><ol class="content-item content-quiz-options"><li>Так красивее выглядит персонаж</li><li data-correct="true">Чтобы спина персонажа не закрывала цель ✓</li><li>Чтобы персонаж бегал быстрее</li></ol>
-<p class="content-item content-question">Чем смотровая башня уравновешена для соперника?</p><ol class="content-item content-quiz-options"><li data-correct="true">Она отнимает у стоящего наверху укрытие ✓</li><li>Она замедляет того, кто на ней стоит</li><li>Она мешает своей команде видеть арену</li></ol>
-<p class="content-item content-question">Где твоя команда будет держать оборону — у ворот, на башне или за стеной? Почему именно там?</p>
+<p class="content-item content-question">Почему камеру для боя сдвигают вбок, за плечо?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы спина не закрывала цель ✓</li><li>Так красивее выглядит сам персонаж</li><li>Чтобы персонаж бегал заметно быстрее</li></ol>
+<p class="content-item content-question">Чем смотровая башня уравновешена для соперника?</p><ol class="content-item content-quiz-options"><li>Она замедляет того, кто на ней стоит</li><li>Она мешает своей команде видеть арену</li><li data-correct="true">Она отнимает у стоящего наверху укрытие ✓</li></ol>
+<p class="content-item content-question">Почему башня считается честным преимуществом?</p><ol class="content-item content-quiz-options"><li>Она выше стены, поэтому с неё дальше стреляет оружие</li><li data-correct="true">Она даёт обзор, но забирает укрытие: наверху ты на виду ✓</li><li>Она стоит у ворот, и её легко удержать вдвоём</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: камера сбоку открывает цель; башня даёт обзор и забирает укрытие. Открытый вопрос — разогрев перед сборкой: пусть каждый вслух выберет место обороны и объяснит выбор, тогда на практике форма крепости придумается сама.</aside>
 </div>
 </section>
@@ -177,9 +177,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="20-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Снаряд летит из ручки пистолета, а не из ствола. В чём дело?</p><ol class="content-item content-quiz-options"><li>Цвет заряда в атрибутах оружия</li><li data-correct="true">Метка TipAttachment стоит не в срезе ствола ✓</li><li>Ширину ворот крепости</li></ol>
+<p class="content-item content-question">Снаряд летит из ручки пистолета, а не из ствола. В чём дело?</p><ol class="content-item content-quiz-options"><li>Цвет заряда в атрибутах оружия</li><li>Ширина ворот крепости мала</li><li data-correct="true">Метка TipAttachment стоит не там ✓</li></ol>
 <p class="content-item content-question">Почему вторую крепость делают копией первой?</p><ol class="content-item content-quiz-options"><li data-correct="true">Копия строится быстрее и повторяет постройку точь-в-точь ✓</li><li>Копия занимает меньше места в игре</li><li>Копию нельзя перекрасить, и команды не путаются</li></ol>
-<p class="content-item content-question">Что в вашем матче оказалось решающим: крепость, оружие или прицел?</p>
+<p class="content-item content-question">Кто ведёт счёт попаданий в матче?</p><ol class="content-item content-quiz-options"><li>Ведущий занятия записывает попадания команд по ходу раунда</li><li data-correct="true">Модуль счёта: таблица открыта всем и обновляется в бою ✓</li><li>Каждый игрок считает свои попадания сам и называет их</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: метка не в срезе ствола; копия даёт равные крепости. Разделить две поломки вслух: метки нет вовсе — выстрела не будет совсем; метка есть, но не на месте — заряд летит, только не оттуда. Открытый вопрос — разбор матча: важно услышать, что решала не сила оружия, а позиция и умение целиться.</aside>
 </div>
 </section>
@@ -188,7 +188,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="20-c-1">
 <h3 class="slide-title">Пятая игра портфолио готова <span class="slide-duration">(2 мин)</span></h3>
 <p class="content-item content-paragraph">Две крепости, честная карта, своё оружие и прицел, который не обманывает. Игра опубликована — в неё уже можно позвать друзей.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: оформи страницу игры — название, описание и иконку (красивый кадр из своей игры), — позови двух друзей и проведи матч</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Дальше — механизмы и физика: качели, карусели и подъёмники на готовых шарнирах и моторах Studio</li></ul>
+<ul class="content-item content-bullets"><li>Домашнее задание: оформи страницу игры — название, описание и иконку (красивый кадр из своей игры), — позови двух друзей и проведи матч</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: механизмы и физика — качели, карусели и подъёмники на готовых шарнирах и моторах Studio</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Про домашнее задание: важны не победы, а первое действие нового игрока — по нему видно, понятна ли игра без объяснений. Отметить главное: проект собран из четырёх уроков блока, и каждый из них был нужен. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>

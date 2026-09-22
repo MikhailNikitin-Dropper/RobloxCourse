@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="28-r-1">
 <h3 class="slide-title">Вспомним урок 27 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Чем задают цвет тела монстра?</p><ol class="content-item content-quiz-options"><li data-correct="true">Объектом BodyColors ✓</li><li>Свойством Color каждой части</li><li>Свойством Material</li></ol>
-<p class="content-item content-question">Что делает включённый Looping у анимации ходьбы?</p><ol class="content-item content-quiz-options"><li>Анимация проигрывается один раз и замирает</li><li data-correct="true">Анимация повторяется по кругу ✓</li><li>Анимация публикуется в аккаунт автоматически</li></ol>
-<p class="content-item content-question">Зачем анимации нужен числовой ID после публикации?</p><ol class="content-item content-quiz-options"><li>Чтобы анимация стала длиннее</li><li>Чтобы её увидели друзья в профиле</li><li data-correct="true">Чтобы игра нашла нужную анимацию по номеру ✓</li></ol>
+<p class="content-item content-question">Чем задают цвет тела монстра?</p><ol class="content-item content-quiz-options"><li>Свойством Color каждой части</li><li data-correct="true">Объектом BodyColors внутри рига ✓</li><li>Свойством Material у детали</li></ol>
+<p class="content-item content-question">Что делает включённый Looping у анимации ходьбы?</p><ol class="content-item content-quiz-options"><li>Анимация проигрывается один раз и замирает</li><li>Анимация публикуется в аккаунт автоматически</li><li data-correct="true">Анимация повторяется по кругу постоянно ✓</li></ol>
+<p class="content-item content-question">Зачем анимации нужен числовой ID после публикации?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы игра нашла анимацию по номеру ✓</li><li>Чтобы анимация стала заметно длиннее</li><li>Чтобы её увидели друзья в профиле</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса вслух. Третий вопрос — прямой мостик к сегодняшней практике: попросить участников открыть Attributes своей модели монстра и убедиться, что оба номера на месте. У кого их нет, тот не сможет пройти шаг 3 — лучше выяснить это сейчас, а не в середине занятия.</aside>
 </div>
 </section>
@@ -98,7 +98,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="28-t-8">
 <h3 class="slide-title">Портал открывает награда <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Портал</b> — рамка с полотном (деталь Gate) в зале победы, в конце лабиринта</li><li>Пока артефактов мало, полотно тёмное: сквозь него проходишь, но наружу оно не выводит</li><li>Модуль курса «Портал» — папка ExitPortal внутрь модели портала</li><li>Собрано столько, сколько стоит в RequiredArtifacts, — портал загорается и переносит игрока в лагерь</li></ul>
+<ul class="content-item content-bullets"><li><b>Портал</b> — рамка с полотном (деталь Gate) в зале победы, в конце лабиринта</li><li>Пока артефактов мало, полотно тёмное: сквозь него можно пройти, но наружу оно не выводит</li><li>Модуль курса «Портал» — папку ExitPortal кладём внутрь модели</li><li>Собрано столько, сколько стоит в RequiredArtifacts, — портал загорается и переносит игрока в лагерь</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль портала: <a href="https://create.roblox.com/store/asset/97743211352966/ExitPortal" target="_blank" rel="noopener">https://create.roblox.com/store/asset/97743211352966/ExitPortal</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: тёмное полотно закрытого портала между двумя каменными стойками в зале победы, внизу экрана подсказка о нехватке артефактов]</p>
 <aside class="speaker-notes">Заметка ведущего: Две минуты. Сказать, как два модуля разговаривают друг с другом: модуль артефактов записывает игроку число собранного, модуль портала его читает — и всё, другой связи между ними нет. Тот же приём был на уроке 20: бластер записывал попадания, дисплей счёта их показывал. Это и есть способ соединять готовые части, не заглядывая внутрь них. Про полотно проговорить прямо: оно никогда не стена. Правило одно — светится и выводит наружу или тёмное и не выводит; упереться в портал нельзя, и в игре на двоих это важно, ведь счёт у каждого свой.</aside>
@@ -126,9 +126,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="28-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда кладут папку модуля монстра?</p><ol class="content-item content-quiz-options"><li data-correct="true">Внутрь модели монстра ✓</li><li>Рядом с моделью, в Workspace</li><li>В ReplicatedStorage</li></ol>
-<p class="content-item content-question">Артефактов в лабиринте два, а портал требует три. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Портал откроется на втором артефакте</li><li data-correct="true">Портал не откроется никогда ✓</li><li>Портал откроется, но перенесёт не туда</li></ol>
-<p class="content-item content-question">Где в твоём лабиринте лучше всего спрятать самый дальний артефакт и почему именно там?</p>
+<p class="content-item content-question">Куда кладут папку модуля монстра?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью в Workspace</li><li data-correct="true">Внутрь самой модели монстра ✓</li><li>В сервис ReplicatedStorage игры</li></ol>
+<p class="content-item content-question">Артефактов в лабиринте два, а портал требует три. Что произойдёт?</p><ol class="content-item content-quiz-options"><li data-correct="true">Портал не откроется никогда ✓</li><li>Портал откроется на втором артефакте</li><li>Портал откроется, но перенесёт мимо</li></ol>
+<p class="content-item content-question">Как расставляют артефакты по лабиринту?</p><ol class="content-item content-quiz-options"><li>Три подряд в одном дальнем тупике за спиной монстра</li><li>Все у входа, чтобы игрок собрал их сразу</li><li data-correct="true">По одному на ветку, пути к ним разной длины ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый: попросить двух-трёх участников показать место на своём плане лабиринта. Хороший ответ звучит как «за петлёй, потому что туда сворачивают редко», слабый — «в самом дальнем углу», потому что дальний угол обычно и есть зал победы.</aside>
 </div>
 </section>
@@ -183,8 +183,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="28-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Игрок дошёл до портала с тремя артефактами, а портал не открылся. Что проверяем первым?</p><ol class="content-item content-quiz-options"><li>Цвет полотна портала</li><li data-correct="true">Число в RequiredArtifacts ✓</li><li>Скорость монстра</li></ol>
-<p class="content-item content-question">Монстр после установки модуля стоит на месте. Что проверяем первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Папка MonsterAI лежит внутри модели монстра, а не рядом ✓</li><li>Свойства точки возрождения</li><li>Настройки освещения</li></ol>
-<p class="content-item content-question">Какое место своей игры ты бы показал другу первым — и что в нём должно случиться в первые тридцать секунд?</p>
+<p class="content-item content-question">Монстр после установки модуля стоит на месте. Что проверяем первым?</p><ol class="content-item content-quiz-options"><li>Свойства точки возрождения игрока</li><li>Настройки освещения в Lighting</li><li data-correct="true">Папка MonsterAI лежит внутри модели ✓</li></ol>
+<p class="content-item content-question">Что открывает портал в дальнем зале?</p><ol class="content-item content-quiz-options"><li data-correct="true">Собранные артефакты: пока их мало, полотно тёмное ✓</li><li>Приближение монстра: он распахивает рамку портала сам</li><li>Тег Artifact, поставленный прямо на деталь Gate</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Четыре минуты. Третий вопрос открытый и работает на домашнее задание: первые тридцать секунд решают, останется ли гость в игре. Если участник называет место, где ничего не происходит, вместе придумать, что там добавить — свет, звук или артефакт на виду.</aside>
 </div>
 </section>
@@ -193,12 +193,12 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="28-c-1">
 <h3 class="slide-title">Седьмая игра курса готова <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Четыре занятия назад здесь была пустая тёмная комната. Сегодня в ней есть лагерь, лабиринт, живой обитатель, цель и выход — то есть игра.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Дальше — первые скрипты: посмотрим, что за инструкции работают внутри готовых модулей</li></ul>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: первые скрипты — посмотрим, что за инструкции работают внутри готовых модулей</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить масштаб: игра собрана из четырёх занятий, и каждое видно в готовом результате. Анонс урока 29: до сих пор мы ставили готовые модули целиком, дальше начнём заглядывать внутрь и разбираться, из чего они сделаны.</aside>
 </div>
 <div class="slide" id="28-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ol class="content-item content-steps"><li>Оформи страницу игры: короткое имя, описание и иконку — кадр из своего лабиринта</li><li>Пройди опрос о содержимом и открой доступ к игре</li><li>Позови двух гостей и посмотри, куда они пойдут от точки возрождения</li><li>Добавь свет или ориентир там, где гость растерялся</li></ol>
+<ul class="content-item content-bullets"><li>Оформи страницу игры: короткое имя, описание и иконку — кадр из своего лабиринта</li><li>Открой доступ: пройди опрос о содержимом игры</li><li>Позови гостей: посмотри, куда двое пойдут от точки возрождения</li><li>Добавь ориентир: свет или метку там, где гость растерялся</li></ul>
 <p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
 <aside class="speaker-notes">Заметка ведущего: Одна минута. Порядок пунктов важен: сначала опрос о содержимом и доступ, иначе гости в игру просто не зайдут. Про гостей сказать главное: смотреть надо не на похвалу, а на первые тридцать секунд — куда человек пошёл без подсказки. Последнее действие занятия — сохранение: File → Save to Roblox; несохранённый проект — это следующий урок с пустого места.</aside>
 </div>

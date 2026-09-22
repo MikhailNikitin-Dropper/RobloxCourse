@@ -37,7 +37,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="11-w-1">
 <h3 class="slide-title">Сегодня ты — Level Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Наша трасса уже опасна и честна. Но погибший игрок каждый раз начинает с самого начала — пора это исправить.</p>
-<p class="content-item content-paragraph"><b>Архитектор маршрута</b> — это специалист, который делит трассу на этапы, расставляет точки сохранения и ведёт игрока по уровню светом и цветом.</p>
+<p class="content-item content-paragraph"><b>Level Designer</b> (архитектор маршрута) делит трассу на этапы, расставляет точки сохранения и ведёт игрока по уровню светом и цветом.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Спросить группу: что чувствует игрок, когда после получаса прохождения гибнет и оказывается на старте? Сегодня решаем именно эту проблему.</aside>
 </div>
 </section>
@@ -45,9 +45,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="11-r-1">
 <h3 class="slide-title">Вспомним урок 10 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что происходит при касании kill-блока?</p><ol class="content-item content-quiz-options"><li>Персонаж замирает на несколько секунд</li><li data-correct="true">Персонаж теряет всё здоровье и возвращается на точку возрождения ✓</li><li>Kill-блок исчезает</li></ol>
-<p class="content-item content-question">Почему kill-блоки мы красили в красный?</p><ol class="content-item content-quiz-options"><li data-correct="true">Красное — общий цветовой код опасности, он читается без слов ✓</li><li>Красный цвет делает деталь скользкой</li><li>Красные детали легче найти в Explorer</li></ol>
-<p class="content-item content-question">Каким свойством мы настраивали скорость вращающегося препятствия?</p><ol class="content-item content-quiz-options"><li>WalkSpeed</li><li>Transparency</li><li data-correct="true">AngularVelocity ✓</li></ol>
+<p class="content-item content-question">Что происходит при касании kill-блока?</p><ol class="content-item content-quiz-options"><li data-correct="true">Персонаж гибнет и возвращается на старт ✓</li><li>Персонаж замирает на несколько секунд</li><li>Kill-блок исчезает с трассы навсегда</li></ol>
+<p class="content-item content-question">Почему kill-блоки мы красили в красный?</p><ol class="content-item content-quiz-options"><li>Красный цвет делает деталь очень скользкой</li><li>Красные детали легче найти в Explorer</li><li data-correct="true">Красное — общий цветовой код опасности ✓</li></ol>
+<p class="content-item content-question">Каким свойством мы настраивали скорость вращающегося препятствия?</p><ol class="content-item content-quiz-options"><li>WalkSpeed</li><li data-correct="true">AngularVelocity ✓</li><li>Transparency</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: возврат на точку возрождения; цветовой код опасности; AngularVelocity. Слова «точка возрождения» из первого вопроса — мостик к теме урока: сегодня научимся управлять тем, куда именно возвращается игрок.</aside>
 </div>
 </section>
@@ -107,9 +107,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="11-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Чем чекпоинт отличается от обычной платформы?</p><ol class="content-item content-quiz-options"><li data-correct="true">После его касания погибший игрок возвращается сюда, а не на старт ✓</li><li>Он прочнее и не ломается</li><li>На нём нельзя стоять дольше десяти секунд</li></ol>
-<p class="content-item content-question">Зачем у SpawnLocation защитное поле (Duration)?</p><ol class="content-item content-quiz-options"><li>Чтобы персонаж красиво светился на скриншотах</li><li data-correct="true">Чтобы игрока не убило в первые секунды после появления ✓</li><li>Чтобы другие игроки не заняли точку возрождения</li></ol>
-<p class="content-item content-question">Как вести игрока по маршруту, не рисуя стрелок?</p><ol class="content-item content-quiz-options"><li>Написать инструкцию в описании игры</li><li>Сделать все пути одинаково красивыми</li><li data-correct="true">Подсветить правильный путь светом и контрастным цветом ✓</li></ol>
+<p class="content-item content-question">Чем чекпоинт отличается от обычной платформы?</p><ol class="content-item content-quiz-options"><li>Он заметно прочнее и не ломается</li><li>На нём нельзя стоять дольше десяти секунд</li><li data-correct="true">После касания игрок возвращается именно сюда ✓</li></ol>
+<p class="content-item content-question">Зачем у SpawnLocation защитное поле (Duration)?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы игрока не убило сразу после появления ✓</li><li>Чтобы персонаж красиво светился на скриншотах</li><li>Чтобы другие игроки не заняли точку возрождения</li></ol>
+<p class="content-item content-question">Как вести игрока по маршруту, не рисуя стрелок?</p><ol class="content-item content-quiz-options"><li>Написать подробную инструкцию в описании игры</li><li data-correct="true">Подсветить нужный путь светом и цветом ✓</li><li>Сделать все пути одинаково яркими и красивыми</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Если группа сомневается во втором вопросе — напомнить пример с вращающимся препятствием у точки возрождения: без поля игрок погибал бы бесконечно.</aside>
 </div>
 </section>
@@ -155,9 +155,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="11-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Игрок погиб на третьем этапе, но вернулся на самый старт. Что проверяем в первую очередь?</p><ol class="content-item content-quiz-options"><li data-correct="true">Имена площадок и их место внутри папки CheckpointSystem ✓</li><li>Цвет чекпоинтов</li><li>Скорость вращающегося препятствия на первом этапе</li></ol>
-<p class="content-item content-question">Куда логичнее всего ставить чекпоинт?</p><ol class="content-item content-quiz-options"><li>В середину самого сложного участка</li><li data-correct="true">Сразу после сложного участка ✓</li><li>В случайное место — где осталось свободное пространство</li></ol>
-<p class="content-item content-question">Что показал тест на новичке: где сосед застрял на твоей трассе и как ты это исправишь?</p>
+<p class="content-item content-question">Игрок погиб на третьем этапе, но вернулся на самый старт. Что проверяем в первую очередь?</p><ol class="content-item content-quiz-options"><li>Цвет площадок-чекпоинтов на всей трассе</li><li>Скорость вращающегося препятствия на первом этапе</li><li data-correct="true">Имена площадок внутри папки CheckpointSystem ✓</li></ol>
+<p class="content-item content-question">Куда логичнее всего ставить чекпоинт?</p><ol class="content-item content-quiz-options"><li>В середину самого сложного участка</li><li data-correct="true">Сразу после самого сложного участка ✓</li><li>В случайное свободное место трассы</li></ol>
+<p class="content-item content-question">Как ведут себя, пока новичок проходит твою трассу?</p><ol class="content-item content-quiz-options"><li data-correct="true">Молча наблюдают и записывают, где он застрял ✓</li><li>Подсказывают дорогу, чтобы он не бросил трассу</li><li>Проходят рядом вторым игроком и показывают путь</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Третий вопрос — открытый, на рефлексию: попросить 2–3 учеников назвать конкретное место застревания и способ правки. Ожидаемые ответы на квизы: имена и папка модуля; сразу после сложного участка.</aside>
 </div>
 </section>
@@ -165,8 +165,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="11-c-1">
 <h3 class="slide-title">Трасса обрела маршрут <span class="slide-duration">(2 мин)</span></h3>
-<p class="content-item content-paragraph">Мы разметили трассу как настоящие архитекторы маршрута: точка возрождения с безопасной зоной, четыре этапа с чекпоинтами, свет и маяк, которые ведут игрока без единой стрелки.</p>
-<ul class="content-item content-bullets"><li>Домашнее задание: исправь места, где застрял сосед, добавь на трассу новый этап с чекпоинтом и проверь его</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>На следующем уроке — ПРОЕКТ 3: собираем всё в законченное обби «Дорога героя» с разными по стилю и сложности зонами</li></ul>
+<p class="content-item content-paragraph">Мы разметили трассу как настоящие архитекторы маршрута: точка возрождения с безопасной зоной, четыре этапа с чекпоинтами, свет и маяк, которые ведут игрока сами.</p>
+<ul class="content-item content-bullets"><li>Домашнее задание: исправь места, где застрял сосед, добавь на трассу новый этап с чекпоинтом и проверь его</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: ПРОЕКТ 3 — собираем всё в законченное обби «Дорога героя» с разными по стилю и сложности зонами</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Анонс проекта: на следующем уроке ничего принципиально нового — собираем и полируем всё, что умеем: ловушки, чекпоинты, ориентиры, свет. Последнее действие занятия — сохранение: File → Save to Roblox. Пройти по группе и убедиться, что проект сохранён в облаке у каждого: несохранённый проект — это следующий урок с пустого места.</aside>
 </div>
 </section>
