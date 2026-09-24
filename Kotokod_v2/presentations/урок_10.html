@@ -211,10 +211,16 @@ a{color:var(--blue);font-weight:600;text-underline-offset:.15em}
 /* выноски (раздел 13): номер всегда, подпись со стрелкой по наведению */
 /* у каждой области свой цвет --c (PALETTE), тот же — у карточки пункта */
 .co{position:absolute;border:2px solid color-mix(in srgb,var(--c,#4F5BFF) 60%,transparent);border-radius:6px;cursor:pointer;
-  outline:none;transition:background-color .15s,border-color .15s}
-.co.co-on,.co:focus-visible{border-color:var(--c,#4F5BFF);background:color-mix(in srgb,var(--c,#4F5BFF) 20%,transparent);z-index:3}
+  outline:none;background:color-mix(in srgb,var(--c,#4F5BFF) 10%,transparent);
+  transition:background-color .15s,border-color .15s}
+.co.co-on,.co:focus-visible{border-color:var(--c,#4F5BFF);background:color-mix(in srgb,var(--c,#4F5BFF) 25%,transparent);z-index:3}
+/* кото-блок с номером показывается по наведению: прячем прозрачностью, а не
+   display/visibility — раскладка подписей считает его размеры, а наведение
+   ловится прямо на нём */
 .co-mark{position:absolute;left:4px;top:4px;min-width:28px;height:28px;padding:0 7px;border-radius:14px;background:var(--c,#4F5BFF);
-  color:#fff;font:800 17px/28px var(--display);text-align:center;box-shadow:0 2px 6px rgba(23,29,77,.28)}
+  color:#fff;font:800 17px/28px var(--display);text-align:center;box-shadow:0 2px 6px rgba(23,29,77,.28);
+  opacity:0;transition:opacity .15s ease}
+.co.co-on .co-mark,.co:focus-visible .co-mark{opacity:1}
 .co--tiny .co-mark{left:50%;top:50%;transform:translate(-50%,-50%)}
 .co.co-on .co-mark{box-shadow:0 0 0 3px #fff,0 2px 6px rgba(23,29,77,.28)}
 .co-label{position:absolute;left:0;top:0;white-space:nowrap;background:var(--c,#4F5BFF);color:#fff;font:700 20px/1.2 var(--display);
@@ -309,7 +315,9 @@ body.idle .nav{opacity:.2}
 .lightbox[hidden]{display:none}
 .lightbox .ph-figure{margin:0}
 .lightbox .ph-wrap{display:inline-block;width:auto;max-width:none;margin:0}
-.lightbox .ph{width:auto;height:auto;max-width:92vw;max-height:80vh;object-fit:contain}
+/* высоту держим с запасом на панель управления внизу: при 80vh она
+   ложилась на нижний край широкого кадра */
+.lightbox .ph{width:auto;height:auto;max-width:92vw;max-height:72vh;object-fit:contain}
 .lightbox .ph-zoom{display:none}
 .lightbox .ph-figure::before{display:none}
 .lb-close,.lb-all{position:fixed;top:20px;height:52px;border:0;border-radius:14px;background:#fff;color:var(--blue);cursor:pointer;z-index:51}
@@ -358,6 +366,12 @@ b{color:var(--dark)}
 /* ровно три карточки — тремя колонками, без висящей четвёртой позиции */
 .icards--grid:has(>li:nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
 .col-text .icard{padding:20px 24px;gap:20px}
+/* рядом с кадром колонка уже: с четвёртой карточки поджимаем поля,
+   иначе последняя карточка обрезается нижней кромкой */
+.col-text .icards:has(>li:nth-child(4)) .icard{padding:16px 22px;gap:18px}
+.col-text .icards:has(>li:nth-child(4)){gap:20px}
+.col-text .icards:has(>li:nth-child(5)) .icard{padding:12px 20px;gap:16px}
+.col-text .icards:has(>li:nth-child(5)){gap:16px}
 .col-text .icard-ico{width:56px;height:56px;border-radius:0 0 12px 12px}
 .col-text .icard-title{font-size:1.1em}
 .col-text .icard-text{font-size:.9em}
@@ -472,11 +486,11 @@ b{color:var(--dark)}
 .quiz-opt.is-correct{--c:var(--ok-deep);border-color:var(--ok-deep);box-shadow:0 8px 0 var(--ok-deep);background:#EAF9F1}
 .quiz-opt.is-wrong{--c:var(--err-deep);border-color:var(--err-deep);box-shadow:0 8px 0 var(--err-deep);background:#FDEEEC}
 .quiz-opt:disabled:not(.is-correct):not(.is-wrong){opacity:.5}
-.quiz-feedback{font-size:.95em;margin-top:26px;min-height:0;padding:0}
+.quiz-feedback{font-size:.95em;margin-top:26px;min-height:3.2em;padding:0}
 .quiz-feedback.is-on{padding:.6em .9em;border-radius:16px}
 .quiz-feedback--ok{color:var(--ok-deep)}
 .quiz-feedback--err{color:var(--err-deep)}
-.quiz-actions{margin-top:22px;justify-content:flex-end}
+.quiz-actions{margin-top:16px;justify-content:flex-end}
 /* пустое поле разбора подсказывает, что делать */
 .quiz-reset,.bt-reset{border:3px solid var(--dark);color:var(--dark);background:#fff;box-shadow:0 5px 0 var(--dark);font-size:22px}
 .quiz-reset:hover,.bt-reset:hover{background:#fff;transform:translateY(2px);box-shadow:0 3px 0 var(--dark)}
@@ -731,7 +745,7 @@ body.kb-active .zm-hint{bottom:114px}
   background:radial-gradient(circle,#fff 0 18%,#FF3B3B 20% 60%,rgba(255,59,59,.35) 62% 100%);box-shadow:0 0 22px 8px rgba(255,59,59,.45)}
 #kb-laser[hidden]{display:none}
 /* панель */
-.kb-bar{position:fixed;left:50%;bottom:64px;transform:translateX(-50%);z-index:60;display:flex;gap:6px;align-items:center;flex-wrap:nowrap;
+.kb-bar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:60;display:flex;gap:6px;align-items:center;flex-wrap:nowrap;
   background:#fff;border:2px solid var(--dark);border-radius:14px;box-shadow:0 3px 0 var(--dark);padding:4px 6px;font-family:var(--display)}
 .kb-bar[hidden]{display:none}
 .kb-group{display:flex;gap:2px;align-items:center}
@@ -748,7 +762,12 @@ body.kb-active .zm-hint{bottom:114px}
 .kb-sw[aria-pressed="true"]{outline:2px solid var(--dark);outline-offset:2px;clip-path:none;border-radius:6px}
 #nav-board svg{display:block;width:100%;height:100%}
 #nav-board[aria-pressed="true"]{background:var(--blue);color:#fff}
-body.kb-active .nav{opacity:1}
+/* пока доска включена, панель управления уходит вправо и освобождает центр
+   под инструменты: в полном экране свободного поля под слайдом нет, и обе
+   панели иначе наезжают на кадр Studio */
+body.kb-active .nav{opacity:1;left:auto;right:20px;bottom:12px;transform:none}
+/* доска поверх развёрнутого кадра: ужимаем картинку под панель */
+.lightbox.kb-on .ph{max-height:72vh}
 
 /* ================= Лупа ================= */
 #zoomer{position:absolute;inset:0;transform-origin:0 0}
@@ -1234,7 +1253,7 @@ var quizResets=[]; /* {slide, reset} — чтобы сбрасывать выб�
 var cur=0;
 function show(i){
   cur=Math.max(0,Math.min(slides.length-1,i));
-  for(var k=0;k<slides.length;k++){slides[k].classList.toggle('on',k===cur);slides[k].classList.toggle('prev',k<cur);}if(window.kkBoard)window.kkBoard.onSlide();if(window.kkZoom)window.kkZoom.reset();if(window.kkShots)window.kkShots.onSlide();
+  for(var k=0;k<slides.length;k++){slides[k].classList.toggle('on',k===cur);slides[k].classList.toggle('prev',k<cur);}if(window.kkBoard)window.kkBoard.onSlide();if(window.kkZoom)window.kkZoom.reset();if(window.kkShots)window.kkShots.onSlide();if(window.kkCoReset)window.kkCoReset();
   /* квизы на неактивных слайдах возвращаются в исходное состояние */
   for(var r=0;r<quizResets.length;r++)
     if(!quizResets[r].slide.classList.contains('on'))quizResets[r].reset();
@@ -1280,6 +1299,7 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='End')show(slides.length-1);
 });
 window.addEventListener('resize',fit);document.addEventListener('fullscreenchange',fit);
+function refitQuiz(q){var sl=q;while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;if(!sl)return;var was=sl.classList.contains('on');if(!was)sl.classList.add('on');var fits=sl.querySelectorAll('.fit');for(var i=0;i<fits.length;i++){fits[i].style.fontSize='';shrinkEl(fits[i]);}if(!was)sl.classList.remove('on');}
 function initQuizzes(){
   var quizzes=document.querySelectorAll('.quiz');
   for(var i=0;i<quizzes.length;i++)(function(q){
@@ -1296,10 +1316,10 @@ function initQuizzes(){
       fb.className='quiz-feedback is-on '+(right?'quiz-feedback--ok':'quiz-feedback--err');
       var expl=e.currentTarget.getAttribute('data-expl');
       fb.textContent=(right?'Верно.':'Пока нет.')+(expl?' '+expl:'');
-      rst.disabled=false;
+      rst.disabled=false;refitQuiz(q);
     }
     function reset(){
-      done=false;fb.className='quiz-feedback';fb.textContent='';rst.disabled=true;
+      done=false;fb.className='quiz-feedback';fb.textContent='';rst.disabled=true;refitQuiz(q);
       for(var k=0;k<opts.length;k++){opts[k].disabled=false;opts[k].classList.remove('is-correct','is-wrong');}
     }
     for(var j=0;j<opts.length;j++)opts[j].addEventListener('click',pick);
@@ -1401,6 +1421,10 @@ function drawCallouts(wrap){
     var co=act[j],lb=co.querySelector('.co-label');
     if(!lb)continue;
     var col=getComputedStyle(co).getPropertyValue('--c').trim()||'#4F5BFF'; /* цвет области */
+    /* узкий кадр: подпись в одну строку шире картинки и уезжает за край —
+       разрешаем ей перенос по ширине кадра */
+    lb.style.whiteSpace='';lb.style.maxWidth='';
+    if(lb.offsetWidth>W-2*pad){lb.style.whiteSpace='normal';lb.style.maxWidth=(W-2*pad)+'px';}
     var ax=co.offsetLeft,ay=co.offsetTop,aw=co.offsetWidth,ah=co.offsetHeight,w=lb.offsetWidth,h=lb.offsetHeight;
     var clx=function(x){return Math.max(pad,Math.min(x,W-pad-w));};
     var cly=function(y){return Math.max(pad,Math.min(y,H-pad-h));};
@@ -1496,6 +1520,14 @@ function initHotspots(){
   })(wraps[i]);
 }
 initHotspots();
+/* курсор мог остаться над областью: при смене слайда гасим все выноски,
+   иначе кото-блок «залипает» на соседнем слайде */
+/* доска ужимает картинку в развёрнутом кадре — ей нужен пересчёт выносок */
+window.kkCoRelayout=clampHotspotLabels;
+window.kkCoReset=function(){
+  var ws=document.querySelectorAll('.ph-wrap');
+  for(var i=0;i<ws.length;i++)if(ws[i]._coSet){ws[i]._coKey=null;ws[i]._coSet([]);}
+};
 /* наведение на пункт списка с номером показывает его выноску на картинке */
 (function(){
   var lis=document.querySelectorAll('[data-co]');
@@ -1516,23 +1548,53 @@ initHotspots();
   var lb=document.getElementById('lightbox');
   if(!lb)return;
   var btn=lb.querySelector('.lb-all');
-  function resetAll(){
-    var ws=document.querySelectorAll('.ph-wrap');
-    for(var i=0;i<ws.length;i++)if(ws[i]._coSet){ws[i]._coKey=null;ws[i]._coSet([]);}
-  }
+  function resetAll(){window.kkCoReset();}
   function sync(){
     btn.hidden=lb.hidden||!lb.querySelector('.co');
     if(lb.hidden&&lb.classList.contains('lb-show-all')){
       lb.classList.remove('lb-show-all');btn.classList.remove('is-on');btn.textContent='Показать все';resetAll();
     }
   }
-  new MutationObserver(sync).observe(lb,{attributes:true,attributeFilter:['hidden']});
+  /* вертикальный кадр занимает почти всю высоту, и панель управления внизу
+     по центру ложится прямо на картинку — уводим её в поле слева от кадра */
+  function placeNav(){
+    var nav=document.querySelector('.nav');
+    if(!nav)return;
+    nav.style.left=nav.style.top=nav.style.right=nav.style.bottom=nav.style.transform='';
+    if(lb.hidden||document.body.classList.contains('kb-active'))return;
+    var img=lb.querySelector('.ph-wrap')||lb.querySelector('.ph');
+    if(!img)return;
+    var r=img.getBoundingClientRect(),n=nav.getBoundingClientRect(),pad=20;
+    /* вертикальный кадр занимает всю высоту — панель уходит вбок; широкий
+       кадр оставляет место снизу, и панель остаётся по центру */
+    var tall=r.height>r.width;
+    if(!tall&&window.innerHeight-r.bottom>=n.height+16)return;
+    var x=null;
+    if(r.left>=n.width+pad+12)x=r.left-n.width-pad;                       /* слева */
+    else if(window.innerWidth-r.right>=n.width+pad+12)x=r.right+pad;      /* справа */
+    if(x===null)return;
+    nav.style.left=Math.round(x)+'px';
+    nav.style.right='auto';nav.style.transform='none';
+    nav.style.top=Math.round(Math.max(12,r.bottom-n.height))+'px';nav.style.bottom='auto';
+  }
+  window.kkNavPlace=placeNav;
+  new MutationObserver(function(){sync();setTimeout(placeNav,0);setTimeout(placeNav,200);})
+    .observe(lb,{attributes:true,attributeFilter:['hidden']});
+  /* картинка в развёрнутом кадре получает размер не сразу (масштаб, загрузка),
+     поэтому пересчитываем положение панели на каждое изменение размеров */
+  if(window.ResizeObserver){
+    var slot=lb.querySelector('.lb-slot');
+    if(slot)new ResizeObserver(function(){placeNav();}).observe(slot);
+  }
+  lb.addEventListener('click',function(e){
+    if(e.target.closest('.ph-next,.ph-prev'))setTimeout(placeNav,0);
+  });
   btn.addEventListener('click',function(){
     var on=lb.classList.toggle('lb-show-all');
     btn.classList.toggle('is-on',on);btn.textContent=on?'Скрыть подписи':'Показать все';
     resetAll();
   });
-  window.addEventListener('resize',function(){if(!lb.hidden)clampHotspotLabels(lb);});
+  window.addEventListener('resize',function(){if(!lb.hidden){clampHotspotLabels(lb);placeNav();}});
   sync();
 })();
 /* навигация затухает, если мышь не двигается */
@@ -1609,7 +1671,7 @@ function initTimers(){
       if(btn.classList.contains('bt-done'))return;
       if(iv){stop();return;}
       endAt=Date.now()+left*1000;
-      iv=setInterval(tick,250);btn.classList.add('bt-run');rst.disabled=false;
+      iv=setInterval(tick,250);btn.classList.add('bt-run');rst.disabled=false;refitQuiz(q);
     });
     rst.addEventListener('click',function(){
       stop();left=total;render();btn.classList.remove('bt-done');
@@ -2834,6 +2896,13 @@ window.Drauu = { createDrauu: createDrauu, Drauu: Drauu };
     active=v;document.body.classList.toggle('kb-active',v);applyClasses();
     bar.hidden=!v;tog.setAttribute('aria-pressed',String(v));
     if(!v){laser.hidden=true;if(!sheet.hidden&&!inLb()){sheet.hidden=true;restore();}}
+    /* в развёрнутом кадре картинка ужимается под панель — выноски и подписи
+       считаются от её размеров, поэтому раскладку пересчитываем */
+    if(window.kkCoRelayout){var lb=document.getElementById('lightbox');
+      if(lb&&!lb.hidden)setTimeout(function(){window.kkCoRelayout(lb);},0);}
+    /* панель управления: при доске её место задаёт CSS, без доски — расчёт
+       у края развёрнутого кадра */
+    if(window.kkNavPlace)setTimeout(window.kkNavPlace,0);
   }
   /* увеличение лупы у текущей поверхности */
   function zoomLevel(){
