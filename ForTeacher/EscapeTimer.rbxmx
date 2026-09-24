@@ -1,0 +1,100 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX5DBA5118873141E0991420EE7D0C98BF">
+		<Properties>
+			<string name="Name">EscapeTimer</string>
+		</Properties>
+		<Item class="Script" referent="RBX433C2F5BA57744AD9595F78728877BC9">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- EscapeTimerScript — настенный дисплей с обратным отсчётом.
+-- Модуль курса «Таймер побега», урок 31.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: сколько минут идёт отсчёт, что написано в конце и на какой грани
+-- детали появятся цифры. Их можно менять. Всё, что ниже второго ряда, —
+-- логика: её не трогаем.
+--
+-- Папка модуля кладётся внутрь детали-дисплея. Скрипт сам рисует на её грани
+-- дисплей с цифрами: отдельно собирать интерфейс не нужно.
+
+-- ============================ НАСТРОЙКИ ============================
+local MINUTES = 5 -- сколько минут на побег
+local TIME_UP_TEXT = "Время вышло" -- что написано на дисплее, когда время кончилось
+local FACE = "Front" -- грань детали с цифрами: Front, Back, Left, Right, Top, Bottom
+local WARN_SECONDS = 30 -- за сколько секунд до конца цифры краснеют; 0 — не краснеют
+-- ===================================================================
+
+-- Папка модуля лежит внутри детали-дисплея.
+local board = script.Parent.Parent
+
+if not board:IsA("BasePart") then
+	warn("EscapeTimer: папку модуля кладут внутрь детали-дисплея, а не в модель")
+	return
+end
+
+board.Anchored = true
+
+-- Дисплей: SurfaceGui на грани детали. LightInfluence 0 — цифры видно и в темноте.
+local gui = board:FindFirstChild("EscapeTimerGui")
+if not gui then
+	gui = Instance.new("SurfaceGui")
+	gui.Name = "EscapeTimerGui"
+	gui.Parent = board
+end
+gui.Face = Enum.NormalId[FACE] or Enum.NormalId.Front
+gui.SizingMode = Enum.SurfaceGuiSizingMode.FixedSize
+gui.PixelsPerStud = 50
+gui.LightInfluence = 0
+gui.AlwaysOnTop = false
+
+local label = gui:FindFirstChild("Time")
+if not label then
+	label = Instance.new("TextLabel")
+	label.Name = "Time"
+	label.Parent = gui
+end
+label.Size = UDim2.fromScale(1, 1)
+label.BackgroundTransparency = 1
+label.Font = Enum.Font.GothamBold
+label.TextScaled = true
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.Text = "--:--"
+
+local function show(seconds)
+	local minutes = math.floor(seconds / 60)
+	local rest = seconds % 60
+	label.Text = string.format("%02d:%02d", minutes, rest)
+	if WARN_SECONDS > 0 and seconds <= WARN_SECONDS then
+		label.TextColor3 = Color3.fromRGB(255, 80, 70)
+	else
+		label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end
+end
+
+-- Отсчёт идёт с первой секунды игры и продолжается, пока не кончится время.
+-- Атрибут Seconds виден в Properties: по нему другие модули урока могут
+-- понять, сколько осталось.
+local left = math.max(0, math.floor(MINUTES * 60))
+board:SetAttribute("Seconds", left)
+show(left)
+
+task.spawn(function()
+	while left > 0 do
+		task.wait(1)
+		left -= 1
+		board:SetAttribute("Seconds", left)
+		show(left)
+	end
+	label.Text = TIME_UP_TEXT
+	label.TextColor3 = Color3.fromRGB(255, 80, 70)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">EscapeTimerScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

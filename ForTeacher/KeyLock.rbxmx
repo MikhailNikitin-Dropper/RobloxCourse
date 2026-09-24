@@ -1,0 +1,194 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXCD65A755BF3A42E696C5E9493F3F1539">
+		<Properties>
+			<string name="Name">KeyLock</string>
+		</Properties>
+		<Item class="Script" referent="RBXE92F178916174D179EF5968C6378AFE1">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- KeyLockScript — дверь открывается только с ключом.
+-- Модуль курса «Ключ и замок», урок 31.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя ключа, имена деталей и три числа. Их можно менять. Всё, что
+-- ниже второго ряда, — логика: её не трогаем.
+--
+-- Ключ — это Tool с деталью Handle внутри, ученик собирает его сам. Скрипт
+-- ставит на ключ подсказку «Взять», а на замок — «Открыть» или «Нужен ключ».
+-- Тексты подсказок берутся из настроек, дальность и удержание — из Properties
+-- самого ProximityPrompt, как на уроке 30.
+
+-- ============================ НАСТРОЙКИ ============================
+local KEY_NAME = "Key" -- имя ключа, который открывает эту дверь (в кавычках!)
+local DOOR = "Door" -- имя детали-двери
+local LOCK = "Lock" -- имя детали-замка: на ней появится подсказка
+local ACTION_TEXT = "Открыть" -- подсказка на замке, когда ключ есть
+local LOCKED_TEXT = "Нужен ключ" -- подсказка на замке, когда ключа нет
+local OPEN_TIME = 0.8 -- за сколько секунд дверь уезжает
+local STAY_OPEN = 4 -- сколько секунд дверь открыта; 0 — не закрывается
+local KEEP_KEY = true -- true — ключ остаётся у игрока, false — исчезает
+-- ===================================================================
+
+local TweenService = game:GetService("TweenService")
+
+-- Папка модуля лежит внутри модели двери, поэтому детали ищем в ней.
+local model = script.Parent.Parent
+local door = model:FindFirstChild(DOOR)
+local lock = model:FindFirstChild(LOCK)
+
+if not door then
+	warn("KeyLock: в модели " .. model.Name .. " нет детали " .. DOOR)
+	return
+end
+if not lock then
+	warn("KeyLock: в модели " .. model.Name .. " нет детали " .. LOCK)
+	return
+end
+
+door.Anchored = true
+lock.Anchored = true
+
+-- Подсказка на замке: своя, если ученик её добавил, иначе ставим сами.
+local prompt = lock:FindFirstChildOfClass("ProximityPrompt")
+if not prompt then
+	prompt = Instance.new("ProximityPrompt")
+	prompt.ObjectText = "Дверь"
+	prompt.Parent = lock
+end
+prompt.ActionText = LOCKED_TEXT
+
+-- Ключ у игрока: он либо в руках (в персонаже), либо в рюкзаке.
+local function findKey(player)
+	local character = player.Character
+	if character then
+		local held = character:FindFirstChild(KEY_NAME)
+		if held and held:IsA("Tool") then
+			return held
+		end
+	end
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	if backpack then
+		local stored = backpack:FindFirstChild(KEY_NAME)
+		if stored and stored:IsA("Tool") then
+			return stored
+		end
+	end
+	return nil
+end
+
+-- Подсказка честная: ещё до нажатия видно, открывается эта дверь или нет.
+-- Скрипт серверный, поэтому текст один на всех: он меняется, как только ключ
+-- оказывается у кого-то из игроков, и возвращается, когда ключа ни у кого нет.
+local Players = game:GetService("Players")
+
+local function anyoneHasKey()
+	for _, player in ipairs(Players:GetPlayers()) do
+		if findKey(player) then
+			return true
+		end
+	end
+	return false
+end
+
+local function refreshPrompt()
+	prompt.ActionText = anyoneHasKey() and ACTION_TEXT or LOCKED_TEXT
+end
+
+local function watch(container)
+	container.ChildAdded:Connect(refreshPrompt)
+	container.ChildRemoved:Connect(refreshPrompt)
+end
+
+local function watchPlayer(player)
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	if backpack then
+		watch(backpack)
+	end
+	player.CharacterAdded:Connect(function(character)
+		watch(character)
+		-- рюкзак создаётся заново вместе с персонажем
+		local fresh = player:FindFirstChildOfClass("Backpack")
+		if fresh then
+			watch(fresh)
+		end
+		refreshPrompt()
+	end)
+	if player.Character then
+		watch(player.Character)
+	end
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+	watchPlayer(player)
+end
+Players.PlayerAdded:Connect(function(player)
+	watchPlayer(player)
+	refreshPrompt()
+end)
+Players.PlayerRemoving:Connect(function()
+	task.defer(refreshPrompt)
+end)
+refreshPrompt()
+
+-- Дверь уезжает вверх ровно на свою высоту.
+local closed = door.CFrame
+local opened = closed + Vector3.new(0, door.Size.Y, 0)
+
+local function move(goal)
+	local tween = TweenService:Create(door, TweenInfo.new(OPEN_TIME), { CFrame = goal })
+	tween:Play()
+	tween.Completed:Wait()
+end
+
+-- Стоит ли кто-нибудь в проёме: на игроке дверь не закрывается.
+local function someoneInDoorway()
+	for _, part in ipairs(workspace:GetPartBoundsInBox(closed, door.Size)) do
+		local character = part.Parent
+		if part ~= door and character and character:FindFirstChildOfClass("Humanoid") then
+			return true
+		end
+	end
+	return false
+end
+
+local busy = false
+
+prompt.Triggered:Connect(function(player)
+	if busy then
+		return
+	end
+	local key = findKey(player)
+	if not key then
+		-- Без ключа дверь не двигается: игрок видит, что нужен предмет.
+		prompt.ActionText = LOCKED_TEXT
+		return
+	end
+	busy = true
+	if not KEEP_KEY then
+		key:Destroy()
+	end
+	prompt.ActionText = ACTION_TEXT
+	-- Пока дверь едет или открыта, подсказка спрятана: второе нажатие не
+	-- дёрнет полотно на полпути.
+	prompt.Enabled = false
+	move(opened)
+	if STAY_OPEN > 0 then
+		task.wait(STAY_OPEN)
+		while someoneInDoorway() do
+			task.wait(0.5)
+		end
+		move(closed)
+		prompt.Enabled = true
+	end
+	busy = false
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">KeyLockScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

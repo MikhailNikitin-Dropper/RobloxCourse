@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 32. ПРОЕКТ 8: комната побега</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="32">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 32. ПРОЕКТ 8: комната побега</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер эскейп-рума</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="32-w-1">
+<h3 class="slide-title">Сегодня ты — продюсер побега <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Две комнаты, кнопки, код, ключ и таймер уже стоят в проекте. Сегодня из них получается игра, в которую можно проиграть и выиграть.</p>
+<p class="content-item content-paragraph"><b>Продюсер эскейп-рума</b> отвечает не за отдельную загадку, а за путь целиком: почему игрок здесь, что он делает первым и чем заканчивается побег.</p>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Восьмой проект курса. Главная мысль: сегодня не стройка с нуля, а сборка и доводка. Всё, что нужно, уже стоит в проекте с уроков 30 и 31.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 31 <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="32-r-1">
+<h3 class="slide-title">Вспомним урок 31 <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Что обязательно лежит внутри Tool, чтобы предмет взялся в руку?</p><ol class="content-item content-quiz-options"><li data-correct="true">Деталь с именем Handle ✓</li><li>Скрипт с именем Main</li><li>Папка с именем Items</li></ol>
+<p class="content-item content-question">По чему запертая дверь узнаёт свой ключ?</p><ol class="content-item content-quiz-options"><li data-correct="true">По имени предмета из настройки KEY_NAME ✓</li><li>По цвету детали ключа</li><li>По размеру детали Handle</li></ol>
+<p class="content-item content-question">Где лежит честно спрятанный ключ?</p><ol class="content-item content-quiz-options"><li data-correct="true">Там, откуда его видно от запертой двери ✓</li><li>В тёмном углу без света</li><li>В соседней закрытой комнате</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса. Ожидаемые ответы: Handle; имя предмета из KEY_NAME; ключ видно с места, где он нужен.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Как из комнат получается игра <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="32-t-1">
+<h3 class="slide-title">Что собираем сегодня <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Легенда: почему игрок заперт и куда он бежит</li><li>Третья комната: кнопка открывает путь к ключу от финальной двери</li><li>Атмосфера: полутёмный свет, локальные источники и звук помещения</li><li>Слепой плейтест, таймер по замеру и публикация игры</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Перечислить пять дел урока. Подчеркнуть: новых механик сегодня нет, есть сборка, атмосфера и проверка чужими руками.</aside>
+</div>
+<div class="slide" id="32-t-2">
+<h3 class="slide-title">Легенда в двух предложениях <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Легенда отвечает на два вопроса: почему я здесь и куда бегу</li><li>Её рассказывает обстановка, а не текст на экране</li><li>Заброшенная лаборатория, затопленный подвал, склад с ящиками</li><li>Сначала одно предложение легенды, потом декор под него</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Попросить каждого проговорить свою легенду вслух одним предложением. Важно: сначала легенда, потом декор, а не наоборот.</aside>
+</div>
+<div class="slide" id="32-t-3">
+<h3 class="slide-title">Три комнаты — три ступени <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Первая комната — знакомство: одна кнопка на видном месте</li><li>Вторая — поиск: ключ спрятан честно, но не на виду</li><li>Третья — комбинация: кнопка открывает путь к ключу финальной двери</li><li>Игрок учится языку игры по одному приёму за комнату</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема комнаты побега сверху: три комнаты подряд, в первой кнопка, во второй полка с ключом, в третьей кнопка и финальная дверь; стрелками показан путь игрока]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Показать раскладку: знакомство, поиск, комбинация. Это та же лестница сложности, что в обби уроков 9 и 12.</aside>
+</div>
+<div class="slide" id="32-t-4">
+<h3 class="slide-title">Свет ведёт, звук держит <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Общий свет полутёмный: в эскейп-руме темнота — это настроение</li><li>Локальные источники ровно там, где важное: кнопка, полка, дверь</li><li>Звук помещения — объект <b>Sound</b> в Workspace с включённым Looped</li><li>Темнота пугает, но искать в ней нельзя: важное всегда подсвечено</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: полутёмная комната побега, светом выделены кнопка на стене и полка с ключом, остальное тонет в тени]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Приёмы уроков 25 и 26, но с другой целью: не спрятать, а направить. Тёмным делаем фон, светлым — важное.</aside>
+</div>
+<div class="slide" id="32-t-5">
+<h3 class="slide-title">Таймер ставят последним <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Сначала пройди комнату сам и засеки время</li><li>Поставь MINUTES по формуле: своё время плюс половина</li><li>Меньше — игра непроходима для всех, кроме автора</li><li>Больше вдвое — давление пропадает, и таймер не нужен</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Правило: сначала автор проходит комнату и замеряет время, потом ставит минуты. Ориентир — своё время плюс половина.</aside>
+</div>
+<div class="slide" id="32-t-6">
+<h3 class="slide-title">Слепой плейтест <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Тестер проходит комнату сам, автор молчит и смотрит</li><li>Записываем три пункта: где встал, что попробовал первым, что искал дольше минуты</li><li>Остановка дольше минуты — не сложность, а непонятность</li><li>Смотрим не на время прохода, а на места остановок</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица: тестер стоит посреди второй комнаты и осматривается, рядом полка с ключом вне светового пятна]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Главная проверка проекта. Автор молчит и записывает три пункта. Остановка дольше минуты — это непонятность, а не сложность.</aside>
+</div>
+<div class="slide" id="32-t-7">
+<h3 class="slide-title">Что чинить после теста <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Кнопку не заметили — подсветить её локальным источником</li><li>Ключ не нашли — переставить туда, откуда его видно от двери</li><li>Не поняли, что откроется — дописать ObjectText подсказки</li><li>Все три правки — настройки, комнату переделывать не нужно</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Три типовые правки. Все три — настройки, а не переделка: именно ради этого загадки собраны из модулей.</aside>
+</div>
+<div class="slide" id="32-t-8">
+<h3 class="slide-title">Финал и публикация <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>За финальной дверью — светлая площадка выхода</li><li>Публикация: <b>File → Publish to Roblox</b>, игра сначала закрыта</li><li>Доступ открывают на сайте, в настройках игры</li><li>Иконка — кадр своей комнаты, обрезанный в квадрат</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: окно Publish Experience с заполненными полями Name и Description; рядом кадр светлой площадки выхода за финальной дверью]</p>
+<aside class="speaker-notes">Заметка ведущего: Две с половиной минуты. Финал: игрок должен понять, что выбрался. Публикация: File → Publish to Roblox, доступ открывается на сайте, иконка — кадр из своей игры.</aside>
+</div>
+<div class="slide" id="32-t-9">
+<h3 class="slide-title">Частые ошибки продюсера <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Комнат больше трёх — на плейтест не остаётся времени</li><li>Все загадки одного вида — игра кажется длиннее, чем она есть</li><li>Минуты таймера поставлены по своему времени без запаса</li><li>Темно там, где нужно искать: темнота пугает, но мешать не должна</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Две минуты. Перечислить и спросить, у кого из группы уже видно такую ошибку. Про темноту сказать отдельно: полумрак — это настроение, но место поиска всегда подсвечено, иначе игрок обыскивает стены вместо загадки.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="32-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">С чего начинают оформление комнаты побега?</p><ol class="content-item content-quiz-options"><li data-correct="true">С одного предложения легенды ✓</li><li>С покупки декора в библиотеке</li><li>С расстановки светильников</li></ol>
+<p class="content-item content-question">Сколько минут ставят на таймер побега?</p><ol class="content-item content-quiz-options"><li data-correct="true">Своё время прохода плюс половина ✓</li><li>Ровно своё время прохода</li><li>Одну минуту на каждую комнату</li></ol>
+<p class="content-item content-question">Что делает автор во время слепого плейтеста?</p><ol class="content-item content-quiz-options"><li data-correct="true">Молчит и записывает остановки тестера ✓</li><li>Подсказывает, где лежит ключ</li><li>Проходит комнату вместе с тестером</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса. Ожидаемые ответы: легенда до декора; своё время плюс половина; молчать и записывать остановки.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="32-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<aside class="speaker-notes">Заметка ведущего: Пять минут. Нажать на таймер на слайде — пойдёт отсчёт. После перерыва открываем проект комнаты побега и достраиваем финальную комнату.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем комнату побега <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="32-p-1">
+<h3 class="slide-title">Шаг 1: легенда и план <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Запиши легенду одним предложением: почему заперт и куда бежишь</li><li>Нарисуй три комнаты и подпиши, чем открывается каждая дверь</li><li>Проговори план вслух: знакомство, поиск, комбинация</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. План на бумаге: одна строка легенды и три комнаты. Проговорить вслух — так три одинаковые кнопки не появятся.</aside>
+</div>
+<div class="slide" id="32-p-2">
+<h3 class="slide-title">Шаг 2: финальная комната <span class="slide-duration">(4 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой проект комнаты побега с уроков 30 и 31</li><li>Дострой финальную комнату: кнопка открывает проход к полке с ключом</li><li>Повесь финальную дверь на замок и впиши KEY_NAME своего ключа</li><li>Test → пройди новую комнату: кнопка, ключ, дверь</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: третья комната побега в режиме редактирования — кнопка на стене, проход к полке с ключом и финальная дверь с деталью-замком]</p>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты. Достраиваем третью комнату к проекту уроков 30 и 31. Модули вставляются так же: папка внутрь модели двери, настройки в начале скрипта. Если кто-то не сохранил проект на уроке 31, дать ему собрать одну комнату с кнопкой и ключом — без третьей комнаты проект всё равно проходит плейтест и публикуется.</aside>
+</div>
+<div class="slide" id="32-p-3">
+<h3 class="slide-title">Шаг 3: атмосфера под легенду <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Расставь декор под свою легенду: ящики, трубы, стеллажи</li><li>Сделай общий свет полутёмным, а важное подсвети локально</li><li>Добавь в Workspace объект <b>Sound</b> с гулом помещения и включи Looped</li><li>У всего декора: Anchored включён, CanCollide выключен</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: оформленная комната побега — стеллажи и ящики вдоль стен, полутёмный свет, подсвечена кнопка на стене]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Декор берут в библиотеке под свою легенду. Напомнить связку: Anchored включён, CanCollide выключен у декора.</aside>
+</div>
+<div class="slide" id="32-p-4">
+<h3 class="slide-title">Шаг 4: финал побега <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>За финальной дверью собери светлую площадку выхода</li><li>Отметь выход цветом и светом из своей легенды</li><li>Добавь звук победы: Sound в детали площадки</li><li>Test → выйди наружу: понятно, что побег удался?</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. За финальной дверью — светлая площадка, табличка и звук победы. Игрок должен понять, что выбрался, без слов автора.</aside>
+</div>
+<div class="slide" id="32-p-5">
+<h3 class="slide-title">Шаг 5: слепой тест <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поменяйся местами с соседом и пройди его комнату молча</li><li>Автор записывает: где встал, что попробовал первым, что искал дольше минуты</li><li>Сделай по одной правке на каждую остановку: подсветить, переставить, дописать текст</li><li>Test → пройди исправленное место ещё раз</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: два окна-клиента рядом — в одном тестер стоит у запертой двери, в другом автор смотрит на ту же комнату сверху]</p>
+<aside class="speaker-notes">Заметка ведущего: Три с половиной минуты. Пары меняются местами. Автор молчит и записывает. После прохода — по одной правке на каждую остановку.</aside>
+</div>
+<div class="slide" id="32-p-6">
+<h3 class="slide-title">Шаг 6: таймер и публикация <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Замерь своё время прохода и поставь MINUTES с запасом в половину</li><li>Опубликуй игру: File → Publish to Roblox и открой доступ в настройках на сайте</li><li>Заполни название и описание, поставь иконку из кадра своей игры</li></ol>
+<p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: страница опубликованной игры-побега с названием, описанием и квадратной иконкой — кадром комнаты с дисплеем таймера]</p>
+<aside class="speaker-notes">Заметка ведущего: Три минуты. Замер, таймер с запасом, публикация. Кадр для иконки снимают из своей игры и обрезают в квадрат. Сохранение проекта — на финальном слайде занятия, отдельным пунктом здесь оно не нужно.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="32-qp-1">
+<h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Тестер стоит на месте больше минуты. О чём это говорит?</p><ol class="content-item content-quiz-options"><li data-correct="true">Комната в этом месте непонятна ✓</li><li>Тестер играет слишком медленно</li><li>Загадка получилась удачной</li></ol>
+<p class="content-item content-question">Ключ не нашли за весь проход. Что правят первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Место ключа: он должен быть виден от двери ✓</li><li>Скорость открытия двери</li><li>Число минут на таймере</li></ol>
+<p class="content-item content-question">Игру опубликовали, но друг в неё не заходит. Что проверить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Открыт ли доступ в настройках игры ✓</li><li>Сохранён ли проект в Studio</li><li>Стоит ли на двери замок</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Четыре минуты, три вопроса. Ожидаемые ответы: остановка дольше минуты; подсветить или переставить; доступ открывают в настройках на сайте.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="32-c-1">
+<h3 class="slide-title">Комната побега опубликована <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Три комнаты, три загадки, легенда и финал — восьмой проект курса опубликован и открыт для друзей.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: очки и таблица лидеров — игра начнёт считать результат</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Отметить главное: игра собралась из модулей трёх уроков, а работа продюсера была в сборке, атмосфере и проверке чужими руками. Анонс урока 33: очки и таблица лидеров.</aside>
+</div>
+<div class="slide" id="32-c-2">
+<h3 class="slide-title">ДЗ: чужой проход <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Позови двух человек дома и дай пройти комнату молча</li><li>Запиши, где каждый остановился дольше минуты</li><li>Сделай по одной правке на каждую остановку</li><li>Замерь время обоих и подбери минуты таймера заново</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Одна минута. Задание проверяется на следующем занятии. Смысл тот же, что у слепого теста: автор не подсказывает, а записывает.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-experiences-and-places.md">Publish experiences and places | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/promotion/experience-page.md">Experience page | Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Sound.md">Sound | Roblox Creator Hub (API Reference)</a></li><li><a href="tools/l31_keylock/KeyLockScript.server.luau">Модуль курса «Ключ и замок» — исходник</a></li><li><a href="tools/l31_timer/EscapeTimerScript.server.luau">Модуль курса «Таймер побега» — исходник</a></li></ul></section>
+</article>
+</body>
+</html>

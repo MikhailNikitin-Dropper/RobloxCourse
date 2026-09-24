@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 31. Ключи и замки — Eduson Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ek-violet:#8C7FF6; --ek-violet-soft:#A79EF9; --ek-violet-deep:#6F61E8; --ek-violet-bg:#F0EEFE;
+  --ek-green:#3DF79D; --ek-green-soft:#7BF9BD; --ek-green-mint:#C9F7E3; --ek-green-pale:#E7FDF2; --ek-green-deep:#0FBF6E;
+  --ek-ink:#17171C; --ek-gray:#8F8F98; --ek-gray-light:#EFEFF2; --ek-line:#E3E3EA; --ek-white:#fff;
+  --ek-red:#FF6B6B; --ek-red-pale:#FFECEC; --ek-bg:#F7F7FB; --ek-radius:28px;
+  --ek-font-head:'Inter Tight','Inter','Segoe UI',system-ui,sans-serif;
+  --ek-font-body:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#101016;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;font-family:var(--ek-font-head);color:var(--ek-ink)}
+.slide.on{display:block}
+.fit{overflow:hidden}
+.slide--violet{background:var(--ek-violet)}
+.slide--green{background:var(--ek-green)}
+.slide--white{background:#fff}
+
+/* декор «Орбита» */
+.sl-orbit{position:absolute;inset:0;pointer-events:none}
+.slide--violet .sl-orbit{--decor:#A79EF9;--letter:#C4BEFA}
+.slide--green .sl-orbit{--decor:#7BF9BD;--letter:#C4FCE0}
+.slide--white .sl-orbit{--decor:#97F3C8;--letter:#fff}
+.sl-ring{position:absolute;left:50%;top:50%;width:1040px;height:660px;transform:translate(-50%,-50%);border:3px solid var(--decor);border-radius:50%;opacity:.9}
+.sl-ico{position:absolute;color:var(--decor)}
+.sl-letter{position:absolute;border-radius:50%;background:var(--decor);color:var(--letter);display:flex;align-items:center;justify-content:center;font:800 var(--fs,40px)/1 var(--ek-font-head);font-style:normal}
+.sl-waves{position:absolute;right:0;top:0;width:520px;height:720px;pointer-events:none}
+.sl-waves svg{width:100%;height:100%}
+
+/* базовые элементы слайда */
+.sl-card{position:relative;background:#fff;border-radius:28px;box-shadow:0 30px 80px rgba(23,23,28,.16)}
+.sl-card-top{display:flex;justify-content:space-between;align-items:center;padding:24px 30px 0}
+.sl-dots{display:flex;gap:9px}
+.sl-dots i{width:13px;height:13px;border-radius:50%;background:var(--ek-violet)}
+.sl-close{position:relative;width:22px;height:22px;opacity:.9}
+.sl-close::before,.sl-close::after{content:"";position:absolute;left:-1px;top:9px;width:24px;height:4px;border-radius:2px;background:var(--ek-violet)}
+.sl-close::before{transform:rotate(45deg)}
+.sl-close::after{transform:rotate(-45deg)}
+.sl-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 26px/1 var(--ek-font-head);padding:14px 24px;border-radius:14px;transform:rotate(-4deg);box-shadow:0 10px 24px rgba(23,23,28,.10)}
+.ek-badge{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 14px/1 var(--ek-font-head);padding:9px 16px;border-radius:10px;transform:rotate(-3deg)}
+.ek-badge--violet{background:var(--ek-violet);color:#fff}
+.sl-h1{font:800 54px/1.12 var(--ek-font-head);letter-spacing:-.015em;margin:0}
+.sl-h2{font:800 40px/1.18 var(--ek-font-head);letter-spacing:-.01em;margin:0}
+.sl-body{font:500 1em/1.5 var(--ek-font-body)}
+.def{font-weight:800}
+.sl-pagenum{position:absolute;right:54px;bottom:38px;font:800 38px/1 var(--ek-font-head);color:#fff}
+.slide--white .sl-pagenum{color:var(--ek-ink)}
+/* на слайде практики номер наезжает на белую карточку — белым он невидим */
+.practice-card~.sl-pagenum{color:var(--ek-ink)}
+.sl-bubble{position:relative;background:#EFEFF1;border-radius:30px;padding:58px 74px;text-align:center}
+.sl-bubble::after{content:"";position:absolute;right:56px;bottom:-24px;width:0;height:0;border-left:38px solid transparent;border-top:28px solid #EFEFF1}
+
+/* титульный */
+.title-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:860px}
+.title-badge{position:absolute;left:50%;top:-30px;transform:translateX(-50%) rotate(-4deg)}
+.title-card-in{padding:26px 70px 56px;text-align:center}
+.title-role{margin-top:18px;font:700 24px/1.3 var(--ek-font-head);color:var(--ek-violet-deep)}
+
+/* разделитель */
+.div-bubble{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px}
+.div-bubble-text{font:800 38px/1.25 var(--ek-font-head)}
+
+/* приветствие (2-й слайд) и прощание: роль — бейдж в заголовке,
+   абзацы — акцентные карточки; отступы подогнаны под текст */
+.role-chip{display:inline-block;background:var(--ek-green);color:var(--ek-ink);font:800 .78em/1.1 var(--ek-font-head);padding:.2em .45em;border-radius:.28em;transform:rotate(-2deg);box-shadow:0 6px 16px rgba(23,23,28,.08);vertical-align:middle}
+.welcome-role{display:flex;align-items:center;gap:18px;margin-top:24px}
+.welcome-role-badge{font-size:15px;padding:9px 14px}
+.welcome-role-name{display:inline-block;font:800 24px/1 var(--ek-font-head);color:var(--ek-violet-deep);background:var(--ek-violet-bg);border:2px solid var(--ek-violet-soft);border-radius:12px;padding:9px 18px}
+.welcome-grid{display:grid;gap:16px;align-content:start;justify-items:start}
+.welcome-card{border-radius:18px;padding:.52em .8em}
+.welcome-card--violet{background:var(--ek-violet-bg);border:3px solid var(--ek-violet-soft)}
+.welcome-card--green{background:var(--ek-green-pale);border:3px solid var(--ek-green-soft)}
+.welcome-card--dash{background:#fff;border:3px dashed var(--ek-violet-soft)}
+.welcome-card-text{font-size:1em}
+
+/* вопросы */
+.qa-wrap{position:absolute;left:100px;top:110px;width:760px;bottom:70px;display:flex;flex-direction:column}
+.qa-head{color:var(--ek-violet-deep);font-size:30px;margin-bottom:46px;flex:0 0 auto}
+.qa-list{flex:1 1 auto;min-height:0;font-size:38px}
+/* открытый вопрос — карточка-рамка с номером (размеры в em — под .fit) */
+.q-card{display:flex;align-items:flex-start;gap:.55em;background:#fff;border:3px solid var(--ek-violet-soft);border-radius:.58em;padding:.58em .7em;margin-bottom:.7em}
+.q-card:nth-of-type(even){border-color:var(--ek-green-soft)}
+.q-num{flex:0 0 auto;width:1.42em;height:1.42em;border-radius:50%;background:var(--ek-violet);color:#fff;display:flex;align-items:center;justify-content:center;font:800 .74em/1 var(--ek-font-head)}
+.q-card:nth-of-type(even) .q-num{background:var(--ek-green);color:var(--ek-ink)}
+.q-item{font:800 .9em/1.3 var(--ek-font-head);letter-spacing:-.01em;margin:0}
+.qa-counter{display:block;margin-top:12px;font:700 15px/1 var(--ek-font-head);letter-spacing:.09em;text-transform:uppercase;color:var(--ek-gray)}
+
+/* квиз (компонент quiz-single дизайн-бука; размеры в em — под авто-ужатие .fit) */
+.quiz-q{font:800 .9em/1.25 var(--ek-font-head);letter-spacing:-.01em;margin-bottom:.95em}
+.ek-option{display:flex;align-items:center;gap:.7em;width:100%;text-align:left;background:#fff;border:2px solid var(--ek-line);border-radius:16px;padding:.7em .9em;font:600 .55em/1.35 var(--ek-font-body);color:var(--ek-ink);cursor:pointer;transition:border-color .15s,background .15s,opacity .2s}
+.ek-option+.ek-option{margin-top:.55em}
+.ek-option:hover{border-color:var(--ek-violet-soft)}
+.ek-option:disabled{cursor:default}
+.ek-option:disabled:not(.is-correct):not(.is-wrong){opacity:.5}
+.ek-option:disabled:not(.is-correct):not(.is-wrong):hover{border-color:var(--ek-line)}
+.ek-option.is-correct{border-color:var(--ek-green-deep);background:var(--ek-green-pale);animation:quiz-pop .35s ease}
+.ek-option.is-wrong{border-color:var(--ek-red);background:var(--ek-red-pale);animation:quiz-shake .3s ease}
+.ek-chip{flex:0 0 auto;width:1.9em;height:1.9em;border-radius:50%;background:var(--ek-gray-light);display:flex;align-items:center;justify-content:center;font:800 .85em var(--ek-font-head)}
+.ek-option.is-correct .ek-chip{background:var(--ek-green)}
+.ek-option.is-wrong .ek-chip{background:var(--ek-red);color:#fff}
+/* пустой блок фидбека всегда занимает место: авто-ужатие .fit меряет слайд
+   до клика, и появившийся позже текст не должен выталкивать кнопку «Заново» */
+.ek-feedback{display:block;min-height:4.2em;margin-top:.5em;border-radius:14px;padding:.55em .75em;font:600 .47em/1.5 var(--ek-font-body)}
+.ek-feedback.is-on{animation:quiz-rise .25s ease}
+.ek-feedback--ok{background:var(--ek-green-pale);color:#0B7A48}
+.ek-feedback--err{background:var(--ek-red-pale);color:#C6403F}
+.quiz-actions{display:flex;justify-content:flex-end;margin-top:.4em}
+.ek-btn{font:700 .42em/1 var(--ek-font-head);border:0;border-radius:14px;padding:.8em 1.3em;cursor:pointer;transition:opacity .15s,border-color .15s}
+.ek-btn--ghost{background:transparent;border:2px solid var(--ek-line);color:var(--ek-ink)}
+.ek-btn--ghost:hover{border-color:var(--ek-violet-soft)}
+.ek-btn:disabled{opacity:.45;cursor:not-allowed}
+@keyframes quiz-pop{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes quiz-shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+@keyframes quiz-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.ek-option.is-correct,.ek-option.is-wrong,.ek-feedback.is-on{animation:none}}
+
+/* контентные */
+.content-wrap{position:absolute;left:80px;right:80px;top:70px;bottom:80px;display:flex;flex-direction:column}
+.content-wrap .sl-h2{flex:0 0 auto}
+.one-col,.two-col{margin-top:40px;flex:1 1 auto;min-height:0;font-size:23px;min-width:0}
+.two-col{display:flex;gap:44px;align-items:flex-start}
+.two-col .col{flex:1 1 50%;min-width:0}
+.para{margin-bottom:.87em}
+.link-card{background:#fff;border:3px solid var(--ek-violet-soft);border-radius:.58em;padding:.58em .87em;margin-bottom:.87em;overflow-wrap:break-word;word-break:break-all}
+.link-card a{display:block;margin-top:.35em}
+a{color:var(--ek-violet);font-weight:700;text-underline-offset:.15em}
+a:hover{color:var(--ek-violet-deep)}
+.quote{border-left:6px solid var(--ek-violet);padding:6px 0 6px 22px;margin-bottom:.87em;color:var(--ek-violet-deep)}
+.rows{display:grid;gap:.78em}
+.row{display:flex;gap:.87em;align-items:center;background:var(--ek-bg);border-radius:22px;padding:.87em 1.13em}
+.row-dot{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:var(--ek-violet)}
+.row-num{flex:0 0 auto;width:48px;height:48px;border-radius:50%;background:var(--ek-violet);color:#fff;display:flex;align-items:center;justify-content:center;font:800 22px var(--ek-font-head)}
+.row-num--green{background:var(--ek-green);color:var(--ek-ink)}
+.row-text{font-size:.91em}
+
+/* практика */
+.practice-card{position:absolute;left:64px;right:64px;top:48px;bottom:48px;border-radius:30px}
+.practice-card-in{padding:40px 56px;height:100%;font-size:23px}
+.practice-badge{font-size:20px;padding:12px 20px}
+.practice-head{margin:20px 0 24px;font-size:34px}
+
+/* картинка слайда (реальная из images/ или SVG-заглушка); тень карточки —
+   едва заметная, вплотную к карточке: имитация естественного контакта,
+   а не «наложения» слоя */
+.ph-card{padding-bottom:18px;box-shadow:0 3px 10px rgba(23,23,28,.07)}
+.ph-fig{width:calc(100% - 44px);margin:16px auto 0}
+.ph-wrap{position:relative;width:100%;max-width:var(--ph-maxw,none);margin:0 auto}
+.ph{display:block;width:100%;height:auto;max-height:440px;object-fit:cover;background:#fff;border-radius:14px;border:2px solid var(--ek-line)}
+
+/* панель управления картинкой (под картинкой): стрелки кадров + полный экран */
+.ph-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px}
+.ph-btn{display:flex;align-items:center;justify-content:center;min-width:46px;height:36px;border:2px solid var(--ek-line);border-radius:12px;background:#fff;color:var(--ek-violet-deep);font:700 17px/1 var(--ek-font-head);cursor:pointer;transition:border-color .15s,background .15s;padding:0}
+.ph-btn:hover{border-color:var(--ek-violet-soft);background:var(--ek-violet-bg)}
+.ph-zoom{width:36px;min-width:36px} /* квадратная кнопка разворота */
+.ph-count{font:700 15px/1 var(--ek-font-head);color:var(--ek-gray);min-width:40px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* несколько кадров одного слота (images/<урок>-<номер>-1.* ...) —
+   листаются по клику по циклу, чип показывает номер кадра.
+   Размер рамки задаёт первый кадр (он всегда в потоке, но невидим, когда
+   активен другой) — остальные кадры вписываются в эту рамку, и высота
+   слайда не прыгает при переключении */
+.ph-multi{cursor:pointer}
+.ph-multi .ph:first-of-type{visibility:hidden}
+.ph-multi .ph:first-of-type.ph-on{visibility:visible}
+.ph-multi .ph:first-of-type~.ph{display:none;position:absolute;left:0;top:0;width:100%;height:100%;max-height:none;object-fit:contain}
+.ph-multi .ph:first-of-type~.ph.ph-on{display:block}
+
+/* полноэкранный просмотр картинки: кнопка ⛶ в панели открывает оверлей;
+   блок картинки (.ph-fig) переносится в оверлей целиком вместе с панелью,
+   поэтому интерактивные области и стрелки кадров продолжают работать */
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(23,23,28,.92);display:flex;align-items:center;justify-content:center}
+.lightbox[hidden]{display:none}
+.lightbox .ph-fig{width:auto;max-width:none;margin:0;text-align:center}
+.lightbox .ph-wrap{display:inline-block;width:auto;max-width:none;margin:0}
+.lightbox .ph{width:auto;height:auto;max-width:94vw;max-height:84vh;object-fit:contain}
+.lightbox .ph-multi .ph:first-of-type~.ph{object-fit:contain}
+.lightbox .ph-bar{justify-content:center}
+.lightbox .ph-zoom{display:none} /* картинка уже развёрнута — кнопка не нужна */
+.lb-close{position:fixed;top:20px;right:22px;width:56px;height:56px;border:0;border-radius:14px;background:#fff;color:var(--ek-violet-deep);font:700 26px/1 var(--ek-font-head);cursor:pointer;box-shadow:0 14px 36px rgba(0,0,0,.35);z-index:51}
+.lb-close:hover{color:var(--ek-violet)}
+
+/* интерактивные области картинки (images/<урок>-<номер>.areas.json):
+   наведение/фокус подсвечивает область её цветом и показывает подпись;
+   рамка тонкая и прямоугольная (без скруглений) — по требованию заказчика */
+.hs{position:absolute;border:1.5px solid var(--hs);border-radius:0;background:transparent;opacity:.45;cursor:pointer;outline:none;transition:opacity .15s,background-color .15s}
+.hs.hs-on,.hs:focus{opacity:1;background:var(--hs-bg);z-index:2}
+.hs-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--hs);color:#fff;font:700 14px/1.2 var(--ek-font-head);padding:6px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;box-shadow:0 4px 14px rgba(23,23,28,.25)}
+.hs.hs-on .hs-label,.hs:focus .hs-label{opacity:1}
+/* области, привязанные к кадру карусели: видны только на своём кадре */
+.hs-fr{display:none}
+.hs-fr.hs-cur{display:block}
+.practice-card .ph-card{box-shadow:0 3px 10px rgba(23,23,28,.07);margin-top:10px}
+.practice-cols{margin-top:0;align-items:center;font-size:inherit}
+.practice-cols .ph-card{margin-top:0}
+
+/* навигация (слева, чтобы не перекрывать номер страницы шаблона) */
+.nav{position:fixed;left:22px;bottom:20px;display:flex;gap:10px;z-index:10}
+.nav button{width:56px;height:56px;border:none;border-radius:14px;background:rgba(255,255,255,.55);color:var(--ek-violet-deep);font-size:26px;line-height:1;cursor:pointer;font-family:var(--ek-font-head)}
+.nav button:hover{background:rgba(255,255,255,.75)}
+.nav button:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="ek-i-trophy" viewBox="0 0 100 100"><path fill="currentColor" d="M24 16h52v12h8c6 0 10 4 10 10 0 15-11 25-23 27-3 5-8 9-14 10v8h14c4 0 7 3 7 7v4H22v-4c0-4 3-7 7-7h14v-8c-6-1-11-5-14-10C17 63 6 53 6 38c0-6 4-10 10-10h8V16zM24 36h-7c-2 0-4 2-4 4 0 8 5 15 12 18-1-5-1-10-1-16v-6zM76 36v6c0 6 0 11-1 16 7-3 12-10 12-18 0-2-2-4-4-4h-7z"/></symbol><symbol id="ek-i-heart" viewBox="0 0 100 100"><path fill="currentColor" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/></symbol><symbol id="ek-i-star" viewBox="0 0 100 100"><path fill="currentColor" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/></symbol><symbol id="ek-i-gem" viewBox="0 0 100 100"><path fill="currentColor" fill-rule="evenodd" d="M22 14H78L94 38L50 90L6 38L22 14zM49 40H51V81H49V40zM21 18L46 38L44 40L19 20zM79 18L54 38L56 40L81 20zM12 37H88V40H12z"/></symbol></defs></svg>
+<div id="stage">
+<section class="slide slide--violet"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div>
+<div class="sl-card title-card">
+  <div class="sl-badge title-badge">Урок №31</div>
+  <div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div>
+  <div class="title-card-in"><h1 class="sl-h1">Ключи и замки</h1>
+  <p class="title-role">Puzzle Designer (усложнение)</p></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Сегодня ты — Puzzle Designer</h2><div class="welcome-role"><span class="ek-badge welcome-role-badge">Твоя роль сегодня</span><span class="welcome-role-name">Puzzle Designer (усложнение)</span></div>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">На прошлом уроке дверь открывала кнопка: нажал — и прошёл. Сегодня между игроком и дверью встаёт предмет, который сначала надо найти.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text"><b class="def">Puzzle Designer</b> (дизайнер загадок) решает, что игрок ищет, где это лежит и по каким приметам он догадается, куда идти дальше.</p></div></div>
+</div>
+<div class="sl-pagenum">2</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вспомним урок 30<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Что показывает игроку объект ProximityPrompt?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: подсказка появляется, когда игрок подходит к детали, и говорит, что нажать."><span class="ek-chip">А</span><span>Кнопку действия рядом с деталью</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Таблица очков живёт отдельно от подсказок и появится на уроке 33."><span class="ek-chip">Б</span><span>Таблицу очков всех игроков</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Рюкзак показывает панель снаряжения внизу экрана, а не ProximityPrompt."><span class="ek-chip">В</span><span>Список предметов в рюкзаке</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вспомним урок 30<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Куда кладут папку модуля «Кнопка и дверь»?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: скрипт ищет детали в своей модели, поэтому папка лежит там же."><span class="ek-chip">А</span><span>Внутрь модели двери</span></button><button type="button" class="ek-option" data-correct="false" data-expl="StarterGui хранит интерфейс игрока — дверь там искать нечего."><span class="ek-chip">Б</span><span>В сервис StarterGui</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Lighting отвечает за свет сцены, скрипты двери туда не кладут."><span class="ek-chip">В</span><span>В папку Lighting</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вспомним урок 30<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Откуда игрок узнаёт порядок кнопок кодовой двери?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: три лампы над проёмом показывают порядок — это и есть загадка."><span class="ek-chip">А</span><span>Из улики, спрятанной в комнате</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Надпись на двери сделала бы код бессмысленным: разгадывать нечего."><span class="ek-chip">Б</span><span>Из надписи на самой двери</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Меню игры код не подсказывает — комната должна объяснять себя сама."><span class="ek-chip">В</span><span>Из подсказки в меню игры</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Ключ, замок и таймер</span></div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Что добавляем сегодня</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ключ — предмет, который игрок находит и носит с собой</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Замок — дверь, которая ждёт именно этот предмет</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Таймер — дисплей на стене: сколько осталось до конца побега</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Комната урока 30 остаётся: к ней пристраивается третья</span></div></div></div>
+</div>
+<div class="sl-pagenum">7</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Tool: предмет в руках</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">Tool</b> (инструмент) — объект, который персонаж берёт в руку</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">Handle</b> (рукоять) — деталь внутри Tool: за неё игра и держит предмет</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Взятый предмет виден на панели снаряжения внизу экрана</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Код для этого не нужен: фонарь урока 25 собран точно так же</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-1" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTEucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyODUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0KHQutGA0LjQvdGI0L7RgiDQuNCz0YDRiyBSb2Jsb3g6INC/0LXRgNGB0L7QvdCw0LYg0LTQtdGA0LbQuNGCINCyPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtGA0YPQutC1INC60LvRjtGHLCDQstC90LjQt9GDINGN0LrRgNCw0L3QsCDQv9Cw0L3QtdC70Ywg0YHQvdCw0YDRj9C20LXQvdC40Y88L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0YEg0LrQvdC+0L/QutC+0LkgS2V5OyDRgNGP0LTQvtC8INC+0LrQvdC+IEV4cGxvcmVyLCDQsiDQvdGR0Lw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+VG9vbCDRgSDQuNC80LXQvdC10LwgS2V5INC4INC00LXRgtCw0LvRjCBIYW5kbGUg0LLQvdGD0YLRgNC4PC90c3Bhbj48L3RleHQ+PC9zdmc+" alt="Скриншот игры Roblox: персонаж держит в руке ключ, внизу экрана панель снаряжения с кнопкой Key; рядом окно Explorer, в нём Tool с именем Key и деталь Handle внутри" title="Скриншот игры Roblox: персонаж держит в руке ключ, внизу экрана панель снаряжения с кнопкой Key; рядом окно Explorer, в нём Tool с именем Key и деталь Handle внутри"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+</div>
+<div class="sl-pagenum">8</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Где лежит предмет</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">StarterPack</b> — предмет выдают игроку сразу: так работал фонарь</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Tool в комнате — предмет надо найти и взять: так работает ключ</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Взятый предмет уезжает в <b class="def">Backpack</b> (рюкзак) игрока</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ключ — награда за поиск, поэтому в StarterPack его не кладут</span></div></div></div>
+</div>
+<div class="sl-pagenum">9</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Модуль «Ключ и замок»</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Модель двери: полотно <b class="def">Door</b> и деталь-замок <b class="def">Lock</b> рядом с ним</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Папку <b class="def">KeyLock</b> кладут внутрь этой модели — как на уроке 30</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Подсказку модуль ставит на замок сам, если её там нет</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ключ собираем сами: внутри него скриптов нет</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-2" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTIucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyNzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0KHQutGA0LjQvdGI0L7RgiDQvtC60L3QsCBFeHBsb3JlciDQsiBSb2Jsb3ggU3R1ZGlvOjwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QvNC+0LTQtdC70YwgRG9vcjMg0YDQsNGB0LrRgNGL0YLQsCwg0LLQvdGD0YLRgNC4INC00LXRgtCw0LvQuCBEb29yPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC4IExvY2sg0Lgg0L/QsNC/0LrQsCBLZXlMb2NrINGB0L4g0YHQutGA0LjQv9GC0L7QvDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5LZXlMb2NrU2NyaXB0OyDQvtGC0LTQtdC70YzQvdC+INCyIFdvcmtzcGFjZSDQu9C10LbQuNGCPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPlRvb2wg0YEg0LjQvNC10L3QtdC8IEtleTwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Скриншот окна Explorer в Roblox Studio: модель Door3 раскрыта, внутри детали Door и Lock и папка KeyLock со скриптом KeyLockScript; отдельно в Workspace лежит Tool с именем Key" title="Скриншот окна Explorer в Roblox Studio: модель Door3 раскрыта, внутри детали Door и Lock и папка KeyLock со скриптом KeyLockScript; отдельно в Workspace лежит Tool с именем Key"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+</div>
+<div class="sl-pagenum">10</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Настройки замка</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">KEY_NAME</b> — имя предмета, который открывает эту дверь</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">ACTION_TEXT</b> и <b class="def">LOCKED_TEXT</b> — тексты подсказки: «Открыть» и «Нужен ключ»</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">OPEN_TIME</b> и <b class="def">STAY_OPEN</b> — знакомые настройки двери с урока 30</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">KEEP_KEY</b> — оставить ключ игроку или забрать после двери</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTMucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyNzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0KHQutGA0LjQvdGI0L7RgiBSb2Jsb3ggU3R1ZGlvOiDQvtGC0LrRgNGL0YIg0YHQutGA0LjQv9GCPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPktleUxvY2tTY3JpcHQsINC/0L7QtNGB0LLQtdGH0LXQvdGLINC90LDRgdGC0YDQvtC50LrQuCDQvNC10LbQtNGDPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtGA0Y/QtNCw0LzQuCDQt9C90LDQutC+0LIgwqvRgNCw0LLQvdC+wrsg4oCUIEtFWV9OQU1FLDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5BQ1RJT05fVEVYVCwgTE9DS0VEX1RFWFQsIE9QRU5fVElNRSw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+U1RBWV9PUEVOLCBLRUVQX0tFWTwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Скриншот Roblox Studio: открыт скрипт KeyLockScript, подсвечены настройки между рядами знаков «равно» — KEY_NAME, ACTION_TEXT, LOCKED_TEXT, OPEN_TIME, STAY_OPEN, KEEP_KEY" title="Скриншот Roblox Studio: открыт скрипт KeyLockScript, подсвечены настройки между рядами знаков «равно» — KEY_NAME, ACTION_TEXT, LOCKED_TEXT, OPEN_TIME, STAY_OPEN, KEEP_KEY"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+</div>
+<div class="sl-pagenum">11</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Два ключа — две двери</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Имя ключа — это форма замка: RedKey не откроет дверь синего ключа</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Цвет подсказывает пару: красный ключ и красная полоса на двери</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Два ключа рядом — игрок выбирает, а не перебирает</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Больше трёх звеньев в цепочке на занятии не собирают</span></div></div></div>
+</div>
+<div class="sl-pagenum">12</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Прятать честно</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ключ виден с того места, где игрок понял, что ключ нужен</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Хорошо: на полке в стороне от дороги, под неярким светом</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Плохо: за декором, под полом, в тёмном углу без света</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Проверка: встань у двери и посмотри, откуда заметен ключ</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-4" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTQucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyODUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0JrQsNC00YAg0LjQs9GA0YsgUm9ibG94OiDQstC40LQg0L7RgiDQt9Cw0L/QtdGA0YLQvtC5INC00LLQtdGA0Lgg0LI8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LrQvtC80L3QsNGC0YMg4oCUINC60LvRjtGHINC70LXQttC40YIg0L3QsCDQv9C+0LvQutC1INGB0LHQvtC60YMsPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC/0L7QtNGB0LLQtdGH0LXQvSDQvdC10Y/RgNC60LjQvCDRgdCy0LXRgtC+0LwsINC+0YIg0LTQstC10YDQuCDQtdCz0L48L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LLQuNC00L3QvjwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Кадр игры Roblox: вид от запертой двери в комнату — ключ лежит на полке сбоку, подсвечен неярким светом, от двери его видно" title="Кадр игры Roblox: вид от запертой двери в комнату — ключ лежит на полке сбоку, подсвечен неярким светом, от двери его видно"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+</div>
+<div class="sl-pagenum">13</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Таймер побега</h2>
+  <div class="two-col fit"><div class="col"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">Дисплей</b> — деталь на стене, внутрь неё кладут папку <b class="def">EscapeTimer</b></span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text"><b class="def">MINUTES</b> — сколько минут идёт побег, <b class="def">TIME_UP_TEXT</b> — надпись в конце</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Цифры видно и в темноте, последние секунды краснеют</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Дисплей вешают там, где его видно от старта</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-5" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTUucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyODUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0JrQsNC00YAg0LjQs9GA0YsgUm9ibG94OiDQv9C10YDQstCw0Y8g0LrQvtC80L3QsNGC0LAg0L/QvtCx0LXQs9CwLDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QvdCwINGB0YLQtdC90LUg0LTQuNGB0L/Qu9C10Lkg0YEg0YbQuNGE0YDQsNC80LggMDQ6MTIsINGA0Y/QtNC+0Lw8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LTQstC10YDRjCDRgSDQutC90L7Qv9C60L7QuTsg0YbQuNGE0YDRiyDRh9C40YLQsNGO0YLRgdGPINCyPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC/0L7Qu9GD0LzRgNCw0LrQtTwvdHNwYW4+PC90ZXh0Pjwvc3ZnPg==" alt="Кадр игры Roblox: первая комната побега, на стене дисплей с цифрами 04:12, рядом дверь с кнопкой; цифры читаются в полумраке" title="Кадр игры Roblox: первая комната побега, на стене дисплей с цифрами 04:12, рядом дверь с кнопкой; цифры читаются в полумраке"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+</div>
+<div class="sl-pagenum">14</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Частые ошибки с ключом</h2>
+  <div class="one-col fit"><div class="rows"><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Деталь ключа закреплена — предмет не берётся в руку</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Деталь внутри Tool названа не Handle — тот же результат</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Имя ключа и KEY_NAME отличаются хоть одной буквой — дверь не открывается</span></div><div class="row"><span class="row-dot"></span><span class="sl-body row-text">Ключ лежит в тёмном углу — игрок обыскивает комнату вместо того, чтобы играть</span></div></div></div>
+</div>
+<div class="sl-pagenum">15</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Проверяем теорию</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Как называется деталь внутри Tool, за которую персонаж держит предмет?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: Handle — та самая деталь, которую игра приваривает к руке."><span class="ek-chip">А</span><span>Handle (рукоять)</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Anchored — свойство детали, оно держит её на месте, а не в руке."><span class="ek-chip">Б</span><span>Anchored (закрепление)</span></button><button type="button" class="ek-option" data-correct="false" data-expl="PrimaryPart задаёт центр модели и к рукам персонажа отношения не имеет."><span class="ek-chip">В</span><span>PrimaryPart (основа)</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Какая настройка решает, какой ключ открывает эту дверь?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: дверь ищет у игрока предмет ровно с этим именем."><span class="ek-chip">А</span><span>KEY_NAME — имя нужного предмета</span></button><button type="button" class="ek-option" data-correct="false" data-expl="OPEN_TIME отвечает за то, как быстро уезжает полотно."><span class="ek-chip">Б</span><span>OPEN_TIME — скорость двери</span></button><button type="button" class="ek-option" data-correct="false" data-expl="STAY_OPEN говорит, сколько секунд дверь стоит открытой."><span class="ek-chip">В</span><span>STAY_OPEN — время до закрытия</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по теории<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Где по правилу честности лежит ключ?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: игрок должен заметить ключ оттуда, где понял, что ключ нужен."><span class="ek-chip">А</span><span>Там, откуда его видно от запертой двери</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Тёмный угол за декором превращает загадку в обыск комнаты."><span class="ek-chip">Б</span><span>В тёмном углу за декором</span></button><button type="button" class="ek-option" data-correct="false" data-expl="За границей комнаты предмет не найдёт никто — игра станет непроходимой."><span class="ek-chip">В</span><span>За границей игровой комнаты</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Комната с ключом</span></div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 1: комната для ключа</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Открой проект комнаты побега с урока 30</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">За кодовой дверью дострой третью комнату: пол, стены, свет</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Поставь в ней полку или стол — на них ляжет ключ</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">21</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 2: собери ключ</h2>
+    <div class="two-col practice-cols"><div class="col"><div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">В Workspace добавь объект <b class="def">Tool</b> и назови его Key</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Внутрь положи небольшую яркую деталь, назови её <b class="def">Handle</b> и оставь Anchored выключенным</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Поставь ключ на полку в третьей комнате</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Test → подойди к ключу и возьми его: предмет появится в руке</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-6" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTYucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0KHQutGA0LjQvdGI0L7RgiBSb2Jsb3ggU3R1ZGlvOiDQsiBFeHBsb3JlciDQstGL0LTQtdC70LXQvTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj5Ub29sINGBINC40LzQtdC90LXQvCBLZXkg0Lgg0LTQtdGC0LDQu9GMIEhhbmRsZSDQstC90YPRgtGA0LgsPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtCyINC+0LrQvdC1INGB0YbQtdC90Ysg0LrQu9GO0Ycg0LvQtdC20LjRgiDQvdCwINC/0L7Qu9C60LU8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Скриншот Roblox Studio: в Explorer выделен Tool с именем Key и деталь Handle внутри, в окне сцены ключ лежит на полке" title="Скриншот Roblox Studio: в Explorer выделен Tool с именем Key и деталь Handle внутри, в окне сцены ключ лежит на полке"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">22</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 3: запертая дверь</h2>
+    <div class="two-col practice-cols"><div class="col"><div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Перекрой выход из третьей комнаты полотном <b class="def">Door</b>, рядом поставь деталь <b class="def">Lock</b></span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Собери обе детали в модель и получи модуль «Ключ и замок» по ссылке от преподавателя</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">Положи папку <b class="def">KeyLock</b> внутрь модели двери</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">В начале скрипта проверь KEY_NAME: там должно стоять имя твоего ключа</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-7" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTcucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyODUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0KHQutGA0LjQvdGI0L7RgiBSb2Jsb3ggU3R1ZGlvOiDQvNC+0LTQtdC70Ywg0LfQsNC/0LXRgNGC0L7QuTwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QtNCy0LXRgNC4INCyIEV4cGxvcmVyIOKAlCDQtNC10YLQsNC70LggRG9vciDQuCBMb2NrINC4PC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC/0LDQv9C60LAgS2V5TG9jayDQstC90YPRgtGA0Lg7INCyINC+0LrQvdC1INGB0YbQtdC90Ysg0LTQstC10YDRjDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7Qv9C10YDQtdC60YDRi9Cy0LDQtdGCINCy0YvRhdC+0LQsINGA0Y/QtNC+0Lwg0LTQtdGC0LDQu9GMLdC30LDQvNC+0Lo8L3RzcGFuPjwvdGV4dD48L3N2Zz4=" alt="Скриншот Roblox Studio: модель запертой двери в Explorer — детали Door и Lock и папка KeyLock внутри; в окне сцены дверь перекрывает выход, рядом деталь-замок" title="Скриншот Roblox Studio: модель запертой двери в Explorer — детали Door и Lock и папка KeyLock внутри; в окне сцены дверь перекрывает выход, рядом деталь-замок"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">23</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 4: проверь оба случая</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Test без ключа: подойди к замку — подсказка говорит «Нужен ключ», дверь стоит</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Возьми ключ, вернись и нажми E: дверь уезжает</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Не сработало — сверь имя ключа со строкой KEY_NAME</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">24</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 5: таймер на стену</h2>
+    <div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Поставь в первой комнате плоскую деталь-дисплей на стену</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Положи папку <b class="def">EscapeTimer</b> внутрь этой детали</span></div><div class="row"><span class="row-num">3</span><span class="sl-body row-text">В начале скрипта задай MINUTES 5 и свой TIME_UP_TEXT</span></div><div class="row"><span class="row-num row-num--green">4</span><span class="sl-body row-text">Test → цифры идут вниз с первой секунды</span></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">25</div></section><section class="slide slide--violet"><div class="sl-orbit" style="opacity:.35">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:-40px;top:430px;width:260px;height:260px;transform:rotate(-14deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:1150px;top:80px;width:150px;height:150px;--fs:64px">X</i>
+</div>
+<div class="sl-card practice-card">
+  <div class="practice-card-in fit">
+    <span class="ek-badge ek-badge--violet practice-badge">Практика</span>
+    <h2 class="sl-h2 practice-head">Шаг 6: пройди цепочку</h2>
+    <div class="two-col practice-cols"><div class="col"><div class="rows"><div class="row"><span class="row-num">1</span><span class="sl-body row-text">Пройди цепочку целиком: кнопка, код, ключ, запертая дверь</span></div><div class="row"><span class="row-num">2</span><span class="sl-body row-text">Отметь место, где пришлось гадать, и добавь там свет или ориентир</span></div><div class="row"><span class="row-num row-num--green">3</span><span class="sl-body row-text">Сохрани проект: File → Save to Roblox</span></div></div></div><div class="col col-fig"><div class="sl-card ph-card"><div class="sl-card-top"><span class="sl-dots"><i></i><i></i><i></i></span><span class="sl-close"></span></div><div class="ph-fig"><div class="ph-wrap"><img class="ph ph-on" id="img-8" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjYyMCIgdmlld0JveD0iMCAwIDEwMDAgNjIwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2MjAiIGZpbGw9IiNGMEVFRkUiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI5NjAiIGhlaWdodD0iNTgwIiByeD0iMTgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhDN0ZGNiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtZGFzaGFycmF5PSIxNiAxMiIvPjx0ZXh0IHg9IjUwMCIgeT0iMjUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM2RjYxRTgiPtCX0JTQldCh0Kwg0JHQo9CU0JXQoiDQmNCX0J7QkdCg0JDQltCV0J3QmNCVIC8g0JPQmNCk0JrQkCAo0YTQsNC50LsgaW1hZ2VzLzMxLTgucG5nKTo8L3RleHQ+PHRleHQgeD0iNTAwIiB5PSIyODUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjIzIiBmaWxsPSIjMTcxNzFDIj48dHNwYW4geD0iNTAwIiBkeT0iMCI+0JrQsNC00YAg0LjQs9GA0YsgUm9ibG94INC+0YIg0L/QtdGA0LLQvtCz0L4g0LvQuNGG0LA6INC40LPRgNC+0Log0YE8L3RzcGFuPjx0c3BhbiB4PSI1MDAiIGR5PSIzMCI+0LrQu9GO0YfQvtC8INCyINGA0YPQutC1INGB0YLQvtC40YIg0YMg0LfQsNC/0LXRgNGC0L7QuSDQtNCy0LXRgNC4LCDQvdCwPC90c3Bhbj48dHNwYW4geD0iNTAwIiBkeT0iMzAiPtC/0L7QtNGB0LrQsNC30LrQtSDQvdCw0L/QuNGB0LDQvdC+IMKr0J7RgtC60YDRi9GC0YzCuywg0LIg0YPQs9C70YMg0LrQsNC00YDQsDwvdHNwYW4+PHRzcGFuIHg9IjUwMCIgZHk9IjMwIj7QstC40LTQtdC9INC00LjRgdC/0LvQtdC5INGC0LDQudC80LXRgNCwPC90c3Bhbj48L3RleHQ+PC9zdmc+" alt="Кадр игры Roblox от первого лица: игрок с ключом в руке стоит у запертой двери, на подсказке написано «Открыть», в углу кадра виден дисплей таймера" title="Кадр игры Roblox от первого лица: игрок с ключом в руке стоит у запертой двери, на подсказке написано «Открыть», в углу кадра виден дисплей таймера"></div><div class="ph-bar"><button type="button" class="ph-btn ph-zoom" aria-label="Развернуть картинку на весь экран" title="Развернуть на весь экран">&#9974;</button></div></div></div></div></div>
+  </div>
+</div>
+<div class="sl-pagenum">26</div></section><section class="slide slide--green"><div class="sl-orbit">
+<i class="sl-ring"></i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:75px;top:20px;width:150px;height:150px;transform:rotate(-10deg)"><use href="#ek-i-trophy"/></svg>
+<i class="sl-letter" style="left:466px;top:13px;width:78px;height:78px;--fs:36px">Y</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1040px;top:15px;width:130px;height:130px;transform:rotate(12deg)"><use href="#ek-i-heart"/></svg>
+<i class="sl-letter" style="left:68px;top:268px;width:100px;height:100px;--fs:46px">X</i>
+<i class="sl-letter" style="left:1137px;top:327px;width:95px;height:95px;--fs:44px">B</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:102px;top:532px;width:125px;height:125px;transform:rotate(-15deg)"><use href="#ek-i-star"/></svg>
+<i class="sl-letter" style="left:726px;top:613px;width:78px;height:78px;--fs:36px">A</i>
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1045px;top:540px;width:110px;height:110px;transform:rotate(8deg)"><use href="#ek-i-gem"/></svg>
+</div><div class="sl-bubble div-bubble"><span class="div-bubble-text">Обсуждаем практику</span></div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 1 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Ключ собрали, а в руку он не берётся. Что проверить первым?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: без детали с именем Handle предмет в руку не встаёт."><span class="ek-chip">А</span><span>Имя детали внутри Tool: должно быть Handle</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Цвет помогает заметить ключ, но на то, берётся он или нет, не влияет."><span class="ek-chip">Б</span><span>Цвет детали: должен быть ярким</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Размер комнаты к механике предмета отношения не имеет."><span class="ek-chip">В</span><span>Размер комнаты: должен быть больше</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 2 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Зачем запертую дверь проверяют и без ключа тоже?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: дверь, которая открывается без ключа, отменяет загадку."><span class="ek-chip">А</span><span>Чтобы убедиться, что без ключа она не открывается</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Скорость задаёт OPEN_TIME, её проверяют одним прогоном."><span class="ek-chip">Б</span><span>Чтобы измерить скорость двери</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Дверь никого не запоминает: она каждый раз смотрит, есть ли предмет."><span class="ek-chip">В</span><span>Чтобы дверь запомнила игрока</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-waves"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 520 720">
+  <path d="M300 0C260 105 365 165 315 260C250 385 175 480 230 590C250 640 225 680 210 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M480 0C520 100 425 185 470 290C520 405 390 480 450 590C480 650 440 690 430 720" fill="none" stroke="#C9F7E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(330 95) rotate(10) scale(1.429) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 88C28 70 8 56 8 35C8 22 19 13 32 13C41 13 47 18 50 27C53 18 59 13 68 13C81 13 92 22 92 35C92 56 72 70 50 88z"/>
+  </g>
+  <g transform="translate(455 155) scale(0.95) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="bold" text-anchor="middle">Y</text>
+  </g>
+  <g transform="translate(255 330) rotate(-8) scale(1.307) translate(-50 -50)">
+    <path fill="#97F3C8" d="M22 14H78L94 38L50 90L6 38L22 14z"/>
+    <path d="M50 40V82M21 18L45 39M79 18L55 39M13 38H87" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(465 560) rotate(12) scale(1.337) translate(-50 -50)">
+    <path fill="#97F3C8" d="M50 8C53 8 55 10 56 13L63 34C64 36 66 37 68 37L90 37C94 37 96 42 92 45L74 58C72 60 72 62 73 64L80 85C82 89 78 93 74 90L53 77C51 76 49 76 47 77L26 90C22 93 18 89 20 85L27 64C28 62 28 60 26 58L8 45C4 42 6 37 10 37L32 37C34 37 36 36 37 34L44 13C45 10 47 8 50 8z"/>
+  </g>
+  <g transform="translate(185 600) scale(0.9) translate(-50 -50)">
+    <circle cx="50" cy="50" r="50" fill="#97F3C8"/>
+    <text x="50" y="50" dy="0.36em" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="bold" text-anchor="middle">A</text>
+  </g>
+</svg>
+</div>
+<div class="qa-wrap">
+  <h2 class="sl-h2 qa-head">Вопросы по практике<span class="qa-counter">Вопрос 3 из 3</span></h2>
+  <div class="qa-list fit"><div class="quiz"><h3 class="quiz-q">Как понять, что ключ спрятан честно?</h3><div class="quiz-options" role="group"><button type="button" class="ek-option" data-correct="true" data-expl="Верно: проверка идёт с места, где игрок понял, что нужен ключ."><span class="ek-chip">А</span><span>Встать у двери и увидеть, откуда заметен ключ</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Подсказка соседа заменяет проверку: игрок в вашей игре её не получит."><span class="ek-chip">Б</span><span>Спросить у соседа, где он лежит</span></button><button type="button" class="ek-option" data-correct="false" data-expl="Координаты ничего не говорят о том, видно предмет или нет."><span class="ek-chip">В</span><span>Посмотреть его координаты в Properties</span></button></div><div class="ek-feedback" role="status" aria-live="polite"></div><div class="quiz-actions"><button type="button" class="ek-btn ek-btn--ghost quiz-reset" disabled>Заново</button></div></div></div>
+</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Дверь ждёт ключ</h2>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Мы собрали ключ-предмет, запертую дверь и таймер на стене — комната побега стала длиннее на целую загадку.</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Сохрани проект в конце занятия: File → Save to Roblox</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Следующий урок: ПРОЕКТ «Комната побега» — собираем игру целиком и публикуем</p></div></div>
+</div>
+<div class="sl-pagenum">31</div></section><section class="slide slide--white"><div class="sl-orbit">
+<svg class="sl-ico" viewBox="0 0 100 100" style="left:1120px;top:560px;width:100px;height:100px;transform:rotate(14deg)"><use href="#ek-i-star"/></svg>
+</div>
+<div class="content-wrap">
+  <h2 class="sl-h2">Домашнее задание: второй ключ</h2>
+  <div class="one-col fit welcome-grid"><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Второй ключ: собери ещё один Tool и назови его своим именем</p></div><div class="welcome-card welcome-card--green"><p class="sl-body welcome-card-text">Вторая дверь: поставь ей KEY_NAME второго ключа и свой цвет</p></div><div class="welcome-card welcome-card--dash"><p class="sl-body welcome-card-text">Спрячь оба ключа честно: от каждой двери свой ключ должно быть видно</p></div><div class="welcome-card welcome-card--violet"><p class="sl-body welcome-card-text">Позови друга и засеки, за сколько он выйдет</p></div></div>
+</div>
+<div class="sl-pagenum">32</div></section>
+</div>
+<div class="nav">
+  <button id="nav-prev" type="button" aria-label="Предыдущий слайд">&#8592;</button>
+  <button id="nav-next" type="button" aria-label="Следующий слайд">&#8594;</button>
+  <button id="nav-full" type="button" aria-label="Полноэкранный режим (выход — Esc)" title="Полноэкранный режим (выход — Esc)">&#9974;</button>
+</div>
+<div class="lightbox" id="lightbox" hidden>
+  <button type="button" class="lb-close" aria-label="Закрыть (Esc)" title="Закрыть (Esc)">&#10005;</button>
+  <div class="lb-slot"></div>
+</div>
+<script>
+(function(){
+'use strict';
+var slides=document.querySelectorAll('.slide');
+var prev=document.getElementById('nav-prev'),next=document.getElementById('nav-next');
+var full=document.getElementById('nav-full');
+var quizResets=[]; /* {slide, reset} — чтобы сбрасывать выбор при уходе со слайда */
+var cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  for(var k=0;k<slides.length;k++)slides[k].classList.toggle('on',k===cur);
+  /* квизы на неактивных слайдах возвращаются в исходное состояние */
+  for(var r=0;r<quizResets.length;r++)
+    if(!quizResets[r].slide.classList.contains('on'))quizResets[r].reset();
+  prev.disabled=cur===0;next.disabled=cur===slides.length-1;
+  if(history.replaceState)history.replaceState(null,'','#'+(cur+1));
+}
+function fit(){
+  var s=Math.min(window.innerWidth/1280,window.innerHeight/720);
+  document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';
+}
+prev.addEventListener('click',function(){show(cur-1);});
+next.addEventListener('click',function(){show(cur+1);});
+/* полноэкранный режим; выход — Esc (нативное поведение браузера) */
+full.addEventListener('click',function(){
+  if(document.fullscreenElement){if(document.exitFullscreen)document.exitFullscreen();}
+  else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
+});
+document.addEventListener('keydown',function(e){
+  /* пробел на сфокусированной кнопке (вариант квиза, «Заново») — это клик,
+     а не листание */
+  if(e.key===' '&&e.target&&e.target.tagName==='BUTTON')return;
+  /* пока открыт полноэкранный просмотр картинки, презентация не листается */
+  var lb=document.getElementById('lightbox');
+  if(lb&&!lb.hidden)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+window.addEventListener('resize',fit);
+function initQuizzes(){
+  var quizzes=document.querySelectorAll('.quiz');
+  for(var i=0;i<quizzes.length;i++)(function(q){
+    var opts=q.querySelectorAll('.ek-option'),fb=q.querySelector('.ek-feedback'),
+        rst=q.querySelector('.quiz-reset'),done=false;
+    function pick(e){
+      if(done)return;done=true;
+      var right=e.currentTarget.getAttribute('data-correct')==='true';
+      for(var k=0;k<opts.length;k++){
+        opts[k].disabled=true;
+        if(opts[k].getAttribute('data-correct')==='true')opts[k].classList.add('is-correct');
+      }
+      if(!right)e.currentTarget.classList.add('is-wrong');
+      fb.className='ek-feedback is-on '+(right?'ek-feedback--ok':'ek-feedback--err');
+      var expl=e.currentTarget.getAttribute('data-expl');
+      fb.textContent=(right?'Верно! 🎉':'Пока нет — правильный ответ подсвечен зелёным.')+(expl?' '+expl:'');
+      rst.disabled=false;
+    }
+    function reset(){
+      done=false;fb.className='ek-feedback';fb.textContent='';rst.disabled=true;
+      for(var k=0;k<opts.length;k++){opts[k].disabled=false;opts[k].classList.remove('is-correct','is-wrong');}
+    }
+    for(var j=0;j<opts.length;j++)opts[j].addEventListener('click',pick);
+    rst.addEventListener('click',reset);
+    var sl=q;while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;
+    if(sl)quizResets.push({slide:sl,reset:reset});
+  })(quizzes[i]);
+}
+initQuizzes();
+/* авто-ужатие шрифта останавливается на 80% базового кегля — это уровень
+   слайда 7 урока 2, мельче текст быть не должен; слайд, не влезающий и при
+   минимуме, чинится контентом (см. предупреждения конвертера при сборке) */
+function shrinkEl(el){
+  if(!el.dataset.basefs)el.dataset.basefs=getComputedStyle(el).fontSize;
+  var base=parseFloat(el.dataset.basefs)||16,k=1,guard=0;
+  el.style.fontSize='';
+  if(el.scrollHeight>el.clientHeight+1){
+    while(el.scrollHeight>el.clientHeight+1&&k>0.801&&guard<14){k-=0.05;el.style.fontSize=(base*k)+'px';guard++;}
+  }else{
+    /* разреженный слайд: подращиваем кегль, пока не подойдём к нижнему краю
+       (потолок 1.25 базового — чтобы кегль не расходился сильно между слайдами) */
+    while(k<1.249&&guard<10){
+      var nk=k+0.05;el.style.fontSize=(base*nk)+'px';
+      if(el.scrollHeight>el.clientHeight+1){el.style.fontSize=(base*k)+'px';break;}
+      k=nk;guard++;
+    }
+  }
+}
+/* подпись области центрируется в своей рамке и у краёв картинки вылезала бы
+   наружу — после раскладки чип задвигается внутрь картинки (margin поверх
+   центрирующего translate; мерить можно только видимый слайд) */
+function clampHotspotLabels(sl){
+  var wraps=sl.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++){
+    var w=wraps[i].offsetWidth,h=wraps[i].offsetHeight,
+        hss=wraps[i].querySelectorAll('.hs');
+    for(var j=0;j<hss.length;j++){
+      var hs=hss[j],lb=hs.querySelector('.hs-label');
+      if(!lb||!hs.offsetWidth)continue; /* скрытые (кадр карусели) — при показе кадра */
+      var pad=4,
+          cx=hs.offsetLeft+hs.offsetWidth/2,cy=hs.offsetTop+hs.offsetHeight/2,
+          hw=lb.offsetWidth/2,hh=lb.offsetHeight/2,dx=0,dy=0;
+      if(cx+hw>w-pad)dx=(w-pad)-(cx+hw);
+      if(cx-hw+dx<pad)dx=pad-(cx-hw);
+      if(cy+hh>h-pad)dy=(h-pad)-(cy+hh);
+      if(cy-hh+dy<pad)dy=pad-(cy-hh);
+      lb.dataset.mx=dx;lb.dataset.my=dy;
+      lb.style.marginLeft=dx+'px';lb.style.marginTop=dy+'px';
+    }
+  }
+}
+/* области могут перекрываться (вложенные зоны), а браузерный :hover достаётся
+   только самой верхней — поэтому подсветкой управляет JS: активны ВСЕ области
+   под курсором, их подписи раскладываются вертикальной стопкой без наложений
+   (первая — самой маленькой области, на её обычном месте) */
+function initHotspots(){
+  var wraps=document.querySelectorAll('.ph-wrap');
+  for(var i=0;i<wraps.length;i++)(function(wrap){
+    var hss=wrap.querySelectorAll('.hs');
+    if(!hss.length)return;
+    function baseLabel(lb){
+      lb.style.left='';lb.style.top='';lb.style.transform='';
+      lb.style.marginLeft=(lb.dataset.mx||0)+'px';
+      lb.style.marginTop=(lb.dataset.my||0)+'px';
+    }
+    function off(hs){
+      hs.classList.remove('hs-on');
+      var lb=hs.querySelector('.hs-label');
+      if(lb)baseLabel(lb);
+    }
+    function clear(){for(var j=0;j<hss.length;j++)off(hss[j]);}
+    function layout(active){
+      var pad=4,W=wrap.offsetWidth,H=wrap.offsetHeight,lbs=[],total=0;
+      for(var j=0;j<active.length;j++){
+        var lb=active[j].querySelector('.hs-label');
+        if(lb)lbs.push({hs:active[j],lb:lb,w:lb.offsetWidth,h:lb.offsetHeight}),total+=lb.offsetHeight+6;
+      }
+      if(!lbs.length)return;
+      total-=6;
+      var f=lbs[0],
+          cx=f.hs.offsetLeft+f.hs.offsetWidth/2+parseFloat(f.lb.dataset.mx||0),
+          top=f.hs.offsetTop+f.hs.offsetHeight/2-f.h/2+parseFloat(f.lb.dataset.my||0);
+      top=Math.max(pad,Math.min(top,H-pad-total));
+      for(var j=0;j<lbs.length;j++){
+        var o=lbs[j],x=Math.max(pad,Math.min(cx-o.w/2,W-pad-o.w));
+        o.lb.style.transform='none';o.lb.style.margin='0';
+        o.lb.style.left=(x-o.hs.offsetLeft)+'px';
+        o.lb.style.top=(top-o.hs.offsetTop)+'px';
+        top+=o.h+6;
+      }
+    }
+    wrap.addEventListener('mousemove',function(e){
+      /* координаты курсора → css-px обёртки (дека масштабируется zoom/scale) */
+      var r=wrap.getBoundingClientRect(),k=r.width/wrap.offsetWidth||1,
+          x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k,active=[];
+      for(var j=0;j<hss.length;j++){
+        var hs=hss[j];
+        if(x>=hs.offsetLeft&&x<=hs.offsetLeft+hs.offsetWidth&&
+           y>=hs.offsetTop&&y<=hs.offsetTop+hs.offsetHeight)active.push(hs);
+        else off(hs);
+      }
+      active.sort(function(a,b){return a.offsetWidth*a.offsetHeight-b.offsetWidth*b.offsetHeight;});
+      for(var j=0;j<active.length;j++)active[j].classList.add('hs-on');
+      if(active.length>1)layout(active);
+      else if(active.length===1){var lb=active[0].querySelector('.hs-label');if(lb)baseLabel(lb);}
+    });
+    wrap.addEventListener('mouseleave',clear);
+  })(wraps[i]);
+}
+initHotspots();
+/* несколько кадров одного слота листаются стрелками панели под картинкой
+   (клик по самой картинке — следующий кадр; клик по интерактивной области —
+   это про область, кадр не меняет) */
+function initFrameCycles(){
+  var figs=document.querySelectorAll('.ph-fig');
+  for(var i=0;i<figs.length;i++)(function(fig){
+    var wrap=fig.querySelector('.ph-multi');
+    if(!wrap)return;
+    var frames=wrap.querySelectorAll('.ph'),count=fig.querySelector('.ph-count'),cur=0;
+    function go(d){
+      cur=(cur+d+frames.length)%frames.length;
+      for(var j=0;j<frames.length;j++)frames[j].classList.toggle('ph-on',j===cur);
+      var frs=wrap.querySelectorAll('.hs-fr'); /* области своего кадра */
+      for(var j=0;j<frs.length;j++)frs[j].classList.toggle('hs-cur',frs[j].getAttribute('data-frame')===''+(cur+1));
+      /* подписи новых областей ещё не прижаты к краям картинки */
+      var host=wrap;
+      while(host&&!(host.classList&&host.classList.contains('slide'))&&host.id!=='lightbox')host=host.parentElement;
+      if(host)clampHotspotLabels(host);
+      if(count)count.textContent=(cur+1)+'/'+frames.length;
+    }
+    var pv=fig.querySelector('.ph-prev'),nx=fig.querySelector('.ph-next');
+    if(pv)pv.addEventListener('click',function(e){e.stopPropagation();go(-1);});
+    if(nx)nx.addEventListener('click',function(e){e.stopPropagation();go(1);});
+    wrap.addEventListener('click',function(e){
+      var t=e.target;
+      while(t&&t!==wrap){if(t.classList&&t.classList.contains('hs'))return;t=t.parentElement;}
+      go(1);
+    });
+  })(figs[i]);
+}
+initFrameCycles();
+/* полноэкранный просмотр: блок картинки (.ph-fig — картинка + панель)
+   переносится в оверлей и обратно — слушатели областей/стрелок при переносе
+   сохраняются; инлайновые размеры от fitImages на время просмотра снимаются */
+function initLightbox(){
+  var lb=document.getElementById('lightbox');
+  if(!lb)return;
+  var slot=lb.querySelector('.lb-slot'),closeBtn=lb.querySelector('.lb-close'),opened=null;
+  function open(fig){
+    if(opened)return;
+    var sl=fig;
+    while(sl&&!(sl.tagName==='SECTION'&&sl.classList.contains('slide')))sl=sl.parentElement;
+    var wrap=fig.querySelector('.ph-wrap');
+    opened={fig:fig,parent:fig.parentElement,next:fig.nextSibling,
+            wrap:wrap,wrapCss:wrap?wrap.style.cssText:'',slide:sl};
+    if(wrap)wrap.style.cssText='';
+    slot.appendChild(fig);
+    lb.hidden=false;
+    clampHotspotLabels(lb);
+  }
+  function close(){
+    if(!opened)return;
+    if(opened.wrap)opened.wrap.style.cssText=opened.wrapCss;
+    opened.parent.insertBefore(opened.fig,opened.next);
+    lb.hidden=true;
+    if(opened.slide)clampHotspotLabels(opened.slide);
+    opened=null;
+  }
+  closeBtn.addEventListener('click',close);
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  document.addEventListener('keydown',function(e){
+    if(lb.hidden)return;
+    if(e.key==='Escape'||e.key==='Esc'){close();return;}
+    /* пока картинка развёрнута, стрелки листают КАДРЫ галереи, а не слайды:
+       слайды в этот момент и так стоят (общий обработчик выходит раньше).
+       Жмём те же кнопки панели — их слушатели уже переключают области
+       подсветки и счётчик кадров. У одиночной картинки кнопок нет, и
+       стрелки в развёрнутом виде просто ничего не делают. */
+    var btn=null;
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')btn=lb.querySelector('.ph-next');
+    else if(e.key==='ArrowLeft'||e.key==='PageUp')btn=lb.querySelector('.ph-prev');
+    if(btn){e.preventDefault();btn.click();}
+  });
+  var zooms=document.querySelectorAll('.ph-zoom');
+  for(var i=0;i<zooms.length;i++)zooms[i].addEventListener('click',function(e){
+    e.stopPropagation();
+    var fig=e.currentTarget;
+    while(fig&&!(fig.classList&&fig.classList.contains('ph-fig')))fig=fig.parentElement;
+    if(fig)open(fig);
+  });
+}
+initLightbox();
+/* картинка, не влезающая по высоте в свою область (например, портретная),
+   ужимается по ширине — пропорции сохраняются, уменьшение шрифта этого
+   исправить не может; мерить можно только видимый слайд */
+function fitImages(el){
+  var wraps=el.querySelectorAll('.ph-wrap');
+  if(!wraps.length)return;
+  var pb=parseFloat(getComputedStyle(el).paddingBottom)||0;
+  for(var i=0;i<wraps.length;i++){
+    var w=wraps[i];
+    w.style.width='';w.style.marginLeft='';w.style.marginRight='';
+    var guard=0;
+    /* низ меряем по карточке (.ph-card): в ней и панель под картинкой */
+    var card=w.parentElement;
+    while(card&&!(card.classList&&card.classList.contains('ph-card')))card=card.parentElement;
+    if(!card)card=w.parentElement;
+    var mb=parseFloat(getComputedStyle(card).marginBottom)||0; /* нижний margin фигуры входит в scrollHeight контейнера */
+    while(guard<24){
+      var er=el.getBoundingClientRect(),k=er.height/el.offsetHeight||1,
+          limit=er.bottom-pb*k,
+          cardB=card.getBoundingClientRect().bottom+mb*k,
+          over=(cardB-limit)/k;
+      if(over<=1)break;
+      var h=w.getBoundingClientRect().height/k;
+      if(h<=120)break;
+      var t=Math.max(120,h-over);
+      w.style.width=(w.offsetWidth*t/h)+'px';
+      w.style.marginLeft='auto';w.style.marginRight='auto';
+      guard++;
+    }
+  }
+}
+function shrinkAll(){
+  for(var i=0;i<slides.length;i++){
+    var sl=slides[i],was=sl.classList.contains('on');
+    if(!was)sl.classList.add('on');
+    var fits=sl.querySelectorAll('.fit');
+    for(var j=0;j<fits.length;j++){fitImages(fits[j]);shrinkEl(fits[j]);}
+    clampHotspotLabels(sl);
+    if(!was)sl.classList.remove('on');
+  }
+}
+fit();shrinkAll();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(shrinkAll);
+window.addEventListener('load',shrinkAll);
+show((parseInt(location.hash.slice(1),10)||1)-1);
+window.addEventListener('hashchange',function(){show((parseInt(location.hash.slice(1),10)||1)-1);});
+})();
+</script>
+</body>
+</html>
