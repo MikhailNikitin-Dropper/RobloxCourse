@@ -36,8 +36,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="6-w-1">
 <h3 class="slide-title">Сегодня ты — Narrative Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Твой мир прекрасен: закат, огни, туманная даль. Но он… безлюден. Никто не встретит игрока, не расскажет историю, не даст задание.</p>
-<p class="content-item content-paragraph"><b>Narrative Designer (нарративный дизайнер)</b> — сценарист игры: он придумывает персонажей, их характеры и слова. Сегодня в твоём мире появится первый житель — и с ним можно будет поговорить.</p>
+<p class="content-item content-paragraph">В твоём мире наступил вечер и появились ориентиры-маяки. Но пока в нём нет персонажей, кроме игрока.</p>
+<p class="content-item content-paragraph"><b>Narrative Designer (нарративный дизайнер)</b> — сценарист игры: он придумывает персонажей и их характеры. Сегодня в твоём мире появится первый житель — и с ним можно будет поговорить.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «представьте любимую игру — кто даёт вам задания? кого вы там встречаете?» Ученики сами назовут NPC из известных игр. Обещание: к концу урока в мире будет живой персонаж — в наряде, с характером и целым разговором; второго соберут дома сами.</aside>
 </div>
 </section>
@@ -46,8 +46,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="6-r-1">
 <h3 class="slide-title">Вспомним урок 5 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Каким свойством мы устроили в мире вечер?</p><ol class="content-item content-quiz-options"><li>Свойство Brightness у Lighting</li><li data-correct="true">ClockTime, поставили примерно 18 ✓</li><li>Свойство Density у Atmosphere</li></ol>
-<p class="content-item content-question">Факел с Fire горит, но пещера тёмная. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Fire — картинка пламени, освещает PointLight ✓</li><li>Надо увеличить свойство Size у Fire</li><li>Материал факела должен быть только Neon</li></ol>
-<p class="content-item content-question">Что говорят игроку тёплые огни лагеря?</p><ol class="content-item content-quiz-options"><li>«Тут можно купить снаряжение»</li><li>«Осторожно, впереди большая опасность!»</li><li data-correct="true">«Здесь безопасно», можно выдохнуть ✓</li></ol>
+<p class="content-item content-question">Факел с Fire горит, но пещера тёмная. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Fire — анимация пламени, освещает PointLight ✓</li><li>Надо увеличить свойство Size у Fire</li><li>Материал факела должен быть только Neon</li></ol>
+<p class="content-item content-question">Что говорят игроку тёплые огни лагеря?</p><ol class="content-item content-quiz-options"><li>«Тут можно купить снаряжение»</li><li>«Осторожно, впереди большая опасность!»</li><li data-correct="true">«Здесь безопасно, можно выдохнуть» ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: По 60–70 секунд на вопрос. После третьего — мостик к теме: «свет говорит с игроком без слов, а сегодня мир заговорит по-настоящему — словами персонажей». Спросить, кто сделал ДЗ: подобрал свет пятому предмету.</aside>
 </div>
 </section>
@@ -55,7 +55,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Персонажи и диалоги <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="6-t-1">
 <h3 class="slide-title">Кто такой NPC? <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>NPC (non-player character — неигровой персонаж)</b> — житель мира, которым управляет не игрок, а игра</li><li>NPC дают задания, рассказывают истории, торгуют, охраняют, встречают</li><li>NPC превращают декорацию в живую историю</li><li>NPC — главный инструмент нарративного дизайнера: он говорит с игроком словами</li></ul>
+<ul class="content-item content-bullets"><li><b>NPC (non-player character — неигровой персонаж)</b> — житель мира, которым управляет игра</li><li>NPC дают задания, рассказывают истории, торгуют, охраняют, встречают</li><li>NPC превращают декорацию в живую историю</li><li>NPC — главный инструмент нарративного дизайнера: он говорит с игроком напрямую текстом</li></ul>
 <p class="content-item content-image-prompt">[изображение: Сцена из детской игры: персонаж-страж с восклицательным знаком над головой встречает игрока у входа в пещеру с сокровищами, рядом облако диалога]</p>
 <aside class="speaker-notes">Заметка ведущего: Спросить: «кто помнит NPC из любимой игры?» — назовут торговцев, квестодателей. Подчеркнуть смену роли: раньше мы строили мир, теперь заселяем его.</aside>
 </div>
@@ -67,7 +67,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-t-3">
 <h3 class="slide-title">Наряд NPC: плагин Tabby <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Plugin (плагин)</b> — инструмент-помощник, который добавляется прямо в Studio</li><li><b>Tabby (Outfit &amp; Marketplace Importer)</b> — бесплатный плагин-«гардероб» для персонажей</li><li>Установка один раз: страница плагина → Get, затем Toolbox → раздел плагинов → My Plugins → Install</li><li>Умеет одевать манекен целиком: наряды игроков (по нику) и предметы из каталога</li><li>Выделяем модель → заходим в магазин → находим аксессуар — и он сразу на персонаже</li></ul>
+<ul class="content-item content-bullets"><li><b>Plugin (плагин)</b> — инструмент-помощник, который добавляется прямо в Studio</li><li><b>Tabby (Outfit &amp; Marketplace Importer)</b> — бесплатный плагин-«гардероб» для персонажей</li><li>Установка один раз — страница плагина → Get, затем Toolbox → раздел плагинов → My Plugins → Install</li><li>Умеет одевать манекен целиком — наряды игроков (по нику) и предметы из каталога</li><li>Выделяем модель → заходим в магазин → находим аксессуар — и он сразу на персонаже</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открытое окно плагина Tabby с результатами поиска нарядов, рядом манекен Rig до и после — во втором случае одетый в костюм стража]</p>
 <aside class="speaker-notes">Заметка ведущего: Первый плагин курса — объяснить само понятие: плагин расширяет Studio, как аксессуар — персонажа. Tabby установить в этот момент урока и попросить всех нажать Allow в двух запросах разрешений (Script Injection — для анимаций и гира, сетевой доступ Roproxy — для загрузки нарядов). Script Injection — серьёзное право: даём его конкретному плагину осознанно, а не нажимаем Allow на всё подряд. При ошибке HTTP 429 — подождать минуту, это лимиты Roblox. Показать на любом аксессуаре, как его вставить в персонажа.</aside>
 </div>
@@ -79,24 +79,25 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-t-5">
 <h3 class="slide-title">Purpose и Tone <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Purpose (назначение)</b> — иконка над NPC: Quest — «!», Help — «?», Shop — «$»</li><li>Игрок издалека понимает: «!» — тут задание, «?» — тут подсказка, «$» — тут магазин</li><li><b>Tone (тон)</b> — цвет полосы диалога: Neutral — синяя, Friendly — зелёная, Enemy — красная</li><li>Это тот же язык знаков, что и свет из урока 5: игрок понимает мир по значкам</li></ul>
+<ul class="content-item content-bullets"><li><b>Purpose (назначение)</b> — иконка над NPC: Quest — «!», Help — «?», Shop — «$»</li><li>Игрок издалека понимает: «!» — тут задание, «?» — тут подсказка, «$» — тут магазин</li><li><b>Tone (тон)</b> — цвет полосы диалога: Neutral — синяя, Friendly — зелёная, Enemy — красная</li><li>Это тот же язык знаков, что и свет из предыдущего урока</li></ul>
 <p class="content-item content-image-prompt">[изображение: Три NPC рядом с разными иконками над головами: восклицательный знак, вопросительный знак и знак доллара — подписи Quest, Help, Shop]</p>
 <aside class="speaker-notes">Заметка ведущего: Связка с уроком 5: свет и иконки — «немой» язык игры. Спросить: «какая иконка будет у Хранителя, который даёт задание?» — «!», Quest. «А у персонажа-помощника с подсказками?» — «?», Help. Tone для дружелюбных персонажей — Friendly (зелёная полоса).</aside>
 </div>
 <div class="slide" id="6-t-6">
 <h3 class="slide-title">DialogChoice: выбор ответа <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>DialogChoice (вариант ответа)</b> вставляется внутрь Dialog</li><li><b>UserDialog</b> — что говорит игрок; <b>ResponseDialog</b> — что отвечает NPC</li><li>DialogChoice можно вкладывать друг в друга — получается дерево разговора с ветками</li><li><b>GoodbyeChoiceActive</b> добавляет вариант вежливо попрощаться и выйти</li><li>Разговор = дерево: вопрос игрока → ответ NPC → новые вопросы</li></ul>
+<ul class="content-item content-bullets"><li><b>DialogChoice (вариант ответа)</b> вставляется внутрь Dialog</li><li><b>UserDialog</b> — что говорит игрок</li><li>DialogChoice можно вкладывать друг в друга — получается дерево разговора с ветками</li><li><b>ResponseDialog</b> — что отвечает NPC</li><li>Разговор = дерево: вопрос игрока → ответ NPC → новые вопросы</li></ul>
 <p class="content-item content-image-prompt">[изображение: Схема дерева диалога: от первой фразы Хранителя две ветки — «Что мне делать?» с ответом-заданием и «Кто ты?» с историей, из первой ветки растёт уточнение «А где искать?»]</p>
 <aside class="speaker-notes">Заметка ведущего: Нарисовать схему: корень — InitialPrompt, ветки — DialogChoice. Показать вживую в Explorer: DialogChoice внутри Dialog, вложенный DialogChoice внутри DialogChoice. Метафора: разговор — это лабиринт, который проектирует нарративный дизайнер.</aside>
 </div>
 <div class="slide" id="6-t-7">
 <h3 class="slide-title">Реплики с характером <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li>У персонажа есть три составляющие: имя, желание и манера речи</li><li>Плохо: «Привет». Хорошо: «Тсс! Слышишь, как звенят сокровища? Я стерегу их уже сто лет…»</li><li>Каждая реплика либо раскрывает характер, либо помогает игроку — лучше и то и другое</li><li>Схема разговора квестодателя: приветствие → задание → подсказки на вопросы → благодарность</li><li>Задание отвечает на три вопроса: что сделать, где и зачем</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Главный слайд роли Narrative Designer — на нём стоит задержаться. Упражнение на 90 секунд: показать безликую реплику «Найди сокровища» и попросить группу прокачать её характером (старый страж? весёлый пират? таинственный призрак?). Схема «приветствие → задание → реакция → благодарность» ляжет на дерево DialogChoice в практике один в один.</aside>
+<ul class="content-item content-bullets"><li>У персонажа три составляющие: имя, мотивация и манера речи</li><li>Живая реплика — «Тсс! Слышишь, как звенят сокровища?» вместо «Привет»</li><li>Схема разговора — приветствие → задание → подсказки → благодарность</li><li>Задание отвечает на три вопроса: что сделать, где и зачем</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: каждая реплика либо раскрывает характер, либо помогает игроку — лучше и то и другое.
+Главный слайд роли Narrative Designer — на нём стоит задержаться. Упражнение на 90 секунд: показать безликую реплику «Найди сокровища» и попросить группу прокачать её характером (старый страж? весёлый пират? таинственный призрак?). Схема «приветствие → задание → реакция → благодарность» ляжет на дерево DialogChoice в практике один в один.</aside>
 </div>
 <div class="slide" id="6-t-8">
 <h3 class="slide-title">Частые ошибки с диалогами <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Dialog вставлен не в деталь NPC, а рядом в Workspace — облако не появляется</li><li>NPC не закреплён — игрок толкнул, и рассказчик уплыл или упал</li><li>TriggerDistance слишком маленький — облако не нажать, пока не упрёшься в NPC</li><li>Одна фраза без DialogChoice — разговор закончился, не начавшись</li><li>Реплики без характера: «Привет. Найди 5 предметов.» — безлико, игрок кликает мимо</li></ul>
+<ul class="content-item content-bullets"><li>Dialog вставлен не в деталь NPC, а рядом в Workspace — облако не появляется</li><li>NPC не закреплён — игрок толкнул, и рассказчик уплыл или упал</li><li>TriggerDistance слишком маленький — облако не нажать, пока не упрёшься в NPC</li><li>Одна фраза без DialogChoice — разговор закончился, не начавшись</li><li>Реплики без характера: «Привет. Найди 5 предметов.» — безлико, игрок скучает и не вчитывается в диалог</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Каждую ошибку связать с уже пройденным: облако — Dialog живёт в детали; падение — Anchored; расстояния — TriggerDistance/ConversationDistance в студах. Пятую ошибку обыграть голосом: прочитать безликую реплику монотонно, потом живую — с интонацией.</aside>
 </div>
 </section>
@@ -104,7 +105,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="6-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда вставить Dialog, чтобы над NPC появилось облако разговора?</p><ol class="content-item content-quiz-options"><li data-correct="true">В голову NPC (Head) ✓</li><li>В деталь SpawnLocation</li><li>В сервис Lighting</li></ol>
+<p class="content-item content-question">Куда вставить Dialog, чтобы над NPC появилось облако разговора?</p><ol class="content-item content-quiz-options"><li data-correct="true">В голову NPC ✓</li><li>В деталь SpawnLocation</li><li>В сервис Lighting</li></ol>
 <p class="content-item content-question">Где написать самую первую фразу NPC?</p><ol class="content-item content-quiz-options"><li>В свойстве Name у Dialog</li><li>В свойстве UserDialog у DialogChoice</li><li data-correct="true">В свойстве InitialPrompt у Dialog ✓</li></ol>
 <p class="content-item content-question">Как дать игроку выбор, что ответить персонажу?</p><ol class="content-item content-quiz-options"><li>Вставить в голову второй Dialog</li><li data-correct="true">Вставить внутрь Dialog объекты DialogChoice ✓</li><li>Никак — варианты ответов делаются только кодом</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: в голову (деталь NPC); InitialPrompt; DialogChoice. После третьего вопроса — мини-мостик к практике: «сейчас соберём настоящий разговор с Хранителем подземелья». Если время осталось — спросить, чем UserDialog отличается от ResponseDialog.</aside>
@@ -145,7 +146,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="6-p-5">
 <h3 class="slide-title">Шаг 5: разговор и сохранение <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → подойди к Хранителю: облако с «!» видно издалека?</li><li>Прощёлкай все ветки разговора: каждая реплика на месте? опечаток нет?</li><li>Чек-лист: задание совпадает с настоящей целью охоты, наряд рассказывает характер, реплики живые</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<ol class="content-item content-steps"><li>Test → подойди к Хранителю: облако с «!» видно издалека?</li><li>Проверь все ветки разговора: каждая реплика на месте? опечаток нет?</li><li>Чек-лист: задание совпадает с настоящей целью охоты, наряд рассказывает характер, реплики живые</li><li>Сохрани проект: File → Save to Roblox</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Плейтест снова новый: теперь проверяем слова. Прочитай реплики соседу вслух и спроси, понятно ли задание — если понял сразу, реплики работают. Типовая правка: TriggerDistance маловат — облако появляется слишком поздно. В конце — мостик к ДЗ: у выхода из мира пока пусто, там поселится Странник.</aside>
 </div>
 </section>
