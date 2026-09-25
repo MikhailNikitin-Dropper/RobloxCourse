@@ -36,7 +36,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="7-w-1">
 <h3 class="slide-title">Ты — UX / Systems Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">В твоём мире уже есть закат, огни и живой Хранитель подземелья. С урока 4 там же работает поиск сокровищ — но интерфейс списка пока довольно простой и непроработанный.</p>
+<p class="content-item content-paragraph">В твоём мире уже есть закат, огни и живой Хранитель подземелья. С урока 4 в игре есть поиск сокровищ — но интерфейс игры пока довольно простой и непроработанный.</p>
 <p class="content-item content-paragraph"><b>UX / Systems Designer</b> берёт готовую систему и строит интерфейс заново, по чёткому алгоритму: контейнер, панель, карточка предмета, иконки. Сегодня журнал квеста в твоей игре ты соберёшь сам.</p>
 <aside class="speaker-notes">Заметка ведущего: 60 секунд. Крючок: «поиск сокровищ уже считает расстояние и ставит галочки — а вот интерфейс для этого мы сегодня построим заново, начисто». Обещание: к концу урока на экране будет журнал, который ученик собрал сам, объект за объектом.</aside>
 </div>
@@ -45,17 +45,17 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем прошлый урок <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-r-1">
 <h3 class="slide-title">Вспомним урок 6 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда вставляли Dialog, чтобы над NPC появилось облако для начала диалога?</p><ol class="content-item content-quiz-options"><li>В сервис Lighting</li><li>В деталь SpawnLocation</li><li data-correct="true">В голову NPC (Head) ✓</li></ol>
-<p class="content-item content-question">Как игрок выбирал, что ответить NPC?</p><ol class="content-item content-quiz-options"><li data-correct="true">Объекты DialogChoice внутри Dialog ✓</li><li>Второй Dialog в голове персонажа</li><li>Это работает только с кодом</li></ol>
-<p class="content-item content-question">Что означала иконка «!» над Хранителем?</p><ol class="content-item content-quiz-options"><li>Tone = Enemy — персонаж опасен</li><li data-correct="true">Purpose = Quest — здесь задание ✓</li><li>У NPC закончились реплики</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: в Head; DialogChoice; Purpose = Quest. Мостик к теме: «иконка „!“ уже подсказывала о задании без слов — сегодня соберём целый журнал заданий заново, своими руками».</aside>
+<p class="content-item content-question">За что у Dialog отвечает свойство Tone?</p><ol class="content-item content-quiz-options"><li>За расстояние, с которого видно облако</li><li data-correct="true">За цвет полосы разговора под характер NPC ✓</li><li>За набор вариантов ответа у игрока</li></ol>
+<p class="content-item content-question">Чем мы одевали Хранителя за пару кликов?</p><ol class="content-item content-quiz-options"><li data-correct="true">Плагином Tabby прямо в Studio ✓</li><li>Свойством Costume у модели NPC</li><li>Перекрашивали детали персонажа вручную</li></ol>
+<p class="content-item content-question">Что пишут в свойстве UserDialog у объекта DialogChoice?</p><ol class="content-item content-quiz-options"><li>Ответ персонажа на выбор игрока</li><li>Первую фразу, с которой NPC начинает</li><li data-correct="true">Фразу, которую выбирает сам игрок ✓</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: Tone красит полосу разговора; плагин Tabby; UserDialog — реплика игрока. Мостик к теме: «разговор мы уже оформили, сегодня оформим то, что игрок читает постоянно, — журнал квеста».</aside>
 </div>
 </section>
 <section class="block block-theory">
 <h2 class="block-title" style="color:#006600;">Как создавать интерфейс <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="7-t-1">
 <h3 class="slide-title">Зачем журналу дизайн <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>С урока 4 поиск сокровищ и их сбор уже работают — логика готова</li><li>Старая панель списка — функциональная заготовка</li><li>Сегодня строим интерфейс заново по чёткому алгоритму</li></ul>
+<ul class="content-item content-bullets"><li>С урока 4 поиск сокровищ и их сбор уже работают — логика готова</li><li>Старый список — заготовка без оформления, сегодня собираем свой</li><li>Сегодня строим интерфейс заново по чёткому алгоритму</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: **Интерфейс (UI)** — это всё, что видит игрок поверх самого мира: тексты, иконки, кнопки. Он не украшение, а инструмент: подсказывает цель, показывает прогресс, хвалит за успех.
 Спросить: «в любимой игре — список заданий выглядит как таблица или как оформленные карточки? что удобнее читать?» Подвести к идее: хороший интерфейс не занимает много места, но экономит внимание игрока.</aside>
 </div>
@@ -67,7 +67,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="7-t-3">
 <h3 class="slide-title">ScreenGui: контейнер <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ScreenGui</b> — объект-контейнер: в нём живут все элементы интерфейса игрока</li><li>Создаём его в StarterGui — и он появится у каждого игрока при заходе в игру</li><li>Studio сама копирует ScreenGui в PlayerGui каждого игрока при старте</li><li>Внутри ScreenGui обычно лежит Frame — контейнер для остальных элементов окна</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: StarterGui пуст после удаления старого журнала, внутрь только что вставлен новый ScreenGui «PropHunterGui» с Frame «MainFrame» внутри]</p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: StarterGui пуст: расширенный модуль своего интерфейса не приносит, внутрь только что вставлен новый ScreenGui «PropHunterGui» с Frame «MainFrame» внутри]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать как создаём ScreenGui через «+», переименовать. Связка со старым материалом: Properties снова «панель управления объектом».</aside>
 </div>
 <div class="slide" id="7-t-4">
@@ -84,16 +84,16 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Иконка предмета через Decal <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выдели в Workspace предмет с тегом Prop Hunt</li><li>Вставь в него объект Decal (+ → Decal)</li><li>В Properties впиши ColorMapContent = rbxassetid:// нужной картинки из библиотеки</li><li>Готово: при запуске игры иконка в карточке журнала возьмётся с этого Decal сама</li></ol>
 <p class="content-item content-image-prompt">[изображение: Explorer и Properties рядом: внутри детали предмета вставлен Decal, в поле ColorMapContent стоит rbxassetid картинки; на предмете в мире видна эта же иконка-текстура]</p>
-<aside class="speaker-notes">Заметка ведущего: Это тот же приём, что со StringValue-запиской в уроке 4 — прячем данные внутри модели предмета, скрипт сам их находит. Face у Decal можно не менять, для иконки в журнале это не важно. Так одна карточка-шаблон подхватывает свою картинку у каждого предмета — рисовать отдельную карточку под каждый тип не нужно.</aside>
+<aside class="speaker-notes">Заметка ведущего: Это тот же приём, что со StringValue-запиской в уроке 4 — прячем данные внутри модели предмета, модуль сам их находит. Face у Decal можно не менять, для иконки в журнале это не важно. Так одна карточка-шаблон подхватывает свою картинку у каждого предмета — рисовать отдельную карточку под каждый тип не нужно.</aside>
 </div>
 <div class="slide" id="7-t-7">
 <h3 class="slide-title">Один шаблон карточки <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Список сокровищ может пополняться на ходу — заранее не известно, сколько строк понадобится</li><li><b>Шаблон (ItemTemplate)</b> — одна оформленная карточка-образец, которую мы собираем один раз вручную</li><li>На каждый найденный предмет скрипт делает копию шаблона и подставляет в неё имя, расстояние и иконку с Decal</li><li>Оформили шаблон один раз — одинаково аккуратными получаются все копии сразу</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Ключевая идея урока. Провести аналогию: «одна форма для печенья — сколько угодно одинаковых печений, но с разной начинкой». Сказать, что имена объектов внутри шаблона важны буквально — скрипт ищет их по имени.</aside>
+<ul class="content-item content-bullets"><li>Список сокровищ может пополняться на ходу — заранее не известно, сколько строк понадобится</li><li><b>Шаблон (ItemTemplate)</b> — одна оформленная карточка-образец, которую мы собираем один раз вручную</li><li>На каждый найденный предмет модуль делает копию шаблона и подставляет в неё имя, расстояние и иконку с Decal</li><li>Оформили шаблон один раз — одинаково аккуратными получаются все копии сразу</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Ключевая идея урока. Провести аналогию: «одна форма для печенья — сколько угодно одинаковых печений, но с разной начинкой». Сказать, что имена объектов внутри шаблона важны буквально — модуль ищет их по имени.</aside>
 </div>
 <div class="slide" id="7-t-8">
 <h3 class="slide-title">ScrollingFrame: прокрутка <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ScrollingFrame</b> — контейнер вроде Frame, но умеет прокручиваться: показывает часть содержимого, а остальное открывается прокруткой</li><li>Карточек-копий шаблона может стать больше, чем помещается в панель — поэтому они живут именно в ScrollingFrame, а не в обычном Frame</li><li>AutomaticCanvasSize вместе с UIListLayout сами увеличивают область прокрутки под новые карточки</li><li>ScrollBarThickness задаёт толщину полосы прокрутки в пикселях; 0 прячет её совсем, если прокрутка нужна без видимой полосы</li></ul>
+<ul class="content-item content-bullets"><li><b>ScrollingFrame</b> — контейнер вроде Frame, но его можно пролистать колёсиком мыши: изначально показывает только часть содержимого</li><li>Карточек-копий шаблона может стать больше, чем помещается в панель — поэтому они живут именно в ScrollingFrame, а не в обычном Frame</li><li>AutomaticCanvasSize вместе с UIListLayout сами увеличивают область прокрутки под новые карточки</li><li>ScrollBarThickness задаёт толщину полосы прокрутки в пикселях; 0 прячет её совсем, если прокрутка нужна без видимой полосы</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Аналогия: список сообщений в чате — экран показывает только последние, а остальные открываются прокруткой. Показать вживую: включить AutomaticCanvasSize у ScrollingFrame и добавить несколько карточек — область прокрутки вырастет сама, без ручной настройки CanvasSize.</aside>
 </div>
 <div class="slide" id="7-t-9">
@@ -112,10 +112,10 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="7-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Почему в начале урока старый ScreenGui из урока 4 удаляют целиком?</p><ol class="content-item content-quiz-options"><li>Он мешает новому скрипту работать</li><li>Просто для порядка в Explorer</li><li data-correct="true">Интерфейс строим заново по алгоритму ✓</li></ol>
+<p class="content-item content-question">Почему журнал в этом уроке приходится собирать самому, объект за объектом?</p><ol class="content-item content-quiz-options"><li>Готовый интерфейс нельзя вставить в StarterGui</li><li>Интерфейс из урока 4 работает только в Studio</li><li data-correct="true">Расширенный модуль приходит без готового интерфейса ✓</li></ol>
 <p class="content-item content-question">Как каждый предмет получает свою уникальную иконку в списке?</p><ol class="content-item content-quiz-options"><li data-correct="true">Через Decal, вставленный в деталь предмета ✓</li><li>Дизайнер рисует отдельную карточку под каждый предмет</li><li>Иконка выбирается случайно при каждом Test</li></ol>
-<p class="content-item content-question">Какое имя обязательно должно быть у нового ScreenGui, чтобы всё заработало?</p><ol class="content-item content-quiz-options"><li>Любое, главное чтобы он лежал в StarterGui</li><li data-correct="true">PropHunterGui — по нему скрипт его находит ✓</li><li>MainFrame, как у главной панели интерфейса</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: логика отдельно от интерфейса; иконка — через Decal на предмете; имя ScreenGui — строго PropHunterGui. Если время осталось — спросить, чем UICorner отличается от UIStroke.</aside>
+<p class="content-item content-question">Какое имя обязательно должно быть у нового ScreenGui, чтобы всё заработало?</p><ol class="content-item content-quiz-options"><li>Любое, главное чтобы он лежал в StarterGui</li><li data-correct="true">PropHunterGui — по нему модуль его находит ✓</li><li>MainFrame, как у главной панели интерфейса</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: модуль приходит без интерфейса; иконка — через Decal на предмете; имя ScreenGui — строго PropHunterGui. Если время осталось — спросить, чем UICorner отличается от UIStroke.</aside>
 </div>
 </section>
 <section class="block block-break">
@@ -146,7 +146,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="7-p-4">
 <h3 class="slide-title">Шаг 4: шаблон ItemTemplate <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Внутри ScrollingFrame собери карточку ItemTemplate: Icon, NameLabel, DistanceLabel, CheckIcon</li><li>Добавь картинку галочки в свойство Image у CheckIcon</li><li>Оставь ItemTemplate видимым — прятать его при старте будет скрипт</li></ol>
+<ol class="content-item content-steps"><li>Внутри ScrollingFrame собери карточку ItemTemplate: Icon, NameLabel, DistanceLabel, CheckIcon</li><li>Добавь картинку галочки в свойство Image у CheckIcon</li><li>Оставь ItemTemplate видимым — прятать его при старте будет модуль</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот практики: собранная карточка ItemTemplate внутри нового ScrollingFrame — иконка, имя предмета, расстояние и место под галочку, подписи имён объектов рядом]</p>
 <aside class="speaker-notes">Заметка ведущего: Имена объектов — точь-в-точь как на слайде теории: NameLabel, DistanceLabel, CheckIcon, Icon. Опечатка в имени — самая частая причина ошибки на следующих шагах.</aside>
 </div>
@@ -158,7 +158,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="7-p-6">
 <h3 class="slide-title">Шаг 6: система и окна <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Добавь рядом с MainFrame ещё Frame WinFrame и Frame InfoFrame (с TextLabel внутри), оформи в одном стиле</li><li>Спрячь WinFrame и InfoFrame через свойство Visible — они появятся только в нужный момент игры</li><li>Test → пройди рядом с предметами: список заполнится карточками с твоими иконками</li><li>Собери предмет — расстояние прячется, появляется галочка и всплывающая подсказка</li></ol>
+<ol class="content-item content-steps"><li>Добавь рядом с MainFrame ещё Frame WinFrame и Frame InfoFrame (с TextLabel внутри), оформи в одном стиле</li><li>Спрячь WinFrame и InfoFrame через свойство Visible — они появятся только в нужный момент игры</li><li>Test → список сразу заполнится карточками всех предметов с твоими иконками</li><li>Собери предмет — расстояние прячется, появляется галочка и всплывающая подсказка</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Самый напряжённый момент урока: у части учеников список не заполнится с первого раза — сверяем имена объектов по алгоритму со слайда теории.</aside>
 </div>
 <div class="slide" id="7-p-7">
@@ -172,9 +172,9 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="7-qp-1">
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Все карточки показывают одинаковую заглушку вместо своих иконок. В чём вероятная причина?</p><ol class="content-item content-quiz-options"><li>Не добавили UIGradient на панель интерфейса</li><li>Панель MainFrame назвали совсем неправильно</li><li data-correct="true">Забыли вставить Decal в детали предметов ✓</li></ol>
-<p class="content-item content-question">Зачем карточку предмета собирают один раз как шаблон?</p><ol class="content-item content-quiz-options"><li>Шаблон уменьшает вес игры и заметно ускоряет её загрузку</li><li data-correct="true">Скрипт копирует шаблон, и карточки выходят одинаково аккуратными ✓</li><li>Без шаблона ScrollingFrame не умеет прокручивать длинный список</li></ol>
-<p class="content-item content-question">Почему ItemTemplate можно оставить видимым во время сборки в Studio?</p><ol class="content-item content-quiz-options"><li data-correct="true">Скрипт спрячет его при старте игры ✓</li><li>Studio сама прячет любые шаблоны интерфейса</li><li>Видимый шаблон обязателен для работы скрипта</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: нет Decal или пустой ColorMapContent; открытый вопрос — сравнить сложность сборки интерфейса и подключения иконок; шаблон прячет сам скрипт при старте. Открытый вопрос — рефлексия роли UX-дизайнера.</aside>
+<p class="content-item content-question">Зачем карточку предмета собирают один раз как шаблон?</p><ol class="content-item content-quiz-options"><li>Шаблон уменьшает вес игры и заметно ускоряет её загрузку</li><li data-correct="true">Модуль копирует шаблон, и карточки выходят одинаково аккуратными ✓</li><li>Без шаблона ScrollingFrame не умеет прокручивать длинный список</li></ol>
+<p class="content-item content-question">Почему ItemTemplate можно оставить видимым во время сборки в Studio?</p><ol class="content-item content-quiz-options"><li data-correct="true">Модуль спрячет его при старте игры ✓</li><li>Studio сама прячет любые шаблоны интерфейса</li><li>Видимый шаблон обязателен для работы модуля</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Ожидаемые ответы: нет Decal или пустой ColorMapContent; открытый вопрос — сравнить сложность сборки интерфейса и подключения иконок; шаблон прячет сам модуль при старте. Открытый вопрос — рефлексия роли UX-дизайнера.</aside>
 </div>
 </section>
 <section class="block block-closing">
