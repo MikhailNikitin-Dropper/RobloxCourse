@@ -484,10 +484,19 @@
 				<Properties>
 					<ProtectedString name="Source"><![CDATA[local part = script.Parent
 
+-- Защитное поле уважаем: пока у персонажа висит ForceField, стержень его
+-- не убивает — иначе игрок гибнет сразу после появления.
+local function isProtected(character: Instance): boolean
+	return character:FindFirstChildOfClass("ForceField") ~= nil
+end
+
 part.Touched:Connect(function(hit)
 	local character = hit.Parent
-	local humanoid = character:FindFirstChild("Humanoid")
-	if humanoid then
+	if not character then
+		return
+	end
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if humanoid and humanoid.Health > 0 and not isProtected(character) then
 		humanoid.Health = 0
 	end
 end)
