@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 33. Лут и счёт</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="33">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 33. Лут и счёт</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Systems Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="33-w-1">
+<h3 class="slide-title">Сегодня ты — Systems Designer <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Комната побега опубликована. Начинаем новую игру — лутер: игрок выходит из хаба, собирает находки и должен донести их обратно.</p>
+<p class="content-item content-paragraph"><b>Systems Designer</b> (дизайнер систем) отвечает за правила, по которым игра считает: что сколько стоит и сколько игрок может унести.</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: начинаем новую игру — лутер: вылазки за добычей и возвращение в хаб.
+Сказать: сегодня собираем основу — находки с ценой и рюкзак, в который влезает не всё.
+Сказать: зоны, магазин и другие игроки появятся на следующих уроках.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 32 <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="33-r-1">
+<h3 class="slide-title">Вспомним урок 32 <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Куда клали папку модуля стендов, чтобы мост и лифт заработали?</p><ol class="content-item content-quiz-options"><li data-correct="true">Внутрь модели, где лежат детали ✓</li><li>Рядом с моделью в Workspace</li><li>В любое место коридора</li></ol>
+<p class="content-item content-question">Где у модулей курса живут настройки, которые мы меняем?</p><ol class="content-item content-quiz-options"><li data-correct="true">В начале файла, между рядами знаков «равно» ✓</li><li>В строках логики ниже настроек</li><li>В имени скрипта в Explorer</li></ol>
+<p class="content-item content-question">Как проверяли комнату побега перед публикацией?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чужими руками: сосед проходит молча ✓</li><li>Своими руками по памяти автора</li><li>Чтением скрипта без запуска игры</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: внутрь модели коридора; переменные в начале файла; чужими руками.
+Сказать: сегодня работаем теми же приёмами, но игра будет считать деньги.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Находки, рюкзак и счёт <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="33-t-1">
+<h3 class="slide-title">Лутер: вылазка и возвращение <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Лутер</b> — игра, где выходят из безопасного хаба за добычей</li><li>Хаб — место, куда возвращаются: старт и будущий лагерь</li><li>Ценность есть только у того, что донёс до хаба</li><li>Сегодня: находки с ценой и рюкзак, в который влезает не всё</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: лутер — игра про дорогу туда и обратно, а не про сбор ради сбора.
+Сказать: пока находки в рюкзаке, они ещё не деньги — это обещание денег.
+Сказать: сегодня появляются находки и рюкзак, дальше — зоны, сдача и другие игроки.</aside>
+</div>
+<div class="slide" id="33-t-2">
+<h3 class="slide-title">Находка: тег и цена <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Тег</b> (Tag) — метка детали, по ней модуль находит свои предметы</li><li>Тег ставится в Properties → Tags, как у билетов и артефактов</li><li><b>Атрибут Value</b> — цена находки в монетах</li><li>Тег говорит «это находка», Value — «столько она стоит»</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель Properties выделенной детали — раздел Tags с тегом Loot и раздел Attributes с числом Value = 10]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь, Properties → Tags → добавить тег Loot; рядом Attributes → Value.
+Сказать: тег отвечает на вопрос «это находка?», атрибут Value — «сколько она стоит».
+Сказать: так же работали билеты урока 24 и артефакты урока 28 — новое здесь только цена.</aside>
+</div>
+<div class="slide" id="33-t-3">
+<h3 class="slide-title">Рюкзак с дном <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>CAPACITY</b> — сколько находок влезает в рюкзак</li><li>Мест мало: мелкие находки приходится оставлять на земле</li><li>Полный рюкзак не берёт находку и говорит об этом на экране</li><li>Бездонный рюкзак убивает выбор: тогда берут всё подряд</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: бездонный рюкзак превращает игру в уборку карты — подбирай всё подряд.
+Сказать: лимит мест делает каждую находку решением, и это главный приём жанра.
+Сказать: настройка CAPACITY лежит в начале скрипта модуля, её мы и подберём на практике.</aside>
+</div>
+<div class="slide" id="33-t-4">
+<h3 class="slide-title">Таблица игроков <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>leaderstats</b> — папка внутри игрока, её числа Roblox показывает списком</li><li>Имя пишется строчными буквами: Leaderstats таблицу не покажет</li><li>В нашей игре два числа: «В рюкзаке» и «Монеты»</li><li>Папку создаёт модуль: собирать её руками не нужно</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: список игроков справа вверху с двумя столбцами — «В рюкзаке» и «Монеты», в списке два игрока с разными числами]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка leaderstats внутри игрока, внутри неё два IntValue.
+Сказать: имя папки только строчными буквами, иначе таблицы не будет — это частая поломка.
+Сказать: папку создаёт модуль, ученику её собирать не нужно.</aside>
+</div>
+<div class="slide" id="33-t-5">
+<h3 class="slide-title">Полоска рюкзака <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Полоска вверху экрана: «Рюкзак 3/6 · 120 монет»</li><li>Занятые места и сумма — то, чем игрок рискует прямо сейчас</li><li>Интерфейс рисует модуль: собирать <b>ScreenGui</b> не нужно</li><li>Сообщения модуля тоже появляются здесь: «+30», «Рюкзак полон»</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вверху экрана тёмная полоска с надписью «Рюкзак 3/6 · 120 монет», под ней жёлтая надпись «+30»]</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: таблица показывает всех, а полоска — только тебя, и смотреть в неё быстрее.
+Сказать: полоску рисует сам модуль, как это делали билеты урока 24.
+Сказать: на полоске видно и занятые места, и сумму — именно то, чем игрок рискует.</aside>
+</div>
+<div class="slide" id="33-t-6">
+<h3 class="slide-title">Цена — это дизайн <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Обычная находка — 10 монет, редкая — 30, легендарная — 80</li><li>Разница в разы: игрок сразу понимает, за чем стоит идти</li><li>Дорогое кладут туда, куда идти дольше и страшнее</li><li>Одинаковые цены делают карту однообразной: всё равно, куда идти</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: цена говорит игроку, что в игре ценно, поэтому её выбирает дизайнер, а не случай.
+Сказать: стартовые числа курса — 10, 30 и 80 монет: разница в разы, и дорогое видно сразу.
+Сказать: на следующем уроке по этим числам вырастут зоны.</aside>
+</div>
+<div class="slide" id="33-t-7">
+<h3 class="slide-title">Модуль «Лут и рюкзак» <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Папка <b>LootSystem</b> кладётся в Workspace</li><li><b>TAG</b> — метка находки, <b>CAPACITY</b> — места в рюкзаке</li><li><b>PICKUP_RANGE</b> — с какого расстояния находка подбирается</li><li><b>RESPAWN_SECONDS</b> — через сколько находка вернётся на место</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer раскрыта папка LootSystem со скриптами LootScript и LootClient, в окне скрипта видны настройки TAG, CAPACITY, PICKUP_RANGE]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка LootSystem в Workspace, внутри LootScript и LootClient.
+Сказать: настройки лежат в начале LootScript, как у модулей блока: TAG, CAPACITY, PICKUP_RANGE.
+Сказать: модуль получают по ссылке — ссылку пришлёт преподаватель, запасной путь у него же файлом.</aside>
+</div>
+<div class="slide" id="33-t-8">
+<h3 class="slide-title">Частые ошибки первого дня <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Находка не поднимается — забыли тег или не включили Anchored</li><li>Все находки стоят одинаково — не заполнили атрибут Value</li><li>Рюкзак не кончается — CAPACITY поставили слишком большим</li><li>Таблицы нет — папку назвали Leaderstats с большой буквы</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: четыре поломки, из-за которых кажется, что модуль не работает.
+Проверить у каждого: тег на деталях стоит, Anchored включён, Value заполнен.
+Сказать: если таблицы нет — почти всегда дело в имени папки leaderstats.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="33-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">По какой метке модуль находит свои находки на карте?</p><ol class="content-item content-quiz-options"><li data-correct="true">По тегу детали из раздела Tags ✓</li><li>По имени детали в окне Explorer</li><li>По цвету детали в панели свойств</li></ol>
+<p class="content-item content-question">Что задаёт цену одной находки в монетах?</p><ol class="content-item content-quiz-options"><li data-correct="true">Атрибут Value у самой детали ✓</li><li>Настройка CAPACITY в скрипте</li><li>Размер детали в свойствах</li></ol>
+<p class="content-item content-question">Как должна называться папка, чтобы появилась таблица игроков?</p><ol class="content-item content-quiz-options"><li data-correct="true">leaderstats — строчными буквами ✓</li><li>Leaderstats — с большой буквы</li><li>LeaderStats — с двумя большими</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: тег; атрибут Value; строчными буквами.
+Сказать: из этих трёх настроек и состоит сегодняшний модуль.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="33-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Через 5 минут создаём новый проект — в нём вырастет лутер.</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
+Проверить после перерыва: у каждого создан новый пустой проект и под рукой ссылка на модуль лута.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Первая вылазка <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="33-p-1">
+<h3 class="slide-title">Шаг 1: хаб и поле <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Создай новый проект: File → New, пустой Baseplate</li><li>Собери площадку хаба и поставь на неё точку возрождения</li><li>Вокруг хаба оставь ровное поле — здесь будут находки</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: площадка хаба с зелёной точкой возрождения посередине, вокруг ровное поле, вид сверху под углом]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: площадка хаба с точкой возрождения и вокруг неё ровное поле на 40–50 студов.
+Сказать: хаб — место возвращения: на следующих уроках в нём появятся сдача и магазин.
+Сказать: поле пока плоское, зоны и опасности будут на следующем уроке.</aside>
+</div>
+<div class="slide" id="33-p-2">
+<h3 class="slide-title">Шаг 2: находки с ценой <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Разложи по полю 8–10 деталей и включи каждой Anchored</li><li>Каждой детали поставь тег <b>Loot</b>: Properties → Tags</li><li>Добавь атрибут <b>Value</b>: обычным 10, двум-трём — 30</li><li>Дорогие находки поставь подальше от хаба</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь → Anchored, Properties → Tags → Loot, Attributes → Value.
+Проверить у каждого: тег написан ровно как в настройке модуля, без пробелов.
+Сказать: две-три находки сделайте дорогими — по ним потом будет видно, куда бегут игроки.</aside>
+</div>
+<div class="slide" id="33-p-3">
+<h3 class="slide-title">Шаг 3: вставь модуль <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Получи модуль «Лут и рюкзак» — ссылку пришлёт преподаватель</li><li>Положи папку <b>LootSystem</b> в Workspace</li><li>Test → подойди к находке: она исчезает, полоска растёт</li><li>Загляни в таблицу игроков: там появилось «В рюкзаке»</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок рядом с жёлтой находкой, вверху экрана полоска «Рюкзак 1/6 · 10 монет», справа вверху таблица игроков]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка LootSystem в Workspace, внутри LootScript и LootClient.
+Сказать: модуль получают по ссылке — её пришлёт преподаватель, запасной путь файлом у него же.
+Сделать: Test — подойти к находке и посмотреть на полоску и таблицу.</aside>
+</div>
+<div class="slide" id="33-p-4">
+<h3 class="slide-title">Шаг 4: размер рюкзака <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой <b>LootScript</b> и найди настройку CAPACITY</li><li>Поставь столько мест, чтобы всё поле не унести за раз</li><li>Test → набей рюкзак и дождись надписи «Рюкзак полон»</li><li>Не понравилось — поменяй число и перезапусти Test</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: полоска «Рюкзак 6/6 · 90 монет» и жёлтая надпись «Рюкзак полон» под ней]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: открыть LootScript и найти CAPACITY в начале файла.
+Сказать: правило — мест меньше, чем находок в поле, иначе выбор исчезает.
+Сделать: Test после каждой правки: скрипт читает числа при запуске игры.</aside>
+</div>
+<div class="slide" id="33-p-5">
+<h3 class="slide-title">Шаг 5: дальность подбора <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Найди в скрипте настройку <b>PICKUP_RANGE</b></li><li>Поставь своё число и перезапусти Test</li><li>Проверь на бегу: находка берётся, когда игрок рядом</li><li>Слишком большое число собирает поле само — верни поменьше</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сказать: PICKUP_RANGE — с какого расстояния находка прыгает в рюкзак.
+Сказать: слишком большое число собирает всё поле на бегу, слишком маленькое заставляет топтаться.
+Сделать: Test — пройти мимо находки и проверить, подбирается ли она на ходу.</aside>
+</div>
+<div class="slide" id="33-p-6">
+<h3 class="slide-title">Шаг 6: тест вдвоём <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → Clients and Servers, два игрока в одном мире</li><li>Соберите поле наперегонки и сравните таблицу</li><li>Проверь: у каждого игрока свой рюкзак и свой счёт</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: два окна-клиента рядом, в каждом свой игрок на поле находок, у обоих вверху экрана своя полоска рюкзака]</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Clients and Servers, два игрока.
+Сказать: у каждого свой рюкзак и своя строка в таблице — счёт личный.
+Сделать: File → Save to Roblox — проект понадобится на следующем уроке.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="33-qp-1">
+<h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Деталь лежит в поле, но в рюкзак не попадает. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Стоит ли на детали тег Loot ✓</li><li>Совпадает ли цвет с другими находками</li><li>Сохранён ли проект в облако</li></ol>
+<p class="content-item content-question">Сколько мест в рюкзаке делает выбор игрока настоящим?</p><ol class="content-item content-quiz-options"><li data-correct="true">Меньше, чем находок в поле ✓</li><li>Ровно столько, сколько находок</li><li>Больше, чем находок в поле</li></ol>
+<p class="content-item content-question">Двое собирают находки в одном мире. Чей счёт растёт?</p><ol class="content-item content-quiz-options"><li data-correct="true">У каждого свой счёт и свой рюкзак ✓</li><li>Общий счёт на двоих в одной строке</li><li>Счёт того, кто зашёл в игру первым</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: тег забыли; мест меньше, чем находок; у каждого свой счёт.
+Сказать: на следующем уроке поле разделится на зоны, и цена будет зависеть от расстояния.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="33-c-1">
+<h3 class="slide-title">Основа лутера готова <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы собрали находки с ценой, рюкзак с дном и счёт в таблице игроков — это работа Systems Designer.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: зоны риска — чем дальше от хаба, тем дороже находки</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня появились находки с ценой, рюкзак с дном и счёт, который видят все.
+Сказать: на следующем уроке поле разделится на зоны: чем дальше от хаба, тем дороже находки.
+Сделать: File → Save to Roblox — проект нужен на всех уроках блока.</aside>
+</div>
+<div class="slide" id="33-c-2">
+<h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Добавь в поле ещё 5 находок и поставь им свои цены</li><li>Подбери CAPACITY так, чтобы поле нельзя было унести за раз</li><li>Посчитай, сколько монет приносит один полный рюкзак</li><li>Запиши это число: на следующем уроке по нему сделаем зоны</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: дома добавить в поле ещё находки и поиграть с числами.
+Сказать: задание проверим одним вопросом — сколько монет приносит полный рюкзак.
+Сказать: числа пригодятся на следующем уроке, когда появятся зоны.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/players/leaderboards.md">Leaderboards — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/CollectionService.md">CollectionService — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/ui/screen-guis.md">ScreenGui — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Testing modes — Roblox Creator Hub</a></li></ul></section>
+</article>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 35. Сдача, смерть и магазин</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="35">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 35. Сдача, смерть и магазин</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Monetization Designer</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="35-w-1">
+<h3 class="slide-title">Сегодня ты — дизайнер денег <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Находки лежат по зонам, рюкзак наполняется, но монет у игрока пока нет. Сегодня добыча станет деньгами, а гибель начнёт их отнимать.</p>
+<p class="content-item content-paragraph"><b>Monetization Designer</b> (дизайнер экономической петли) решает, где добыча превращается в деньги и на что игрок их тратит.</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: находки и зоны есть, но монеты пока не появляются — их негде получить.
+Сказать: сегодня добыча станет деньгами, а гибель начнёт эти деньги отнимать.
+Сказать: к концу занятия игра замкнётся в петлю: вылазка, сдача, покупка, вылазка глубже.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 34 <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="35-r-1">
+<h3 class="slide-title">Вспомним урок 34 <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Где в игре лежат самые дорогие находки?</p><ol class="content-item content-quiz-options"><li data-correct="true">Дальше всего от хаба, в глубине ✓</li><li>Рядом с хабом, на виду у всех</li><li>В случайном месте каждой зоны</li></ol>
+<p class="content-item content-question">Чем показывают, что находка редкая?</p><ol class="content-item content-quiz-options"><li data-correct="true">Цветом, материалом и свечением ✓</li><li>Размером детали на полу</li><li>Именем детали в Explorer</li></ol>
+<p class="content-item content-question">Где ставят ловушку, чтобы она работала на игру?</p><ol class="content-item content-quiz-options"><li data-correct="true">На пути к дорогой находке ✓</li><li>В стороне от маршрутов игрока</li><li>Прямо в хабе рядом со стартом</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: дальше от хаба; цвет и свет; на пути к находке.
+Сказать: сегодня у зон появится смысл — ради чего вообще рисковать.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Сдача, потеря и магазин <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="35-t-1">
+<h3 class="slide-title">Что добавляем сегодня <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Зона сдачи: добыча превращается в монеты</li><li>Гибель: рюкзак падает мешком и достаётся тому, кто добежал</li><li>Бластер: опасность теперь приходит и от других игроков</li><li>Магазин: монеты становятся снаряжением на одну вылазку</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — сдача, потеря, оружие и магазин.
+Сказать: после урока каждая вылазка станет историей с концом: донёс или потерял.
+Сказать: зоны и находки не переделываем — добавляем лагерь.</aside>
+</div>
+<div class="slide" id="35-t-2">
+<h3 class="slide-title">Сдача в лагере <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Зона сдачи</b> — площадка в лагере: встал и сдал добычу</li><li>«В рюкзаке» обнуляется, «Монеты» растут на ту же сумму</li><li>Пока лут в рюкзаке, он ничей: деньгами он становится здесь</li><li>Точка сдачи одна: дорога назад — часть игры</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок стоит на светлой площадке сдачи в лагере, вверху экрана полоска «Рюкзак 0/6 · 0 монет» и надпись «Сдано: +180»]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: площадка сдачи и папка ExtractZone внутри модели.
+Сказать: пока находки в рюкзаке, это обещание денег, а не деньги.
+Сказать: одна точка сдачи на карте — так дорога назад становится частью игры.</aside>
+</div>
+<div class="slide" id="35-t-3">
+<h3 class="slide-title">Безопасный лагерь <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>ForceField</b> — защита, которая гасит урон от оружия</li><li>Зона сдачи выдаёт её, пока игрок в лагере</li><li>Вышел за границу — защита пропала</li><li>Без защиты у сдачи начинаются засады</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: без защиты лагеря игроки устроят засаду прямо у сдачи.
+Сказать: зона выдаёт ForceField — защиту, которая гасит урон оружия.
+Сказать: защита снимается, как только игрок вышел из лагеря.
+Сказать: ForceField гасит урон оружия, но не спасает от ловушек, которые обнуляют здоровье напрямую: kill-блоки в лагере не ставим.</aside>
+</div>
+<div class="slide" id="35-t-4">
+<h3 class="slide-title">Гибель: рюкзак падает <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Погиб до сдачи — рюкзак падает <b>мешком</b> на месте гибели</li><li>Мешок подбирается как обычная находка: кто добежал, тот и забрал</li><li><b>BAG_SECONDS</b> — сколько секунд мешок лежит, потом исчезает</li><li>Сданные монеты не теряются: гибель отнимает только рюкзак</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: оранжевый светящийся мешок лежит на земле в тёмной зоне, к нему бежит игрок]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: настройки DROP_ON_DEATH и BAG_SECONDS в начале LootScript.
+Сказать: несданное не исчезает — оно остаётся там, где игрок упал.
+Сказать: мешок живёт секунды, поэтому за ним бегут наперегонки.
+Сказать: мешок занимает столько же мест, сколько было в рюкзаке погибшего: с полным рюкзаком его не поднять — сначала сдай своё.</aside>
+</div>
+<div class="slide" id="35-t-5">
+<h3 class="slide-title">Почему мешок, а не убийце <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>У персонажа нет записи о том, кто нанёс последний удар</li><li>Мешок на земле честнее: добычу видно и за неё борются</li><li>Погибший понимает, что случилось: добыча осталась на месте</li><li>Успеть к мешку — отдельный риск: рядом тот, кто тебя убил</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: в Roblox у гибели нет встроенной записи «кто убил» — Humanoid знает только, что здоровье дошло до нуля.
+Сказать: мешок решает это честно: добыча лежит на виду, и за неё можно побороться.
+Сказать: заодно погибший понимает, что случилось с добычей.</aside>
+</div>
+<div class="slide" id="35-t-6">
+<h3 class="slide-title">Опасность от игроков <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Самая дорогая опасность — игрок, который ищет полный рюкзак</li><li>Бластер из битвы крепостей продаётся на одну вылазку</li><li>При гибели рюкзак очищается, и оружие пропадает вместе с лутом</li><li>Охота — риск в обе стороны: у охотника тоже полный рюкзак</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: ловушка стоит на месте, а игрок с бластером идёт туда, где добыча.
+Сказать: бластер — тот же модуль, что в битве двух крепостей, покупается на одну вылазку.
+Сказать: при гибели рюкзак игры очищается и наполняется заново из StarterPack, поэтому купленное оружие пропадает.</aside>
+</div>
+<div class="slide" id="35-t-7">
+<h3 class="slide-title">Магазин снаряжения <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Прилавок с подсказкой <b>ProximityPrompt</b>: нажал и открыл список</li><li>Аптечка и щит помогают выжить, ускорение — убежать</li><li>Большой рюкзак даёт места на одну вылазку</li><li>Снаряжение одноразовое: после гибели его покупают заново</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: окно магазина посередине экрана со списком товаров и ценами, рядом игрок у прилавка]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: прилавок с подсказкой и папка ShopKiosk внутри модели.
+Сказать: подсказка та же, что у дверей комнаты побега, — ProximityPrompt.
+Сказать: всё снаряжение одноразовое, поэтому монеты нужны после каждой вылазки.</aside>
+</div>
+<div class="slide" id="35-t-8">
+<h3 class="slide-title">Цены и доход вылазки <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Вылазка на окраину приносит около 60 монет — это мерка</li><li>Первая покупка стоит примерно столько: аптечка 40, ускорение 50</li><li>Снаряжение для глубины дороже вылазки: рюкзак 80, бластер 120</li><li>Цены выше дохода — магазин не откроется никогда</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: цена — это время игры, поэтому её считают от дохода вылазки, замеренного на прошлом уроке.
+Сказать: первая покупка должна быть по карману после первой вылазки на окраину.
+Сказать: снаряжение для глубины дороже одной вылазки — за ним ходят дважды.</aside>
+</div>
+<div class="slide" id="35-t-9">
+<h3 class="slide-title">Частые ошибки петли <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Сдача далеко от старта — потери кажутся несправедливыми</li><li>Мешок лежит минуту — риск исчезает, всё всегда возвращается</li><li>Лагерь без защиты — у сдачи дежурят охотники</li><li>Снаряжение навсегда — после трёх покупок монеты не нужны</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: четыре поломки, из-за которых петля перестаёт работать.
+Проверить у каждого: сдача рядом со стартом, защита включена, снаряжение одноразовое.
+Сказать: проверяется всё это только вдвоём.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="35-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Где добыча из рюкзака превращается в монеты?</p><ol class="content-item content-quiz-options"><li data-correct="true">В зоне сдачи, в лагере ✓</li><li>В момент подбора находки</li><li>В магазине во время покупки</li></ol>
+<p class="content-item content-question">Что происходит с несданной добычей, если игрок погиб?</p><ol class="content-item content-quiz-options"><li data-correct="true">Падает мешком на месте гибели ✓</li><li>Исчезает сразу и бесследно</li><li>Переносится на счёт убийцы</li></ol>
+<p class="content-item content-question">Почему снаряжение в магазине сделано одноразовым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы монеты были нужны после каждой вылазки ✓</li><li>Чтобы игра работала быстрее на слабых устройствах</li><li>Чтобы список товаров помещался в одно окно</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: в зоне сдачи; падает мешком; снаряжение одноразовое.
+Сказать: на практике соберём лагерь и проверим петлю вдвоём.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="35-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Через 5 минут собираем лагерь: сдачу добычи и прилавок со снаряжением.</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
+Проверить после перерыва: у каждого открыт проект с зонами и под рукой ссылки на модули сдачи и магазина.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Лагерь и магазин <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="35-p-1">
+<h3 class="slide-title">Шаг 1: зона сдачи <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери в хабе площадку сдачи и назови деталь <b>Pad</b></li><li>Получи модуль сдачи — ссылку пришлёт преподаватель</li><li>Положи папку <b>ExtractZone</b> внутрь модели площадки</li><li>Test → принеси находки и встань на площадку: монеты выросли</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer модель зоны сдачи с деталью Pad и папкой ExtractZone внутри, в окне сцены площадка рядом с точкой возрождения]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: площадка Pad рядом с точкой возрождения, папка ExtractZone внутри модели.
+Сказать: модуль получают по ссылке — её пришлёт преподаватель.
+Сделать: Test — принести находки и встать на площадку.</aside>
+</div>
+<div class="slide" id="35-p-2">
+<h3 class="slide-title">Шаг 2: мешок при гибели <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой <b>LootScript</b> и включи <b>DROP_ON_DEATH</b></li><li>Поставь <b>BAG_SECONDS</b>: сколько секунд лежит мешок</li><li>Test → набери находок, погибни в ловушке и найди мешок</li><li>Добежать слишком легко — уменьши число секунд</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: DROP_ON_DEATH и BAG_SECONDS в начале LootScript.
+Сделать: Test — набрать находок, попасть в ловушку и посмотреть на мешок.
+Сказать: время мешка подбирают так, чтобы добежать было можно, но трудно.</aside>
+</div>
+<div class="slide" id="35-p-3">
+<h3 class="slide-title">Шаг 3: магазин <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Поставь рядом со сдачей прилавок и назови деталь <b>Counter</b></li><li>Получи модуль магазина — ссылку пришлёт преподаватель</li><li>Положи папку <b>ShopKiosk</b> внутрь модели прилавка</li><li>Test → подойди и нажми E: откроется список товаров</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок у прилавка магазина, на экране открыто окно со списком товаров и ценами]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: прилавок Counter и папка ShopKiosk внутри модели магазина.
+Сказать: подсказку можно настроить в Properties, как двери комнаты побега.
+Сделать: Test — подойти к прилавку и открыть список.</aside>
+</div>
+<div class="slide" id="35-p-4">
+<h3 class="slide-title">Шаг 4: свои цены <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой <b>ShopScript</b> и найди таблицу <b>ITEMS</b></li><li>Поставь свои цены, опираясь на замер дохода вылазки</li><li>Проверь: первая покупка по карману после одной вылазки</li><li>Test → сходи за находками, сдай их и купи снаряжение</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: окно скрипта ShopScript, в таблице ITEMS видны строки с названиями товаров и ценами]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: таблица ITEMS в начале ShopScript — имя, цена и число.
+Сказать: опирайтесь на замер прошлого урока: сколько приносит вылазка на окраину.
+Проверить у каждого: первая покупка по карману после одной вылазки.</aside>
+</div>
+<div class="slide" id="35-p-5">
+<h3 class="slide-title">Шаг 5: бластер в продажу <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери тул бластера по ссылке ниже, как в битве крепостей</li><li>Положи готовый тул в <b>ServerStorage</b> под тем же именем</li><li>Test → купи бластер, погибни и убедись, что он пропал</li></ol>
+<p class="content-item content-paragraph">Ссылка на систему бластера: <a href="https://create.roblox.com/store/asset/83440701618994/ArenaBlaster" target="_blank" rel="noopener">https://create.roblox.com/store/asset/83440701618994/ArenaBlaster</a></p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: собранный бластер в ServerStorage, имя совпадает со строкой товара.
+Сказать: это тот же модуль, что в битве двух крепостей, — он уже опубликован.
+Сделать: Test — купить бластер, погибнуть и убедиться, что его больше нет.</aside>
+</div>
+<div class="slide" id="35-p-6">
+<h3 class="slide-title">Шаг 6: петля вдвоём <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → Clients and Servers, два игрока в одном мире</li><li>Первый собирает добычу, второй охотится за ней</li><li>Проверьте: в лагере урона нет, а мешок успевают подобрать</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: два окна-клиента рядом — в одном игрок с полным рюкзаком бежит к лагерю, в другом игрок с бластером идёт ему навстречу]</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Clients and Servers, два игрока.
+Сказать: один собирает добычу, второй пробует отнять её у сдачи и в зоне.
+Проверить у каждого: в лагере урона нет, мешок успевают подобрать.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="35-qp-1">
+<h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Игроки дежурят у сдачи и отнимают добычу. Что проверить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Включена ли защита лагеря в зоне сдачи ✓</li><li>Хватает ли мест в рюкзаке у жертвы</li><li>Не слишком ли дорогие находки в глубине</li></ol>
+<p class="content-item content-question">Мешок всегда успевают подобрать, и потеря не ощущается. Что менять?</p><ol class="content-item content-quiz-options"><li data-correct="true">Уменьшить число секунд у мешка ✓</li><li>Увеличить цену находок в зоне</li><li>Добавить ещё одну точку сдачи</li></ol>
+<p class="content-item content-question">Никто не дошёл до первой покупки за занятие. В чём дело?</p><ol class="content-item content-quiz-options"><li data-correct="true">Цены выше дохода одной вылазки ✓</li><li>Мешок живёт слишком мало секунд</li><li>Находки возвращаются слишком быстро</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: защита лагеря; уменьшить секунды мешка; цены выше дохода.
+Сказать: на следующем уроке собираем игру целиком и публикуем.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="35-c-1">
+<h3 class="slide-title">Петля замкнулась <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы собрали сдачу, включили мешок при гибели и поставили магазин — игра пошла по кругу: вылазка, сдача, покупка, вылазка глубже.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: ПРОЕКТ «Лутер» — собираем игру целиком и публикуем</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня добыча стала деньгами, гибель — потерей, а монеты — снаряжением.
+Сказать: на следующем уроке собираем игру целиком, балансируем и публикуем.
+Сделать: File → Save to Roblox.</aside>
+</div>
+<div class="slide" id="35-c-2">
+<h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Сделай три вылазки подряд и запиши, сколько монет накопил</li><li>Подбери цену бластера так, чтобы на него копили две вылазки</li><li>Добавь в магазин свой товар и придумай ему цену</li><li>Позови друга и проверьте, кто первым дойдёт до глубины</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: дома проверить цены на живых вылазках и записать, что получилось.
+Сказать: задание проверим вопросом — за сколько вылазок накопили на бластер.
+Сказать: числа пригодятся на сборке проекта.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Humanoid.md">Humanoid — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/ForceField.md">ForceField — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Backpack.md">Backpack — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/ProximityPrompt.md">ProximityPrompt — Roblox Creator Hub</a></li></ul></section>
+</article>
+</body>
+</html>

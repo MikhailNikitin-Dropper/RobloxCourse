@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Урок 36. ПРОЕКТ 9: лутер</title>
+<style>
+body { font-family: Arial, sans-serif; }
+.lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
+.lesson-role { font-size: 16px; font-weight: 400; color: #555555; }
+.lesson-total { font-size: 13px; font-weight: 400; color: #999999; }
+.block-title { font-size: 20px; font-weight: 700; }
+.block-duration { font-size: 14px; font-weight: 400; color: #888888; }
+.slide { }
+.slide-title { font-size: 17px; font-weight: 600; color: #222222; }
+.slide-duration { font-size: 12px; font-weight: 400; color: #aaaaaa; }
+.content-paragraph { font-size: 15px; font-weight: 400; color: #333333; }
+.content-bullets li,
+.content-steps li { font-size: 15px; font-weight: 400; color: #333333; }
+.content-question { font-size: 15px; font-weight: 600; color: #0000cc; }
+.content-quiz-options li { font-size: 14px; font-weight: 400; color: #333333; }
+.content-quiz-options li[data-correct="true"] { font-weight: 700; color: #006600; }
+.content-quote { font-size: 15px; font-weight: 400; color: #006600; font-style: italic; }
+.content-image-prompt { font-size: 13px; font-weight: 400; color: #777777; }
+.speaker-notes { font-size: 13px; font-weight: 400; color: #999999; }
+.source-list li { font-size: 12px; font-weight: 400; color: #888888; }
+</style>
+</head>
+<body>
+<article class="lesson" data-lesson-number="36">
+<header class="lesson-header">
+<h1 class="lesson-title">Урок 36. ПРОЕКТ 9: лутер</h1>
+<p class="lesson-role">Роль гейм-дизайнера: Продюсер лутера</p>
+<p class="lesson-total">Общая длительность: 60 мин</p>
+</header>
+<section class="block block-welcome">
+<h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
+<div class="slide" id="36-w-1">
+<h3 class="slide-title">Сегодня ты — продюсер лутера <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Находки, зоны, сдача, мешок и магазин уже стоят в проекте. Сегодня из них получается игра, в которую можно проиграть и выиграть.</p>
+<p class="content-item content-paragraph"><b>Продюсер лутера</b> отвечает не за отдельную зону, а за круг целиком: ради чего игрок выходит из лагеря и почему возвращается.</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: все части игры уже собраны — находки, зоны, сдача, мешок и магазин.
+Сказать: сегодня не стройка с нуля, а сборка, проверка и публикация.
+Сказать: главная работа дня — баланс: риск должен окупаться, но пугать.</aside>
+</div>
+</section>
+<section class="block block-review_previous">
+<h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 35 <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="36-r-1">
+<h3 class="slide-title">Вспомним урок 35 <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Где добыча превращается в монеты?</p><ol class="content-item content-quiz-options"><li data-correct="true">В зоне сдачи, в лагере ✓</li><li>В момент подбора находки</li><li>В магазине во время покупки</li></ol>
+<p class="content-item content-question">Что происходит с несданной добычей при гибели?</p><ol class="content-item content-quiz-options"><li data-correct="true">Падает мешком на месте гибели ✓</li><li>Остаётся в рюкзаке после возрождения</li><li>Сразу переходит на счёт убийцы</li></ol>
+<p class="content-item content-question">Зачем снаряжение в магазине сделали одноразовым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы монеты были нужны после каждой вылазки ✓</li><li>Чтобы список товаров был короче</li><li>Чтобы игра быстрее загружалась</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: в зоне сдачи; падает мешком; чтобы монеты были нужны всегда.
+Сказать: сегодня эти части станут одной игрой.</aside>
+</div>
+</section>
+<section class="block block-theory">
+<h2 class="block-title" style="color:#006600;">Сборка и баланс <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="36-t-1">
+<h3 class="slide-title">Что собираем сегодня <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Лагерь: точка возрождения, сдача и магазин рядом</li><li>Три зоны: цены и опасность растут вместе с расстоянием</li><li>Глубина закрыта снаряжением: без покупки оттуда не вернуться</li><li>Баланс и публикация: игра открывается по ссылке</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — свести части, закрыть глубину снаряжением, выставить баланс и опубликовать.
+Сказать: новых модулей сегодня нет, работаем с тем, что уже стоит.
+Сказать: к концу занятия игра будет открыта по ссылке.</aside>
+</div>
+<div class="slide" id="36-t-2">
+<h3 class="slide-title">Круг игры <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Вылазка: набрать рюкзак в подходящей зоне</li><li>Сдача: донести добычу и превратить её в монеты</li><li>Покупка: взять снаряжение на следующую вылазку</li><li>Снова вылазка — уже глубже и дороже</li></ul>
+<p class="content-item content-image-prompt">[изображение: Схема сверху: лагерь со сдачей и магазином в центре, вокруг три кольца зон, стрелками показан круг — вылазка, возвращение, покупка]</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: цикл лутера — вылазка, сдача, покупка, вылазка глубже.
+Сказать: каждый шаг должен быть коротким: минута-две, иначе круг рвётся.
+Сказать: если из круга выпадает шаг, игра рассыпается — проверяем все четыре.</aside>
+</div>
+<div class="slide" id="36-t-3">
+<h3 class="slide-title">Напряжение решения <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Вопрос игрока: сдать сейчас или рискнуть ещё разок</li><li>Напряжение растёт вместе с тем, что уже лежит в рюкзаке</li><li>Далёкая сдача делает каждый шаг назад решением</li><li>Если возвращаться всегда выгодно, выбор пропадает</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: главное чувство жанра возникает не от находок, а от выбора.
+Сказать: рюкзак наполовину полон, до сдачи далеко, а рядом лежит легендарное — это и есть игра.
+Сказать: если возвращаться всегда выгодно, напряжения нет.</aside>
+</div>
+<div class="slide" id="36-t-4">
+<h3 class="slide-title">Глубина под снаряжение <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Первые вылазки — окраина: там учатся и копят</li><li>Глубина закрыта опасностью, а не стеной</li><li>Без аптечки и ускорения из глубины не возвращаются</li><li>Прогрессия: монеты превращаются в право идти дальше</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: дальняя зона не должна быть проходимой с первой минуты.
+Сказать: закрываем её не стеной, а опасностью: без аптечки и ускорения оттуда не возвращаются.
+Сказать: это и есть прогрессия — деньги превращаются в возможность идти дальше.</aside>
+</div>
+<div class="slide" id="36-t-5">
+<h3 class="slide-title">Баланс проверяют игрой <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Сколько вылазок до первой покупки: хорошо, если одна-две</li><li>Как часто гибнут в средней зоне: изредка, а не каждый раз</li><li>Успевают ли к мешку: иногда да, иногда нет</li><li>Правило: риск должен окупаться, но пугать</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: баланс считается не на бумаге, а по трём наблюдениям из плейтеста.
+Сказать: сколько вылазок до первой покупки, как часто гибнут в средней зоне, успевают ли к мешку.
+Сказать: правило — риск должен окупаться, но пугать.</aside>
+</div>
+<div class="slide" id="36-t-6">
+<h3 class="slide-title">Что чинить первым <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Никто не гибнет — добавь опасностей в средней зоне</li><li>Никто не копит — снизь цены или подними цену находок</li><li>Все сидят на окраине — подними цены глубины</li><li>Меняй по одному числу и проверяй вылазкой</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: у каждой поломки баланса есть своя настройка, и менять их нужно по одной.
+Сказать: поменяли два числа сразу — непонятно, что помогло.
+Сказать: после каждой правки — новая вылазка.</aside>
+</div>
+<div class="slide" id="36-t-7">
+<h3 class="slide-title">Страница игры <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Название говорит про вылазки и добычу</li><li>Описание предупреждает: погиб до сдачи — рюкзак потерян</li><li>Иконка — кадр своей игры, обрезанный в квадрат</li><li>Доступ открывают в настройках игры на сайте</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот сайта Roblox: страница опубликованной игры с названием, описанием про вылазки и квадратной иконкой из кадра игры]</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: страница игры — единственное место, где игрок узнаёт правила до входа.
+Сказать: для лутера важно написать про потерю: погиб до сдачи — рюкзак остался на земле.
+Сказать: иконка — кадр своей игры, обрезанный в квадрат.</aside>
+</div>
+<div class="slide" id="36-t-8">
+<h3 class="slide-title">Частые ошибки сборки <span class="slide-duration">(3 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Лагерь разбросан: сдача в одном конце, магазин в другом</li><li>Зоны одинаковы по опасности — глубина никому не нужна</li><li>Магазин дороже любой вылазки — прогрессии нет</li><li>Игру не проверяли вдвоём — риск от игроков остался на словах</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: пять поломок, которые встречаются на сборке чаще всего.
+Проверить у каждого: лагерь собран в одном месте, глубина опаснее средней зоны.
+Сказать: проверка вдвоём обязательна — в одиночку половина игры не видна.</aside>
+</div>
+</section>
+<section class="block block-qa_theory">
+<h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="36-qt-1">
+<h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Какой вопрос игрока даёт лутеру его главное чувство?</p><ol class="content-item content-quiz-options"><li data-correct="true">Сдать сейчас или рискнуть ещё разок ✓</li><li>Какого цвета сделать находку</li><li>Сколько игроков зашло в игру</li></ol>
+<p class="content-item content-question">Чем закрывают дальнюю зону от новичка?</p><ol class="content-item content-quiz-options"><li data-correct="true">Опасностью и длинной дорогой ✓</li><li>Стеной, которую нельзя обойти</li><li>Запретом на вход в настройках</li></ol>
+<p class="content-item content-question">Как правильно править баланс после плейтеста?</p><ol class="content-item content-quiz-options"><li data-correct="true">По одному числу и сразу проверять ✓</li><li>Сразу все числа, чтобы сэкономить время</li><li>Менять числа, не проверяя игрой</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: сдать или рискнуть; опасностью; по одному числу.
+Сказать: на практике проверим всё это плейтестом вдвоём.</aside>
+</div>
+</section>
+<section class="block block-break">
+<h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
+<div class="slide" id="36-b-1">
+<h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
+<p class="content-item content-paragraph">Через 5 минут собираем игру целиком и публикуем её.</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
+Проверить после перерыва: у каждого открыт проект лутера и записаны числа дохода зон.</aside>
+</div>
+</section>
+<section class="block block-practice">
+<h2 class="block-title" style="color:#cc0000;">Собираем лутер <span class="block-duration">(20 мин)</span></h2>
+<div class="slide" id="36-p-1">
+<h3 class="slide-title">Шаг 1: план на минуту <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Запиши одной строкой, ради чего игрок выходит из лагеря</li><li>Нарисуй карту: лагерь, три зоны и что в каждой лежит</li><li>Отметь, где стоят ловушки и где живёт легендарная находка</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сделать: записать одну строку про игру и нарисовать карту зон.
+Сказать: минута на план экономит полчаса в конце занятия.
+Сказать: на карте отметить, где дорогое и где опасно.</aside>
+</div>
+<div class="slide" id="36-p-2">
+<h3 class="slide-title">Шаг 2: собрать лагерь <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Собери лагерь в одном месте: возрождение, сдача, магазин</li><li>Проверь взглядом: от старта видно и площадку, и прилавок</li><li>Test → выстрели в лагере: урона быть не должно</li><li>Оформи лагерь так, чтобы он выглядел безопасным</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: лагерь сверху — точка возрождения, площадка сдачи и прилавок магазина рядом друг с другом]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: точка возрождения, площадка сдачи и прилавок магазина рядом.
+Сказать: от возрождения должно быть видно и сдачу, и магазин.
+Сделать: Test — проверить, что в лагере оружие не работает.</aside>
+</div>
+<div class="slide" id="36-p-3">
+<h3 class="slide-title">Шаг 3: довести зоны <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Проверь по карте: цены и опасность растут с расстоянием</li><li>Добавь в глубину ещё одну ловушку, если туда доходят слишком легко</li><li>Пройди пешком от лагеря до глубины и обратно</li><li>Test → вернись из глубины с полным рюкзаком</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: карта сверху, три зоны с разными ценами и опасностями.
+Проверить у каждого: глубина заметно опаснее средней зоны.
+Сделать: пройти пешком от лагеря до глубины и обратно.</aside>
+</div>
+<div class="slide" id="36-p-4">
+<h3 class="slide-title">Шаг 4: прогрессия <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Сверь цены магазина с доходом вылазки из своих замеров</li><li>Первая покупка — после одной вылазки на окраину</li><li>Снаряжение для глубины — после двух-трёх вылазок</li><li>Test → пройди круг: вылазка, сдача, покупка, вылазка глубже</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок у прилавка покупает снаряжение, вверху экрана полоска с монетами, рядом видна площадка сдачи]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: таблица ITEMS и числа дохода зон из прошлых уроков.
+Сказать: первая покупка — после одной вылазки, снаряжение глубины — после двух-трёх.
+Сделать: Test — пройти круг целиком и купить снаряжение.</aside>
+</div>
+<div class="slide" id="36-p-5">
+<h3 class="slide-title">Шаг 5: плейтест вдвоём <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Test → Clients and Servers: один собирает, второй охотится</li><li>Запиши: сколько вылазок до первой покупки</li><li>Запиши: часто ли гибнут в средней зоне и успевают ли к мешку</li><li>Сделай одну правку по каждому числу и проверь заново</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: два окна-клиента рядом — в одном игрок с полным рюкзаком у зоны сдачи, в другом игрок с бластером в дальней зоне]</p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Clients and Servers, два игрока, три минуты игры — этого хватает на две вылазки.
+Сказать: автор записывает три числа — вылазки до покупки, гибели в средней зоне, подобранные мешки.
+Сказать: по этим числам и правим баланс, по одному числу за раз.</aside>
+</div>
+<div class="slide" id="36-p-6">
+<h3 class="slide-title">Шаг 6: публикация <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Опубликуй игру: File → Publish to Roblox и открой доступ на сайте</li><li>В описании напиши правило: погиб до сдачи — рюкзак потерян</li><li>Поставь иконку — кадр своей игры, обрезанный в квадрат</li></ol>
+<p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
+<aside class="speaker-notes">Заметка ведущего: Сделать: File → Publish to Roblox, затем открыть доступ в настройках игры на сайте.
+Сказать: в описании обязательно правило про потерю рюкзака.
+Сказать: иконка — кадр своей игры, обрезанный в квадрат.</aside>
+</div>
+</section>
+<section class="block block-qa_practice">
+<h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
+<div class="slide" id="36-qp-1">
+<h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
+<p class="content-item content-question">Все игроки сидят на окраине и никуда не идут. Что менять первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Поднять цены находок в глубине ✓</li><li>Сделать окраину ещё безопаснее</li><li>Убрать из игры зону сдачи</li></ol>
+<p class="content-item content-question">За десять минут плейтеста никто ни разу не погиб. О чём это говорит?</p><ol class="content-item content-quiz-options"><li data-correct="true">Опасностей в зонах не хватает ✓</li><li>Цены находок слишком высокие</li><li>Мешок живёт слишком долго</li></ol>
+<p class="content-item content-question">Что обязательно написать в описании игры-лутера?</p><ol class="content-item content-quiz-options"><li data-correct="true">Что несданная добыча теряется при гибели ✓</li><li>Сколько всего находок на карте</li><li>Как называется редактор, где её собрали</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
+Ответы: поднять цены глубины; добавить опасностей; описание со словом про потерю.
+Сказать: лутер — девятая игра портфолио, дальше финальный блок курса.</aside>
+</div>
+</section>
+<section class="block block-closing">
+<h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
+<div class="slide" id="36-c-1">
+<h3 class="slide-title">Лутер опубликован <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Лагерь, три зоны, сдача, мешок и магазин собрались в одну игру с кругом «вылазка — сдача — покупка» — девятый проект курса опубликован.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: финал курса — защита королевства</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: девятая игра портфолио готова и открыта по ссылке.
+Сказать: на следующем уроке начинается финальный блок курса — защита королевства.
+Сделать: File → Save to Roblox — последнее действие занятия.</aside>
+</div>
+<div class="slide" id="36-c-2">
+<h3 class="slide-title">ДЗ: чужой плейтест <span class="slide-duration">(1 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Позови двух человек дома и дай им сыграть по десять минут</li><li>Запиши, за сколько вылазок каждый дошёл до первой покупки</li><li>Запиши, где они гибли чаще всего</li><li>Сделай по одной правке на каждое наблюдение</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: задание проверим на следующем занятии.
+Сказать: смысл тот же, что у слепого теста комнаты побега: автор записывает, а не подсказывает.
+Сказать: после правок баланс замеряем заново.</aside>
+</div>
+</section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/production/publishing/publish-experiences-and-places.md">Publish experiences and places — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/game-design/index.md">Game design — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Testing modes — Roblox Creator Hub</a></li></ul></section>
+</article>
+</body>
+</html>

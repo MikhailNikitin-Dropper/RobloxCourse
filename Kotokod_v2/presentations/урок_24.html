@@ -234,7 +234,10 @@ a{color:var(--blue);font-weight:600;text-underline-offset:.15em}
    зелёный/коралловый после ответа — функциональные «верно/неверно» */
 .quiz{max-width:1300px}
 .quiz-q{font:800 1.15em/1.3 var(--display);color:var(--dark);margin-bottom:.9em}
+/* длинные термины вроде CustomPhysicalProperties не помещаются в строку и
+   вылезали за карточку: разрешаем перенос внутри слова */
 .quiz-opt{--c:#4F5BFF;display:flex;align-items:center;gap:.7em;width:100%;text-align:left;
+  min-width:0;overflow-wrap:anywhere;
   background:color-mix(in srgb,var(--c) 7%,#fff);border:2px solid color-mix(in srgb,var(--c) 16%,#fff);
   border-radius:20px;padding:.55em .8em;font:500 .92em/1.35 var(--sans);color:var(--text);cursor:pointer;
   transition:background .15s,border-color .15s,opacity .2s}
