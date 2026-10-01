@@ -58,7 +58,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Игроки делятся на команды <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="17-t-1">
 <h3 class="slide-title">Зачем игре команды <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Команда на команду — формат, который ты видел в большинстве известных игр: понятно, за кого болеть и с кем ты</li><li>В Roblox команды работают через готовый сервис — настроим всё через Properties</li><li>Название и цвет команды каждый игрок видит в списке игроков</li></ul>
+<ul class="content-item content-bullets"><li>Команда на команду — формат, который ты видел в большинстве известных игр: понятно, за кого болеть и с кем ты</li><li>Сервис Teams — команды в Roblox работают через готовый сервис, настроим всё через Properties</li><li>Список игроков — в нём каждый видит название и цвет команды</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Спросить: какие командные игры вы знаете и что там делает команду командой?
 Ответы: обычно цвет, база и общая цель — первые два сделаем сегодня, цель будет в конце блока.
 Сказать: название и цвет команды игрок видит в списке игроков.</aside>
@@ -79,7 +79,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="17-t-4">
 <h3 class="slide-title">Точка команды и TeamColor <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>У SpawnLocation выключаем <b>Neutral</b> — точка возрождения перестаёт пускать всех подряд</li><li>TeamColor у SpawnLocation ставим равным TeamColor команды — теперь здесь появляются только свои</li><li>Внимание: TeamColor — не видимый цвет детали; окрасить саму деталь — отдельное свойство (Color или BrickColor)</li></ul>
+<ul class="content-item content-bullets"><li>У SpawnLocation выключаем <b>Neutral</b> — точка возрождения перестаёт пускать всех подряд</li><li>TeamColor как у команды — у SpawnLocation ставим его равным TeamColor команды, и здесь появляются только свои</li><li>Внимание: TeamColor — не видимый цвет детали; окрасить саму деталь — отдельное свойство (Color или BrickColor)</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот панели Properties у SpawnLocation: секция Teams с полями AllowTeamChangeOnTouch, Neutral (выключен) и TeamColor, значение TeamColor совпадает с цветом одной из команд]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: у SpawnLocation выключить Neutral и поставить TeamColor команды.
 Сказать: TeamColor — не видимый цвет детали; краска задаётся свойством Color или BrickColor.
@@ -93,13 +93,13 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="17-t-6">
 <h3 class="slide-title">AllowTeamChangeOnTouch <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>AllowTeamChangeOnTouch</b> — это свойство SpawnLocation: коснулся — перешёл в команду её цвета</li><li>Срабатывает у любого игрока и сколько угодно раз — сторону можно менять посреди матча</li><li>Поэтому в нашей игре оно выключено: команду выдаёт игра, и она не меняется</li></ul>
+<ul class="content-item content-bullets"><li><b>AllowTeamChangeOnTouch</b> — это свойство SpawnLocation: коснулся — перешёл в команду её цвета</li><li>Для всех и всегда — срабатывает у любого игрока и сколько угодно раз: сторону можно менять посреди матча</li><li>Поэтому в нашей игре оно выключено: команду выдаёт игра, и она не меняется</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: включить AllowTeamChangeOnTouch на одной точке, коснуться в Test — команда сменилась, коснуться снова — сменилась обратно.
 Сказать: запретить смену команды настройками Studio нечем, поэтому мы просто не даём такой возможности.</aside>
 </div>
 <div class="slide" id="17-t-7">
 <h3 class="slide-title">Server &amp; Clients <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Server &amp; Clients</b> — это режим теста: Studio запускает локальный сервер и несколько окон-клиентов</li><li>Число клиентов выбираем в выпадающем списке режима теста</li><li>Каждое окно — отдельный игрок: можно выбрать разные команды и увидеть игру их глазами</li><li>Завершение — кнопка End Session в любом окне</li></ul>
+<ul class="content-item content-bullets"><li><b>Server &amp; Clients</b> — это режим теста: Studio запускает локальный сервер и несколько окон-клиентов</li><li>Число клиентов — выбираем в выпадающем списке режима теста</li><li>Каждое окно — отдельный игрок: можно выбрать разные команды и увидеть игру их глазами</li><li>Завершение — кнопка End Session в любом окне</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот панели тестирования Roblox Studio: раскрыт выпадающий список режимов теста с выбранным пунктом Server &amp; Clients и числом клиентов 2]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: список режимов теста → Server &amp; Clients, число клиентов 2.
 Сказать: каждое окно — отдельный игрок, можно увидеть игру глазами обеих команд.
@@ -107,14 +107,14 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="17-t-8">
 <h3 class="slide-title">Карта командной игры <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Середина карты — общая зона: без цветов команд и без точек возрождения</li><li>База команды — своя зона: своя точка возрождения и цвет команды</li><li>Всё, что принадлежит команде, носит её цвет — игрок ориентируется без подписей</li></ul>
+<ul class="content-item content-bullets"><li>Середина карты — общая зона: без цветов команд и без точек возрождения</li><li>База команды — своя зона: своя точка возрождения и цвет команды</li><li>Цвет команды — его носит всё, что ей принадлежит: игрок ориентируется без подписей</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: карта делится на две базы и общую середину, где команды встречаются.
 Сказать: всё, что принадлежит команде, носит её цвет — игрок ориентируется без подписей.
 Сказать: этот принцип станет основой честной арены на следующем уроке.</aside>
 </div>
 <div class="slide" id="17-t-9">
 <h3 class="slide-title">Частые ошибки с командами <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Покрасили деталь, а TeamColor не сменили — точка возрождения работает не на ту команду</li><li>Забыли выключить Neutral — на базе появляются игроки противоположной команды</li><li>Оставили включённым AllowTeamChangeOnTouch — игроки меняют сторону когда захотят</li><li>Цвета Team и точки возрождения почти одинаковые, но разные — связь не работает</li></ul>
+<ul class="content-item content-bullets"><li>Покрасили деталь, а TeamColor не сменили — точка возрождения работает не на ту команду</li><li>Забыли выключить Neutral — на базе появляются игроки противоположной команды</li><li>Оставили включённым AllowTeamChangeOnTouch — игроки меняют сторону когда захотят</li><li>Выбрали почти такой же цвет — у Team и точки возрождения он разный, и связь не работает</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: почти все поломки команд — это цвет, который совпал на вид, но не совпал по названию.
 Сказать: все четыре ошибки ловятся тестом Server &amp; Clients за пару минут.</aside>
 </div>

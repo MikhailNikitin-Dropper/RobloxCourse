@@ -2,29 +2,39 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX5DBA5118873141E0991420EE7D0C98BF">
+	<Item class="Folder" referent="RBXC28D47DC235F468B9B7D2AB0F333AE6C">
 		<Properties>
 			<string name="Name">EscapeTimer</string>
 		</Properties>
-		<Item class="Script" referent="RBX433C2F5BA57744AD9595F78728877BC9">
+		<Item class="Script" referent="RBXB84055DB700747A5BE6F7F2D1BA7DDE0">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- EscapeTimerScript — настенный дисплей с обратным отсчётом.
 -- Модуль курса «Таймер побега», урок 31.
 --
 -- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
--- настройки: сколько минут идёт отсчёт, что написано в конце и на какой грани
+-- настройки: сколько секунд идёт отсчёт, что написано в конце и на какой грани
 -- детали появятся цифры. Их можно менять. Всё, что ниже второго ряда, —
 -- логика: её не трогаем.
 --
 -- Папка модуля кладётся внутрь детали-дисплея. Скрипт сам рисует на её грани
 -- дисплей с цифрами: отдельно собирать интерфейс не нужно.
+--
+-- Время вышло — штраф: все игроки возвращаются на точку возрождения, двери
+-- модулей «Кнопка и дверь» и «Ключ и замок» закрываются, ключи ложатся на
+-- свои места, и отсчёт начинается заново. Встал на финиш — таймер замирает.
 
 -- ============================ НАСТРОЙКИ ============================
-local MINUTES = 5 -- сколько минут на побег
+local SECONDS = 300 -- сколько секунд на побег: 300 — это 5 минут
 local TIME_UP_TEXT = "Время вышло" -- что написано на дисплее, когда время кончилось
 local FACE = "Front" -- грань детали с цифрами: Front, Back, Left, Right, Top, Bottom
 local WARN_SECONDS = 30 -- за сколько секунд до конца цифры краснеют; 0 — не краснеют
+local RESTART = true -- true — время вышло: все на старт и заново; false — без штрафа
+local RESTART_DELAY = 3 -- сколько секунд висит надпись, прежде чем всё начнётся заново
+local FINISH = "ExitPad" -- имя детали финиша: встал на неё — таймер останавливается
+local WIN_TEXT = "Побег удался" -- что написано на дисплее, когда игрок на финише
 -- ===================================================================
+
+local Players = game:GetService("Players")
 
 -- Папка модуля лежит внутри детали-дисплея.
 local board = script.Parent.Parent
@@ -73,22 +83,55 @@ local function show(seconds)
 	end
 end
 
--- Отсчёт идёт с первой секунды игры и продолжается, пока не кончится время.
--- Атрибут Seconds виден в Properties: по нему другие модули урока могут
--- понять, сколько осталось.
-local left = math.max(0, math.floor(MINUTES * 60))
-board:SetAttribute("Seconds", left)
-show(left)
+-- Финиш: деталь с именем FINISH где угодно в Workspace. Нет такой детали —
+-- таймер просто идёт до конца.
+local escaped = false
+local finish = FINISH ~= "" and workspace:FindFirstChild(FINISH, true)
+if finish and finish:IsA("BasePart") then
+	finish.Touched:Connect(function(hit)
+		local character = hit.Parent
+		if not escaped and character and Players:GetPlayerFromCharacter(character) then
+			escaped = true
+			label.Text = WIN_TEXT
+			label.TextColor3 = Color3.fromRGB(110, 230, 120)
+		end
+	end)
+end
+
+-- Отсчёт идёт с первой секунды игры. Атрибут Seconds виден в Properties: по
+-- нему другие модули урока могут понять, сколько осталось.
+local total = math.max(0, math.floor(SECONDS))
 
 task.spawn(function()
-	while left > 0 do
-		task.wait(1)
-		left -= 1
+	while true do
+		local left = total
 		board:SetAttribute("Seconds", left)
 		show(left)
+		while left > 0 and not escaped do
+			task.wait(1)
+			if escaped then
+				break
+			end
+			left -= 1
+			board:SetAttribute("Seconds", left)
+			show(left)
+		end
+		if escaped then
+			return
+		end
+		label.Text = TIME_UP_TEXT
+		label.TextColor3 = Color3.fromRGB(255, 80, 70)
+		if not RESTART then
+			return
+		end
+		task.wait(RESTART_DELAY)
+		-- Сигнал остальным модулям побега: закрыть двери, вернуть ключи.
+		workspace:SetAttribute("EscapeRound", (workspace:GetAttribute("EscapeRound") or 0) + 1)
+		-- Новый персонаж появляется на точке возрождения с пустым рюкзаком.
+		for _, player in ipairs(Players:GetPlayers()) do
+			player:LoadCharacter()
+		end
 	end
-	label.Text = TIME_UP_TEXT
-	label.TextColor3 = Color3.fromRGB(255, 80, 70)
 end)
 ]]></ProtectedString>
 				<bool name="Disabled">false</bool>

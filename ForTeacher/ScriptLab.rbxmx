@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXFE089A7AED6B4435B1BB58FA04E9397E">
+	<Item class="Folder" referent="RBX5FAB77475E494A8B9EA26C071BE005CE">
 		<Properties>
 			<string name="Name">ScriptLab</string>
 		</Properties>
-		<Item class="Script" referent="RBXB172871989CB41B7AE1616B91B798200">
+		<Item class="Script" referent="RBXB4FC374AB79641B1A00644431E7EDA35">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- BlinkScript — заставляет деталь мигать светом. Модуль курса «Лаборатория
 -- скриптов», урок 29.
@@ -53,7 +53,7 @@ end
 				<string name="Name">BlinkScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXCAEB517BE6D34DF398006E7D200AE98D">
+		<Item class="Script" referent="RBX0F5536BCFC2B457ABA2BF3CC8630C0BA">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- LiftScript — лифт: сам поднимает площадку вверх и опускает обратно.
 -- Модуль курса «Лаборатория скриптов», урок 29.
@@ -66,7 +66,7 @@ end
 
 -- ============================ НАСТРОЙКИ ============================
 local PART = "Lift" -- имя детали-площадки (в кавычках!)
-local HEIGHT = 11 -- на сколько студов поднимается
+local HEIGHT = 8 -- на сколько студов поднимается
 local SECONDS = 3 -- сколько секунд едет в одну сторону
 local PAUSE = 1.5 -- сколько секунд стоит на месте наверху и внизу
 -- ===================================================================
@@ -109,7 +109,7 @@ end
 				<string name="Name">LiftScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXEF6D1ED5C95945FE9B0DA7B9DCF38C9A">
+		<Item class="Script" referent="RBXD358AF6502B8400E89D1B0FDCD436A98">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- GhostScript — мост-призрак: то держит игрока, то пропускает его насквозь.
 -- Модуль курса «Лаборатория скриптов», урок 29.

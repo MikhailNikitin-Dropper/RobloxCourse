@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX5C34E380F6B34905B5C8358DEA3855BF">
+	<Item class="Folder" referent="RBXEC423BA342404B7EACB8DCD0D05ECF1F">
 		<Properties>
 			<string name="Name">ButtonDoor</string>
 		</Properties>
-		<Item class="Script" referent="RBX0EAE4AAB0FAA4D9990C3039EBBE6F6BA">
+		<Item class="Script" referent="RBX9DE9BCA4B00A4714886938E6CE2F42A7">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- DoorScript — кнопки открывают дверь.
 -- Модуль курса «Кнопка и дверь», урок 30.
@@ -17,6 +17,9 @@
 --
 -- Подсказку «нажми E» настраивают не здесь, а в Properties: это объект
 -- ProximityPrompt внутри каждой кнопки. Если его нет, скрипт поставит свой.
+--
+-- Если в комнате висит таймер побега и время вышло, дверь закрывается и код
+-- гаснет: побег начинается заново.
 
 -- ============================ НАСТРОЙКИ ============================
 local DOOR = "Door" -- имя детали-двери (в кавычках!)
@@ -79,8 +82,10 @@ end
 local closed = door.CFrame
 local opened = closed + Vector3.new(0, door.Size.Y, 0)
 
+local activeTween
 local function move(goal)
 	local tween = TweenService:Create(door, TweenInfo.new(OPEN_TIME), { CFrame = goal })
+	activeTween = tween
 	tween:Play()
 	tween.Completed:Wait()
 end
@@ -111,23 +116,40 @@ local function reset()
 	end
 end
 
+-- Номер попытки: таймер побега увеличивает его, когда время вышло.
+-- Открытие двери, начатое в прошлой попытке, после сброса не продолжается.
+local round = workspace:GetAttribute("EscapeRound") or 0
+
 local function openDoor()
+	local myRound = round
 	-- Пока дверь едет или открыта, подсказки спрятаны: второе нажатие не
 	-- дёрнет полотно на полпути.
 	for _, entry in ipairs(buttons) do
 		entry.prompt.Enabled = false
 	end
 	move(opened)
-	if STAY_OPEN <= 0 then
+	if STAY_OPEN <= 0 or myRound ~= round then
 		return
 	end
 	task.wait(STAY_OPEN)
-	while someoneInDoorway() do
+	while myRound == round and someoneInDoorway() do
 		task.wait(0.5)
 	end
-	move(closed)
-	reset()
+	if myRound == round then
+		move(closed)
+		reset()
+	end
 end
+
+-- Время побега вышло: дверь закрыта, код набирают сначала.
+workspace:GetAttributeChangedSignal("EscapeRound"):Connect(function()
+	round = workspace:GetAttribute("EscapeRound") or 0
+	if activeTween then
+		activeTween:Cancel()
+	end
+	door.CFrame = closed
+	reset()
+end)
 
 for i, entry in ipairs(buttons) do
 	entry.prompt.Triggered:Connect(function()

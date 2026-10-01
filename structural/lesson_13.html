@@ -66,14 +66,14 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-t-2">
 <h3 class="slide-title">Почему берём готовое шасси <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>VehicleSeat сам читает клавиши, но машину не везёт: колёсам нужны моторы и подвеска</li><li><b>Шасси</b> — это готовая основа машины: рама, колёса, подвеска, сиденье и вся механика уже связаны</li><li>Шасси для урока — готовый модуль курса <b>Car Chassis</b>: получаем его по ссылке</li></ul>
+<ul class="content-item content-bullets"><li><b>VehicleSeat</b> — сам читает клавиши, но машину не везёт: колёсам нужны моторы и подвеска</li><li><b>Шасси</b> — это готовая основа машины: рама, колёса, подвеска, сиденье и вся механика уже связаны</li><li>Шасси для урока — готовый модуль курса <b>Car Chassis</b>: получаем его по ссылке</li></ul>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/118669881648248/Car-Chassis" target="_blank" rel="noopener">https://create.roblox.com/store/asset/118669881648248/Car-Chassis</a></p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: сиденье читает клавиши, но колёсам нужны моторы и подвеска — поэтому берём готовое шасси.
 Сказать: связку сиденья с колёсами программируют разработчики шасси, а дизайнер выбирает основу, настраивает характер и делает облик.</aside>
 </div>
 <div class="slide" id="13-t-3">
 <h3 class="slide-title">Осмотр шасси после вставки <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Открываем модель в Explorer: сиденье DriverSeat, механика CarScript и три папки с деталями</li><li>Parts — детали машины: колёса Wheel, ступицы Hub передних колёс, плита Main и руль SteeringWheel</li><li>Motors — моторы колёс и мотор поворота передних колёс; Suspension — пружины: они смягчают кочки и приземления</li><li>Колёса, моторы и подвеска уже связаны — меняем только то, что добавляем сами</li><li>Первый тест-драйв сразу после вставки: машина должна ехать до любых модификаций</li></ul>
+<ul class="content-item content-bullets"><li>Открываем модель в Explorer: сиденье DriverSeat, механика CarScript и три папки с деталями</li><li>Parts — детали машины: колёса Wheel, ступицы Hub передних колёс, плита Main и руль SteeringWheel</li><li>Motors — моторы колёс и мотор поворота передних колёс; Suspension — пружины: они смягчают кочки и приземления</li><li>Колёса, моторы и подвеска уже связаны — меняем только то, что добавляем сами</li><li>Первый тест-драйв — сразу после вставки, ещё до любых модификаций</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот окна Explorer в Roblox Studio: раскрыта модель Car Chassis, в дереве видны DriverSeat, скрипт CarScript и папки Parts, Motors, Suspension; в Parts раскрыта папка FrontLeft с деталями Wheel, Hub, SuspensionArm, SuspensionMount]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: раскрыть модель в Explorer — DriverSeat, скрипт CarScript и папки Parts, Motors, Suspension.
 Сказать: колёса, моторы и подвеска уже связаны — меняем только то, что добавляем сами.
@@ -89,7 +89,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-t-5">
 <h3 class="slide-title">Характер машины <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Атрибут (attribute)</b> — это настройка объекта: число, которое читает механика машины</li><li><b>MaxSpeed (максимальная скорость)</b> — как быстро машина едет вперёд</li><li><b>TurnAngle (угол поворота)</b> — насколько сильно выкручиваются передние колёса</li><li>Оба атрибута находятся в модели машины: выдели её в Explorer, в Properties — раздел Attributes</li></ul>
+<ul class="content-item content-bullets"><li><b>Атрибут (attribute)</b> — это настройка объекта: число, которое читает механика машины</li><li><b>MaxSpeed (максимальная скорость)</b> — как быстро машина едет вперёд</li><li><b>TurnAngle (угол поворота)</b> — насколько сильно выкручиваются передние колёса</li><li>Где их найти — оба атрибута в модели машины: выдели её в Explorer, в Properties раздел Attributes</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить модель машины, в Properties раздел Attributes — MaxSpeed и TurnAngle.
 Сказать: MaxSpeed — какой у машины мотор, TurnAngle — насколько острый руль; менять можно прямо во время теста.
 Сказать: кто справится раньше, посмотрит Acceleration, BrakeForce и ReverseSpeed.
@@ -97,7 +97,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="13-t-6">
 <h3 class="slide-title">Свой кузов поверх шасси <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Панели кузова, спойлер, фары — собираем из Part и операций Union/Negate</li><li><b>Weld (сварка)</b> — это крепление детали к основе машины: прикреплённая деталь едет вместе с ней</li><li>Выдели свою деталь и основу машины — Part с именем Main в папке Parts, потом вкладка Model → Weld</li><li>У деталей кузова выключаем CanCollide и включаем Massless: декор не цепляется за препятствия и не утяжеляет машину</li><li>Колёса Wheel, сиденье DriverSeat и стойки подвески не трогаем — это механика, без неё машина встанет</li></ul>
+<ul class="content-item content-bullets"><li>Панели кузова, спойлер, фары — собираем из Part и операций Union/Negate</li><li><b>Weld (сварка)</b> — это крепление детали к основе машины: прикреплённая деталь едет вместе с ней</li><li>Выдели свою деталь и основу машины — Part с именем Main в папке Parts, потом вкладка Model → Weld</li><li>Лёгкий кузов — выключаем CanCollide и включаем Massless: декор не цепляется за препятствия и не утяжеляет машину</li><li>Не трогаем механику — Wheel, DriverSeat и подвеску: без них машина встанет</li></ul>
 <p class="content-item content-image-prompt">[изображение: Одно и то же готовое шасси до и после кастомизации: слева простое шасси с колёсами, справа — красная машина со своим кузовом, спойлером на стойках, фарами и лобовым стеклом]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить свою деталь и Part Main → вкладка Model → Weld; затем выключить CanCollide и включить Massless.
 Сказать: крепим только к Main — деталь на подвеске заклинит колесо.

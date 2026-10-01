@@ -59,13 +59,13 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Механизмы: шарниры и моторы <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="22-t-1">
 <h3 class="slide-title">Механизм движется по правилу <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Свободная деталь едет туда, куда толкнули: направления ей никто не задаёт</li><li>У механизма движение ограничено: дверь ходит вокруг петель, карусель — вокруг столба</li><li>Правило задаёт <b>constraint</b> (ограничение) — объект между двумя деталями</li></ul>
+<ul class="content-item content-bullets"><li>Свободная деталь — едет туда, куда толкнули: направления ей никто не задаёт</li><li>У механизма движение ограничено: дверь ходит вокруг петель, карусель — вокруг столба</li><li>Правило задаёт <b>constraint</b> — ограничение, объект между двумя деталями</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: свободная деталь едет туда, куда толкнули, а механизму движение ограничено.
 Сказать: Anchored запрещает движение целиком, ограничение разрешает ровно один его вид.</aside>
 </div>
 <div class="slide" id="22-t-2">
 <h3 class="slide-title">Attachment — точка опоры <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Attachment</b> (точка крепления) — метка внутри детали: место и направление осей</li><li>Ограничение соединяет не детали целиком, а две такие точки: Attachment0 и Attachment1</li><li>Физика держит обе точки в одном месте, как петля держит створку у косяка</li></ul>
+<ul class="content-item content-bullets"><li><b>Attachment</b> (точка крепления) — метка внутри детали: место и направление осей</li><li>Attachment0 и Attachment1 — ограничение соединяет не детали целиком, а две такие точки</li><li>Точки держатся вместе — физика не даёт им разойтись, как петля держит створку у косяка</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: точка крепления в Explorer лежит внутри детали.
 Сказать: ограничение соединяет не детали целиком, а две такие точки — Attachment0 и Attachment1.
 Сказать: если точки развести, Studio рисует красную линию и стягивает их сама, и механизм ведёт себя не так, как задумано.</aside>
@@ -87,7 +87,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="22-t-5">
 <h3 class="slide-title">Показ ограничений в View <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Обычная сцена не показывает ни сварок, ни осей: механизм выглядит грудой деталей</li><li>Меню <b>View</b> → <b>Show Constraint Details</b>: появляются ось вращения, углы и пределы</li><li>Там же <b>Show Welds</b>: видно, что с чем сварено</li></ul>
+<ul class="content-item content-bullets"><li>Обычная сцена — не показывает ни сварок, ни осей: механизм выглядит грудой деталей</li><li><b>Show Constraint Details</b> в меню View — появляются ось вращения, углы и пределы</li><li>Там же <b>Show Welds</b>: видно, что с чем сварено</li></ul>
 <p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: сборка в редакторе без показов; раскрытое меню View с пунктами Show Welds и Show Constraint Details; та же сборка с включёнными показами — видны ось шарнира и линия сварки]</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: включить в меню View оба показа — Show Welds (Alt+W) и Show Constraint Details (Alt+D).
 Сказать: без них механизм выглядит грудой деталей, и кажется, что шарнир не поставился.
@@ -109,7 +109,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="22-t-8">
 <h3 class="slide-title">Мотор крутит механизм сам <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ActuatorType</b> (тип привода) по умолчанию None: такую деталь крутит что-то снаружи</li><li>Значение Motor превращает шарнир в мотор, и деталь крутится сама</li><li>Скорость задаёт AngularVelocity: радианы в секунду, полный оборот ≈ 6.28</li></ul>
+<ul class="content-item content-bullets"><li><b>ActuatorType</b> (тип привода) — по умолчанию None: такую деталь крутит что-то снаружи</li><li>Значение Motor — превращает шарнир в мотор, и деталь крутится сама</li><li>Скорость задаёт AngularVelocity: радианы в секунду, полный оборот ≈ 6.28</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель Properties шарнира, ActuatorType = Motor, под ним поля AngularVelocity, MotorMaxTorque и MotorMaxAcceleration]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: ActuatorType по умолчанию None — такую деталь крутит что-то снаружи; значение Motor превращает шарнир в мотор.
 Сказать: скорость задаёт AngularVelocity в радианах в секунду, полный оборот примерно 6.28, значит 1.5 — четверть оборота в секунду.

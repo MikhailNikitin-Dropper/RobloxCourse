@@ -2,36 +2,41 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXCD65A755BF3A42E696C5E9493F3F1539">
+	<Item class="Folder" referent="RBXBC35E97597124544A1A838A7108C8EC1">
 		<Properties>
 			<string name="Name">KeyLock</string>
 		</Properties>
-		<Item class="Script" referent="RBXE92F178916174D179EF5968C6378AFE1">
+		<Item class="Script" referent="RBXE5410A1A667F4F24AA98D295146E6A7B">
 			<Properties>
-				<ProtectedString name="Source"><![CDATA[-- KeyLockScript — дверь открывается только с ключом.
+				<ProtectedString name="Source"><![CDATA[-- KeyLockScript — дверь открывается только ключом в руке.
 -- Модуль курса «Ключ и замок», урок 31.
 --
 -- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
 -- настройки: имя ключа, имена деталей и три числа. Их можно менять. Всё, что
 -- ниже второго ряда, — логика: её не трогаем.
 --
--- Ключ — это Tool с деталью Handle внутри, ученик собирает его сам. Скрипт
--- ставит на ключ подсказку «Взять», а на замок — «Открыть» или «Нужен ключ».
--- Тексты подсказок берутся из настроек, дальность и удержание — из Properties
+-- Ключ — это Tool с деталью Handle внутри, ученик собирает его сам. Подобрать
+-- ключ мало: дверь откроется, только если игрок держит его в руке (выбрал на
+-- панели снаряжения). На замке подсказка «Открыть» или «Нужен ключ». Тексты
+-- подсказок берутся из настроек, дальность и удержание — из Properties
 -- самого ProximityPrompt, как на уроке 30.
+--
+-- Если в комнате висит таймер побега и время вышло, дверь закрывается, а ключ
+-- возвращается туда, где лежал в начале игры: побег начинается заново.
 
 -- ============================ НАСТРОЙКИ ============================
 local KEY_NAME = "Key" -- имя ключа, который открывает эту дверь (в кавычках!)
 local DOOR = "Door" -- имя детали-двери
 local LOCK = "Lock" -- имя детали-замка: на ней появится подсказка
-local ACTION_TEXT = "Открыть" -- подсказка на замке, когда ключ есть
-local LOCKED_TEXT = "Нужен ключ" -- подсказка на замке, когда ключа нет
+local ACTION_TEXT = "Открыть" -- подсказка на замке, когда ключ в руке
+local LOCKED_TEXT = "Нужен ключ" -- подсказка на замке, когда ключа в руке нет
 local OPEN_TIME = 0.8 -- за сколько секунд дверь уезжает
 local STAY_OPEN = 4 -- сколько секунд дверь открыта; 0 — не закрывается
 local KEEP_KEY = true -- true — ключ остаётся у игрока, false — исчезает
 -- ===================================================================
 
 local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
 
 -- Папка модуля лежит внутри модели двери, поэтому детали ищем в ней.
 local model = script.Parent.Parent
@@ -50,7 +55,7 @@ end
 door.Anchored = true
 lock.Anchored = true
 
--- Подсказка на замке: своя, если ученик её добавил, иначе ставим сами.
+-- Подсказка на замке: своя, если её добавили, иначе ставим сами.
 local prompt = lock:FindFirstChildOfClass("ProximityPrompt")
 if not prompt then
 	prompt = Instance.new("ProximityPrompt")
@@ -59,85 +64,70 @@ if not prompt then
 end
 prompt.ActionText = LOCKED_TEXT
 
--- Ключ у игрока: он либо в руках (в персонаже), либо в рюкзаке.
-local function findKey(player)
+-- Ключ считается, только когда он в руке: взятый Tool лежит внутри
+-- персонажа, а убранный — в рюкзаке (Backpack). Рюкзак не проверяем.
+local function heldKey(player)
 	local character = player.Character
-	if character then
-		local held = character:FindFirstChild(KEY_NAME)
-		if held and held:IsA("Tool") then
-			return held
-		end
-	end
-	local backpack = player:FindFirstChildOfClass("Backpack")
-	if backpack then
-		local stored = backpack:FindFirstChild(KEY_NAME)
-		if stored and stored:IsA("Tool") then
-			return stored
-		end
+	local held = character and character:FindFirstChild(KEY_NAME)
+	if held and held:IsA("Tool") then
+		return held
 	end
 	return nil
 end
 
 -- Подсказка честная: ещё до нажатия видно, открывается эта дверь или нет.
--- Скрипт серверный, поэтому текст один на всех: он меняется, как только ключ
--- оказывается у кого-то из игроков, и возвращается, когда ключа ни у кого нет.
-local Players = game:GetService("Players")
-
-local function anyoneHasKey()
+-- Скрипт серверный, поэтому текст один на всех: «Открыть», пока ключ у
+-- кого-то в руке, и «Нужен ключ», когда ни у кого его в руке нет.
+local function refreshPrompt()
 	for _, player in ipairs(Players:GetPlayers()) do
-		if findKey(player) then
-			return true
+		if heldKey(player) then
+			prompt.ActionText = ACTION_TEXT
+			return
 		end
 	end
-	return false
+	prompt.ActionText = LOCKED_TEXT
 end
 
-local function refreshPrompt()
-	prompt.ActionText = anyoneHasKey() and ACTION_TEXT or LOCKED_TEXT
-end
-
-local function watch(container)
-	container.ChildAdded:Connect(refreshPrompt)
-	container.ChildRemoved:Connect(refreshPrompt)
+-- Взял ключ в руку или убрал — меняется состав персонажа.
+local function watchCharacter(character)
+	character.ChildAdded:Connect(refreshPrompt)
+	character.ChildRemoved:Connect(refreshPrompt)
+	refreshPrompt()
 end
 
 local function watchPlayer(player)
-	local backpack = player:FindFirstChildOfClass("Backpack")
-	if backpack then
-		watch(backpack)
-	end
-	player.CharacterAdded:Connect(function(character)
-		watch(character)
-		-- рюкзак создаётся заново вместе с персонажем
-		local fresh = player:FindFirstChildOfClass("Backpack")
-		if fresh then
-			watch(fresh)
-		end
-		refreshPrompt()
-	end)
+	player.CharacterAdded:Connect(watchCharacter)
 	if player.Character then
-		watch(player.Character)
+		watchCharacter(player.Character)
 	end
 end
 
 for _, player in ipairs(Players:GetPlayers()) do
 	watchPlayer(player)
 end
-Players.PlayerAdded:Connect(function(player)
-	watchPlayer(player)
-	refreshPrompt()
-end)
+Players.PlayerAdded:Connect(watchPlayer)
 Players.PlayerRemoving:Connect(function()
 	task.defer(refreshPrompt)
 end)
-refreshPrompt()
+
+-- Где ключ лежал в начале игры: туда он вернётся, если время побега выйдет.
+local keyHome, keyCopy
+do
+	local key = workspace:FindFirstChild(KEY_NAME, true)
+	if key and key:IsA("Tool") then
+		keyHome = key.Parent
+		keyCopy = key:Clone()
+	end
+end
 
 -- Дверь уезжает вверх ровно на свою высоту.
 local closed = door.CFrame
 local opened = closed + Vector3.new(0, door.Size.Y, 0)
 
+local activeTween
 local function move(goal)
 	local tween = TweenService:Create(door, TweenInfo.new(OPEN_TIME), { CFrame = goal })
+	activeTween = tween
 	tween:Play()
 	tween.Completed:Wait()
 end
@@ -153,36 +143,72 @@ local function someoneInDoorway()
 	return false
 end
 
+-- Номер попытки: таймер побега увеличивает его, когда время вышло.
+-- Открытие двери, начатое в прошлой попытке, после сброса не продолжается.
+local round = workspace:GetAttribute("EscapeRound") or 0
 local busy = false
 
 prompt.Triggered:Connect(function(player)
 	if busy then
 		return
 	end
-	local key = findKey(player)
+	local key = heldKey(player)
 	if not key then
-		-- Без ключа дверь не двигается: игрок видит, что нужен предмет.
+		-- Без ключа в руке дверь не двигается: игрок видит, что нужен предмет.
 		prompt.ActionText = LOCKED_TEXT
 		return
 	end
 	busy = true
+	local myRound = round
 	if not KEEP_KEY then
 		key:Destroy()
 	end
-	prompt.ActionText = ACTION_TEXT
 	-- Пока дверь едет или открыта, подсказка спрятана: второе нажатие не
 	-- дёрнет полотно на полпути.
 	prompt.Enabled = false
 	move(opened)
-	if STAY_OPEN > 0 then
+	if STAY_OPEN > 0 and myRound == round then
 		task.wait(STAY_OPEN)
-		while someoneInDoorway() do
+		while myRound == round and someoneInDoorway() do
 			task.wait(0.5)
 		end
-		move(closed)
-		prompt.Enabled = true
+		if myRound == round then
+			move(closed)
+			prompt.Enabled = true
+		end
 	end
+	if myRound == round then
+		busy = false
+	end
+end)
+
+-- Время побега вышло: дверь закрыта, ключ снова на своём месте.
+workspace:GetAttributeChangedSignal("EscapeRound"):Connect(function()
+	round = workspace:GetAttribute("EscapeRound") or 0
+	if activeTween then
+		activeTween:Cancel()
+	end
+	door.CFrame = closed
+	prompt.Enabled = true
 	busy = false
+	if keyCopy then
+		-- Ключ мог остаться в руке, в рюкзаке или на полу: убираем все копии.
+		for _, player in ipairs(Players:GetPlayers()) do
+			for _, holder in ipairs({ player.Character, player:FindFirstChildOfClass("Backpack") }) do
+				local key = holder and holder:FindFirstChild(KEY_NAME)
+				if key and key:IsA("Tool") then
+					key:Destroy()
+				end
+			end
+		end
+		for _, item in ipairs(workspace:GetDescendants()) do
+			if item.Name == KEY_NAME and item:IsA("Tool") then
+				item:Destroy()
+			end
+		end
+		keyCopy:Clone().Parent = keyHome
+	end
+	refreshPrompt()
 end)
 ]]></ProtectedString>
 				<bool name="Disabled">false</bool>

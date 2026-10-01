@@ -59,14 +59,14 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Находки, рюкзак и счёт <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="33-t-1">
 <h3 class="slide-title">Лутер: вылазка и возвращение <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Лутер</b> — игра, где выходят из безопасного хаба за добычей</li><li>Хаб — место, куда возвращаются: старт и будущий лагерь</li><li>Ценность есть только у того, что донёс до хаба</li><li>Сегодня: находки с ценой и рюкзак, в который влезает не всё</li></ul>
+<ul class="content-item content-bullets"><li><b>Лутер</b> — игра, где выходят из безопасного хаба за добычей</li><li>Хаб — место, куда возвращаются: старт и будущий лагерь</li><li>Ценность — только у того, что донёс до хаба</li><li>Сегодня: находки с ценой и рюкзак, в который влезает не всё</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: лутер — игра про дорогу туда и обратно, а не про сбор ради сбора.
 Сказать: пока находки в рюкзаке, они ещё не деньги — это обещание денег.
 Сказать: сегодня появляются находки и рюкзак, дальше — зоны, сдача и другие игроки.</aside>
 </div>
 <div class="slide" id="33-t-2">
 <h3 class="slide-title">Находка: тег и цена <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Тег</b> (Tag) — метка детали, по ней модуль находит свои предметы</li><li>Тег ставится в Properties → Tags, как у билетов и артефактов</li><li><b>Атрибут Value</b> — цена находки в монетах</li><li>Тег говорит «это находка», Value — «столько она стоит»</li></ul>
+<ul class="content-item content-bullets"><li><b>Тег</b> (Tag) — метка детали, по ней модуль находит свои предметы</li><li>Где ставят тег — в Properties → Tags, как у билетов и артефактов</li><li><b>Атрибут Value</b> — цена находки в монетах</li><li>Тег говорит «это находка», Value — «столько она стоит»</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель Properties выделенной детали — раздел Tags с тегом Loot и раздел Attributes с числом Value = 10]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь, Properties → Tags → добавить тег Loot; рядом Attributes → Value.
 Сказать: тег отвечает на вопрос «это находка?», атрибут Value — «сколько она стоит».
@@ -74,7 +74,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-t-3">
 <h3 class="slide-title">Рюкзак с дном <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>CAPACITY</b> — сколько находок влезает в рюкзак</li><li>Мест мало: мелкие находки приходится оставлять на земле</li><li>Полный рюкзак не берёт находку и говорит об этом на экране</li><li>Бездонный рюкзак убивает выбор: тогда берут всё подряд</li></ul>
+<ul class="content-item content-bullets"><li><b>CAPACITY</b> — сколько находок влезает в рюкзак</li><li>Мест мало: мелкие находки приходится оставлять на земле</li><li>Полный рюкзак — не берёт находку и говорит об этом на экране</li><li>Бездонный рюкзак убивает выбор: тогда берут всё подряд</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: бездонный рюкзак превращает игру в уборку карты — подбирай всё подряд.
 Сказать: лимит мест делает каждую находку решением, и это главный приём жанра.
 Сказать: настройка CAPACITY лежит в начале скрипта модуля, её мы и подберём на практике.</aside>
@@ -89,7 +89,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-t-5">
 <h3 class="slide-title">Полоска рюкзака <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Полоска вверху экрана: «Рюкзак 3/6 · 120 монет»</li><li>Занятые места и сумма — то, чем игрок рискует прямо сейчас</li><li>Интерфейс рисует модуль: собирать <b>ScreenGui</b> не нужно</li><li>Сообщения модуля тоже появляются здесь: «+30», «Рюкзак полон»</li></ul>
+<ul class="content-item content-bullets"><li>Полоска вверху экрана: «Рюкзак 3/6 · 120 монет»</li><li>Занятые места и сумма — то, чем игрок рискует прямо сейчас</li><li>Интерфейс рисует модуль: собирать <b>ScreenGui</b> не нужно</li><li>Сообщения модуля — тоже появляются здесь: «+30», «Рюкзак полон»</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вверху экрана тёмная полоска с надписью «Рюкзак 3/6 · 120 монет», под ней жёлтая надпись «+30»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: таблица показывает всех, а полоска — только тебя, и смотреть в неё быстрее.
 Сказать: полоску рисует сам модуль, как это делали билеты урока 24.
@@ -97,14 +97,14 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-t-6">
 <h3 class="slide-title">Цена — это дизайн <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Обычная находка — 10 монет, редкая — 30, легендарная — 80</li><li>Разница в разы: игрок сразу понимает, за чем стоит идти</li><li>Дорогое кладут туда, куда идти дольше и страшнее</li><li>Одинаковые цены делают карту однообразной: всё равно, куда идти</li></ul>
+<ul class="content-item content-bullets"><li>Обычная находка — 10 монет, редкая — 30, легендарная — 80</li><li>Разница в разы: игрок сразу понимает, за чем стоит идти</li><li>Дорогое подальше — его кладут туда, куда идти дольше и страшнее</li><li>Одинаковые цены — делают карту однообразной: всё равно, куда идти</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: цена говорит игроку, что в игре ценно, поэтому её выбирает дизайнер, а не случай.
 Сказать: стартовые числа курса — 10, 30 и 80 монет: разница в разы, и дорогое видно сразу.
 Сказать: на следующем уроке по этим числам вырастут зоны.</aside>
 </div>
 <div class="slide" id="33-t-7">
 <h3 class="slide-title">Модуль «Лут и рюкзак» <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Папка <b>LootSystem</b> кладётся в Workspace</li><li><b>TAG</b> — метка находки, <b>CAPACITY</b> — места в рюкзаке</li><li><b>PICKUP_RANGE</b> — с какого расстояния находка подбирается</li><li><b>RESPAWN_SECONDS</b> — через сколько находка вернётся на место</li></ul>
+<ul class="content-item content-bullets"><li>Папка <b>LootSystem</b> — кладётся в Workspace</li><li><b>TAG</b> — метка находки, <b>CAPACITY</b> — места в рюкзаке</li><li><b>PICKUP_RANGE</b> — с какого расстояния находка подбирается</li><li><b>RESPAWN_SECONDS</b> — через сколько находка вернётся на место</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer раскрыта папка LootSystem со скриптами LootScript и LootClient, в окне скрипта видны настройки TAG, CAPACITY, PICKUP_RANGE]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка LootSystem в Workspace, внутри LootScript и LootClient.
 Сказать: настройки лежат в начале LootScript, как у модулей блока: TAG, CAPACITY, PICKUP_RANGE.

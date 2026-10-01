@@ -59,7 +59,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Как устроена физика Roblox <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="21-t-1">
 <h3 class="slide-title">Почему всё было закреплено <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Anchored</b> (закреплено) — свойство детали: физика её не трогает вовсе</li><li>Закреплённая деталь висит в воздухе, не падает и не сдвигается от удара</li><li>Сняли галочку — включились гравитация и столкновения, деталь ожила</li></ul>
+<ul class="content-item content-bullets"><li><b>Anchored</b> (закреплено) — свойство детали: физика её не трогает вовсе</li><li>Висит в воздухе — закреплённая деталь не падает и не сдвигается от удара</li><li>Сняли галочку — включились гравитация и столкновения, деталь ожила</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: Anchored — свойство детали, при котором физика её не трогает вовсе.
 Сказать: сняли галочку — включились гравитация и столкновения, деталь ожила.</aside>
 </div>
@@ -74,14 +74,14 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="21-t-3">
 <h3 class="slide-title">Масса — это объём × плотность <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Mass</b> (масса) — поле только для чтения: Roblox считает её сам</li><li>Масса = объём детали × плотность её материала</li><li>Нужна деталь тяжелее — меняем размер или плотность, само поле массы не редактируется</li></ul>
+<ul class="content-item content-bullets"><li><b>Mass</b> (масса) — поле только для чтения: Roblox считает её сам</li><li>Формула массы — объём детали × плотность её материала</li><li>Нужна деталь тяжелее — меняем размер или плотность, само поле массы не редактируется</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: масса — это объём детали, умноженный на плотность материала; само поле Mass не редактируется.
 Сказать: плотности — Wood 0.35, Plastic 0.7, Brick 1.922, Metal 7.85.
 Сказать: два одинаковых куба, деревянный и металлический, отличаются по массе больше чем в двадцать раз.</aside>
 </div>
 <div class="slide" id="21-t-4">
 <h3 class="slide-title">CustomPhysicalProperties <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>CustomPhysicalProperties</b> — включаем в Properties</li><li>Включили — появились поля: Density, Friction, Elasticity и два веса к ним</li><li>Настройки детали важнее её материала: Roblox сначала смотрит на них</li></ul>
+<ul class="content-item content-bullets"><li><b>CustomPhysicalProperties</b> — включаем в Properties</li><li>Включили — появились поля: Density, Friction, Elasticity и два веса к ним</li><li>Настройки главнее материала — Roblox сначала смотрит на них</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель Properties выделенной детали, галочка CustomPhysicalProperties включена и под ней раскрыты поля Density, Friction, Elasticity]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: пока галочка CustomPhysicalProperties снята, полей нет вообще — поэтому плотность и не находят в списке свойств.
 Сказать: эту панель мы открывали на уроке 9, когда делали скользкий лёд, — сегодня берём из неё другое число.
@@ -89,7 +89,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="21-t-5">
 <h3 class="slide-title">Числа материала <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Density</b> (плотность) — принимает значения от 0.0001 до 100</li><li>Меньше единицы — деталь легче воды, больше — тяжелее</li><li><b>Elasticity</b> (упругость) — сколько скорости деталь возвращает после удара: от 0 до 1</li><li>Rubber 0.95 отскакивает как мяч, Snow 0.03 гасит удар полностью</li><li><b>Friction</b> (трение) — сопротивление скольжению: Rubber 1.5, Ice 0.02</li><li>Чтобы игрок заскользил, нужен ещё FrictionWeight — вес трения, которым мы делали скользкий лёд</li></ul>
+<ul class="content-item content-bullets"><li><b>Density</b> (плотность) — принимает значения от 0.0001 до 100</li><li>Меньше единицы — деталь легче воды, больше — тяжелее</li><li><b>Elasticity</b> (упругость) — сколько скорости деталь возвращает после удара: от 0 до 1</li><li>Примеры упругости — Rubber 0.95 отскакивает как мяч, Snow 0.03 гасит удар полностью</li><li><b>Friction</b> (трение) — сопротивление скольжению: Rubber 1.5, Ice 0.02</li><li><b>FrictionWeight</b> — вес трения: без него игрок не заскользит, им мы делали скользкий лёд</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: Density — плотность от 0.0001 до 100, Elasticity — упругость от 0 до 1, Friction — трение.
 Сказать: Rubber 0.95 отскакивает как мяч, Snow 0.03 гасит удар полностью; Ice 0.02 против Rubber 1.5 по трению.
 Сказать: искать их в Properties сверху вниз в том же порядке; сегодня главный герой — плотность.
@@ -121,7 +121,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="21-t-9">
 <h3 class="slide-title">Предсказываем → проверяем <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Перед запуском проговариваем вслух, что произойдёт, — это предсказание</li><li>Запускаем и сравниваем с тем, что видим</li><li>Не совпало — ищем причину, а не переделываем наугад</li></ul>
+<ul class="content-item content-bullets"><li>Предсказание — перед запуском проговариваем вслух, что произойдёт</li><li>Проверка — запускаем и сравниваем с тем, что видим</li><li>Не совпало — ищем причину, а не переделываем наугад</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: перед каждым запуском проговариваем вслух, что произойдёт, — это предсказание.
 Сказать: не совпало — ищем причину, а не переделываем наугад.
 Сказать: несовпавшее предсказание не провал, а результат опыта, если причина потом найдена.</aside>
