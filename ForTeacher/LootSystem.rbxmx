@@ -1,0 +1,863 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX3E0C57948A4D455EB533360855F22EF2">
+		<Properties>
+			<string name="Name">LootSystem</string>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBXE6BDE387E4BD459BAD2FE16F57BE93EA">
+			<Properties>
+				<string name="Name">Update</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX32A0B7E0E0B14E7A9E97D97CEC28FA46">
+			<Properties>
+				<string name="Name">Drop</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX6FB8EED62AB146C6A4AF516188DE91CF">
+			<Properties>
+				<string name="Name">Collected</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX364930B88A804DF899CAE4AF6EF77EF5">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- LootScript — находки, рюкзак и счёт игрока.
+-- Модуль курса «Лут и рюкзак», уроки 33-35.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: метка находки, сколько мест в рюкзаке, с какого расстояния
+-- предмет подбирается и что происходит при гибели. Их можно менять. Всё, что
+-- ниже второго ряда, — логика: её не трогаем.
+--
+-- Находкой становится закреплённая деталь или модель с тегом TAG (Properties →
+-- Tags). Модель собирают из 2–3 деталей на сварке (Weld), тег и атрибуты ставят
+-- на саму модель. Цена находки — её атрибут Value; если атрибута нет, берётся
+-- DEFAULT_VALUE. Подобранная находка уменьшается и, вращаясь, летит к игроку.
+--
+-- Рюкзак — обычный инвентарь Roblox (Backpack). Подобранная находка
+-- превращается в предмет-Tool с атрибутом Value: его видно в нижней панели,
+-- его можно взять в руку, а продаётся он в зоне сдачи. Место в рюкзаке
+-- занимает и снаряжение из магазина: у таких предметов есть атрибут Slots.
+-- Продаются и падают мешком только находки — предметы с атрибутом Value.
+--
+-- Предмет из рюкзака можно выбросить (клавиша Q, предмет — в руке): он ложится
+-- на землю, место в рюкзаке освобождается, подобрать его может кто угодно.
+-- Выбрасываются находки и покупки; стартовое оружие без Slots и Value — нет.
+
+-- ============================ НАСТРОЙКИ ============================
+local TAG = "Loot" -- метка находки: ставится в Properties → Tags
+local CAPACITY = 6 -- сколько находок влезает в рюкзак
+local PICKUP_RANGE = 6 -- с какого расстояния находка подбирается, студы
+local DEFAULT_VALUE = 10 -- цена находки без атрибута Value
+local RESPAWN_SECONDS = 45 -- через сколько находка возвращается на место
+local DROP_ON_DEATH = false -- true — рюкзак падает мешком при гибели
+local BAG_SECONDS = 30 -- сколько мешок лежит, прежде чем исчезнуть
+local BAG_NAME = "Мешок" -- имя мешка: его видно в Explorer
+local HIGHLIGHT_RANGE = 14 -- с какого расстояния находка подсвечивается, студы
+local DROP_SECONDS = 60 -- сколько выброшенный предмет лежит на земле
+local DROP_KEY = "Q" -- клавиша «выбросить предмет из руки»
+-- ===================================================================
+
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+local ServerStorage = game:GetService("ServerStorage")
+
+local package = script.Parent
+-- Метку и дальность подсветки берёт экран игрока: настройки живут здесь.
+package:SetAttribute("Tag", TAG)
+package:SetAttribute("HighlightRange", HIGHLIGHT_RANGE)
+package:SetAttribute("DropKey", DROP_KEY)
+
+-- Канал к экрану игрока: полоска рюкзака и короткие сообщения.
+local update = package:FindFirstChild("Update")
+if not update then
+	update = Instance.new("RemoteEvent")
+	update.Name = "Update"
+	update.Parent = package
+end
+
+-- Канал к экранам всех игроков: «эту находку забрал вот этот игрок» —
+-- по нему рисуется полёт находки к игроку.
+local collected = package:FindFirstChild("Collected")
+if not collected then
+	collected = Instance.new("RemoteEvent")
+	collected.Name = "Collected"
+	collected.Parent = package
+end
+local FLY_SECONDS = 0.4 -- сколько летит находка к игроку (логика, не настройка)
+
+-- Канал от игрока: «выброси предмет из руки».
+local dropEvent = package:FindFirstChild("Drop")
+if not dropEvent then
+	dropEvent = Instance.new("RemoteEvent")
+	dropEvent.Name = "Drop"
+	dropEvent.Parent = package
+end
+
+-- Склад, где находка ждёт возвращения: из Workspace её видно, из склада нет.
+local hidden = ServerStorage:FindFirstChild("LootHidden")
+if not hidden then
+	hidden = Instance.new("Folder")
+	hidden.Name = "LootHidden"
+	hidden.Parent = ServerStorage
+end
+
+-- Находка — деталь или модель.
+local function isFind(item)
+	return item:IsA("BasePart") or item:IsA("Model")
+end
+
+-- Где находка стоит: у модели — главная деталь (PrimaryPart).
+local function whereIs(item)
+	if item:IsA("BasePart") then
+		return item.Position
+	end
+	local primary = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart", true)
+	return primary and primary.Position or nil
+end
+
+local home = {} -- находка → откуда она и где стояла
+
+local function remember(item)
+	if not home[item] and item.Parent ~= hidden then
+		local cframe = item:IsA("Model") and item:GetPivot() or item.CFrame
+		home[item] = { parent = item.Parent, cframe = cframe }
+	end
+end
+
+for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+	if isFind(item) then
+		remember(item)
+	end
+end
+CollectionService:GetInstanceAddedSignal(TAG):Connect(function(item)
+	if isFind(item) then
+		remember(item)
+	end
+end)
+
+------------------------------------------------------------------ счёт игрока
+local function statsOf(player)
+	local stats = player:FindFirstChild("leaderstats")
+	if not stats then
+		-- Имя папки только строчными буквами, иначе таблицы не будет.
+		stats = Instance.new("Folder")
+		stats.Name = "leaderstats"
+		stats.Parent = player
+	end
+	local bag = stats:FindFirstChild("В рюкзаке")
+	if not bag then
+		bag = Instance.new("IntValue")
+		bag.Name = "В рюкзаке"
+		bag.Parent = stats
+	end
+	local coins = stats:FindFirstChild("Монеты")
+	if not coins then
+		coins = Instance.new("IntValue")
+		coins.Name = "Монеты"
+		coins.Parent = stats
+	end
+	return bag, coins
+end
+
+-- Сколько мест в рюкзаке у этого игрока: снаряжение из магазина добавляет
+-- свои атрибутом BonusSlots — до гибели.
+local function capacityOf(player)
+	return CAPACITY + (player:GetAttribute("BonusSlots") or 0)
+end
+
+-- Находки игрока: предметы с атрибутом Value в рюкзаке и в руке.
+local function lootOf(player)
+	local list = {}
+	for _, holder in ipairs({ player:FindFirstChildOfClass("Backpack"), player.Character }) do
+		if holder then
+			for _, tool in ipairs(holder:GetChildren()) do
+				if tool:IsA("Tool") and tool:GetAttribute("Value") then
+					table.insert(list, tool)
+				end
+			end
+		end
+	end
+	return list
+end
+
+-- Занятые места — все предметы с атрибутом Slots или Value (находки и
+-- покупки), цена рюкзака — только находки.
+local function count(player)
+	local slots, value = 0, 0
+	for _, holder in ipairs({ player:FindFirstChildOfClass("Backpack"), player.Character }) do
+		if holder then
+			for _, tool in ipairs(holder:GetChildren()) do
+				if tool:IsA("Tool") and (tool:GetAttribute("Value") or tool:GetAttribute("Slots")) then
+					slots += tonumber(tool:GetAttribute("Slots")) or 1
+					value += tonumber(tool:GetAttribute("Value")) or 0
+				end
+			end
+		end
+	end
+	return slots, value
+end
+
+local shown = {} -- какие цифры последний раз ушли на экран игрока
+
+local function show(player, message)
+	local bag, coins = statsOf(player)
+	local slots, value = count(player)
+	local capacity = capacityOf(player)
+	bag.Value = value
+	-- Атрибуты игрока читают зона сдачи и магазин урока 35.
+	player:SetAttribute("LootCount", slots)
+	player:SetAttribute("LootValue", value)
+	player:SetAttribute("LootCapacity", capacity)
+	shown[player] = string.format("%d/%d/%d/%d", slots, capacity, value, coins.Value)
+	update:FireClient(player, {
+		count = slots,
+		capacity = capacity,
+		value = value,
+		coins = coins.Value,
+		message = message,
+	})
+end
+
+-- Рюкзак меняется не только здесь: продажа в лагере, покупки, гибель.
+-- Поэтому экран обновляем, как только цифры разошлись с показанными.
+local function refresh(player)
+	local _, coins = statsOf(player)
+	local slots, value = count(player)
+	local now = string.format("%d/%d/%d/%d", slots, capacityOf(player), value, coins.Value)
+	if shown[player] ~= now then
+		show(player)
+	end
+end
+
+local function setup(player)
+	statsOf(player)
+	task.defer(show, player)
+end
+
+Players.PlayerAdded:Connect(setup)
+Players.PlayerRemoving:Connect(function(player)
+	shown[player] = nil
+end)
+for _, player in ipairs(Players:GetPlayers()) do
+	setup(player)
+end
+
+------------------------------------------------------------------ предмет-находка
+-- Копия находки без меток и атрибутов модуля: из неё делают рукоять и
+-- выброшенный предмет.
+local function bareCopy(item)
+	local copy = item:Clone()
+	for _, tag in ipairs(CollectionService:GetTags(copy)) do
+		CollectionService:RemoveTag(copy, tag)
+	end
+	for name in pairs(copy:GetAttributes()) do
+		copy:SetAttribute(name, nil)
+	end
+	local stored = copy:FindFirstChild("Stored")
+	if stored then
+		stored:Destroy()
+	end
+	return copy
+end
+
+local HAND_SIZE = 1.4 -- самый большой размер предмета в руке, студы
+local shapes = {} -- предмет → находка в натуральную величину (стирается вместе с предметом)
+
+-- Рукоять предмета — уменьшенная копия самой находки: в руке игрок держит
+-- то же, что подобрал. У модели все детали привариваются к рукояти, чтобы
+-- в руке она не развалилась.
+local function makeTool(item, value, slots)
+	local tool = Instance.new("Tool")
+	tool.Name = item.Name
+	tool.ToolTip = value .. " монет"
+	tool.CanBeDropped = false
+	tool:SetAttribute("Value", value)
+	tool:SetAttribute("Slots", slots)
+	shapes[tool] = bareCopy(item)
+	tool.Destroying:Connect(function()
+		shapes[tool] = nil
+	end)
+
+	local shape = bareCopy(item)
+	local parts = {}
+	local handle
+	if shape:IsA("BasePart") then
+		local biggest = math.max(shape.Size.X, shape.Size.Y, shape.Size.Z)
+		if biggest > HAND_SIZE then
+			shape.Size = shape.Size * (HAND_SIZE / biggest)
+		end
+		parts = { shape }
+		handle = shape
+	else
+		local extent = shape:GetExtentsSize()
+		local biggest = math.max(extent.X, extent.Y, extent.Z)
+		if biggest > HAND_SIZE then
+			shape:ScaleTo(shape:GetScale() * HAND_SIZE / biggest)
+		end
+		for _, d in ipairs(shape:GetDescendants()) do
+			if d:IsA("BasePart") then
+				table.insert(parts, d)
+			end
+		end
+		handle = shape.PrimaryPart or parts[1]
+	end
+	if not handle then
+		return tool
+	end
+
+	-- Какие детали уже приварены (Weld или WeldConstraint внутри модели).
+	local welded = {}
+	for _, d in ipairs(shape:GetDescendants()) do
+		if d:IsA("WeldConstraint") or d:IsA("JointInstance") then
+			if d.Part0 then
+				welded[d.Part0] = true
+			end
+			if d.Part1 then
+				welded[d.Part1] = true
+			end
+		end
+	end
+
+	handle.Name = "Handle"
+	for _, p in ipairs(parts) do
+		p.Anchored = false
+		p.CanCollide = false
+		p.Massless = true
+		if p ~= handle and not welded[p] then
+			local weld = Instance.new("WeldConstraint")
+			weld.Part0 = handle
+			weld.Part1 = p
+			weld.Parent = handle
+		end
+	end
+	if shape:IsA("Model") then
+		for _, child in ipairs(shape:GetChildren()) do
+			child.Parent = tool
+		end
+		shape:Destroy()
+	else
+		shape.Parent = tool
+	end
+	return tool
+end
+
+------------------------------------------------------------------ подбор
+-- Полёт к игроку рисуют экраны игроков (LootClient), а находка пока
+-- остаётся на месте с атрибутом Taken — второй раз её не поднять.
+local function fly(item, player, destroy)
+	item:SetAttribute("Taken", true)
+	collected:FireAllClients(item, player)
+	task.delay(FLY_SECONDS, function()
+		item:SetAttribute("Taken", nil)
+		if destroy then
+			item:Destroy()
+			return
+		end
+		item.Parent = hidden
+		local spot = home[item]
+		task.delay(RESPAWN_SECONDS, function()
+			if item.Parent == hidden and spot then
+				if item:IsA("Model") then
+					item:PivotTo(spot.cframe)
+				else
+					item.CFrame = spot.cframe
+				end
+				item.Parent = spot.parent
+			end
+		end)
+	end)
+end
+
+local function take(player, item)
+	local slots = tonumber(item:GetAttribute("Slots")) or 1
+	local value = tonumber(item:GetAttribute("Value")) or DEFAULT_VALUE
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	if not backpack then
+		return
+	end
+
+	if count(player) + slots > capacityOf(player) then
+		-- Игрок стоит рядом с находкой, и проверка идёт пять раз в секунду:
+		-- без паузы сообщение «Рюкзак полон» мигало бы без остановки.
+		local last = player:GetAttribute("LootFullSaid") or 0
+		if os.clock() - last > 3 then
+			player:SetAttribute("LootFullSaid", os.clock())
+			show(player, "Рюкзак полон")
+		end
+		return
+	end
+
+	-- Выброшенный предмет возвращается в рюкзак тем же, каким был: покупка
+	-- остаётся покупкой, находка — находкой со своей ценой.
+	local stored = item:FindFirstChild("Stored")
+	if stored and stored.Value then
+		local tool = stored.Value
+		tool.Parent = backpack
+		fly(item, player, true)
+		show(player, "+" .. tool.Name)
+		return
+	end
+
+	makeTool(item, value, slots).Parent = backpack
+	-- Мешок погибшего одноразовый и не возвращается.
+	fly(item, player, item:GetAttribute("IsBag") == true)
+	show(player, "+" .. value)
+end
+
+local since = 0
+RunService.Heartbeat:Connect(function(dt)
+	since = since + dt
+	if since < 0.2 then
+		return
+	end
+	since = 0
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if root and humanoid and humanoid.Health > 0 then
+			for _, item in ipairs(CollectionService:GetTagged(TAG)) do
+				local spot = isFind(item) and item.Parent ~= hidden and not item:GetAttribute("Taken") and whereIs(item)
+				if spot then
+					local distance = (spot - root.Position).Magnitude
+					if item:GetAttribute("DropperId") == player.UserId then
+						-- Свой выброшенный предмет поднимается, только когда
+						-- игрок отошёл и вернулся, иначе он прыгнул бы обратно.
+						if distance > PICKUP_RANGE + 1 then
+							item:SetAttribute("DropperId", nil)
+						end
+					elseif distance <= PICKUP_RANGE then
+						take(player, item)
+					end
+				end
+			end
+		end
+		refresh(player)
+	end
+end)
+
+------------------------------------------------------------------ выброс
+-- Предмет из руки ложится на землю перед игроком. Сам Tool ждёт на складе,
+-- а на земле лежит его копия-находка со ссылкой Stored на него.
+local dropped = hidden:FindFirstChild("Dropped")
+if not dropped then
+	dropped = Instance.new("Folder")
+	dropped.Name = "Dropped"
+	dropped.Parent = hidden
+end
+
+dropEvent.OnServerEvent:Connect(function(player)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not (humanoid and root and humanoid.Health > 0) then
+		return
+	end
+	local tool = character:FindFirstChildOfClass("Tool")
+	if not tool then
+		show(player, "Возьми предмет в руку")
+		return
+	end
+	if not (tool:GetAttribute("Value") or tool:GetAttribute("Slots")) then
+		show(player, "Этот предмет не выбросить")
+		return
+	end
+	-- На землю ложится находка в натуральную величину, а не уменьшенная
+	-- рукоять. У покупок своей «большой» формы нет — кладём их рукоять.
+	local part
+	if shapes[tool] then
+		part = shapes[tool]:Clone()
+	else
+		local handle = tool:FindFirstChild("Handle")
+		part = handle and handle:Clone() or Instance.new("Part")
+		for _, child in ipairs(part:GetChildren()) do
+			if not child:IsA("DataModelMesh") and not child:IsA("Decal") and not child:IsA("SurfaceAppearance") then
+				child:Destroy()
+			end
+		end
+		if part.Size.Magnitude < 1.5 then
+			part.Size = Vector3.new(1.2, 1.2, 1.2)
+		end
+	end
+	part.Name = tool.Name
+	local pieces = part:IsA("BasePart") and { part } or {}
+	for _, d in ipairs(part:GetDescendants()) do
+		if d:IsA("BasePart") then
+			table.insert(pieces, d)
+		end
+	end
+	for _, piece in ipairs(pieces) do
+		piece.Anchored = true
+		piece.CanCollide = false
+	end
+	-- Перед игроком на земле. Луч к земле не видит лежащие находки — иначе
+	-- новый предмет вставал бы на старый слоем. Если место занято, ищем
+	-- свободное по кругу вокруг игрока: от места перед ним поочерёдно вправо
+	-- и влево, а когда круг занят — на следующем, пошире.
+	local box, size
+	if part:IsA("Model") then
+		box, size = part:GetBoundingBox()
+	else
+		box, size = part.CFrame, part.Size
+	end
+	local skip = { character }
+	for _, other in ipairs(CollectionService:GetTagged(TAG)) do
+		table.insert(skip, other)
+	end
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = skip
+	local overlap = OverlapParams.new()
+	overlap.FilterType = Enum.RaycastFilterType.Exclude
+	overlap.FilterDescendantsInstances = { character }
+
+	local forward = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z).Unit
+	local right = Vector3.new(root.CFrame.RightVector.X, 0, root.CFrame.RightVector.Z).Unit
+	local step = math.max(size.X, size.Z) + 0.5
+	local spots = {}
+	for ring = 0, 2 do
+		local radius = math.max(3.5, step + 1) + ring * step
+		local slots = math.max(6, math.floor(2 * math.pi * radius / step))
+		local angle = 2 * math.pi / slots
+		for i = 0, slots - 1 do
+			local turn = math.ceil(i / 2) * (i % 2 == 1 and 1 or -1) * angle
+			table.insert(spots, root.Position + (forward * math.cos(turn) + right * math.sin(turn)) * radius)
+		end
+	end
+	local chosen, first
+	for _, spot in ipairs(spots) do
+		local ground = workspace:Raycast(spot + Vector3.new(0, 3, 0), Vector3.new(0, -12, 0), params)
+		local y = ground and ground.Position.Y or (root.Position.Y - 3)
+		local center = Vector3.new(spot.X, y + size.Y / 2 + 0.05, spot.Z)
+		first = first or center
+		local busy = false
+		for _, touch in ipairs(workspace:GetPartBoundsInBox(CFrame.new(center), size * 0.9, overlap)) do
+			if not (ground and touch == ground.Instance) then
+				busy = true
+				break
+			end
+		end
+		if not busy then
+			chosen = center
+			break
+		end
+	end
+	chosen = chosen or first
+	if part:IsA("Model") then
+		part:PivotTo(CFrame.new(chosen) * box:ToObjectSpace(part:GetPivot()))
+	else
+		part.CFrame = CFrame.new(chosen)
+	end
+	part:SetAttribute("Value", tool:GetAttribute("Value"))
+	part:SetAttribute("Slots", tonumber(tool:GetAttribute("Slots")) or 1)
+	part:SetAttribute("DropperId", player.UserId)
+	local stored = Instance.new("ObjectValue")
+	stored.Name = "Stored"
+	stored.Value = tool
+	stored.Parent = part
+
+	tool.Parent = dropped
+	part.Parent = workspace
+	CollectionService:AddTag(part, TAG)
+	show(player, "Выброшено: " .. tool.Name)
+
+	task.delay(DROP_SECONDS, function()
+		if part.Parent then
+			part:Destroy()
+			if tool.Parent == dropped then
+				tool:Destroy()
+			end
+		end
+	end)
+end)
+
+------------------------------------------------------------------ гибель
+-- Несданное не исчезает: находки из рюкзака падают одним мешком там, где
+-- игрок упал, и мешок лежит BAG_SECONDS секунд. Подобрать его может любой,
+-- кто успел добежать, — в рюкзаке мешок займёт столько же мест.
+local function dropBag(position, value, slots)
+	local drop = Instance.new("Part")
+	drop.Name = BAG_NAME
+	drop.Size = Vector3.new(2, 2, 2)
+	drop.CFrame = CFrame.new(position + Vector3.new(0, 2, 0))
+	drop.Anchored = true
+	drop.CanCollide = false
+	drop.Material = Enum.Material.SmoothPlastic
+	drop.Color = Color3.fromRGB(255, 176, 0)
+	drop:SetAttribute("Value", value)
+	drop:SetAttribute("Slots", math.max(slots, 1))
+	drop:SetAttribute("IsBag", true)
+
+	local glow = Instance.new("PointLight")
+	glow.Brightness = 2
+	glow.Range = 14
+	glow.Color = drop.Color
+	glow.Parent = drop
+
+	drop.Parent = workspace
+	CollectionService:AddTag(drop, TAG)
+	Debris:AddItem(drop, BAG_SECONDS)
+end
+
+local function watch(player, character)
+	local humanoid = character:WaitForChild("Humanoid", 10)
+	if not humanoid then
+		return
+	end
+	humanoid.Died:Connect(function()
+		local slots, value = 0, 0
+		for _, tool in ipairs(lootOf(player)) do
+			slots += tonumber(tool:GetAttribute("Slots")) or 1
+			value += tonumber(tool:GetAttribute("Value")) or 0
+		end
+		for _, tool in ipairs(lootOf(player)) do
+			tool:Destroy()
+		end
+		local root = character:FindFirstChild("HumanoidRootPart")
+		if DROP_ON_DEATH and root and value > 0 then
+			dropBag(root.Position, value, slots)
+		end
+		-- Снаряжение действует до гибели: лишние места пропадают вместе с ним.
+		player:SetAttribute("BonusSlots", 0)
+		local message = nil
+		if value > 0 then
+			message = DROP_ON_DEATH and "Рюкзак упал мешком" or "Рюкзак потерян"
+		end
+		show(player, message)
+	end)
+end
+
+local function hook(player)
+	player.CharacterAdded:Connect(function(character)
+		task.defer(watch, player, character)
+		task.defer(show, player)
+	end)
+	if player.Character then
+		task.defer(watch, player, player.Character)
+	end
+end
+
+Players.PlayerAdded:Connect(hook)
+for _, player in ipairs(Players:GetPlayers()) do
+	hook(player)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">LootScript</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX8A4621E011264DE784013865010A5FA1">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- LootClient — полоска рюкзака на экране.
+-- Модуль курса «Лут и рюкзак», уроки 33-35.
+--
+-- Интерфейс собирать не нужно: скрипт сам рисует полоску в PlayerGui и
+-- обновляет её по сообщению сервера. Настроек у клиента нет — всё, что можно
+-- менять, лежит в LootScript.
+
+local CollectionService = game:GetService("CollectionService")
+local ContextActionService = game:GetService("ContextActionService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+if not player then
+	return
+end
+
+local package = script.Parent
+local update = package:WaitForChild("Update", 10)
+if not update then
+	return
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "LootGui"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local panel = Instance.new("Frame")
+panel.Name = "Bag"
+panel.AnchorPoint = Vector2.new(0.5, 0)
+panel.Position = UDim2.new(0.5, 0, 0, 16)
+panel.Size = UDim2.new(0, 280, 0, 44)
+panel.BackgroundColor3 = Color3.fromRGB(25, 27, 31)
+panel.BackgroundTransparency = 0.15
+panel.BorderSizePixel = 0
+panel.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = panel
+
+local label = Instance.new("TextLabel")
+label.Name = "Text"
+label.Size = UDim2.new(1, -20, 1, 0)
+label.Position = UDim2.new(0, 10, 0, 0)
+label.BackgroundTransparency = 1
+label.Font = Enum.Font.GothamBold
+label.TextSize = 20
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.Text = "Рюкзак 0/6 · 0 монет"
+label.Parent = panel
+
+local flash = Instance.new("TextLabel")
+flash.Name = "Flash"
+flash.AnchorPoint = Vector2.new(0.5, 0)
+flash.Position = UDim2.new(0.5, 0, 0, 66)
+flash.Size = UDim2.new(0, 280, 0, 28)
+flash.BackgroundTransparency = 1
+flash.Font = Enum.Font.GothamBold
+flash.TextSize = 22
+flash.TextColor3 = Color3.fromRGB(255, 196, 64)
+flash.TextTransparency = 1
+flash.Text = ""
+flash.Parent = gui
+
+-- Выбросить предмет из руки: клавиша из настройки DROP_KEY в LootScript,
+-- на телефоне — кнопка. Что именно выбросить и можно ли, решает сервер.
+local dropEvent = package:WaitForChild("Drop", 10)
+if dropEvent then
+	local keyName = package:GetAttribute("DropKey") or "Q"
+	local key = Enum.KeyCode[keyName] or Enum.KeyCode.Q
+	ContextActionService:BindAction("LootDrop", function(_, inputState)
+		if inputState == Enum.UserInputState.Begin then
+			dropEvent:FireServer()
+		end
+		return Enum.ContextActionResult.Pass
+	end, true, key)
+	ContextActionService:SetTitle("LootDrop", "Выбросить")
+end
+
+local function say(message)
+	flash.Text = message
+	flash.TextTransparency = 0
+	TweenService:Create(flash, TweenInfo.new(1.2), { TextTransparency = 1 }):Play()
+end
+
+update.OnClientEvent:Connect(function(state)
+	label.Text = string.format(
+		"Рюкзак %d/%d · %d монет",
+		state.count or 0,
+		state.capacity or 0,
+		state.value or 0
+	)
+	if state.message then
+		say(state.message)
+	end
+end)
+
+-- Подсветка: находка, к которой игрок подошёл, обводится контуром. Её видит
+-- только этот игрок — подсветка живёт на его экране, не на сервере.
+local highlights = {} -- находка → её Highlight
+local since = 0
+RunService.Heartbeat:Connect(function(dt)
+	since += dt
+	if since < 0.1 then
+		return
+	end
+	since = 0
+
+	local tag = package:GetAttribute("Tag") or "Loot"
+	local range = package:GetAttribute("HighlightRange") or 14
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+
+	local near = {}
+	if root then
+		for _, part in ipairs(CollectionService:GetTagged(tag)) do
+			local spot = nil
+			if part:IsA("BasePart") then
+				spot = part.Position
+			elseif part:IsA("Model") and part.PrimaryPart then
+				spot = part.PrimaryPart.Position
+			end
+			if spot and part:IsDescendantOf(workspace) and not part:GetAttribute("Taken")
+				and (spot - root.Position).Magnitude <= range then
+				near[part] = true
+				if not highlights[part] then
+					local h = Instance.new("Highlight")
+					h.FillColor = Color3.fromRGB(255, 220, 90)
+					h.FillTransparency = 0.75
+					h.OutlineColor = Color3.fromRGB(255, 240, 160)
+					h.DepthMode = Enum.HighlightDepthMode.Occluded
+					h.Parent = part
+					highlights[part] = h
+				end
+			end
+		end
+	end
+	for part, h in pairs(highlights) do
+		if not near[part] then
+			h:Destroy()
+			highlights[part] = nil
+		end
+	end
+end)
+
+-- Полёт находки: подобранная находка уменьшается и, вращаясь, летит к
+-- игроку, который её забрал. Рисует каждый экран у себя — сервер тем
+-- временем уже положил предмет в рюкзак и уберёт находку с карты.
+local collected = package:WaitForChild("Collected", 10)
+local FLY = 0.4 -- секунды, как FLY_SECONDS в LootScript
+if collected then
+	collected.OnClientEvent:Connect(function(item, who)
+		local character = who and who.Character
+		local target = character and character:FindFirstChild("HumanoidRootPart")
+		if not (item and item.Parent and target) then
+			return
+		end
+		local isModel = item:IsA("Model")
+		if isModel and not item.PrimaryPart then
+			return
+		end
+		local start = isModel and item:GetPivot() or item.CFrame
+		local turn = start - start.Position
+		local startSize = (not isModel) and item.Size or nil
+		local startScale = isModel and item:GetScale() or 1
+		local begin = os.clock()
+		local conn
+		conn = RunService.RenderStepped:Connect(function()
+			if not item.Parent or not target.Parent then
+				conn:Disconnect()
+				return
+			end
+			local a = math.clamp((os.clock() - begin) / FLY, 0, 1)
+			local pos = start.Position:Lerp(target.Position + Vector3.new(0, 1, 0), a * a)
+			local cframe = CFrame.new(pos) * turn * CFrame.Angles(0, a * math.pi * 3, 0)
+			local scale = math.max(1 - 0.85 * a, 0.05)
+			if isModel then
+				item:ScaleTo(startScale * scale)
+				item:PivotTo(cframe)
+			else
+				item.Size = startSize * scale
+				item.CFrame = cframe
+			end
+			if a >= 1 then
+				conn:Disconnect()
+				for _, d in ipairs(isModel and item:GetDescendants() or { item }) do
+					if d:IsA("BasePart") then
+						d.LocalTransparencyModifier = 1
+					end
+				end
+			end
+		end)
+	end)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">LootClient</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

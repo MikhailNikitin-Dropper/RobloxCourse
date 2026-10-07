@@ -36,10 +36,10 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="34-w-1">
 <h3 class="slide-title">Сегодня ты — Economy Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Находки и рюкзак уже есть, но поле ровное: идти в любую сторону одинаково выгодно. Сегодня расстояние станет ценой.</p>
+<p class="content-item content-paragraph">Находки и рюкзак уже есть, но поле ровное: идти в любую сторону одинаково выгодно. Сегодня глубина карты станет ценой.</p>
 <p class="content-item content-paragraph"><b>Economy Designer</b> (дизайнер экономики) решает, что сколько стоит и чем игрок платит за дорогую находку.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: вчера поле было ровным — все находки одинаково далеко и одинаково безопасны.
-Сказать: сегодня появляется расстояние как цена: дальше — дороже и страшнее.
+Сказать: сегодня появляется глубина как цена: ближе к центру — дороже и опаснее.
 Сказать: игрок начнёт сам решать, куда ему хватит смелости дойти.</aside>
 </div>
 </section>
@@ -47,9 +47,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 33 <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="34-r-1">
 <h3 class="slide-title">Вспомним урок 33 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">По какой метке модуль узнаёт находку среди других деталей?</p><ol class="content-item content-quiz-options"><li data-correct="true">По тегу Loot в разделе Tags ✓</li><li>По имени детали в Explorer</li><li>По материалу детали в свойствах</li></ol>
+<p class="content-item content-question">По какой метке модуль узнаёт находку среди других деталей?</p><ol class="content-item content-quiz-options"><li>По имени детали в Explorer</li><li>По материалу детали в свойствах</li><li data-correct="true">По тегу Loot в разделе Tags ✓</li></ol>
 <p class="content-item content-question">Чем задаётся цена одной находки в монетах?</p><ol class="content-item content-quiz-options"><li data-correct="true">Атрибутом Value у самой детали ✓</li><li>Размером детали в свойствах</li><li>Расстоянием до точки возрождения</li></ol>
-<p class="content-item content-question">Какая настройка решает, сколько находок влезет в рюкзак?</p><ol class="content-item content-quiz-options"><li data-correct="true">CAPACITY — число мест в рюкзаке ✓</li><li>PICKUP_RANGE — дальность подбора</li><li>RESPAWN_SECONDS — время возврата</li></ol>
+<p class="content-item content-question">Какая настройка решает, сколько находок влезет в рюкзак?</p><ol class="content-item content-quiz-options"><li>PICKUP_RANGE — дальность подбора</li><li data-correct="true">CAPACITY — число мест в рюкзаке ✓</li><li>RESPAWN_SECONDS — время возврата</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: тег Loot; атрибут Value; CAPACITY.
 Сказать: сегодня к этим настройкам добавится расстояние.</aside>
@@ -59,49 +59,50 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Зоны, редкость и опасность <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="34-t-1">
 <h3 class="slide-title">Что добавляем сегодня <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Три зоны вокруг хаба: окраина, средняя и глубина</li><li>Редкость: цвет и свет говорят о цене до подхода</li><li>Ловушки: там, где лежит дорогое</li><li>Находки возвращаются: поле не пустеет за одну вылазку</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — три зоны, редкость, ловушки у дорогого и возвращение находок.
-Сказать: поле прошлого урока не переделываем, оно станет ближней зоной.
-Сказать: к концу урока по карте будет видно, где дорого и где страшно.</aside>
+<ul class="content-item content-bullets"><li>Три зоны — кольца от края карты к центру: окраина, средняя, глубина</li><li>Редкость — материал и форма говорят о цене до подхода</li><li>Опасность — другие игроки: у каждого стартовый пистолет</li><li>Находки возвращаются — поле не пустеет за одну вылазку</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — три зоны, редкость, укрытия, стартовый пистолет и возвращение находок.
+Сказать: поле прошлого урока не переделываем, оно станет окраиной у края карты.
+Сказать: ловушек в лутере нет — опасность приходит от других игроков.</aside>
 </div>
 <div class="slide" id="34-t-2">
-<h3 class="slide-title">Дальше — дороже <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Чем дальше, тем дороже — находки дорожают с расстоянием от хаба</li><li>Дорога назад — часть цены: с полным рюкзаком идти опаснее</li><li>Дорогое у хаба — обесценивает дальние зоны</li><li>Игрок решает сам: сходить быстро или рискнуть и уйти дальше</li></ul>
+<h3 class="slide-title">Глубже — дороже <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Чем глубже, тем дороже — находки дорожают к центру карты</li><li>Дорога назад — часть цены: с полным рюкзаком идти опаснее</li><li>Дорогое на окраине — обесценивает глубину</li><li>Игрок решает сам — сходить быстро или рискнуть и уйти глубже</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: расстояние — самая честная цена: за дорогую находку игрок платит временем и риском.
-Сказать: если дорогое лежит рядом с хабом, дальние зоны никому не нужны.
-Сказать: правило работает в обе стороны — рядом должно быть дёшево.</aside>
+Сказать: если дорогое лежит у края, глубина никому не нужна.
+Сказать: правило работает в обе стороны — на окраине должно быть дёшево.</aside>
 </div>
 <div class="slide" id="34-t-3">
 <h3 class="slide-title">Три зоны и их цены <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Окраина: находки по 10 монет, опасностей нет</li><li>Средняя зона: находки по 30 монет, появляются ловушки</li><li>Глубина: находки по 80 монет, ловушек больше и дорога длиннее</li><li>Разница в разы: за что рисковать, видно по цене</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: вид сверху на карту — хаб посередине и три кольца вокруг него, в каждом кольце находки своего цвета]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: карта сверху с тремя кольцами вокруг хаба.
+<ul class="content-item content-bullets"><li>Окраина — лес у края карты, находки по 10 монет</li><li>Средняя зона — деревня, кристаллы по 30 монет</li><li>Глубина — руины в центре, золотые идолы по 80 монет</li><li>Разница в разы — за что рисковать, видно по цене</li></ul>
+<p class="content-item content-image-prompt">[изображение: Вид сверху на карту Roblox: круглая локация за каменной стеной, три кольца — лес по краю, деревня с домиками в середине, руины крепости в центре]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: карта сверху — лес по краю, деревня, руины в центре.
 Сказать: числа курса — 10, 30 и 80 монет: разница в разы, поэтому выбор очевиден.
-Сказать: ученик может взять свои числа, но разница между зонами должна остаться заметной.</aside>
+Сказать: свои числа можно взять, но разница между зонами должна остаться заметной.</aside>
 </div>
 <div class="slide" id="34-t-4">
 <h3 class="slide-title">Границу зоны видно <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Границу показывают стройкой: ворота, мост, смена цвета пола</li><li>До первой ловушки — игрок должен понять, что шагнул дальше</li><li>Невидимая граница — выглядит как обман: правило честности из обби</li><li>Вид дальней зоны — сразу обещает добычу: свет, руины, обломки</li></ul>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вид от игрока на границу зон — ворота и смена цвета пола, за ними темнее и видно светящуюся находку]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: игрок должен понимать, что шагнул дальше, до того как погиб.
-Сказать: граница показывается стройкой — ворота, мост, смена цвета пола.
+<ul class="content-item content-bullets"><li>Границу показывают стройкой — лес сменяется домами, дома — стеной руин</li><li>Смена вида — игрок понимает, что шагнул глубже</li><li>Невидимая граница — выглядит как обман: правило честности из обби</li><li>Вид глубины — сразу обещает добычу: руины, башня, обломки</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: край деревни — деревья и ящики, за ними стена руин крепости с каменными воротами]</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: игрок должен понимать, что шагнул глубже, ещё до встречи с охотником.
+Сказать: граница показывается стройкой — лес, дома, стена руин.
 Сказать: это то же правило честности, что в обби: опасность видна заранее.</aside>
 </div>
 <div class="slide" id="34-t-5">
-<h3 class="slide-title">Редкость: цвет и свет <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Обычная находка — простой материал без свечения</li><li>Редкая — яркий цвет, заметный издалека</li><li>Легендарная — <b>Neon</b> и <b>PointLight</b>: светится в темноте</li><li>Вид и цена должны совпадать: светится — значит дорого</li></ul>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: три находки рядом — серый камень, ярко-синий кристалл и светящийся золотой предмет с ореолом света]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: три находки рядом — обычный материал, яркий цвет, Neon с PointLight.
+<h3 class="slide-title">Редкость видно издалека <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Обычная находка — ящик или камень из простого материала</li><li>Редкая — кристалл из стекла: Material = Glass</li><li>Легендарная — золотой идол из фольги: Material = Foil</li><li>Подсветка — модуль обводит находку контуром, когда игрок рядом</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: в руинах рядом стоят деревянный ящик, голубой кристалл и золотой идол, идол обведён жёлтым контуром подсветки]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: три находки рядом — ящик, кристалл с Material = Glass, идол с Material = Foil.
 Сказать: редкость — это обещание цены, данное внешним видом.
-Сказать: цвет и свет должны совпадать с атрибутом Value, иначе игра обманывает.</aside>
+Сказать: контур рисует модуль сам, его дальность — HIGHLIGHT_RANGE в LootScript.
+Сказать: вид должен совпадать с атрибутом Value, иначе игра обманывает.</aside>
 </div>
 <div class="slide" id="34-t-6">
-<h3 class="slide-title">Опасность у дорогого <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Охрана из обби — дорогое охраняют знакомые ловушки</li><li>На пути к находке — ловушка стоит там, а не в пустом месте</li><li>Опасность видна заранее: цвет, звук, движение</li><li>Без охраны — дальняя зона превращается в длинную прогулку</li></ul>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: светящаяся находка на площадке, перед ней вращающееся препятствие и красный kill-блок на подходе]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: дорогая находка без охраны обесценивает зону — до неё просто добегают.
-Сказать: ловушки берём знакомые: kill-блок и вращающееся препятствие из школы обби.
-Сказать: ловушку видно заранее — иначе игра становится нечестной.</aside>
+<h3 class="slide-title">Опасность от игроков <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Охотник — другой игрок с пистолетом: он идёт туда, где дорого</li><li>Открытое место — у дорогой находки подходить опаснее всего</li><li>Укрытия — стены, дома и валуны: прячут от выстрелов</li><li>Стартовый пистолет — есть у каждого с первой вылазки</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: золотой идол на постаменте на открытой площадке среди руин, вокруг укрытия — обломки стен и колонны]</p>
+<aside class="speaker-notes">Заметка ведущего: Сказать: в лутере нет ловушек — опасность в том, кто ещё пришёл за добычей.
+Сказать: дорогое ставим на открытом месте, а на подходах — укрытия: игрок решает, как подойти.
+Сказать: стартовый пистолет — тот же бластер из битвы крепостей, только слабее магазинного.</aside>
 </div>
 <div class="slide" id="34-t-7">
 <h3 class="slide-title">Находки возвращаются <span class="slide-duration">(2.5 мин)</span></h3>
@@ -112,9 +113,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="34-t-8">
 <h3 class="slide-title">Частые ошибки зон <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Зоны одинаково опасны — идти дальше незачем</li><li>Дорогая находка стоит у хаба — дальние зоны пустуют</li><li>Граница не обозначена — о зоне узнают только после гибели</li><li>Ловушку не видно — игра теряет честность</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: пять поломок, из-за которых зоны перестают работать.
-Проверить у каждого: дорогое лежит в глубине, ловушки видно, границы обозначены.
+<ul class="content-item content-bullets"><li>Зоны одинаково ценны — идти глубже незачем</li><li>Дорогая находка у края — глубина пустует</li><li>Граница не видна — игрок не понимает, куда зашёл</li><li>Дорогое без укрытий — к нему не подойти живым</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: четыре поломки, из-за которых зоны перестают работать.
+Проверить у каждого: дорогое лежит в глубине, границы видно, у подходов есть укрытия.
 Сказать: проверять зоны нужно пешком, а не сверху в редакторе.</aside>
 </div>
 </section>
@@ -122,11 +123,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="34-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Где в лутере должна лежать самая дорогая находка?</p><ol class="content-item content-quiz-options"><li data-correct="true">Дальше всего от хаба и за опасностью ✓</li><li>Рядом с хабом, чтобы её точно нашли</li><li>В случайном месте карты каждый раз</li></ol>
-<p class="content-item content-question">Как игрок понимает, что находка дорогая, ещё не подойдя?</p><ol class="content-item content-quiz-options"><li data-correct="true">По цвету и свечению находки ✓</li><li>По размеру детали на полу</li><li>По числу находок рядом с ней</li></ol>
-<p class="content-item content-question">Что будет, если убрать возвращение находок совсем?</p><ol class="content-item content-quiz-options"><li data-correct="true">Поле опустеет, и играть станет не во что ✓</li><li>Находки подорожают сами по себе</li><li>Рюкзак начнёт вмещать больше</li></ol>
+<p class="content-item content-question">Где в лутере должна лежать самая дорогая находка?</p><ol class="content-item content-quiz-options"><li data-correct="true">В глубине, дальше всего от края ✓</li><li>У края, чтобы её точно нашли</li><li>В случайном месте каждой зоны</li></ol>
+<p class="content-item content-question">Как игрок понимает, что находка дорогая, ещё не подойдя?</p><ol class="content-item content-quiz-options"><li>По размеру детали на полу</li><li>По числу находок рядом</li><li data-correct="true">По материалу и форме находки ✓</li></ol>
+<p class="content-item content-question">Что будет, если убрать возвращение находок совсем?</p><ol class="content-item content-quiz-options"><li>Находки подорожают сами по себе</li><li data-correct="true">Поле опустеет, и играть станет не во что ✓</li><li>Рюкзак начнёт вмещать больше</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: дальше и опаснее; цвет и свет; поле пустеет.
+Ответы: в глубине; материал и форма; поле пустеет.
 Сказать: на практике проверим это ногами — сходим в каждую зону.</aside>
 </div>
 </section>
@@ -136,53 +137,56 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
 <p class="content-item content-paragraph">Через 5 минут открываем проект прошлого урока — поле превратится в карту добычи.</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
-Проверить после перерыва: у каждого открыт проект прошлого урока и под рукой ссылки на модули ловушек.</aside>
+Проверить после перерыва: у каждого открыт проект прошлого урока и под рукой ссылка на систему бластера.</aside>
 </div>
 </section>
 <section class="block block-practice">
 <h2 class="block-title" style="color:#cc0000;">Карта добычи <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="34-p-1">
 <h3 class="slide-title">Шаг 1: три зоны <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой проект прошлого урока: поле станет ближней зоной</li><li>Отметь вокруг хаба три кольца: окраина, средняя, глубина</li><li>Границы покажи стройкой: ворота, мост или смена цвета пола</li><li>Пройди пешком от хаба до края: границы видно с земли</li></ol>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: карта сверху — хаб в центре, три кольца с разным цветом пола и ворота на границах]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: вид сверху, три кольца вокруг хаба разного цвета пола.
-Сказать: ближняя зона — поле прошлого урока, его не переделываем.
+<ol class="content-item content-steps"><li>Открой проект прошлого урока: поле станет окраиной</li><li>Расширь карту к центру: средняя зона, а в середине глубина</li><li>Границы покажи стройкой: лес, дома, стена руин</li><li>Пройди пешком от края до центра: границы видно с земли</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: вид сверху на круглую карту с выделенной моделью Map в Explorer — лес по краю, кольцо деревни и руины в центре]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: вид сверху — лес по краю, кольцо домиков, руины в центре.
+Сказать: окраина — поле прошлого урока, его не переделываем, старт остаётся у края.
 Сказать: граница должна читаться с земли, а не только сверху.</aside>
 </div>
 <div class="slide" id="34-p-2">
 <h3 class="slide-title">Шаг 2: цены по зонам <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Находкам окраины поставь <b>Value</b> 10</li><li>Находкам средней зоны — 30, находкам глубины — 80</li><li>Проверь по карте: дешёвых находок в глубине не осталось</li><li>Test → пробеги по зонам и посмотри на полоску рюкзака</li></ol>
+<ol class="content-item content-steps"><li>Находкам окраины поставь Value 10</li><li>Находкам средней зоны — 30, находкам глубины — 80</li><li>Проверь по карте: дешёвых находок в глубине не осталось</li><li>Test → пробеги по зонам и посмотри на полоску рюкзака</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: атрибут Value у находки, замена числа.
 Проверить у каждого: в глубине нет находок по 10 монет и наоборот.
 Сделать: Test — пробежать по зонам и посмотреть, как меняется полоска.</aside>
 </div>
 <div class="slide" id="34-p-3">
 <h3 class="slide-title">Шаг 3: редкость видно <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Обычным находкам оставь простой материал</li><li>Редким поставь яркий цвет, легендарным — <b>Neon</b></li><li>Легендарным добавь <b>PointLight</b>: они светятся в темноте</li><li>Отойди подальше и проверь: дорогое узнаётся издалека</li></ol>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: тёмная дальняя зона, издалека видно светящуюся золотую находку, рядом обычные серые детали]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Material = Neon и PointLight у легендарной находки.
-Сказать: свет ставим только дорогому — иначе игрок перестанет ему верить.
-Сделать: отойти на два десятка студов и проверить, что дорогое узнаётся.</aside>
+<ol class="content-item content-steps"><li>Обычным находкам оставь простой материал: ящики и камни</li><li>Редким поставь Material = Glass, легендарным — Foil и золотой цвет</li><li>Открой LootScript и подбери HIGHLIGHT_RANGE — дальность подсветки</li><li>Test → подойди к идолу: его обводит контур</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: персонаж в руинах идёт к золотому идолу на постаменте, идол обведён жёлтым контуром, в панели внизу стартовый пистолет]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Material = Glass у кристалла и Material = Foil у идола.
+Сказать: неон и свет не нужны — материал и форма видны и днём.
+Сказать: HIGHLIGHT_RANGE — с какого расстояния модуль обводит находку контуром.
+Сделать: Test — подойти к идолу и проверить контур.</aside>
 </div>
 <div class="slide" id="34-p-4">
-<h3 class="slide-title">Шаг 4: ловушки у дорогого <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модули ловушек по ссылкам ниже и поставь их в глубине</li><li>Ловушку ставь на пути к находке: её видно за несколько шагов</li><li>Test → дойди до дорогой находки и вернись с ней к хабу</li></ol>
-<p class="content-item content-paragraph">Ссылки на модули: <a href="https://create.roblox.com/store/asset/75269316315197/UniversalKillScript" target="_blank" rel="noopener">https://create.roblox.com/store/asset/75269316315197/UniversalKillScript</a> и <a href="https://create.roblox.com/store/asset/135190764471982/SpinningObstacle" target="_blank" rel="noopener">https://create.roblox.com/store/asset/135190764471982/SpinningObstacle</a></p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: kill-блок и вращающееся препятствие на подходе к легендарной находке.
-Сказать: модули ловушек те же, что в школе обби, — получают по ссылке.
-Проверить у каждого: ловушку видно до того, как в неё попал.</aside>
+<h3 class="slide-title">Шаг 4: укрытия и пистолет <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Расставь укрытия на подходах к дорогому: стены, валуны, обломки</li><li>Получи систему бластера по ссылке и собери пистолет, как в битве крепостей</li><li>Назови тул «Пистолет», поставь Damage = 10, Cooldown = 0.6 и положи его в StarterPack</li></ol>
+<p class="content-item content-paragraph">Ссылка на систему бластера: <a href="https://create.roblox.com/store/asset/83440701618994/ArenaBlaster" target="_blank" rel="noopener">https://create.roblox.com/store/asset/83440701618994/ArenaBlaster</a></p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: укрытия у идола — обломки стен и колонны.
+Показать в Studio: тул «Пистолет» в StarterPack, атрибуты Damage = 10 и Cooldown = 0.6.
+Сказать: StarterPack выдаёт пистолет каждому игроку при каждом появлении.
+Сказать: пистолет слабый нарочно — сильный бластер будет продаваться в магазине.
+Проверить у каждого: система ArenaBlaster лежит в Workspace, пистолет стреляет в Test.</aside>
 </div>
 <div class="slide" id="34-p-5">
 <h3 class="slide-title">Шаг 5: возвращение находок <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой <b>LootScript</b> и найди <b>RESPAWN_SECONDS</b></li><li>Поставь своё число секунд и перезапусти Test</li><li>Собери ближнюю зону и дождись, пока находки вернутся</li><li>Поле пустеет надолго — уменьши число, стоят все сразу — увеличь</li></ol>
+<ol class="content-item content-steps"><li>Открой <b>LootScript</b> и найди <b>RESPAWN_SECONDS</b></li><li>Поставь своё число секунд и перезапусти Test</li><li>Собери окраину и дождись, пока находки вернутся</li><li>Поле пустеет надолго — уменьши число, стоят все сразу — увеличь</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: RESPAWN_SECONDS в начале LootScript.
 Сделать: Test — собрать зону и дождаться, пока находки вернутся.
 Сказать: скрипт читает число при запуске, поэтому после правки нужен новый Test.</aside>
 </div>
 <div class="slide" id="34-p-6">
 <h3 class="slide-title">Шаг 6: замер зон <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Сходи в каждую зону и вернись с полным рюкзаком</li><li>Запиши, сколько монет принесла вылазка в каждую из них</li><li>Сравни: глубина должна приносить в разы больше окраины</li><li>Сохрани проект: File → Save to Roblox</li></ol>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок в дальней зоне со светящимися находками, вверху экрана полоска «Рюкзак 6/6 · 480 монет»]</p>
+<ol class="content-item content-steps"><li>Сходи в каждую зону и вернись к краю с полным рюкзаком</li><li>Запиши, сколько монет принесла вылазка в каждую из них</li><li>Сравни: глубина должна приносить в разы больше окраины</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: персонаж в руинах крепости, вверху полоска «Рюкзак 6/6 · 480 монет», внизу шесть золотых идолов в панели]</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: три вылазки — по одной в каждую зону, с полным рюкзаком.
 Сказать: записанные числа нужны на следующем уроке: по ним считаются цены магазина.
 Сделать: File → Save to Roblox.</aside>
@@ -193,32 +197,32 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="34-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Вылазка в глубину принесла столько же, сколько на окраину. Что не так?</p><ol class="content-item content-quiz-options"><li data-correct="true">Цены зон отличаются слишком слабо ✓</li><li>Рюкзак оказался слишком большим</li><li>Находки возвращаются слишком быстро</li></ol>
-<p class="content-item content-question">Игрок гибнет в средней зоне и говорит, что это несправедливо. Что проверить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Видно ли ловушку до того, как в неё попал ✓</li><li>Стоит ли рядом самая дорогая находка</li><li>Хватает ли мест в рюкзаке игрока</li></ol>
-<p class="content-item content-question">Игрок забрёл в глубину и не понял, куда попал. Чего не хватает?</p><ol class="content-item content-quiz-options"><li data-correct="true">Видимой границы между зонами ✓</li><li>Ещё одной дорогой находки</li><li>Большего числа мест в рюкзаке</li></ol>
+<p class="content-item content-question">Игроки не доходят до золотого идола живыми. Что проверить?</p><ol class="content-item content-quiz-options"><li>Сколько мест в рюкзаке у игроков</li><li data-correct="true">Есть ли укрытия на подходе к нему ✓</li><li>Как быстро возвращаются находки на место</li></ol>
+<p class="content-item content-question">Игрок забрёл в глубину и не понял, куда попал. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Ещё одной дорогой находки</li><li>Большего числа мест в рюкзаке</li><li data-correct="true">Видимой границы между зонами ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: в разы больше; ловушка не видна; граница не обозначена.
-Сказать: на следующем уроке добыча начнёт превращаться в монеты и появится риск от других игроков.</aside>
+Ответы: в разы больше; укрытий нет; граница не обозначена.
+Сказать: на следующем уроке добыча начнёт превращаться в монеты.</aside>
 </div>
 </section>
 <section class="block block-closing">
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="34-c-1">
 <h3 class="slide-title">Карта добычи готова <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Мы разделили поле на три зоны, показали редкость цветом и светом и поставили ловушки у дорогого — это работа Economy Designer.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: сдача добычи, мешок при гибели и магазин</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня расстояние стало ценой, а дорогое обзавелось охраной.
-Сказать: на следующем уроке добыча превратится в монеты и появится риск от других игроков.
+<p class="content-item content-paragraph">Мы разделили карту на три зоны, показали редкость материалом и подсветкой, расставили укрытия и выдали всем стартовый пистолет — это работа Economy Designer.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: бункер, выходы, скупщик и магазин</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня глубина стала ценой, а у дорогого появились укрытия и охотники.
+Сказать: на следующем уроке появится бункер: добыча превратится в монеты.
 Сделать: File → Save to Roblox.</aside>
 </div>
 <div class="slide" id="34-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Добавь в глубину ещё две ловушки и одну легендарную находку</li><li>Оформи дальнюю зону так, чтобы в неё было страшно заходить</li><li>Замерь заново: сколько монет приносит полный рюкзак из глубины</li><li>Позови друга и посмотри, до какой зоны дойдёт он</li></ul>
+<ul class="content-item content-bullets"><li>Добавь в глубину ещё один золотой идол и укрытия на подходе к нему</li><li>Оформи глубину так, чтобы в неё было страшно заходить</li><li>Замерь заново: сколько монет приносит полный рюкзак из глубины</li><li>Проверь двумя окнами-игроками, до какой зоны можно дойти живым</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: дома довести глубину до состояния, в которое страшно заходить.
 Сказать: задание проверим одним вопросом — сколько монет приносит глубина.
 Сказать: числа понадобятся для цен магазина.</aside>
 </div>
 </section>
-<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/parts/materials.md">Materials — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/PointLight.md">PointLight — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/CollectionService.md">CollectionService — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/game-design/index.md">Game design — Roblox Creator Hub</a></li></ul></section>
+<section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/en-us/parts/materials.md">Materials — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Highlight.md">Highlight — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/CollectionService.md">CollectionService — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/game-design/index.md">Game design — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/StarterPack.md">StarterPack — Roblox Creator Hub</a></li></ul></section>
 </article>
 </body>
 </html>
