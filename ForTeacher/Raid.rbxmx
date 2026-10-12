@@ -1,0 +1,466 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX023A8BF5FA89495591BBEAAABB888C4D">
+		<Properties>
+			<string name="Name">Raid</string>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBX12DC81501D144D2FA34DD5D8225140C0">
+			<Properties>
+				<string name="Name">RaidState</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX7EAF60003595428C8ED3D8689E0D92DD">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- RaidServer — входы на локацию и выходы с неё (итоговая игра блока 9).
+--
+-- Порталы в лобби — детали с тегом PORTAL_TAG и атрибутом Target: шагнул в
+-- портал — оказался на точке входа с этим именем (детали в папке Entries).
+-- Target = "Random" (или пусто) — вход выбирается случайно из всех.
+-- Выходы — детали с тегом EXIT_TAG: простоял на выходе EXTRACT_SECONDS
+-- секунд — вернулся в лобби вместе с рюкзаком. Продают добычу уже в лобби.
+-- Только что вышедший на поверхность PROTECT_SECONDS секунд под защитой: урон
+-- по нему не проходит, а оружие в руку не берётся — бить в ответ тоже нельзя.
+-- В самом бункере (ниже BUNKER_Y) урон не проходит вовсе: там продают и
+-- покупают, засад быть не должно.
+-- Атрибут игрока InRaid = true, пока он на карте и защита после входа снята:
+-- по нему товары магазина решают, можно ли ими пользоваться.
+
+-- ============================ НАСТРОЙКИ ============================
+local PORTAL_TAG = "RaidPortal" -- метка портала в лобби
+local EXIT_TAG = "Exit" -- метка зоны выхода на карте
+local ENTRIES = "Entries" -- папка с точками входа (имена = Target порталов)
+local LOBBY_SPAWN = "LobbySpawn" -- точка возрождения в лобби
+local EXTRACT_SECONDS = 5 -- сколько стоять на выходе
+local PORTAL_RANGE = 5 -- насколько близко подойти к порталу, студы
+local PROTECT_SECONDS = 3 -- сколько секунд после входа нельзя ни получить, ни нанести урон
+local BUNKER_Y = -15 -- ниже этой высоты — бункер: там урон не проходит
+local REACH_HEIGHT = 8 -- насколько выше или ниже портала и плиты выхода можно стоять, студы
+-- ===================================================================
+
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local package = script.Parent
+
+local state = package:FindFirstChild("RaidState")
+if not state then
+	state = Instance.new("RemoteEvent")
+	state.Name = "RaidState"
+	state.Parent = package
+end
+
+local function findNamed(name)
+	for _, d in ipairs(workspace:GetDescendants()) do
+		if d.Name == name and d:IsA("BasePart") then
+			return d
+		end
+	end
+	return nil
+end
+
+local entries = workspace:FindFirstChild(ENTRIES, true)
+
+-- Где выходы — публикуем в ReplicatedStorage: экран игрока рисует их поверх
+-- мира и на миникарте, а при стриминге дальние плиты у клиента не загружены.
+local published = game:GetService("ReplicatedStorage"):FindFirstChild("RaidExits")
+if published then
+	published:Destroy()
+end
+published = Instance.new("Folder")
+published.Name = "RaidExits"
+for index, exit in ipairs(CollectionService:GetTagged(EXIT_TAG)) do
+	if exit:IsA("BasePart") then
+		local spot = Instance.new("Vector3Value")
+		spot.Name = "Exit" .. index
+		spot.Value = exit.Position
+		spot.Parent = published
+	end
+end
+published.Parent = game:GetService("ReplicatedStorage")
+local lobbySpawn = findNamed(LOBBY_SPAWN)
+
+-- Перенос персонажа. Карта и лобби далеко друг от друга: при стриминге
+-- сначала просим загрузить место прибытия, иначе игрок упадёт в пустоту.
+local function move(player, cframe)
+	local character = player.Character
+	if not character then
+		return
+	end
+	pcall(function()
+		player:RequestStreamAroundAsync(cframe.Position)
+	end)
+	character:PivotTo(cframe + Vector3.new(0, 4, 0))
+end
+
+-- Расстояние по земле: прыжок над деталью не мешает, но этаж должен совпадать —
+-- иначе портал бункера сработал бы у того, кто стоит над ним на карте.
+local function flat(a, b)
+	if math.abs(a.Y - b.Y) > REACH_HEIGHT then
+		return math.huge
+	end
+	return Vector3.new(a.X - b.X, 0, a.Z - b.Z).Magnitude
+end
+
+-- Защита после входа. ForceField не пропускает урон (и бластера, и кулака:
+-- оба бьют через TakeDamage), а снятое из руки оружие не даёт стрелять.
+-- Атрибут RaidProtected читает модуль кулака: бить голыми руками тоже нельзя.
+local SHIELD = "RaidShield"
+local guard = {} -- игрок → { till, character, conn }
+
+local function unprotect(player)
+	local g = guard[player]
+	if not g then
+		return
+	end
+	guard[player] = nil
+	g.conn:Disconnect()
+	if g.character then
+		local field = g.character:FindFirstChild(SHIELD)
+		if field then
+			field:Destroy()
+		end
+		g.character:SetAttribute("RaidProtected", nil)
+	end
+end
+
+local function protect(player)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then
+		return
+	end
+	unprotect(player)
+	local field = Instance.new("ForceField")
+	field.Name = SHIELD
+	field.Visible = true -- соперник видит, что стрелять бесполезно
+	field.Parent = character
+	character:SetAttribute("RaidProtected", true)
+	humanoid:UnequipTools()
+	local conn = character.ChildAdded:Connect(function(child)
+		if child:IsA("Tool") then
+			task.defer(function()
+				humanoid:UnequipTools()
+			end)
+		end
+	end)
+	guard[player] = { till = os.clock() + PROTECT_SECONDS, character = character, conn = conn }
+end
+
+local onExit = {} -- игрок → сколько секунд стоит на выходе
+local cooldown = {} -- игрок → до какого времени порталы его не трогают
+
+local function leave(player)
+	onExit[player] = nil
+	cooldown[player] = os.clock() + 2
+	if lobbySpawn then
+		task.spawn(move, player, lobbySpawn.CFrame)
+	end
+	state:FireClient(player, { mode = "done", message = "Ты вышел с добычей" })
+end
+
+local since = 0
+RunService.Heartbeat:Connect(function(dt)
+	since += dt
+	if since < 0.2 then
+		return
+	end
+	local step = since
+	since = 0
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if not (root and humanoid and humanoid.Health > 0) then
+			-- Погиб на выходе или под защитой — убрать надпись с экрана.
+			if onExit[player] or guard[player] then
+				state:FireClient(player, { mode = "clear" })
+			end
+			onExit[player] = nil
+			unprotect(player)
+			player:SetAttribute("InRaid", false)
+			continue
+		end
+
+		-- Бункер: невидимое поле, пока игрок внизу.
+		local bunkerShield = character:FindFirstChild("BunkerShield")
+		local inBunker = root.Position.Y < BUNKER_Y
+		if inBunker and not bunkerShield then
+			bunkerShield = Instance.new("ForceField")
+			bunkerShield.Name = "BunkerShield"
+			bunkerShield.Visible = false
+			bunkerShield.Parent = character
+		elseif not inBunker and bunkerShield then
+			bunkerShield:Destroy()
+		end
+
+		-- Защита после входа: отсчёт на экране, по истечении — снять.
+		local g = guard[player]
+		if g then
+			local left = g.till - os.clock()
+			if left <= 0 or g.character ~= character then
+				unprotect(player)
+				state:FireClient(player, { mode = "clear", message = "Защита снята" })
+			else
+				state:FireClient(player, { mode = "protect", left = left })
+			end
+		end
+		player:SetAttribute("InRaid", not inBunker and guard[player] == nil)
+
+		-- Порталы лобби.
+		if os.clock() > (cooldown[player] or 0) then
+			for _, portal in ipairs(CollectionService:GetTagged(PORTAL_TAG)) do
+				if portal:IsA("BasePart") and flat(portal.Position, root.Position) <= PORTAL_RANGE then
+					local wanted = portal:GetAttribute("Target") or ""
+					local target = entries and entries:FindFirstChild(wanted)
+					if entries and not target and (wanted == "" or wanted == "Random") then
+						local all = entries:GetChildren()
+						local spots = {}
+						for _, spot in ipairs(all) do
+							if spot:IsA("BasePart") and spot.Name ~= "Cover" then
+								table.insert(spots, spot)
+							end
+						end
+						target = spots[math.random(1, math.max(#spots, 1))]
+					end
+					if target then
+						cooldown[player] = os.clock() + 2
+						protect(player)
+						task.spawn(move, player, target.CFrame)
+						state:FireClient(player, { mode = "done", message = "Вылазка: " .. target.Name })
+					end
+					break
+				end
+			end
+		end
+
+		-- Выходы с карты.
+		local standing = false
+		for _, exit in ipairs(CollectionService:GetTagged(EXIT_TAG)) do
+			if exit:IsA("BasePart") and flat(exit.Position, root.Position) <= math.max(exit.Size.X, exit.Size.Z) / 2 then
+				standing = true
+				break
+			end
+		end
+		if standing then
+			onExit[player] = (onExit[player] or 0) + step
+			local left = math.max(0, EXTRACT_SECONDS - onExit[player])
+			if left <= 0 then
+				leave(player)
+			else
+				state:FireClient(player, { mode = "extract", left = left })
+			end
+		elseif onExit[player] then
+			onExit[player] = nil
+			state:FireClient(player, { mode = "clear" })
+		end
+	end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	unprotect(player)
+	onExit[player] = nil
+	cooldown[player] = nil
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">RaidServer</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBXE22F0A818E884C0C8022C0BE78C0E7D2">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- RaidClient — отсчёт на выходе, защита после входа и короткие сообщения.
+
+-- ============================ НАСТРОЙКИ ============================
+local EXIT_SHOW_RANGE = 30 -- ближе скольких студов значок выхода виден поверх мира
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local package = script.Parent
+local state = package:WaitForChild("RaidState")
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "RaidScreen"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local panel = Instance.new("Frame")
+panel.AnchorPoint = Vector2.new(0.5, 0.5)
+panel.Position = UDim2.new(0.5, 0, 0.32, 0)
+panel.Size = UDim2.new(0, 300, 0, 64)
+panel.BackgroundColor3 = Color3.fromRGB(25, 27, 31)
+panel.BackgroundTransparency = 0.15
+panel.BorderSizePixel = 0
+panel.Visible = false
+panel.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = panel
+
+local label = Instance.new("TextLabel")
+label.Size = UDim2.fromScale(1, 1)
+label.BackgroundTransparency = 1
+label.Font = Enum.Font.GothamBold
+label.TextSize = 26
+label.TextColor3 = Color3.fromRGB(140, 255, 180)
+label.Parent = panel
+
+local flash = Instance.new("TextLabel")
+flash.AnchorPoint = Vector2.new(0.5, 0.5)
+flash.Position = UDim2.new(0.5, 0, 0.32, 0)
+flash.Size = UDim2.new(0, 420, 0, 40)
+flash.BackgroundTransparency = 1
+flash.Font = Enum.Font.GothamBold
+flash.TextSize = 28
+flash.TextColor3 = Color3.fromRGB(255, 255, 255)
+flash.TextStrokeTransparency = 0.5
+flash.TextTransparency = 1
+flash.Parent = gui
+
+state.OnClientEvent:Connect(function(info)
+	if info.mode == "extract" then
+		panel.Visible = true
+		label.TextColor3 = Color3.fromRGB(140, 255, 180)
+		label.Text = string.format("Выход через %d", math.ceil(info.left))
+	elseif info.mode == "protect" then
+		-- Защита после гермодвери: урона нет ни по игроку, ни от него.
+		panel.Visible = true
+		label.TextColor3 = Color3.fromRGB(150, 200, 255)
+		label.Text = string.format("Защита: %d с", math.ceil(info.left))
+	else
+		panel.Visible = false
+	end
+	if info.message then
+		flash.Text = info.message
+		flash.TextTransparency = 0
+		TweenService:Create(flash, TweenInfo.new(2.5), { TextTransparency = 1 }):Play()
+	end
+end)
+
+-- Камера за плечом (модуль ShoulderCam урока 20) держит мышь в центре
+-- экрана. Пока открыто окно магазина, выключаем её у себя: атрибут,
+-- поставленный на клиенте, видит только этот игрок.
+local playerGui = player:WaitForChild("PlayerGui")
+local cam = workspace:FindFirstChild("ShoulderCam")
+local shopOpen = false
+game:GetService("RunService").Heartbeat:Connect(function()
+	cam = cam or workspace:FindFirstChild("ShoulderCam")
+	local shop = playerGui:FindFirstChild("ShopGui")
+	local open = shop ~= nil and shop.Enabled
+	if cam and open ~= shopOpen then
+		shopOpen = open
+		cam:SetAttribute("Enabled", not open)
+	end
+end)
+
+-- Выходы — оверлеем: значок «ВЫХОД» с расстоянием поверх мира. Выход за
+-- кадром прижимается к краю экрана, чтобы было понятно, куда поворачивать.
+-- Поверх мира значок виден только ближе EXIT_SHOW_RANGE, на миникарте — всегда.
+-- В бункере значков нет.
+local overlay = Instance.new("ScreenGui")
+overlay.Name = "ExitOverlay"
+overlay.ResetOnSpawn = false
+overlay.IgnoreGuiInset = true
+overlay.Parent = playerGui
+
+local markers = {}
+local function addMarker(value)
+	if not value:IsA("Vector3Value") then
+		return
+	end
+	local m = Instance.new("Frame")
+	m.AnchorPoint = Vector2.new(0.5, 0.5)
+	m.Size = UDim2.fromOffset(92, 40)
+	m.BackgroundColor3 = Color3.fromRGB(25, 27, 31)
+	m.BackgroundTransparency = 0.25
+	m.Parent = overlay
+	local r = Instance.new("UICorner")
+	r.CornerRadius = UDim.new(0, 8)
+	r.Parent = m
+	local title = Instance.new("TextLabel")
+	title.Size = UDim2.new(1, 0, 0.55, 0)
+	title.BackgroundTransparency = 1
+	title.Font = Enum.Font.GothamBold
+	title.TextSize = 14
+	title.TextColor3 = Color3.fromRGB(140, 230, 160)
+	title.Text = "ВЫХОД"
+	title.Parent = m
+	local dist = Instance.new("TextLabel")
+	dist.Name = "Distance"
+	dist.Position = UDim2.fromScale(0, 0.5)
+	dist.Size = UDim2.new(1, 0, 0.45, 0)
+	dist.BackgroundTransparency = 1
+	dist.Font = Enum.Font.Gotham
+	dist.TextSize = 13
+	dist.TextColor3 = Color3.fromRGB(220, 220, 220)
+	dist.Parent = m
+	markers[value] = m
+end
+task.spawn(function()
+	local list = game:GetService("ReplicatedStorage"):WaitForChild("RaidExits")
+	for _, v in ipairs(list:GetChildren()) do
+		addMarker(v)
+	end
+	list.ChildAdded:Connect(addMarker)
+end)
+
+local MARGIN = 50
+local MAP_BLOCK = Vector2.new(270, 320) -- место миникарты: ширина от правого края и низ
+game:GetService("RunService").RenderStepped:Connect(function()
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	local inRaid = root ~= nil and root.Position.Y > -15
+	overlay.Enabled = inRaid
+	if not inRaid then
+		return
+	end
+	local camera = workspace.CurrentCamera
+	local size = camera.ViewportSize
+	for value, m in pairs(markers) do
+		local distance = (value.Value - root.Position).Magnitude
+		m.Visible = distance <= EXIT_SHOW_RANGE
+		if not m.Visible then
+			continue
+		end
+		local spot = value.Value + Vector3.new(0, 3, 0)
+		local p, _ = camera:WorldToViewportPoint(spot)
+		local x, y = p.X, p.Y
+		if p.Z < 0 then
+			-- Выход за спиной: отражаем, чтобы значок ушёл к нужному краю.
+			x, y = size.X - x, size.Y - y
+		end
+		local onScreen = p.Z > 0 and x > MARGIN and x < size.X - MARGIN and y > MARGIN and y < size.Y - MARGIN
+		if not onScreen then
+			local cx, cy = size.X / 2, size.Y / 2
+			local dx, dy = x - cx, y - cy
+			if p.Z < 0 and math.abs(dy) < 1 then
+				dy = 1
+			end
+			local scale = math.min((cx - MARGIN) / math.max(math.abs(dx), 1e-3), (cy - MARGIN) / math.max(math.abs(dy), 1e-3))
+			x, y = cx + dx * scale, cy + dy * scale
+			-- Правый верхний угол занят миникартой: значок уходит под неё.
+			if x > size.X - MAP_BLOCK.X and y < MAP_BLOCK.Y then
+				y = MAP_BLOCK.Y
+			end
+		end
+		m.Position = UDim2.fromOffset(x, y)
+		m.Distance.Text = math.floor(distance) .. " м"
+	end
+end)
+
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">RaidClient</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

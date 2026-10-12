@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXC28D47DC235F468B9B7D2AB0F333AE6C">
+	<Item class="Folder" referent="RBXCDF8C44DE56049B0B39A9505E71D0148">
 		<Properties>
 			<string name="Name">EscapeTimer</string>
 		</Properties>
-		<Item class="Script" referent="RBXB84055DB700747A5BE6F7F2D1BA7DDE0">
+		<Item class="Script" referent="RBX6F184667CE614A5D9537A9B28228ADD5">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- EscapeTimerScript — настенный дисплей с обратным отсчётом.
 -- Модуль курса «Таймер побега», урок 31.

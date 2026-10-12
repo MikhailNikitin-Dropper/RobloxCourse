@@ -1,0 +1,262 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX8F1A5930033B4A32BEAF4E6F0378F5B9">
+		<Properties>
+			<string name="Name">Fist</string>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBX80D814B60EAD469B9583045ED756BCCF">
+			<Properties>
+				<string name="Name">Punch</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX607BD067629A4548B93967ED0272A242">
+			<Properties>
+				<string name="Name">Hit</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX9B5BC736EC8A4927BB085A866EB705F6">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- FistServer — удар кулаком, когда в руке нет предмета (итоговая игра блока 9).
+--
+-- Кулак нужен, чтобы игрок без оружия мог ответить тому, кто подошёл вплотную.
+-- Сервер сам решает, попал ли удар: клиент только сообщает «ударил». Урон идёт
+-- через TakeDamage, поэтому защитное поле (щит у скупщика, защита после входа)
+-- его не пропускает. Под защитой входа (атрибут RaidProtected) бить нельзя.
+
+-- ============================ НАСТРОЙКИ ============================
+local DAMAGE = 15 -- урон одного удара
+local RANGE = 5 -- дальность удара от центра персонажа, студы
+local ANGLE = 70 -- ширина сектора перед персонажем, градусы
+local COOLDOWN = 0.7 -- пауза между ударами, секунды
+local HIT_DELAY = 0.45 -- через сколько секунд от начала замаха кулак достаёт цель:
+                       -- подгоняется под свою анимацию удара (SWING_ANIMATION в FistClient)
+local SURFACE_Y = -15 -- ниже этой высоты бункер: там не дерутся
+-- ===================================================================
+
+local Players = game:GetService("Players")
+
+local folder = script.Parent
+
+local function remote(name)
+	local event = folder:FindFirstChild(name)
+	if not event then
+		event = Instance.new("RemoteEvent")
+		event.Name = name
+		event.Parent = folder
+	end
+	return event
+end
+
+local punchEvent = remote("Punch")
+local hitEvent = remote("Hit")
+
+local nextPunch = {}
+
+Players.PlayerRemoving:Connect(function(player)
+	nextPunch[player] = nil
+end)
+
+-- Звук замаха слышат все рядом. Саму руку двигает клиент анимацией
+-- (FistClient): анимация своего персонажа видна и другим игрокам.
+local function swing(root)
+	local sound = Instance.new("Sound")
+	sound.SoundId = "rbxasset://sounds/swordlunge.wav"
+	sound.Volume = 0.4
+	sound.PlaybackSpeed = 1.4
+	sound.Parent = root
+	sound:Play()
+	game:GetService("Debris"):AddItem(sound, 1)
+end
+
+-- Ближайший живой персонаж в секторе перед бьющим, без стены между ними.
+local function findTarget(character, root)
+	local params = OverlapParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = { character }
+	local look = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z).Unit
+	local limit = math.cos(math.rad(ANGLE / 2))
+	local best, bestDistance = nil, math.huge
+	local seen = {}
+	for _, part in ipairs(workspace:GetPartBoundsInRadius(root.Position, RANGE + 2, params)) do
+		local model = part:FindFirstAncestorOfClass("Model")
+		local humanoid = model and model:FindFirstChildOfClass("Humanoid")
+		local theirRoot = humanoid and humanoid.RootPart
+		if theirRoot and not seen[model] and humanoid.Health > 0 then
+			seen[model] = true
+			local offset = theirRoot.Position - root.Position
+			local flat = Vector3.new(offset.X, 0, offset.Z)
+			local distance = flat.Magnitude
+			local ahead = distance < 2 or flat.Unit:Dot(look) >= limit
+			if distance <= RANGE and ahead and distance < bestDistance then
+				local rayParams = RaycastParams.new()
+				rayParams.FilterType = Enum.RaycastFilterType.Exclude
+				rayParams.FilterDescendantsInstances = { character, model }
+				if not workspace:Raycast(root.Position, offset, rayParams) then
+					best, bestDistance = humanoid, distance
+				end
+			end
+		end
+	end
+	return best
+end
+
+punchEvent.OnServerEvent:Connect(function(player)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local root = humanoid and humanoid.RootPart
+	if not (root and humanoid.Health > 0) then
+		return
+	end
+	-- Кулак — только с пустыми руками, не под защитой входа и не в бункере.
+	if character:FindFirstChildOfClass("Tool") or character:GetAttribute("RaidProtected") then
+		return
+	end
+	if root.Position.Y < SURFACE_Y then
+		return
+	end
+	local now = os.clock()
+	if now < (nextPunch[player] or 0) then
+		return
+	end
+	nextPunch[player] = now + COOLDOWN * 0.9
+
+	swing(root)
+
+	-- Урон — в момент, когда кулак долетел, а не в начале замаха. Цель ищем
+	-- тоже в этот момент: кто успел отскочить, тот увернулся.
+	task.delay(HIT_DELAY, function()
+		if player.Character ~= character or humanoid.Health <= 0 or not root.Parent then
+			return
+		end
+		local victim = findTarget(character, root)
+		-- По тому, кто под защитным полем, удар проходит впустую: не засчитываем.
+		if victim and not victim.Parent:FindFirstChildOfClass("ForceField") then
+			victim:TakeDamage(DAMAGE)
+			hitEvent:FireClient(player, DAMAGE)
+			-- Тот же договор, что у бластера: попадание увеличивает атрибут Hits.
+			player:SetAttribute("Hits", (player:GetAttribute("Hits") or 0) + 1)
+		end
+	end)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">FistServer</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX04C76E9B2E2E4BE5BC22A72EBA74AA99">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- FistClient — удар кулаком: левая кнопка мыши или F, на телефоне — кнопка.
+-- Работает, только когда в руке нет предмета: с пистолетом в руке левая
+-- кнопка стреляет, как раньше. Попал ли удар, решает сервер.
+
+-- ============================ НАСТРОЙКИ ============================
+local SWING_ANIMATION = 75104097134402 -- ID анимации удара (R15, своего аккаунта);
+                                       -- момент попадания — HIT_DELAY в FistServer
+-- ===================================================================
+
+local ContextActionService = game:GetService("ContextActionService")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local folder = script.Parent
+local punchEvent = folder:WaitForChild("Punch")
+local hitEvent = folder:WaitForChild("Hit")
+local player = Players.LocalPlayer
+
+local SURFACE_Y = -15 -- как в FistServer: ниже — бункер
+
+local function canPunch()
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not root or root.Position.Y < SURFACE_Y then
+		return false
+	end
+	if character:FindFirstChildOfClass("Tool") or character:GetAttribute("RaidProtected") then
+		return false
+	end
+	return true
+end
+
+-- Замах — анимация удара (R15, опубликована в аккаунте игры). Суставов
+-- Motor6D у аватаров нет, руку двигает только анимация; анимация своего
+-- персонажа видна всем игрокам. В самой анимации включён повтор — здесь
+-- его выключаем: один удар — один проигрыш.
+local COOLDOWN = 0.7 -- как в FistServer: чаще замах не показываем
+local track, trackOwner = nil, nil
+local lastSwing = 0
+
+local function swing(character)
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	local animator = humanoid and humanoid:FindFirstChildOfClass("Animator")
+	if not animator then
+		return
+	end
+	if trackOwner ~= character then
+		local anim = Instance.new("Animation")
+		anim.AnimationId = "rbxassetid://" .. SWING_ANIMATION
+		track = animator:LoadAnimation(anim)
+		track.Priority = Enum.AnimationPriority.Action4
+		track.Looped = false
+		trackOwner = character
+	end
+	track:Play(0.05)
+end
+
+local function punch()
+	if canPunch() and os.clock() - lastSwing >= COOLDOWN then
+		lastSwing = os.clock()
+		swing(player.Character)
+		punchEvent:FireServer()
+	end
+end
+
+UserInputService.InputBegan:Connect(function(input, processed)
+	if not processed and input.UserInputType == Enum.UserInputType.MouseButton1 then
+		punch()
+	end
+end)
+
+-- Клавиша F и кнопка на сенсорном экране.
+ContextActionService:BindAction("Fist", function(_, inputState)
+	if inputState == Enum.UserInputState.Begin then
+		punch()
+	end
+	return Enum.ContextActionResult.Pass
+end, true, Enum.KeyCode.F)
+ContextActionService:SetTitle("Fist", "Удар")
+
+-- Попал — короткая цифра урона под прицелом.
+local gui = Instance.new("ScreenGui")
+gui.Name = "FistScreen"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local mark = Instance.new("TextLabel")
+mark.AnchorPoint = Vector2.new(0.5, 0.5)
+mark.Position = UDim2.new(0.5, 0, 0.5, 40)
+mark.Size = UDim2.fromOffset(120, 30)
+mark.BackgroundTransparency = 1
+mark.Font = Enum.Font.GothamBold
+mark.TextSize = 24
+mark.TextColor3 = Color3.fromRGB(255, 220, 120)
+mark.TextStrokeTransparency = 0.4
+mark.TextTransparency = 1
+mark.Parent = gui
+
+hitEvent.OnClientEvent:Connect(function(damage)
+	mark.Text = "−" .. tostring(damage)
+	mark.TextTransparency = 0
+	TweenService:Create(mark, TweenInfo.new(0.6), { TextTransparency = 1 }):Play()
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">FistClient</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

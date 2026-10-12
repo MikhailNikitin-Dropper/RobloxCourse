@@ -1,0 +1,168 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX6C8E6790344C40E0961687AE3E6A3C27">
+		<Properties>
+			<string name="Name">ExtractZone</string>
+		</Properties>
+		<Item class="Script" referent="RBX800FE7A056804F69BC903CDF501C1FC4">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- ExtractScript — скупщик и безопасный лагерь.
+-- Модуль курса «Зона сдачи», урок 35.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали-площадки, защита в лагере, почём скупщик берёт
+-- покупки и надпись при продаже. Их можно менять. Всё, что ниже второго
+-- ряда, — логика.
+--
+-- Папка модуля кладётся внутрь модели зоны сдачи: деталь-площадку с именем PAD
+-- ставит ученик сам.
+--
+-- ПРОДАЖА. Игрок выбрасывает предмет из руки (клавиша модуля лута, обычно Q)
+-- так, чтобы он лёг на площадку, — скупщик забирает его и платит тому, кто
+-- выбросил. Находка продаётся за свою цену (атрибут Value), покупка из
+-- магазина — за долю цены SELL_SHARE (атрибут Price). Бесплатное (пистолет за
+-- 0 монет) скупщик тоже забирает — за 0: так освобождают ячейку оружия.
+
+-- ============================ НАСТРОЙКИ ============================
+local PAD = "Pad" -- имя детали-площадки
+local SAFE_ZONE = true -- true — на площадке не работает оружие (ForceField)
+local SAFE_RANGE = 8 -- с какого расстояния от площадки действует защита, студы
+local SELL_SHARE = 0.5 -- какую долю цены магазина скупщик платит за покупку
+local MESSAGE = "Продано" -- что показать игроку при продаже
+-- ===================================================================
+
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local model = script.Parent.Parent
+local pad = model:FindFirstChild(PAD)
+
+if not pad then
+	warn("ExtractZone: в модели " .. model.Name .. " нет детали " .. PAD)
+	return
+end
+
+pad.Anchored = true
+
+-- Выброшенные предметы и полоску рюкзака ведёт модуль лута: берём у него
+-- метку предметов на земле и канал к экрану игрока.
+local lootFolder = workspace:FindFirstChild("LootSystem")
+local lootUpdate = lootFolder and lootFolder:FindFirstChild("Update")
+local TAG = lootFolder and lootFolder:GetAttribute("Tag") or "Loot"
+local EDGE = 1.5 -- насколько предмет может свеситься с края площадки (логика)
+local SELL_DELAY = 0.4 -- сколько проданный предмет ещё виден на площадке (логика)
+
+local function coinsOf(player)
+	local stats = player:FindFirstChild("leaderstats")
+	return stats and stats:FindFirstChild("Монеты")
+end
+
+local function say(player, message)
+	local coins = coinsOf(player)
+	if lootUpdate and coins then
+		lootUpdate:FireClient(player, {
+			count = player:GetAttribute("LootCount") or 0,
+			capacity = player:GetAttribute("LootCapacity") or 0,
+			value = player:GetAttribute("LootValue") or 0,
+			coins = coins.Value,
+			message = message,
+		})
+	end
+end
+
+local function shield(character, on)
+	local field = character:FindFirstChild("CampShield")
+	if on and not field then
+		field = Instance.new("ForceField")
+		field.Name = "CampShield"
+		field.Visible = false
+		field.Parent = character
+	elseif not on and field then
+		field:Destroy()
+	end
+end
+
+-- Где лежит предмет: у модели — её середина.
+local function whereIs(item)
+	if item:IsA("BasePart") then
+		return item.Position
+	elseif item:IsA("Model") then
+		return item:GetBoundingBox().Position
+	end
+	return nil
+end
+
+-- Лежит ли точка на площадке: над её верхом и в пределах краёв.
+local function onPad(position)
+	local p = pad.CFrame:PointToObjectSpace(position)
+	return math.abs(p.X) <= pad.Size.X / 2 + EDGE
+		and math.abs(p.Z) <= pad.Size.Z / 2 + EDGE
+		and p.Y > -1 and p.Y < pad.Size.Y / 2 + 6
+end
+
+-- Сколько скупщик платит за предмет.
+local function priceOf(tool)
+	local value = tonumber(tool:GetAttribute("Value"))
+	if value then
+		return value
+	end
+	local price = tonumber(tool:GetAttribute("Price"))
+	if price then
+		return math.floor(price * SELL_SHARE)
+	end
+	return 0
+end
+
+-- Модуль лута кладёт на землю копию предмета: атрибут Owner — кто выбросил,
+-- ссылка Stored — сам предмет из рюкзака.
+CollectionService:GetInstanceAddedSignal(TAG):Connect(function(item)
+	local ownerId = item:GetAttribute("Owner")
+	local stored = item:FindFirstChild("Stored")
+	local tool = stored and stored.Value
+	local spot = whereIs(item)
+	if not (ownerId and tool and spot and onPad(spot)) then
+		return
+	end
+	local player = Players:GetPlayerByUserId(ownerId)
+	local coins = player and coinsOf(player)
+	if not coins then
+		return
+	end
+	local earned = priceOf(tool)
+	item:SetAttribute("Taken", true) -- больше никто не поднимет
+	coins.Value += earned
+	say(player, MESSAGE .. ": " .. tool.Name .. " +" .. earned)
+	task.delay(SELL_DELAY, function()
+		item:Destroy()
+		tool:Destroy()
+	end)
+end)
+
+if SAFE_ZONE then
+	local since = 0
+	RunService.Heartbeat:Connect(function(dt)
+		since = since + dt
+		if since < 0.3 then
+			return
+		end
+		since = 0
+		for _, player in ipairs(Players:GetPlayers()) do
+			local character = player.Character
+			local root = character and character:FindFirstChild("HumanoidRootPart")
+			if root then
+				shield(character, (root.Position - pad.Position).Magnitude <= SAFE_RANGE)
+			end
+		end
+	end)
+end
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">ExtractScript</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

@@ -1,0 +1,1567 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXDF4074CED1104E5AA6B23B3C9CEC31D4">
+		<Properties>
+			<string name="Name">TowerDefense</string>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBX59B457B91EB5457F97C831EC46A494D0">
+			<Properties>
+				<string name="Name">Action</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBXC75411C0733D44639B7403AB34665BBA">
+			<Properties>
+				<string name="Name">Shot</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBXA5A6820096684E2193887510D545DDAC">
+			<Properties>
+				<string name="Name">Notice</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX4265084DCBD64F4EBF027D28D98A0A57">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- TDServer — модуль курса «Защита королевства» (уроки 37–40), сервер.
+--
+-- Игра на одного игрока с видом сверху. Модуль приносит только правила:
+-- карту, башни и врагов ученик строит сам.
+--
+-- Уровень — папка в Workspace с меткой TDLevel (имя папки — название уровня):
+--   Waypoints  — папка точек пути 1, 2, 3… (враги идут от точки к точке)
+--   Start      — деталь, где появляются враги
+--   Base       — база в конце пути (деталь или модель)
+--   Placement  — папка клеток: на каждую клетку — одна башня
+--   Waves      — папка волн 1, 2, 3… (Configuration). Кто выходит в волне:
+--                атрибут «имя врага = сколько» (имя латиницей, например
+--                Zombie = 5) или IntValue внутри волны с именем врага
+--                (можно по-русски). Атрибут Gap — секунды между врагами.
+--   Cam        — деталь, смотрящая вниз: через неё игрок видит карту
+--   атрибуты папки уровня: StartMoney, BaseHealth
+--
+-- Башни — модели в ServerStorage.Towers, атрибуты Price, Damage, Range,
+-- Cooldown, Upgrade (имя следующего уровня в Towers/Upgrades), UpgradePrice.
+-- По желанию: атрибуты IdleAnimationId и AttackAnimationId (номера своих
+-- анимаций), Decal Projectile (картинка снаряда), Sound ShotSound (звук).
+-- Враги — модели в ServerStorage.Mobs, атрибуты Health, Speed, Reward, Damage,
+-- по желанию WalkAnimationId (своя ходьба).
+-- Сцена заставки — папка Intro в Workspace с деталью Cam (по желанию).
+
+------------------------------------------------------------------ настройки
+local GAME_TITLE = "Защита королевства" -- название на заставке
+local WAVE_PAUSE = 8 -- пауза перед волной, секунды
+local WAVE_BONUS = 50 -- деньги за пройденную волну
+local SPAWN_GAP = 1 -- секунды между врагами, если у волны нет Gap
+local SELL_SHARE = 0.5 -- какую долю вложенного возвращает продажа
+local LEVEL_TAG = "TDLevel" -- метка папки уровня
+local SAVE_LEVELS = true -- помнить пройденные уровни между заходами
+
+------------------------------------------------------------------ логика
+local START_MONEY = 200 -- если у уровня нет StartMoney (логика, не настройка)
+local BASE_HEALTH = 100 -- если у уровня нет BaseHealth (логика, не настройка)
+local MOB_GROUP = "TDMobs"
+local WALK_R15 = "rbxassetid://507777826" -- ходьба Roblox: играет в любой игре
+local WALK_R6 = "rbxassetid://180426354"
+local MODES = { "Первый", "Ближний", "Сильный" }
+
+local Players = game:GetService("Players")
+local ServerStorage = game:GetService("ServerStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CollectionService = game:GetService("CollectionService")
+local PhysicsService = game:GetService("PhysicsService")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+
+local package = script.Parent
+package:SetAttribute("Title", GAME_TITLE)
+
+local function remote(name)
+	local e = package:FindFirstChild(name)
+	if not e then
+		e = Instance.new("RemoteEvent")
+		e.Name = name
+		e.Parent = package
+	end
+	return e
+end
+local action = remote("Action") -- игрок → сервер: играть, поставить, улучшить…
+local shot = remote("Shot") -- сервер → игрок: выстрел башни (картинка-снаряд)
+local notice = remote("Notice") -- сервер → игрок: короткое сообщение
+
+-- Персонаж в игре с видом сверху не нужен.
+Players.CharacterAutoLoads = false
+
+pcall(function()
+	PhysicsService:RegisterCollisionGroup(MOB_GROUP)
+end)
+PhysicsService:CollisionGroupSetCollidable(MOB_GROUP, MOB_GROUP, false)
+
+------------------------------------------------------------------ уровни
+local function levels()
+	local list = {}
+	for _, f in ipairs(CollectionService:GetTagged(LEVEL_TAG)) do
+		if f:IsDescendantOf(workspace) then
+			table.insert(list, f)
+		end
+	end
+	table.sort(list, function(a, b)
+		local oa, ob = a:GetAttribute("Order"), b:GetAttribute("Order")
+		if oa and ob and oa ~= ob then
+			return oa < ob
+		end
+		return a.Name < b.Name
+	end)
+	return list
+end
+
+local function towersFolder()
+	return ServerStorage:FindFirstChild("Towers")
+end
+local function mobsFolder()
+	return ServerStorage:FindFirstChild("Mobs")
+end
+
+-- Каталог башен для меню игрока: клиент ServerStorage не видит, поэтому
+-- копии без скриптов (для превью) и числа лежат в ReplicatedStorage.
+local function publishCatalog()
+	local old = ReplicatedStorage:FindFirstChild("TDCatalog")
+	if old then
+		old:Destroy()
+	end
+	local catalog = Instance.new("Folder")
+	catalog.Name = "TDCatalog"
+	local src = towersFolder()
+	if src then
+		for _, model in ipairs(src:GetDescendants()) do
+			if model:IsA("Model") and model.Parent and (model.Parent == src or model.Parent.Name == "Upgrades") then
+				local copy = model:Clone()
+				for _, d in ipairs(copy:GetDescendants()) do
+					if d:IsA("LuaSourceContainer") or d:IsA("Sound") then
+						d:Destroy()
+					end
+				end
+				copy:SetAttribute("IsUpgrade", model.Parent ~= src)
+				copy.Parent = catalog
+			end
+		end
+	end
+	catalog.Parent = ReplicatedStorage
+end
+publishCatalog()
+
+------------------------------------------------------------------ сохранение
+local store
+if SAVE_LEVELS then
+	pcall(function()
+		store = game:GetService("DataStoreService"):GetDataStore("TDLevels")
+	end)
+end
+local completed = {} -- игрок → { [имя уровня] = true }
+
+local function loadProgress(player)
+	completed[player] = {}
+	if not store or #levels() < 2 then
+		return
+	end
+	local ok, data = pcall(function()
+		return store:GetAsync("p" .. player.UserId)
+	end)
+	if ok and type(data) == "table" then
+		for _, name in ipairs(data) do
+			completed[player][name] = true
+		end
+	end
+end
+
+local function saveProgress(player)
+	if not store or #levels() < 2 then
+		return
+	end
+	local list = {}
+	for name in pairs(completed[player] or {}) do
+		table.insert(list, name)
+	end
+	pcall(function()
+		store:SetAsync("p" .. player.UserId, list)
+	end)
+end
+
+local function publishLevels(player)
+	local names, open = {}, {}
+	local prevDone = true
+	for _, lvl in ipairs(levels()) do
+		table.insert(names, lvl.Name)
+		table.insert(open, prevDone)
+		prevDone = (completed[player] or {})[lvl.Name] == true
+	end
+	player:SetAttribute("TDLevels", table.concat(names, "\n"))
+	player:SetAttribute("TDOpen", table.concat((function()
+		local t = {}
+		for i, v in ipairs(open) do
+			t[i] = v and "1" or "0"
+		end
+		return t
+	end)(), ""))
+end
+
+------------------------------------------------------------------ партия
+local game_ = nil -- текущая партия: один игрок — одна партия
+
+-- Персонажа нет, поэтому мир игроку подгружается вокруг детали Cam: при
+-- включённом стриминге без этого камера и клетки до игрока не доезжают.
+local function focus(player, level)
+	local cam
+	if level then
+		cam = level:FindFirstChild("Cam")
+	else
+		local intro = workspace:FindFirstChild("Intro")
+		cam = intro and intro:FindFirstChild("Cam")
+		if not cam then
+			local first = levels()[1]
+			cam = first and first:FindFirstChild("Cam")
+		end
+	end
+	if cam and cam:IsA("BasePart") then
+		player.ReplicationFocus = cam
+		pcall(function()
+			player:RequestStreamAroundAsync(cam.Position)
+		end)
+	end
+end
+
+local function say(player, text)
+	notice:FireClient(player, text)
+end
+
+local function setHud(player)
+	local g = game_
+	if not g then
+		return
+	end
+	player:SetAttribute("TDMoney", g.money)
+	player:SetAttribute("TDWave", g.wave)
+	player:SetAttribute("TDWaves", #g.waves)
+	player:SetAttribute("TDBase", math.max(0, math.floor(g.baseHealth)))
+	player:SetAttribute("TDBaseMax", g.baseMax)
+end
+
+local function wavesOf(level)
+	local list = {}
+	local folder = level:FindFirstChild("Waves")
+	if folder then
+		for _, w in ipairs(folder:GetChildren()) do
+			if tonumber(w.Name) then
+				table.insert(list, w)
+			end
+		end
+	end
+	table.sort(list, function(a, b)
+		return tonumber(a.Name) < tonumber(b.Name)
+	end)
+	return list
+end
+
+-- Кто выходит в волне: атрибуты «враг = сколько» и IntValue внутри.
+local function groupsOf(wave)
+	local groups = {}
+	for name, count in pairs(wave:GetAttributes()) do
+		if name ~= "Gap" and type(count) == "number" then
+			table.insert(groups, { name = name, count = math.floor(count) })
+		end
+	end
+	for _, v in ipairs(wave:GetChildren()) do
+		if v:IsA("IntValue") or v:IsA("NumberValue") then
+			table.insert(groups, { name = v.Name, count = math.floor(v.Value) })
+		end
+	end
+	table.sort(groups, function(a, b)
+		return a.name < b.name
+	end)
+	return groups
+end
+
+local function waypointsOf(level)
+	local list = {}
+	local folder = level:FindFirstChild("Waypoints")
+	if folder then
+		for i = 1, #folder:GetChildren() do
+			local p = folder:FindFirstChild(tostring(i))
+			if not p then
+				break
+			end
+			table.insert(list, p)
+		end
+	end
+	return list
+end
+
+local function partOf(obj)
+	if obj:IsA("BasePart") then
+		return obj
+	end
+	if obj:IsA("Model") then
+		return obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart", true)
+	end
+end
+
+------------------------------------------------------------------ база
+local function baseBar(g)
+	local part = partOf(g.base)
+	if not part then
+		return
+	end
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "TDBaseBar"
+	gui.Size = UDim2.fromOffset(160, 26)
+	gui.StudsOffsetWorldSpace = Vector3.new(0, part.Size.Y / 2 + 3, 0)
+	gui.AlwaysOnTop = true
+	gui.Parent = part
+	local back = Instance.new("Frame")
+	back.Size = UDim2.fromScale(1, 1)
+	back.BackgroundColor3 = Color3.fromRGB(120, 20, 20)
+	back.Parent = gui
+	Instance.new("UICorner", back).CornerRadius = UDim.new(0, 8)
+	local fill = Instance.new("Frame")
+	fill.Name = "Fill"
+	fill.Size = UDim2.fromScale(1, 1)
+	fill.BackgroundColor3 = Color3.fromRGB(60, 200, 80)
+	fill.Parent = back
+	Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 8)
+	local label = Instance.new("TextLabel")
+	label.Name = "Label"
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.TextStrokeTransparency = 0.4
+	label.Font = Enum.Font.GothamBold
+	label.TextScaled = true
+	label.ZIndex = 2
+	label.Parent = back
+	g.baseGui = gui
+end
+
+local function updateBase(g)
+	if g.baseGui and g.baseGui.Parent then
+		local back = g.baseGui:FindFirstChildWhichIsA("Frame")
+		local share = math.clamp(g.baseHealth / g.baseMax, 0, 1)
+		back.Fill.Size = UDim2.fromScale(share, 1)
+		back.Label.Text = "База " .. math.max(0, math.floor(g.baseHealth)) .. " / " .. g.baseMax
+	end
+	setHud(g.player)
+end
+
+-- Поражение: база разлетается на кубики.
+local function blowUp(g)
+	local pieces = Instance.new("Folder")
+	pieces.Name = "TDDebris"
+	pieces.Parent = g.active
+	local center
+	for _, part in ipairs(g.base:IsA("BasePart") and { g.base } or g.base:GetDescendants()) do
+		if part:IsA("BasePart") and part.Transparency < 1 then
+			center = center or part.Position
+			local step = math.max(1.5, math.max(part.Size.X, part.Size.Y, part.Size.Z) / 6)
+			local count = 0
+			for x = -part.Size.X / 2 + step / 2, part.Size.X / 2, step do
+				for y = -part.Size.Y / 2 + step / 2, part.Size.Y / 2, step do
+					for z = -part.Size.Z / 2 + step / 2, part.Size.Z / 2, step do
+						count += 1
+						if count > 220 then
+							break
+						end
+						local cube = Instance.new("Part")
+						cube.Size = Vector3.new(step, step, step) * 0.95
+						cube.CFrame = part.CFrame * CFrame.new(x, y, z)
+						cube.Color = part.Color
+						cube.Material = part.Material
+						cube.Parent = pieces
+					end
+				end
+			end
+			part.Transparency = 1
+			part.CanCollide = false
+		end
+	end
+	if g.baseGui then
+		g.baseGui:Destroy()
+	end
+	if center then
+		local boom = Instance.new("Explosion")
+		boom.Position = center
+		boom.BlastRadius = 30
+		boom.BlastPressure = 400000
+		boom.DestroyJointRadiusPercent = 0
+		boom.Parent = pieces
+	end
+end
+
+------------------------------------------------------------------ враги
+local function healthBar(mob, humanoid)
+	local head = mob:FindFirstChild("Head") or partOf(mob)
+	if not head then
+		return
+	end
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "TDHealth"
+	gui.Size = UDim2.fromOffset(70, 14)
+	gui.StudsOffsetWorldSpace = Vector3.new(0, 2.2, 0)
+	gui.MaxDistance = 250
+	gui.Parent = head
+	local back = Instance.new("Frame")
+	back.Size = UDim2.fromScale(1, 1)
+	back.BackgroundColor3 = Color3.fromRGB(150, 20, 20)
+	back.Parent = gui
+	Instance.new("UICorner", back).CornerRadius = UDim.new(0, 6)
+	local fill = Instance.new("Frame")
+	fill.Size = UDim2.fromScale(1, 1)
+	fill.BackgroundColor3 = Color3.fromRGB(70, 210, 80)
+	fill.Parent = back
+	Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 6)
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.TextStrokeTransparency = 0.3
+	label.Font = Enum.Font.GothamBold
+	label.TextScaled = true
+	label.ZIndex = 2
+	label.Parent = back
+	local function update()
+		local share = math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1)
+		fill.Size = UDim2.fromScale(share, 1)
+		label.Text = tostring(math.max(0, math.ceil(humanoid.Health)))
+	end
+	update()
+	humanoid.HealthChanged:Connect(update)
+end
+
+local function walkAnimation(mob, humanoid)
+	if mob:FindFirstChild("Animate") then
+		return -- у врага свой скрипт анимаций
+	end
+	-- Своя ходьба: атрибут WalkAnimationId (как у монстра урока 27) или
+	-- Animation с именем Walk внутри врага; иначе — ходьба Roblox.
+	local anim = mob:FindFirstChild("Walk")
+	local id = mob:GetAttribute("WalkAnimationId")
+	if id and tostring(id) ~= "" and tostring(id) ~= "0" then
+		anim = Instance.new("Animation")
+		anim.AnimationId = tonumber(id) and ("rbxassetid://" .. tostring(id)) or tostring(id)
+	elseif not (anim and anim:IsA("Animation")) then
+		anim = Instance.new("Animation")
+		anim.AnimationId = humanoid.RigType == Enum.HumanoidRigType.R6 and WALK_R6 or WALK_R15
+	end
+	local animator = humanoid:FindFirstChildOfClass("Animator") or Instance.new("Animator", humanoid)
+	local ok, track = pcall(function()
+		return animator:LoadAnimation(anim)
+	end)
+	if ok and track then
+		track.Looped = true
+		track:Play()
+	end
+end
+
+local function spawnMob(g, name)
+	local folder = mobsFolder()
+	local template = folder and folder:FindFirstChild(name)
+	if not template then
+		warn("TowerDefense: в ServerStorage.Mobs нет врага «" .. name .. "»")
+		return
+	end
+	local mob = template:Clone()
+	local humanoid = mob:FindFirstChildOfClass("Humanoid")
+	local root = mob:FindFirstChild("HumanoidRootPart") or mob.PrimaryPart
+	if not (humanoid and root) then
+		warn("TowerDefense: враг «" .. name .. "» — не риг (нет Humanoid)")
+		mob:Destroy()
+		return
+	end
+	local health = tonumber(template:GetAttribute("Health")) or humanoid.MaxHealth
+	humanoid.MaxHealth = health
+	humanoid.Health = health
+	humanoid.WalkSpeed = tonumber(template:GetAttribute("Speed")) or humanoid.WalkSpeed
+	humanoid.BreakJointsOnDeath = false
+	humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	for _, d in ipairs(mob:GetDescendants()) do
+		if d:IsA("BasePart") then
+			d.Anchored = false
+			d.CollisionGroup = MOB_GROUP
+		end
+	end
+	local start = g.level:FindFirstChild("Start")
+	mob:PivotTo(start.CFrame + Vector3.new(0, 3, 0))
+	mob.Parent = g.mobs
+	pcall(function()
+		root:SetNetworkOwner(nil)
+	end)
+	healthBar(mob, humanoid)
+	walkAnimation(mob, humanoid)
+
+	local info = { model = mob, humanoid = humanoid, root = root, index = 1, alive = true }
+	g.alive[mob] = info
+
+	humanoid.Died:Connect(function()
+		if not info.alive then
+			return
+		end
+		info.alive = false
+		g.alive[mob] = nil
+		if game_ == g and not g.over then
+			g.money += tonumber(template:GetAttribute("Reward")) or 0
+			setHud(g.player)
+		end
+		local bar = mob:FindFirstChild("TDHealth", true)
+		if bar then
+			bar:Destroy()
+		end
+		Debris:AddItem(mob, 1)
+	end)
+
+	task.spawn(function()
+		local points = g.points
+		for i = 1, #points do
+			info.index = i
+			local target = points[i].Position
+			-- MoveTo сам сдаётся через 8 секунд — повторяем, пока не дойдёт.
+			while info.alive and game_ == g and not g.over do
+				humanoid:MoveTo(target)
+				local reached = humanoid.MoveToFinished:Wait()
+				local flat = Vector3.new(root.Position.X - target.X, 0, root.Position.Z - target.Z)
+				if reached or flat.Magnitude < 2.5 then
+					break
+				end
+			end
+			if not info.alive or game_ ~= g or g.over then
+				return
+			end
+		end
+		-- Дошёл до базы.
+		info.alive = false
+		g.alive[mob] = nil
+		mob:Destroy()
+		if game_ == g and not g.over then
+			g.baseHealth -= tonumber(template:GetAttribute("Damage")) or 1
+			updateBase(g)
+		end
+	end)
+end
+
+-- Насколько враг продвинулся по пути: для режима цели «Первый».
+local function progress(g, info)
+	local points = g.points
+	local nextPoint = points[info.index]
+	local d = nextPoint and (nextPoint.Position - info.root.Position).Magnitude or 0
+	return info.index * 100000 - d
+end
+
+------------------------------------------------------------------ башни
+local function towerTemplate(name)
+	local folder = towersFolder()
+	if not folder then
+		return nil
+	end
+	local t = folder:FindFirstChild(name)
+	if t and t:IsA("Model") then
+		return t
+	end
+	local up = folder:FindFirstChild("Upgrades")
+	t = up and up:FindFirstChild(name)
+	if t and t:IsA("Model") then
+		return t
+	end
+end
+
+-- Анимация башни: атрибут IdleAnimationId / AttackAnimationId или Animation
+-- с именем Idle / Attack внутри модели.
+local function playAnimation(model, name, looped)
+	local anim = model:FindFirstChild(name)
+	local id = model:GetAttribute(name .. "AnimationId")
+	if id and tostring(id) ~= "" and tostring(id) ~= "0" then
+		anim = Instance.new("Animation")
+		anim.AnimationId = tonumber(id) and ("rbxassetid://" .. tostring(id)) or tostring(id)
+	end
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	if not (anim and anim:IsA("Animation") and humanoid) then
+		return nil
+	end
+	local animator = humanoid:FindFirstChildOfClass("Animator") or Instance.new("Animator", humanoid)
+	local ok, track = pcall(function()
+		return animator:LoadAnimation(anim)
+	end)
+	if ok and track then
+		track.Looped = looped
+		track:Play()
+		return track
+	end
+end
+
+local function buildTower(g, template, tile, facing)
+	local model = template:Clone()
+	local _, size = model:GetBoundingBox()
+	local top = tile.Position + Vector3.new(0, tile.Size.Y / 2 + size.Y / 2, 0)
+	local look = facing or (top + Vector3.new(0, 0, -1))
+	model:PivotTo(CFrame.lookAt(top, Vector3.new(look.X, top.Y, look.Z)))
+	-- Пивот модели может быть не в центре — ставим по рамке.
+	local box = model:GetBoundingBox()
+	model:PivotTo(model:GetPivot() + (top - box.Position))
+	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	local root = model:FindFirstChild("HumanoidRootPart")
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("BasePart") then
+			d.Anchored = not (humanoid and root) or d == root
+			d.CanCollide = false
+		elseif d:IsA("LuaSourceContainer") then
+			d:Destroy()
+		end
+	end
+	if humanoid then
+		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+		humanoid.HealthDisplayDistance = 0
+	end
+	CollectionService:AddTag(model, "TDTower")
+	model.Parent = g.towersFolder
+	playAnimation(model, "Idle", true)
+	return model
+end
+
+local function placeTower(g, tile, name)
+	if g.towerOn[tile] then
+		return say(g.player, "Клетка занята")
+	end
+	local template = towerTemplate(name)
+	if not template or template.Parent ~= towersFolder() then
+		return
+	end
+	local price = tonumber(template:GetAttribute("Price")) or 0
+	if g.money < price then
+		return say(g.player, "Не хватает денег")
+	end
+	g.money -= price
+	local model = buildTower(g, template, tile)
+	local info = { model = model, tile = tile, spent = price, mode = MODES[1], nextShot = 0 }
+	model:SetAttribute("TDMode", info.mode)
+	g.towers[model] = info
+	g.towerOn[tile] = model
+	tile:SetAttribute("TDTransparency", tile:GetAttribute("TDTransparency") or tile.Transparency)
+	tile.Transparency = 1
+	tile.CanQuery = false
+	setHud(g.player)
+end
+
+local function freeTile(tile)
+	tile.Transparency = tile:GetAttribute("TDTransparency") or 0
+	tile.CanQuery = true
+end
+
+local function upgradeTower(g, model)
+	local info = g.towers[model]
+	if not info then
+		return
+	end
+	local nextName = model:GetAttribute("Upgrade")
+	local template = nextName and nextName ~= "" and towerTemplate(nextName)
+	if not template then
+		return say(g.player, "Это последний уровень")
+	end
+	local price = tonumber(model:GetAttribute("UpgradePrice")) or 0
+	if g.money < price then
+		return say(g.player, "Не хватает денег")
+	end
+	g.money -= price
+	local pivot = model:GetPivot()
+	local newModel = buildTower(g, template, info.tile, pivot.Position + pivot.LookVector)
+	g.towers[model] = nil
+	model:Destroy()
+	info.model = newModel
+	info.spent += price
+	newModel:SetAttribute("TDMode", info.mode)
+	g.towers[newModel] = info
+	g.towerOn[info.tile] = newModel
+	setHud(g.player)
+	return newModel
+end
+
+local function sellTower(g, model)
+	local info = g.towers[model]
+	if not info then
+		return
+	end
+	g.money += math.floor(info.spent * SELL_SHARE)
+	g.towers[model] = nil
+	g.towerOn[info.tile] = nil
+	freeTile(info.tile)
+	model:Destroy()
+	setHud(g.player)
+end
+
+local function findTarget(g, info, origin, range)
+	local best, bestScore = nil, -math.huge
+	for _, m in pairs(g.alive) do
+		if m.alive and m.humanoid.Health > 0 then
+			local flat = Vector3.new(m.root.Position.X - origin.X, 0, m.root.Position.Z - origin.Z)
+			local d = flat.Magnitude
+			if d <= range then
+				local score
+				if info.mode == "Ближний" then
+					score = -d
+				elseif info.mode == "Сильный" then
+					score = m.humanoid.Health
+				else
+					score = progress(g, m)
+				end
+				if score > bestScore then
+					best, bestScore = m, score
+				end
+			end
+		end
+	end
+	return best
+end
+
+local function towerTick(g)
+	local now = os.clock()
+	for model, info in pairs(g.towers) do
+		if model.Parent and now >= info.nextShot then
+			local origin = model:GetPivot().Position
+			local range = tonumber(model:GetAttribute("Range")) or 15
+			local target = findTarget(g, info, origin, range)
+			if target then
+				info.nextShot = now + (tonumber(model:GetAttribute("Cooldown")) or 1)
+				local aim = Vector3.new(target.root.Position.X, origin.Y, target.root.Position.Z)
+				if (aim - origin).Magnitude > 0.1 then
+					model:PivotTo(CFrame.lookAt(origin, aim))
+				end
+				playAnimation(model, "Attack", false)
+				local sound = model:FindFirstChild("ShotSound", true)
+				if sound and sound:IsA("Sound") then
+					sound:Play()
+				end
+				shot:FireAllClients(model, target.model)
+				target.humanoid:TakeDamage(tonumber(model:GetAttribute("Damage")) or 10)
+			end
+		end
+	end
+end
+
+------------------------------------------------------------------ ход партии
+local function clearGame(g)
+	g.over = true
+	if g.active then
+		g.active:Destroy()
+	end
+	for tile in pairs(g.towerOn) do
+		freeTile(tile)
+	end
+	-- База — копией, сохранённой перед партией (взрыв её разобрал).
+	if g.baseBackup and g.base then
+		local parent = g.base.Parent
+		g.base:Destroy()
+		g.baseBackup.Parent = parent
+	end
+end
+
+local function finish(g, won)
+	if g.over then
+		return
+	end
+	g.over = true
+	if not won then
+		blowUp(g)
+	else
+		completed[g.player] = completed[g.player] or {}
+		completed[g.player][g.level.Name] = true
+		saveProgress(g.player)
+		publishLevels(g.player)
+	end
+	for _, m in pairs(g.alive) do
+		m.alive = false
+		if m.model.Parent then
+			m.model:Destroy()
+		end
+	end
+	g.alive = {}
+	g.player:SetAttribute("TDPhase", won and "won" or "lost")
+end
+
+local function startGame(player, level)
+	if game_ then
+		clearGame(game_)
+	end
+	local points = waypointsOf(level)
+	local base = level:FindFirstChild("Base")
+	local waves = wavesOf(level)
+	local problems = {}
+	if #points == 0 then
+		table.insert(problems, "нет папки Waypoints с точками 1, 2, 3…")
+	end
+	if not level:FindFirstChild("Start") then
+		table.insert(problems, "нет детали Start")
+	end
+	if not base then
+		table.insert(problems, "нет базы Base")
+	end
+	if #waves == 0 then
+		table.insert(problems, "нет волн в папке Waves")
+	end
+	if not level:FindFirstChild("Placement") then
+		table.insert(problems, "нет папки Placement с клетками")
+	end
+	if #problems > 0 then
+		warn("TowerDefense, уровень «" .. level.Name .. "»: " .. table.concat(problems, "; "))
+		say(player, "Уровень не готов: " .. problems[1])
+		return
+	end
+
+	local active = Instance.new("Folder")
+	active.Name = "TDActive"
+	active.Parent = workspace
+	local g = {
+		player = player,
+		level = level,
+		points = points,
+		waves = waves,
+		wave = 0,
+		money = tonumber(level:GetAttribute("StartMoney")) or START_MONEY,
+		baseMax = tonumber(level:GetAttribute("BaseHealth")) or BASE_HEALTH,
+		base = base,
+		baseBackup = base:Clone(),
+		active = active,
+		mobs = Instance.new("Folder"),
+		towersFolder = Instance.new("Folder"),
+		alive = {},
+		towers = {},
+		towerOn = {},
+		over = false,
+	}
+	g.baseHealth = g.baseMax
+	g.mobs.Name = "Mobs"
+	g.mobs.Parent = active
+	g.towersFolder.Name = "Towers"
+	g.towersFolder.Parent = active
+	game_ = g
+	baseBar(g)
+	updateBase(g)
+	player:SetAttribute("TDLevel", level.Name)
+	focus(player, level)
+	player:SetAttribute("TDPhase", "playing")
+
+	task.spawn(function()
+		for i, wave in ipairs(waves) do
+			if game_ ~= g or g.over then
+				return
+			end
+			g.wave = i
+			for left = WAVE_PAUSE, 1, -1 do
+				player:SetAttribute("TDCountdown", left)
+				setHud(player)
+				task.wait(1)
+				if game_ ~= g or g.over then
+					return
+				end
+			end
+			player:SetAttribute("TDCountdown", 0)
+			local gap = tonumber(wave:GetAttribute("Gap")) or SPAWN_GAP
+			for _, group in ipairs(groupsOf(wave)) do
+				for _ = 1, group.count do
+					if game_ ~= g or g.over then
+						return
+					end
+					spawnMob(g, group.name)
+					task.wait(gap)
+				end
+			end
+			while next(g.alive) and game_ == g and not g.over do
+				task.wait(0.5)
+			end
+			if game_ ~= g or g.over then
+				return
+			end
+			if g.baseHealth <= 0 then
+				return
+			end
+			g.money += WAVE_BONUS
+			setHud(player)
+			if i < #waves then
+				say(player, "Волна " .. i .. " отбита: +" .. WAVE_BONUS)
+			end
+		end
+		if game_ == g and not g.over then
+			finish(g, true)
+		end
+	end)
+end
+
+RunService.Heartbeat:Connect(function()
+	local g = game_
+	if g and not g.over then
+		if g.baseHealth <= 0 then
+			finish(g, false)
+		else
+			towerTick(g)
+		end
+	end
+end)
+
+------------------------------------------------------------------ игрок
+action.OnServerEvent:Connect(function(player, kind, a, b)
+	local g = game_
+	if kind == "Play" then
+		local list = levels()
+		local level
+		for i, lvl in ipairs(list) do
+			if lvl.Name == a or (a == nil and i == 1) then
+				local open = i == 1 or (completed[player] or {})[list[i - 1].Name]
+				if open then
+					level = lvl
+				end
+			end
+		end
+		if level then
+			startGame(player, level)
+		end
+	elseif kind == "Menu" then
+		if g then
+			clearGame(g)
+			game_ = nil
+		end
+		publishLevels(player)
+		focus(player, nil)
+		player:SetAttribute("TDPhase", "title")
+	elseif not g or g.player ~= player or g.over then
+		return
+	elseif kind == "Place" then
+		local placement = g.level:FindFirstChild("Placement")
+		if typeof(a) == "Instance" and a:IsA("BasePart") and placement and a:IsDescendantOf(placement) and type(b) == "string" then
+			placeTower(g, a, b)
+		end
+	elseif kind == "Upgrade" then
+		if typeof(a) == "Instance" then
+			upgradeTower(g, a)
+		end
+	elseif kind == "Sell" then
+		if typeof(a) == "Instance" then
+			sellTower(g, a)
+		end
+	elseif kind == "Mode" then
+		local info = typeof(a) == "Instance" and g.towers[a]
+		if info then
+			local i = table.find(MODES, info.mode) or 1
+			info.mode = MODES[i % #MODES + 1]
+			a:SetAttribute("TDMode", info.mode)
+		end
+	end
+end)
+
+local function join(player)
+	loadProgress(player)
+	publishLevels(player)
+	focus(player, nil)
+	player:SetAttribute("TDPhase", "title")
+end
+Players.PlayerAdded:Connect(join)
+for _, p in ipairs(Players:GetPlayers()) do
+	task.spawn(join, p)
+end
+Players.PlayerRemoving:Connect(function(player)
+	if game_ and game_.player == player then
+		clearGame(game_)
+		game_ = nil
+	end
+	completed[player] = nil
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">TDServer</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBXAA00D35A4D6248B4A4425FE38BB22950">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- TDClient — модуль курса «Защита королевства» (уроки 37–40), экран игрока.
+--
+-- Заставка и меню уровней, камера сверху, клики по клеткам и башням,
+-- меню башен, панель башни, верхняя панель, экраны победы и поражения,
+-- полёт снарядов. Настройки — в начале скрипта TDServer.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CollectionService = game:GetService("CollectionService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+local GuiService = game:GetService("GuiService")
+
+local player = Players.LocalPlayer
+if not player then
+	return
+end
+local package = script.Parent
+local action = package:WaitForChild("Action")
+local shot = package:WaitForChild("Shot")
+local notice = package:WaitForChild("Notice")
+local camera = workspace.CurrentCamera
+
+local LEVEL_TAG = "TDLevel"
+local DARK = Color3.fromRGB(24, 26, 32)
+local GOLD = Color3.fromRGB(255, 205, 80)
+local GREEN = Color3.fromRGB(60, 170, 90)
+local GREY = Color3.fromRGB(90, 92, 100)
+
+------------------------------------------------------------------ помощники
+local gui = Instance.new("ScreenGui")
+gui.Name = "TDGui"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local function corner(obj, r)
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0, r or 10)
+	c.Parent = obj
+end
+
+local function label(parent, text, size)
+	local l = Instance.new("TextLabel")
+	l.BackgroundTransparency = 1
+	l.TextColor3 = Color3.new(1, 1, 1)
+	l.Font = Enum.Font.GothamBold
+	l.TextSize = size or 18
+	l.Text = text
+	l.Parent = parent
+	return l
+end
+
+local function button(parent, text, color)
+	local b = Instance.new("TextButton")
+	b.BackgroundColor3 = color or GREEN
+	b.TextColor3 = Color3.new(1, 1, 1)
+	b.Font = Enum.Font.GothamBold
+	b.TextSize = 18
+	b.Text = text
+	b.AutoButtonColor = true
+	b.Parent = parent
+	corner(b, 8)
+	return b
+end
+
+local function currentLevel()
+	local name = player:GetAttribute("TDLevel")
+	for _, f in ipairs(CollectionService:GetTagged(LEVEL_TAG)) do
+		if f.Name == name and f:IsDescendantOf(workspace) then
+			return f
+		end
+	end
+end
+
+local function levelNames()
+	local raw = player:GetAttribute("TDLevels") or ""
+	local names = {}
+	for n in string.gmatch(raw, "[^\n]+") do
+		table.insert(names, n)
+	end
+	return names
+end
+
+------------------------------------------------------------------ заставка
+local title = Instance.new("Frame")
+title.Size = UDim2.fromScale(1, 1)
+title.BackgroundTransparency = 1
+title.Parent = gui
+
+local titleText = label(title, package:GetAttribute("Title") or "Tower Defense", 64)
+titleText.AnchorPoint = Vector2.new(0.5, 0)
+titleText.Position = UDim2.fromScale(0.5, 0.14)
+titleText.Size = UDim2.new(0.9, 0, 0, 90)
+titleText.TextStrokeTransparency = 0.2
+titleText.TextScaled = true
+package:GetAttributeChangedSignal("Title"):Connect(function()
+	titleText.Text = package:GetAttribute("Title") or ""
+end)
+
+local playButton = button(title, "Играть", GREEN)
+playButton.AnchorPoint = Vector2.new(0.5, 0)
+playButton.Position = UDim2.fromScale(0.5, 0.62)
+playButton.Size = UDim2.fromOffset(260, 64)
+playButton.TextSize = 30
+
+local levelMenu = Instance.new("Frame")
+levelMenu.AnchorPoint = Vector2.new(0.5, 0)
+levelMenu.Position = UDim2.fromScale(0.5, 0.42)
+levelMenu.Size = UDim2.fromOffset(340, 300)
+levelMenu.BackgroundTransparency = 1
+levelMenu.Visible = false
+levelMenu.Parent = title
+local levelLayout = Instance.new("UIListLayout")
+levelLayout.Padding = UDim.new(0, 10)
+levelLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+levelLayout.Parent = levelMenu
+
+local function showLevels()
+	for _, c in ipairs(levelMenu:GetChildren()) do
+		if c:IsA("GuiButton") then
+			c:Destroy()
+		end
+	end
+	local names = levelNames()
+	local open = player:GetAttribute("TDOpen") or ""
+	for i, name in ipairs(names) do
+		local isOpen = string.sub(open, i, i) == "1"
+		local b = button(levelMenu, isOpen and name or (name .. " — пройди предыдущий"), isOpen and GREEN or GREY)
+		b.Size = UDim2.fromOffset(340, 52)
+		b.LayoutOrder = i
+		b.Active = isOpen
+		b.MouseButton1Click:Connect(function()
+			if isOpen then
+				action:FireServer("Play", name)
+			end
+		end)
+	end
+end
+
+playButton.MouseButton1Click:Connect(function()
+	if #levelNames() > 1 then
+		playButton.Visible = false
+		levelMenu.Visible = true
+		showLevels()
+	else
+		action:FireServer("Play", levelNames()[1])
+	end
+end)
+
+------------------------------------------------------------------ верхняя панель
+local hud = Instance.new("Frame")
+hud.AnchorPoint = Vector2.new(0.5, 0)
+hud.Position = UDim2.new(0.5, 0, 0, 12)
+hud.Size = UDim2.fromOffset(460, 44)
+hud.BackgroundColor3 = DARK
+hud.BackgroundTransparency = 0.15
+hud.Visible = false
+hud.Parent = gui
+corner(hud, 12)
+local hudText = label(hud, "", 20)
+hudText.Size = UDim2.fromScale(1, 1)
+
+local flash = label(gui, "", 22)
+flash.AnchorPoint = Vector2.new(0.5, 0)
+flash.Position = UDim2.new(0.5, 0, 0, 62)
+flash.Size = UDim2.fromOffset(500, 30)
+flash.TextColor3 = GOLD
+flash.TextStrokeTransparency = 0.3
+flash.TextTransparency = 1
+
+notice.OnClientEvent:Connect(function(text)
+	flash.Text = text
+	flash.TextTransparency = 0
+	TweenService:Create(flash, TweenInfo.new(1.6), { TextTransparency = 1 }):Play()
+end)
+
+local function updateHud()
+	local wave = player:GetAttribute("TDWave") or 0
+	local waves = player:GetAttribute("TDWaves") or 0
+	local count = player:GetAttribute("TDCountdown") or 0
+	local money = player:GetAttribute("TDMoney") or 0
+	local text = "Волна " .. wave .. " из " .. waves
+	if count > 0 then
+		text = text .. " · через " .. count .. " с"
+	end
+	hudText.Text = text .. " · Деньги: " .. money
+end
+for _, a in ipairs({ "TDWave", "TDWaves", "TDCountdown", "TDMoney" }) do
+	player:GetAttributeChangedSignal(a):Connect(updateHud)
+end
+
+------------------------------------------------------------------ конец партии
+local finale = Instance.new("Frame")
+finale.AnchorPoint = Vector2.new(0.5, 0.5)
+finale.Position = UDim2.fromScale(0.5, 0.45)
+finale.Size = UDim2.fromOffset(420, 220)
+finale.BackgroundColor3 = DARK
+finale.BackgroundTransparency = 0.1
+finale.Visible = false
+finale.Parent = gui
+corner(finale, 16)
+local finaleText = label(finale, "", 44)
+finaleText.Position = UDim2.fromOffset(0, 24)
+finaleText.Size = UDim2.new(1, 0, 0, 60)
+local againButton = button(finale, "Ещё раз", GREEN)
+againButton.Position = UDim2.new(0.5, -190, 1, -84)
+againButton.Size = UDim2.fromOffset(180, 56)
+local menuButton = button(finale, "В меню", GREY)
+menuButton.Position = UDim2.new(0.5, 10, 1, -84)
+menuButton.Size = UDim2.fromOffset(180, 56)
+againButton.MouseButton1Click:Connect(function()
+	action:FireServer("Play", player:GetAttribute("TDLevel"))
+end)
+menuButton.MouseButton1Click:Connect(function()
+	action:FireServer("Menu")
+end)
+
+------------------------------------------------------------------ меню башен
+local catalog = ReplicatedStorage:WaitForChild("TDCatalog")
+
+local popup = Instance.new("Frame")
+popup.BackgroundColor3 = DARK
+popup.BackgroundTransparency = 0.05
+popup.Visible = false
+popup.Parent = gui
+corner(popup, 12)
+local popupPad = Instance.new("UIPadding")
+popupPad.PaddingTop = UDim.new(0, 8)
+popupPad.PaddingBottom = UDim.new(0, 8)
+popupPad.PaddingLeft = UDim.new(0, 8)
+popupPad.PaddingRight = UDim.new(0, 8)
+popupPad.Parent = popup
+local popupLayout = Instance.new("UIListLayout")
+popupLayout.FillDirection = Enum.FillDirection.Horizontal
+popupLayout.Padding = UDim.new(0, 8)
+popupLayout.SortOrder = Enum.SortOrder.LayoutOrder
+popupLayout.Parent = popup
+-- Строки панели идут в том порядке, в каком их добавили.
+local popupOrder = 0
+popup.ChildAdded:Connect(function(child)
+	if child:IsA("GuiObject") then
+		popupOrder += 1
+		child.LayoutOrder = popupOrder
+	end
+end)
+
+local selectedTile = nil
+local selectedTower = nil
+local rangeRing = nil
+
+local function closeMenus()
+	popup.Visible = false
+	selectedTile = nil
+	selectedTower = nil
+	if rangeRing then
+		rangeRing:Destroy()
+		rangeRing = nil
+	end
+end
+
+local function placeNear(frame, screenPos, size)
+	local view = camera.ViewportSize
+	local x = math.clamp(screenPos.X + 16, 8, view.X - size.X - 8)
+	local y = math.clamp(screenPos.Y - size.Y / 2, 8, view.Y - size.Y - 8)
+	frame.Position = UDim2.fromOffset(x, y)
+	frame.Size = UDim2.fromOffset(size.X, size.Y)
+end
+
+local function preview(parent, model)
+	local vp = Instance.new("ViewportFrame")
+	vp.Size = UDim2.new(1, 0, 0, 90)
+	vp.BackgroundColor3 = Color3.fromRGB(40, 44, 54)
+	vp.Ambient = Color3.fromRGB(170, 170, 170)
+	vp.Parent = parent
+	corner(vp, 8)
+	local copy = model:Clone()
+	copy.Parent = vp
+	local cam = Instance.new("Camera")
+	cam.Parent = vp
+	vp.CurrentCamera = cam
+	local box, size = copy:GetBoundingBox()
+	local dist = math.max(size.X, size.Y, size.Z) * 1.6 + 2
+	cam.CFrame = CFrame.lookAt(box.Position + Vector3.new(dist * 0.6, dist * 0.35, -dist * 0.8), box.Position)
+	return vp
+end
+
+local function towerCards()
+	local list = {}
+	for _, m in ipairs(catalog:GetChildren()) do
+		if m:IsA("Model") and not m:GetAttribute("IsUpgrade") then
+			table.insert(list, m)
+		end
+	end
+	table.sort(list, function(a, b)
+		return (a:GetAttribute("Price") or 0) < (b:GetAttribute("Price") or 0)
+	end)
+	return list
+end
+
+local function clearPopup()
+	popupOrder = 0
+	for _, c in ipairs(popup:GetChildren()) do
+		if c:IsA("GuiObject") then
+			c:Destroy()
+		end
+	end
+end
+
+local function openTowerMenu(tile, screenPos)
+	closeMenus()
+	clearPopup()
+	selectedTile = tile
+	popupLayout.FillDirection = Enum.FillDirection.Horizontal
+	local money = player:GetAttribute("TDMoney") or 0
+	local list = towerCards()
+	if #list == 0 then
+		local l = label(popup, "Нет башен: положи модель в ServerStorage → Towers", 16)
+		l.Size = UDim2.fromOffset(420, 40)
+		l.TextWrapped = true
+		placeNear(popup, screenPos, Vector2.new(436, 56))
+		popup.Visible = true
+		return
+	end
+	for _, model in ipairs(list) do
+		local price = model:GetAttribute("Price") or 0
+		local card = Instance.new("TextButton")
+		card.Text = ""
+		card.Size = UDim2.fromOffset(130, 160)
+		card.BackgroundColor3 = money >= price and Color3.fromRGB(52, 58, 70) or Color3.fromRGB(45, 45, 48)
+		card.AutoButtonColor = money >= price
+		card.Parent = popup
+		corner(card, 10)
+		local pad = Instance.new("UIPadding")
+		pad.PaddingTop = UDim.new(0, 6)
+		pad.PaddingLeft = UDim.new(0, 6)
+		pad.PaddingRight = UDim.new(0, 6)
+		pad.Parent = card
+		local vp = preview(card, model)
+		vp.Active = false
+		local nameLabel = label(card, model.Name, 16)
+		nameLabel.Position = UDim2.fromOffset(0, 96)
+		nameLabel.Size = UDim2.new(1, 0, 0, 22)
+		nameLabel.TextScaled = true
+		local priceLabel = label(card, tostring(price), 18)
+		priceLabel.Position = UDim2.fromOffset(0, 122)
+		priceLabel.Size = UDim2.new(1, 0, 0, 24)
+		priceLabel.TextColor3 = money >= price and GOLD or Color3.fromRGB(200, 90, 90)
+		card.MouseButton1Click:Connect(function()
+			if selectedTile and money >= price then
+				action:FireServer("Place", selectedTile, model.Name)
+				closeMenus()
+			end
+		end)
+	end
+	placeNear(popup, screenPos, Vector2.new(16 + #list * 138 - 8, 176))
+	popup.Visible = true
+end
+
+local function showRange(tower)
+	if rangeRing then
+		rangeRing:Destroy()
+	end
+	local range = tower:GetAttribute("Range") or 15
+	local box, size = tower:GetBoundingBox()
+	local ring = Instance.new("Part")
+	ring.Shape = Enum.PartType.Cylinder
+	ring.Size = Vector3.new(0.2, range * 2, range * 2)
+	ring.CFrame = CFrame.new(box.Position.X, box.Position.Y - size.Y / 2 + 0.15, box.Position.Z) * CFrame.Angles(0, 0, math.rad(90))
+	ring.Anchored = true
+	ring.CanCollide = false
+	ring.CanQuery = false
+	ring.CanTouch = false
+	ring.Material = Enum.Material.Neon
+	ring.Color = Color3.fromRGB(120, 200, 255)
+	ring.Transparency = 0.75
+	ring.Parent = camera
+	rangeRing = ring
+end
+
+local function openTowerPanel(tower, screenPos)
+	closeMenus()
+	clearPopup()
+	selectedTower = tower
+	popupLayout.FillDirection = Enum.FillDirection.Vertical
+	local function row(text, size)
+		local l = label(popup, text, size or 16)
+		l.Size = UDim2.new(1, 0, 0, 24)
+		l.TextXAlignment = Enum.TextXAlignment.Left
+		return l
+	end
+	row(tower.Name, 20).TextColor3 = GOLD
+	row(("Урон %s · радиус %s · пауза %s с"):format(
+		tower:GetAttribute("Damage") or "?", tower:GetAttribute("Range") or "?", tower:GetAttribute("Cooldown") or "?"))
+	local nextName = tower:GetAttribute("Upgrade")
+	local money = player:GetAttribute("TDMoney") or 0
+	if nextName and nextName ~= "" then
+		local price = tower:GetAttribute("UpgradePrice") or 0
+		local up = button(popup, "Улучшить → " .. nextName .. " · " .. price, money >= price and GREEN or GREY)
+		up.Size = UDim2.new(1, 0, 0, 40)
+		up.MouseButton1Click:Connect(function()
+			action:FireServer("Upgrade", tower)
+			closeMenus()
+		end)
+	else
+		row("Последний уровень")
+	end
+	local mode = button(popup, "Цель: " .. (tower:GetAttribute("TDMode") or "Первый"), Color3.fromRGB(70, 100, 160))
+	mode.Size = UDim2.new(1, 0, 0, 40)
+	mode.MouseButton1Click:Connect(function()
+		action:FireServer("Mode", tower)
+	end)
+	tower:GetAttributeChangedSignal("TDMode"):Connect(function()
+		mode.Text = "Цель: " .. (tower:GetAttribute("TDMode") or "Первый")
+	end)
+	local sell = button(popup, "Продать", Color3.fromRGB(170, 70, 60))
+	sell.Size = UDim2.new(1, 0, 0, 40)
+	sell.MouseButton1Click:Connect(function()
+		action:FireServer("Sell", tower)
+		closeMenus()
+	end)
+	placeNear(popup, screenPos, Vector2.new(300, 16 + 24 * 2 + 8 * 4 + 40 * 3 + 8))
+	popup.Visible = true
+	showRange(tower)
+end
+
+------------------------------------------------------------------ клики
+UserInputService.InputBegan:Connect(function(input, processed)
+	if processed then
+		return
+	end
+	if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then
+		return
+	end
+	if player:GetAttribute("TDPhase") ~= "playing" then
+		return
+	end
+	local level = currentLevel()
+	if not level then
+		return
+	end
+	-- Позиция ввода — без верхней полосы Roblox: луч по ScreenPointToRay,
+	-- а меню (экран с IgnoreGuiInset) сдвигаем на высоту полосы.
+	local pos = input.Position
+	local ray = camera:ScreenPointToRay(pos.X, pos.Y)
+	local inset = GuiService:GetGuiInset()
+	local at = Vector2.new(pos.X + inset.X, pos.Y + inset.Y)
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	local active = workspace:FindFirstChild("TDActive")
+	local skip = {}
+	if active and active:FindFirstChild("Mobs") then
+		table.insert(skip, active.Mobs)
+	end
+	params.FilterDescendantsInstances = skip
+	local hit = workspace:Raycast(ray.Origin, ray.Direction * 2000, params)
+	if not hit then
+		closeMenus()
+		return
+	end
+	local placement = level:FindFirstChild("Placement")
+	local inst = hit.Instance
+	local tower = inst
+	while tower and not CollectionService:HasTag(tower, "TDTower") do
+		tower = tower.Parent
+	end
+	if tower then
+		openTowerPanel(tower, at)
+	elseif placement and inst:IsDescendantOf(placement) then
+		openTowerMenu(inst, at)
+	else
+		closeMenus()
+	end
+end)
+
+player:GetAttributeChangedSignal("TDMoney"):Connect(function()
+	-- Деньги изменились — меню башен перерисовать с новыми ценами.
+	if popup.Visible and selectedTile then
+		local p = popup.AbsolutePosition
+		openTowerMenu(selectedTile, Vector2.new(p.X - 16, p.Y + popup.AbsoluteSize.Y / 2))
+	end
+end)
+
+------------------------------------------------------------------ снаряды
+shot.OnClientEvent:Connect(function(tower, target)
+	if not (tower and target and tower.Parent and target.Parent) then
+		return
+	end
+	local root = target:FindFirstChild("HumanoidRootPart") or target.PrimaryPart
+	local head = tower:FindFirstChild("Head") or tower.PrimaryPart
+	if not (root and head) then
+		return
+	end
+	local from, to = head.Position, root.Position
+	local p = Instance.new("Part")
+	p.Anchored = true
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CanTouch = false
+	p.Size = Vector3.new(0.6, 0.6, 0.6)
+	p.CFrame = CFrame.lookAt(from, to)
+	local decal = tower:FindFirstChild("Projectile", true)
+	if decal and decal:IsA("Decal") then
+		p.Transparency = 1
+		local bb = Instance.new("BillboardGui")
+		bb.Size = UDim2.fromScale(3, 3)
+		bb.Parent = p
+		local img = Instance.new("ImageLabel")
+		img.Size = UDim2.fromScale(1, 1)
+		img.BackgroundTransparency = 1
+		img.Image = decal.Texture
+		img.Parent = bb
+	else
+		p.Shape = Enum.PartType.Ball
+		p.Material = Enum.Material.Neon
+		p.Color = GOLD
+	end
+	p.Parent = camera
+	TweenService:Create(p, TweenInfo.new(0.25, Enum.EasingStyle.Linear), { CFrame = CFrame.lookAt(to, to + (to - from).Unit) }):Play()
+	Debris:AddItem(p, 0.3)
+end)
+
+------------------------------------------------------------------ камера и фазы
+local orbit = 0
+-- Камера ставится после стандартного модуля камеры, иначе он её перебьёт.
+RunService:BindToRenderStep("TDCamera", Enum.RenderPriority.Camera.Value + 1, function(dt)
+	camera.CameraType = Enum.CameraType.Scriptable
+	local phase = player:GetAttribute("TDPhase")
+	if phase == "title" or phase == nil then
+		local intro = workspace:FindFirstChild("Intro")
+		local cam = intro and intro:FindFirstChild("Cam")
+		if not cam then
+			local first = levelNames()[1]
+			for _, f in ipairs(CollectionService:GetTagged(LEVEL_TAG)) do
+				if f.Name == first then
+					cam = f:FindFirstChild("Cam")
+				end
+			end
+		end
+		if cam then
+			orbit += dt * 0.15
+			local cf = cam.CFrame
+			camera.CFrame = CFrame.new(cf.Position) * CFrame.Angles(0, orbit, 0) * (cf - cf.Position)
+		end
+	else
+		local level = currentLevel()
+		local cam = level and level:FindFirstChild("Cam")
+		if cam then
+			camera.CFrame = cam.CFrame
+		end
+	end
+end)
+
+local function onPhase()
+	local phase = player:GetAttribute("TDPhase")
+	title.Visible = phase == "title" or phase == nil
+	hud.Visible = phase == "playing" or phase == "won" or phase == "lost"
+	finale.Visible = phase == "won" or phase == "lost"
+	if phase == "title" or phase == nil then
+		playButton.Visible = true
+		levelMenu.Visible = false
+	end
+	if phase ~= "playing" then
+		closeMenus()
+	end
+	if phase == "won" then
+		finaleText.Text = "Победа!"
+		finaleText.TextColor3 = GOLD
+	elseif phase == "lost" then
+		finaleText.Text = "Поражение"
+		finaleText.TextColor3 = Color3.fromRGB(230, 90, 80)
+	end
+	menuButton.Visible = #levelNames() > 1
+	againButton.Position = menuButton.Visible and UDim2.new(0.5, -190, 1, -84) or UDim2.new(0.5, -90, 1, -84)
+	updateHud()
+end
+player:GetAttributeChangedSignal("TDPhase"):Connect(onPhase)
+player:GetAttributeChangedSignal("TDLevels"):Connect(onPhase)
+onPhase()
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">TDClient</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

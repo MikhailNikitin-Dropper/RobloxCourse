@@ -61,7 +61,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Что собираем сегодня <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Камера за плечом — из битвы крепостей: целиться и видеть, кто сзади</li><li>Кулак — у того, у кого руки пустые</li><li>Миникарта — карта вокруг игрока и все выходы</li><li>Баланс и публикация — игра открывается по ссылке</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: план дня — камера, кулак, миникарта, баланс и публикация.
-Сказать: камера — модуль ShoulderCam из игры про PvP, кулак и миникарту получаем по ссылке от преподавателя.
+Сказать: камера — модуль ShoulderCam из игры про PvP, кулак и миникарту получаем по ссылкам со слайдов.
 Сказать: в конце урока игра опубликована и открывается по ссылке.</aside>
 </div>
 <div class="slide" id="36-t-2">
@@ -95,9 +95,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="36-t-6">
 <h3 class="slide-title">Что чинить первым <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Безоружный — лёгкая цель: у всех стартовый пистолет, а без него — кулак</li><li>Засада у входа — защита на 2–3 секунды после гермодвери</li><li>Все сидят на окраине — подними цены глубины</li><li>Одно число за раз — меняй и проверяй вылазкой</li></ul>
+<ul class="content-item content-bullets"><li>Безоружный — лёгкая цель: пистолет в магазине бесплатный, а без него — кулак</li><li>Засада у входа — защита на 2–3 секунды после гермодвери</li><li>Все сидят на окраине — подними цены глубины</li><li>Одно число за раз — меняй и проверяй вылазкой</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: так чинили нашу игру — по плейтесту, по одной правке.
-Сказать: безоружного защищают стартовый пистолет и кулак, засаду у входа — короткая защита после гермодвери.
+Сказать: безоружного защищают бесплатный пистолет из магазина и кулак, засаду у входа — короткая защита после гермодвери.
 Сказать: защита длиннее трёх секунд — уже не честная, её используют, чтобы безнаказанно бить.</aside>
 </div>
 <div class="slide" id="36-t-7">
@@ -134,7 +134,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
 <p class="content-item content-paragraph">Через 5 минут собираем игру целиком и публикуем её.</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
-Проверить после перерыва: у каждого открыт проект лутера и записаны числа дохода зон.</aside>
+Проверить после перерыва: у каждого открыт проект лутера, записаны числа дохода зон и ID анимации удара из ДЗ.</aside>
 </div>
 </section>
 <section class="block block-practice">
@@ -149,25 +149,28 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="36-p-2">
 <h3 class="slide-title">Шаг 2: кулак <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль Fist — ссылку пришлёт преподаватель — и положи папку в Workspace</li><li>Test → убери пистолет из руки: левая кнопка мыши или F бьёт кулаком</li><li>Своя анимация удара — поставь её ID в SWING_ANIMATION в FistClient</li><li>В FistServer подбери HIT_DELAY — когда кулак доходит до цели</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль Fist по ссылке и положи папку в Workspace</li><li>Test → убери пистолет из руки: левая кнопка мыши или F бьёт кулаком</li><li>Вставь ID своего удара из ДЗ в SWING_ANIMATION в FistClient, а в FistServer подбери HIT_DELAY — когда кулак доходит до цели</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/122858226958804/Fist" target="_blank" rel="noopener">https://create.roblox.com/store/asset/122858226958804/Fist</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: персонаж делает выпад кулаком в сторону другого игрока, под прицелом жёлтая цифра «−15»]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Fist, в FistServer настройки DAMAGE, RANGE, COOLDOWN, HIT_DELAY, в FistClient — SWING_ANIMATION.
-Сказать: анимация удара — R15 и опубликована в своём аккаунте, иначе в игре она не загрузится.
+Сказать: анимация играет только у того, кто её опубликовал, — поэтому ID у каждого свой, из домашнего задания.
+Сделать: кто не сделал ДЗ — отправить файл PunchAnimation.rbxm: Insert from File, правой кнопкой по анимации → Save to Roblox, свой ID — в SWING_ANIMATION.
 Сказать: HIT_DELAY — секунды от начала замаха до момента, когда рука вытянута: урон приходит в этот момент.
 Сказать: в бункере и под защитой входа кулак не бьёт.</aside>
 </div>
 <div class="slide" id="36-p-3">
 <h3 class="slide-title">Шаг 3: миникарта <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль MiniMap — ссылку пришлёт преподаватель — и положи папку в Workspace</li><li>Собери всю поверхность в модель Map: миникарта копирует её</li><li>В атрибутах папки поставь Radius — радиус карты и View — сколько видно вокруг</li><li>Test → на поверхности в углу карта с выходами, в бункере её нет</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: атрибуты папки MiniMap — Radius, Center, View, Size.
+<ol class="content-item content-steps"><li>Получи модуль MiniMap по ссылке, положи папку в Workspace, а всю поверхность собери в модель Map</li><li>В начале скрипта MiniMapServer поставь RADIUS — радиус карты и VIEW — сколько видно вокруг</li><li>Test → на поверхности в углу карта с выходами, в бункере её нет</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/129691438542620/MiniMap" target="_blank" rel="noopener">https://create.roblox.com/store/asset/129691438542620/MiniMap</a></p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: настройки в начале скрипта MiniMapServer — RADIUS, CENTER, VIEW, SIZE.
 Сказать: находки держим в папке Finds — миникарта её не рисует, иначе добыча видна сверху.
 Сказать: на миникарте выходы видны всегда, а значок над плитой — только вблизи.</aside>
 </div>
 <div class="slide" id="36-p-4">
 <h3 class="slide-title">Шаг 4: баланс <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Сверь цены магазина с доходом вылазки из своих замеров</li><li>Первая покупка — после одной вылазки на окраину</li><li>Защиту после гермодвери поставь 2–3 секунды: PROTECT_SECONDS в RaidServer</li><li>Test → пройди круг: вылазка, выход, продажа, покупка</li></ol>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открыт ShopScript с таблицей ITEMS и ценами, рядом RaidServer с настройкой PROTECT_SECONDS]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: таблица ITEMS в ShopScript и PROTECT_SECONDS в RaidServer.
+<ol class="content-item content-steps"><li>Сверь цены Price в ShopItems с доходом вылазки из своих замеров</li><li>Первая покупка — после одной вылазки на окраину</li><li>Защиту после гермодвери поставь 2–3 секунды: PROTECT_SECONDS в RaidServer</li><li>Test → пройди круг: вылазка, выход, продажа, покупка</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка ShopItems в ServerStorage, в Properties атрибут Price у предмета, рядом RaidServer с настройкой PROTECT_SECONDS]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: цены Price у предметов в ServerStorage.ShopItems и PROTECT_SECONDS в RaidServer.
 Сказать: защита нужна от засады у входа, но дольше трёх секунд её используют, чтобы безнаказанно стрелять.
 Проверить у каждого: первая покупка по карману после одной вылазки.</aside>
 </div>
@@ -185,7 +188,8 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Ссылка на настройки игры: <a href="https://create.roblox.com/dashboard/creations" target="_blank" rel="noopener">https://create.roblox.com/dashboard/creations</a></p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: File → Publish to Roblox, затем открыть доступ в настройках игры на сайте.
 Сказать: в описании обязательно правило про потерю рюкзака.
-Сказать: иконка — кадр своей игры, обрезанный в квадрат.</aside>
+Сказать: иконка — кадр своей игры, обрезанный в квадрат.
+Сказать: монеты сохраняются через хранилище Roblox (DataStore) — оно работает только в опубликованной игре; в Studio — если включить Game Settings → Security → Enable Studio Access to API Services.</aside>
 </div>
 </section>
 <section class="block block-qa_practice">

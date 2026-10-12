@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX4EF333C2AB7643AD9CE09799D96DC71F">
+	<Item class="Folder" referent="RBX2A18E932FBB24F1F9B2240867F54479D">
 		<Properties>
 			<string name="Name">Trampoline</string>
 		</Properties>
-		<Item class="Script" referent="RBXCC6A4E4DE8474DBD8DC3C53780B5EA7E">
+		<Item class="Script" referent="RBX9F92CC8C48C6490380100124C9EFF3FA">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- JumpScript — батут: подбрасывает игрока, который на нём стоит.
 -- Модуль курса «Батут», домашнее задание урока 29.

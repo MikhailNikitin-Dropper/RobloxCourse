@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXBA23C11EA7A14FE781CC6FB0F9EE08E9">
+	<Item class="Folder" referent="RBXE37B0768D6F84907AEC3DD119203E8C4">
 		<Properties>
 			<string name="Name">MonsterAI</string>
 		</Properties>
-		<Item class="Script" referent="RBX330EACFE917940E58B34162CFC6F7F76">
+		<Item class="Script" referent="RBX8A3E9870FAA14FAB916CF2DC1B4E03FC">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterServer — мозг обитателя лабиринта: патруль, погоня, удар.
 --
@@ -921,7 +921,7 @@ report("zapushen")
 				<string name="Name">MonsterServer</string>
 			</Properties>
 		</Item>
-		<Item class="LocalScript" referent="RBXC5967F82A3F24410A150D28571BD9C06">
+		<Item class="LocalScript" referent="RBX5C2A9260415A4D79BFE3695957C6008C">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- MonsterAI.MonsterCamera — клиентская часть модуля: плавно разворачивает
 -- камеру пойманного игрока на монстра.

@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXEC423BA342404B7EACB8DCD0D05ECF1F">
+	<Item class="Folder" referent="RBX3D290CB934784D1AA4B31AB01A052BFC">
 		<Properties>
 			<string name="Name">ButtonDoor</string>
 		</Properties>
-		<Item class="Script" referent="RBX9DE9BCA4B00A4714886938E6CE2F42A7">
+		<Item class="Script" referent="RBXF3D061E2DE31436BB58E5A1E9FF6F008">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- DoorScript — кнопки открывают дверь.
 -- Модуль курса «Кнопка и дверь», урок 30.

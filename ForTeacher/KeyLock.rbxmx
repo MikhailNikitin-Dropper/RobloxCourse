@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXBC35E97597124544A1A838A7108C8EC1">
+	<Item class="Folder" referent="RBXD1D4114D12FB495A8804E2C771BB27A7">
 		<Properties>
 			<string name="Name">KeyLock</string>
 		</Properties>
-		<Item class="Script" referent="RBXE5410A1A667F4F24AA98D295146E6A7B">
+		<Item class="Script" referent="RBXB9E1B90CF76D4A0D866CCDEE9A89996E">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- KeyLockScript — дверь открывается только ключом в руке.
 -- Модуль курса «Ключ и замок», урок 31.

@@ -2,11 +2,11 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX5FAB77475E494A8B9EA26C071BE005CE">
+	<Item class="Folder" referent="RBX2F3C8849E9314EC5B4684B1EA0ECDA23">
 		<Properties>
 			<string name="Name">ScriptLab</string>
 		</Properties>
-		<Item class="Script" referent="RBXB4FC374AB79641B1A00644431E7EDA35">
+		<Item class="Script" referent="RBXD16A14D4873943539ED41C881243261F">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- BlinkScript — заставляет деталь мигать светом. Модуль курса «Лаборатория
 -- скриптов», урок 29.
@@ -53,7 +53,7 @@ end
 				<string name="Name">BlinkScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX0F5536BCFC2B457ABA2BF3CC8630C0BA">
+		<Item class="Script" referent="RBXA6CC1D312F2F4C2DAE4F0202DE3606E7">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- LiftScript — лифт: сам поднимает площадку вверх и опускает обратно.
 -- Модуль курса «Лаборатория скриптов», урок 29.
@@ -109,7 +109,7 @@ end
 				<string name="Name">LiftScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXD358AF6502B8400E89D1B0FDCD436A98">
+		<Item class="Script" referent="RBX56668F1E830E498BA534AFB676942194">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- GhostScript — мост-призрак: то держит игрока, то пропускает его насквозь.
 -- Модуль курса «Лаборатория скриптов», урок 29.

@@ -1,0 +1,922 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXE0C502BA7C1E49B38D93874A5E87DD51">
+		<Properties>
+			<string name="Name">ShopKiosk</string>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBX158A794020394C2AA913871D2A1FDF3A">
+			<Properties>
+				<string name="Name">Open</string>
+			</Properties>
+		</Item>
+		<Item class="RemoteEvent" referent="RBX58FA6CF3D108457CBF9BDDF144A79F1C">
+			<Properties>
+				<string name="Name">Buy</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBXB8C77FBD0BD94EDC98F2E29617A89201">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- ShopScript — магазин снаряжения.
+-- Модуль курса «Магазин снаряжения», урок 35.
+--
+-- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
+-- настройки: имя детали-прилавка, тексты подсказки и имя папки с товарами.
+-- Всё, что ниже второго ряда, — логика.
+--
+-- Папка модуля кладётся внутрь модели магазина: прилавок с именем COUNTER
+-- ставит ученик сам.
+--
+-- ТОВАРЫ магазин берёт из папки ITEMS_FOLDER в ServerStorage. Товар — это
+-- предмет-Tool с атрибутом Price (цена в монетах). Что предмет делает, решает
+-- скрипт внутри него: модуль приносит четыре примера (аптечка, броня,
+-- ускорение, большой рюкзак), их можно менять и копировать. Оружие кладут
+-- туда же — тул бластера с атрибутами Price и Weapon = true, скрипт ему не
+-- нужен. Цена 0 — товар бесплатный (так выдаётся стартовый пистолет).
+-- Порядок в списке — атрибут Order (меньше — выше), без него — по цене.
+-- Строка под названием на карточке товара — атрибут Description.
+--
+-- Каждая покупка — копия предмета в рюкзаке игрока (Backpack), она занимает
+-- в нём место (атрибут Slots, по умолчанию 1): полный рюкзак магазин не
+-- пополнит. Оружие места не занимает, но оно у игрока одно и лежит в первой
+-- ячейке панели: второе не купить, пока первое не продано или не выброшено.
+-- Цена остаётся на покупке атрибутом Price — по ней платит скупщик.
+-- При гибели купленное пропадает вместе с рюкзаком.
+
+-- ============================ НАСТРОЙКИ ============================
+local COUNTER = "Counter" -- имя детали-прилавка с подсказкой
+local ACTION_TEXT = "Открыть" -- что игрок сделает
+local OBJECT_TEXT = "Магазин" -- с чем
+local ITEMS_FOLDER = "ShopItems" -- папка с товарами в ServerStorage
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
+
+local package = script.Parent
+local model = package.Parent
+local counter = model:FindFirstChild(COUNTER)
+
+if not counter then
+	warn("ShopKiosk: в модели " .. model.Name .. " нет детали " .. COUNTER)
+	return
+end
+
+counter.Anchored = true
+
+-- Короткое сообщение на экран игрока: «Броня уже надета». Событие лежит в
+-- ReplicatedStorage, чтобы им пользовались и скрипты самих предметов.
+local notice = ReplicatedStorage:FindFirstChild("ShopNotice")
+if not notice then
+	notice = Instance.new("RemoteEvent")
+	notice.Name = "ShopNotice"
+	notice.Parent = ReplicatedStorage
+end
+
+local open = package:FindFirstChild("Open")
+if not open then
+	open = Instance.new("RemoteEvent")
+	open.Name = "Open"
+	open.Parent = package
+end
+
+local buy = package:FindFirstChild("Buy")
+if not buy then
+	buy = Instance.new("RemoteEvent")
+	buy.Name = "Buy"
+	buy.Parent = package
+end
+
+-- Подсказка: своя, если ученик её добавил, иначе ставим сами.
+local prompt = counter:FindFirstChildOfClass("ProximityPrompt")
+if not prompt then
+	prompt = Instance.new("ProximityPrompt")
+	prompt.MaxActivationDistance = 8
+	prompt.Parent = counter
+end
+prompt.ActionText = ACTION_TEXT
+prompt.ObjectText = OBJECT_TEXT
+
+-- Окно магазина закрывается само, когда игрок отошёл от прилавка дальше,
+-- чем сервер принимает покупку. Где прилавок и как далеко — берёт экран игрока.
+package:SetAttribute("CounterPosition", counter.Position)
+package:SetAttribute("CloseRange", prompt.MaxActivationDistance + 4)
+
+local function coinsOf(player)
+	local stats = player:FindFirstChild("leaderstats")
+	return stats and stats:FindFirstChild("Монеты")
+end
+
+-- Товары — предметы с ценой в папке ITEMS_FOLDER, по порядку списка.
+local function goods()
+	local folder = ServerStorage:FindFirstChild(ITEMS_FOLDER)
+	local list = {}
+	if not folder then
+		warn("ShopKiosk: в ServerStorage нет папки " .. ITEMS_FOLDER)
+		return list
+	end
+	for _, tool in ipairs(folder:GetChildren()) do
+		if tool:IsA("Tool") and tonumber(tool:GetAttribute("Price")) then
+			table.insert(list, tool)
+		end
+	end
+	table.sort(list, function(a, b)
+		local oa = tonumber(a:GetAttribute("Order")) or a:GetAttribute("Price")
+		local ob = tonumber(b:GetAttribute("Order")) or b:GetAttribute("Price")
+		if oa ~= ob then
+			return oa < ob
+		end
+		return a.Name < b.Name
+	end)
+	return list
+end
+
+local function menu(list)
+	local rows = {}
+	for index, tool in ipairs(list) do
+		rows[index] = {
+			name = tool.Name,
+			price = tool:GetAttribute("Price"),
+			description = tool:GetAttribute("Description") or "",
+			weapon = tool:GetAttribute("Weapon") == true,
+			slots = tonumber(tool:GetAttribute("Slots")) or 1,
+		}
+	end
+	return rows
+end
+
+-- Картинки карточек: окно магазина рисует товар в ViewportFrame, а из
+-- ServerStorage экрану игрока ничего не видно. Поэтому кладём в
+-- ReplicatedStorage копии одних деталей товара — без скриптов.
+local function publishPreviews(list)
+	local folder = ReplicatedStorage:FindFirstChild("ShopPreview")
+	if not folder then
+		folder = Instance.new("Folder")
+		folder.Name = "ShopPreview"
+		folder.Parent = ReplicatedStorage
+	end
+	for _, tool in ipairs(list) do
+		if not folder:FindFirstChild(tool.Name) then
+			local model = Instance.new("Model")
+			model.Name = tool.Name
+			for _, d in ipairs(tool:GetDescendants()) do
+				if d:IsA("BasePart") then
+					local copy = d:Clone()
+					for _, child in ipairs(copy:GetDescendants()) do
+						if not (child:IsA("DataModelMesh") or child:IsA("Decal") or child:IsA("Texture") or child:IsA("SurfaceAppearance")) then
+							child:Destroy()
+						end
+					end
+					copy.Anchored = true
+					copy.Parent = model
+				end
+			end
+			model.Parent = folder
+		end
+	end
+end
+
+-- Сколько мест свободно: находки и покупки (атрибуты Value или Slots).
+-- Вместимость рюкзака ведёт модуль лута атрибутом игрока LootCapacity.
+local function freeSlots(player)
+	local used = 0
+	for _, holder in ipairs({ player:FindFirstChildOfClass("Backpack"), player.Character }) do
+		if holder then
+			for _, tool in ipairs(holder:GetChildren()) do
+				if tool:IsA("Tool") and (tool:GetAttribute("Value") or tool:GetAttribute("Slots")) then
+					used += tonumber(tool:GetAttribute("Slots")) or 1
+				end
+			end
+		end
+	end
+	return (player:GetAttribute("LootCapacity") or 6) - used
+end
+
+-- Оружие у игрока одно — в рюкзаке или в руке.
+local function hasWeapon(player)
+	for _, holder in ipairs({ player:FindFirstChildOfClass("Backpack"), player.Character }) do
+		if holder then
+			for _, tool in ipairs(holder:GetChildren()) do
+				if tool:IsA("Tool") and tool:GetAttribute("Weapon") == true then
+					return true
+				end
+			end
+		end
+	end
+	return false
+end
+
+-- Оружие — в первую ячейку панели. Панель Roblox ставит новый предмет в
+-- первую свободную ячейку, поэтому остальные предметы на миг убираем из
+-- рюкзака и возвращаем после оружия.
+local function giveWeapon(player, backpack, tool)
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid:UnequipTools()
+	end
+	local others = {}
+	for _, other in ipairs(backpack:GetChildren()) do
+		if other:IsA("Tool") then
+			table.insert(others, other)
+			other.Parent = nil
+		end
+	end
+	tool.Parent = backpack
+	task.delay(0.1, function()
+		for _, other in ipairs(others) do
+			if other.Parent == nil then
+				other.Parent = backpack
+			end
+		end
+	end)
+end
+
+prompt.Triggered:Connect(function(player)
+	local coins = coinsOf(player)
+	local list = goods()
+	publishPreviews(list)
+	open:FireClient(player, menu(list), coins and coins.Value or 0)
+end)
+
+buy.OnServerEvent:Connect(function(player, index)
+	local list = goods()
+	local item = list[tonumber(index) or 0]
+	local coins = coinsOf(player)
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	if not (item and coins and backpack) then
+		return
+	end
+	local price = tonumber(item:GetAttribute("Price")) or 0
+
+	-- Покупку проверяет сервер: клиент только просит.
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	if not root or (root.Position - counter.Position).Magnitude > prompt.MaxActivationDistance + 4 then
+		return
+	end
+	if coins.Value < price then
+		open:FireClient(player, menu(list), coins.Value, "Не хватает монет")
+		return
+	end
+	local weapon = item:GetAttribute("Weapon") == true
+	local slots = weapon and 0 or (tonumber(item:GetAttribute("Slots")) or 1)
+	if weapon and hasWeapon(player) then
+		open:FireClient(player, menu(list), coins.Value, "Оружие уже есть")
+		return
+	end
+	if freeSlots(player) < slots then
+		open:FireClient(player, menu(list), coins.Value, "Рюкзак полон")
+		return
+	end
+
+	local copy = item:Clone()
+	copy:SetAttribute("Order", nil)
+	copy:SetAttribute("Slots", slots)
+	if weapon then
+		giveWeapon(player, backpack, copy)
+	else
+		copy.Parent = backpack
+	end
+	coins.Value -= price
+	open:FireClient(player, menu(list), coins.Value, "Куплено: " .. item.Name)
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">ShopScript</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX89AF392B4C984953807AD9C7B351552A">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- ShopClient — окно магазина.
+-- Модуль курса «Магазин снаряжения», урок 35.
+--
+-- Интерфейс собирать не нужно: окно с карточками товаров скрипт рисует сам и
+-- показывает его, когда игрок нажал подсказку на прилавке, и закрывает, когда
+-- игрок отошёл. Настроек у клиента нет: товары и цены — предметы в папке
+-- ShopItems в ServerStorage.
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+if not player then
+	return
+end
+
+local package = script.Parent
+local open = package:WaitForChild("Open", 10)
+local buy = package:WaitForChild("Buy", 10)
+if not (open and buy) then
+	return
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "ShopGui"
+gui.ResetOnSpawn = false
+gui.Enabled = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local window = Instance.new("Frame")
+window.AnchorPoint = Vector2.new(0.5, 0.5)
+window.Position = UDim2.new(0.5, 0, 0.5, 0)
+window.Size = UDim2.new(0.92, 0, 0.82, 0)
+window.BackgroundColor3 = Color3.fromRGB(25, 27, 31)
+window.BorderSizePixel = 0
+window.Parent = gui
+
+-- На большом экране окно не растягивается, на телефоне — ужимается.
+local limit = Instance.new("UISizeConstraint")
+limit.MaxSize = Vector2.new(560, 520)
+limit.Parent = window
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 16)
+corner.Parent = window
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -24, 0, 40)
+title.Position = UDim2.new(0, 12, 0, 8)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.GothamBold
+title.TextSize = 22
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Text = "Магазин"
+title.Parent = window
+
+local wallet = Instance.new("TextLabel")
+wallet.Size = UDim2.new(1, -24, 0, 24)
+wallet.Position = UDim2.new(0, 12, 0, 44)
+wallet.BackgroundTransparency = 1
+wallet.Font = Enum.Font.Gotham
+wallet.TextSize = 18
+wallet.TextXAlignment = Enum.TextXAlignment.Left
+wallet.TextColor3 = Color3.fromRGB(255, 196, 64)
+wallet.Text = "0 монет"
+wallet.Parent = window
+
+-- Список товаров листается: карточек может быть сколько угодно.
+local list = Instance.new("ScrollingFrame")
+list.Position = UDim2.new(0, 12, 0, 76)
+list.Size = UDim2.new(1, -24, 1, -136)
+list.BackgroundTransparency = 1
+list.BorderSizePixel = 0
+list.ScrollBarThickness = 6
+list.ScrollingDirection = Enum.ScrollingDirection.Y
+list.CanvasSize = UDim2.new(0, 0, 0, 0)
+list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+list.Parent = window
+
+local grid = Instance.new("UIGridLayout")
+grid.CellSize = UDim2.new(0.5, -14, 0, 220)
+grid.CellPadding = UDim2.new(0, 10, 0, 10)
+grid.SortOrder = Enum.SortOrder.LayoutOrder
+grid.Parent = list
+
+local close = Instance.new("TextButton")
+close.AnchorPoint = Vector2.new(0.5, 1)
+close.Position = UDim2.new(0.5, 0, 1, -12)
+close.Size = UDim2.new(1, -24, 0, 38)
+close.BackgroundColor3 = Color3.fromRGB(58, 62, 70)
+close.Font = Enum.Font.GothamBold
+close.TextSize = 18
+close.TextColor3 = Color3.fromRGB(255, 255, 255)
+close.Text = "Закрыть"
+close.Parent = window
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 10)
+closeCorner.Parent = close
+
+close.Activated:Connect(function()
+	gui.Enabled = false
+end)
+
+local previews = game:GetService("ReplicatedStorage"):WaitForChild("ShopPreview", 10)
+
+local function label(parent, text, size, font, color, y, height)
+	local l = Instance.new("TextLabel")
+	l.BackgroundTransparency = 1
+	l.Position = UDim2.new(0, 8, 0, y)
+	l.Size = UDim2.new(1, -16, 0, height)
+	l.Font = font
+	l.TextSize = size
+	l.TextColor3 = color
+	l.TextWrapped = true
+	l.TextXAlignment = Enum.TextXAlignment.Left
+	l.TextYAlignment = Enum.TextYAlignment.Top
+	l.Text = text
+	l.Parent = parent
+	return l
+end
+
+-- Картинка товара: копия его деталей перед камерой ViewportFrame.
+local function picture(card, name)
+	local view = Instance.new("ViewportFrame")
+	view.Position = UDim2.new(0, 8, 0, 8)
+	view.Size = UDim2.new(1, -16, 0, 84)
+	view.BackgroundColor3 = Color3.fromRGB(48, 52, 60)
+	view.BorderSizePixel = 0
+	view.Ambient = Color3.fromRGB(170, 170, 170)
+	view.LightDirection = Vector3.new(-1, -1, -1)
+	view.Parent = card
+	local round = Instance.new("UICorner")
+	round.CornerRadius = UDim.new(0, 8)
+	round.Parent = view
+
+	previews = previews or game:GetService("ReplicatedStorage"):FindFirstChild("ShopPreview")
+	local source = previews and previews:FindFirstChild(name)
+	if not (source and source:FindFirstChildWhichIsA("BasePart")) then
+		return
+	end
+	local model = source:Clone()
+	model.Parent = view
+	local box, size = model:GetBoundingBox()
+	local radius = size.Magnitude / 2
+	local camera = Instance.new("Camera")
+	camera.FieldOfView = 40
+	local look = box.Position
+	-- Сбоку и чуть сверху: у оружия ствол смотрит вдоль −Z, его видно в профиль.
+	camera.CFrame = CFrame.lookAt(look + Vector3.new(1, 0.45, 0).Unit * radius * 3.2, look)
+	camera.Parent = view
+	view.CurrentCamera = camera
+end
+
+local function draw(items, coins, message)
+	wallet.Text = (message and (message .. " · ") or "") .. coins .. " монет"
+	for _, child in ipairs(list:GetChildren()) do
+		if child:IsA("Frame") then
+			child:Destroy()
+		end
+	end
+	for index, item in ipairs(items) do
+		local card = Instance.new("Frame")
+		card.BackgroundColor3 = Color3.fromRGB(38, 41, 48)
+		card.BorderSizePixel = 0
+		card.LayoutOrder = index
+		card.Parent = list
+		local round = Instance.new("UICorner")
+		round.CornerRadius = UDim.new(0, 12)
+		round.Parent = card
+
+		picture(card, item.name)
+		label(card, item.name, 18, Enum.Font.GothamBold, Color3.fromRGB(255, 255, 255), 98, 22)
+		local kind = item.weapon and "Оружие · 1-я ячейка"
+			or (item.slots == 1 and "1 место в рюкзаке" or (item.slots .. " места в рюкзаке"))
+		local text = item.description ~= "" and (item.description .. "\n" .. kind) or kind
+		label(card, text, 13, Enum.Font.Gotham, Color3.fromRGB(180, 186, 196), 122, 36)
+
+		local button = Instance.new("TextButton")
+		button.AnchorPoint = Vector2.new(0.5, 1)
+		button.Position = UDim2.new(0.5, 0, 1, -8)
+		button.Size = UDim2.new(1, -16, 0, 34)
+		button.BackgroundColor3 = coins >= item.price and Color3.fromRGB(56, 142, 84) or Color3.fromRGB(70, 74, 82)
+		button.Font = Enum.Font.GothamBold
+		button.TextSize = 16
+		button.TextColor3 = Color3.fromRGB(255, 255, 255)
+		button.Text = item.price == 0 and "Взять бесплатно" or ("Купить · " .. item.price)
+		button.Parent = card
+		local buttonRound = Instance.new("UICorner")
+		buttonRound.CornerRadius = UDim.new(0, 8)
+		buttonRound.Parent = button
+
+		button.Activated:Connect(function()
+			buy:FireServer(index)
+		end)
+	end
+	gui.Enabled = true
+end
+
+open.OnClientEvent:Connect(draw)
+
+-- Сообщение о снаряжении («Броня уже надета»): короткая надпись над центром.
+local notice = game:GetService("ReplicatedStorage"):WaitForChild("ShopNotice", 10)
+if notice then
+	local hint = Instance.new("TextLabel")
+	hint.AnchorPoint = Vector2.new(0.5, 0.5)
+	hint.Position = UDim2.new(0.5, 0, 0.4, 0)
+	hint.Size = UDim2.new(0, 420, 0, 40)
+	hint.BackgroundTransparency = 1
+	hint.Font = Enum.Font.GothamBold
+	hint.TextSize = 24
+	hint.TextColor3 = Color3.fromRGB(255, 220, 120)
+	hint.TextStrokeTransparency = 0.5
+	hint.TextTransparency = 1
+	local hintGui = Instance.new("ScreenGui")
+	hintGui.Name = "ShopNotice"
+	hintGui.ResetOnSpawn = false
+	hintGui.Parent = player:WaitForChild("PlayerGui")
+	hint.Parent = hintGui
+	notice.OnClientEvent:Connect(function(text)
+		hint.Text = text
+		hint.TextTransparency = 0
+		game:GetService("TweenService"):Create(hint, TweenInfo.new(1.5), { TextTransparency = 1 }):Play()
+	end)
+end
+
+-- Отошёл от прилавка — окно закрылось само: дальше покупки сервер не примет.
+local since = 0
+game:GetService("RunService").Heartbeat:Connect(function(dt)
+	since += dt
+	if since < 0.2 or not gui.Enabled then
+		return
+	end
+	since = 0
+	local spot = package:GetAttribute("CounterPosition")
+	local range = package:GetAttribute("CloseRange")
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if spot and range and (not root or (root.Position - spot).Magnitude > range) then
+		gui.Enabled = false
+	end
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">ShopClient</string>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBX712877E323184EFEB39A191DD2117A08">
+			<Properties>
+				<string name="Name">ShopItems</string>
+			</Properties>
+			<Item class="Tool" referent="RBXEA909EDB0F20490C842ABCF6AEBFF804">
+				<Properties>
+					<string name="Name">Аптечка</string>
+					<string name="ToolTip">Нажми, чтобы использовать</string>
+					<bool name="CanBeDropped">false</bool>
+					<bool name="RequiresHandle">true</bool>
+					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABEQAUAAABPcmRlcgYAAAAAAADwPwsAAABEZXNjcmlwdGlvbgIvAAAA0JvQtdGH0LjRgiDQtNC+INC/0L7Qu9C90L7Qs9C+INC30LTQvtGA0L7QstGM0Y8=</BinaryString>
+				</Properties>
+				<Item class="Part" referent="RBX062FB9E9ADB941018E459C12CC609994">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4293609030</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
+						<string name="Name">Handle</string>
+					</Properties>
+					<Item class="Weld" referent="RBXF08F5AFEC0C24692B62BB955EC8E202A">
+						<Properties>
+							<string name="Name">Weld</string>
+							<Ref name="Part0">RBX062FB9E9ADB941018E459C12CC609994</Ref>
+							<Ref name="Part1">RBXA68FE5DD918A49DAA876F443849907CC</Ref>
+							<CoordinateFrame name="C0"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Part" referent="RBXA68FE5DD918A49DAA876F443849907CC">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4294309365</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>0.6</X><Y>0.2</Y><Z>1.05</Z></Vector3>
+						<string name="Name">Detail</string>
+					</Properties>
+				</Item>
+				<Item class="Script" referent="RBXA7596EC0B3ED4605AB46835A20BF5525">
+					<Properties>
+						<ProtectedString name="Source"><![CDATA[-- Аптечка — товар магазина. Взял в руку, нажал — лечит и пропадает.
+		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
+		
+		-- ============================ НАСТРОЙКИ ============================
+		local HEAL = 100 -- сколько здоровья вернуть
+		-- ===================================================================
+		
+		local Players = game:GetService("Players")
+		local tool = script.Parent
+		
+		local function say(player, text)
+			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+			if notice then
+				notice:FireClient(player, text)
+			end
+		end
+		
+		tool.Activated:Connect(function()
+			local character = tool.Parent
+			local player = Players:GetPlayerFromCharacter(character)
+			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+			if not (player and humanoid and humanoid.Health > 0) then
+				return
+			end
+			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+			-- InRaid ставит модуль рейда, когда поле после входа снято.
+			if not player:GetAttribute("InRaid") then
+				say(player, "Работает только на вылазке")
+				return
+			end
+			if humanoid.Health >= humanoid.MaxHealth then
+				say(player, "Здоровье и так полное")
+				return
+			end
+			humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
+			tool:Destroy()
+		end)
+		]]></ProtectedString>
+						<bool name="Disabled">false</bool>
+						<token name="RunContext">1</token>
+						<string name="Name">Effect</string>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Tool" referent="RBXF00E302C41904E88B9325CF90199F8B3">
+				<Properties>
+					<string name="Name">Броня</string>
+					<string name="ToolTip">Нажми, чтобы использовать</string>
+					<bool name="CanBeDropped">false</bool>
+					<bool name="RequiresHandle">true</bool>
+					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABOQAUAAABPcmRlcgYAAAAAAAAAQAsAAABEZXNjcmlwdGlvbgImAAAAKzUwINC30LTQvtGA0L7QstGM0Y8g0LTQviDQs9C40LHQtdC70Lg=</BinaryString>
+				</Properties>
+				<Item class="Part" referent="RBX7B6E50A2770C4FF19AAAFAA381392C75">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4282811115</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
+						<string name="Name">Handle</string>
+					</Properties>
+					<Item class="Weld" referent="RBX22B71E49C3DA4C22A290234E9226420E">
+						<Properties>
+							<string name="Name">Weld</string>
+							<Ref name="Part0">RBX7B6E50A2770C4FF19AAAFAA381392C75</Ref>
+							<Ref name="Part1">RBX2DB7E7D6BDCD4E10B152FF93CDFBCF43</Ref>
+							<CoordinateFrame name="C0"><X>0</X><Y>0.6</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Part" referent="RBX2DB7E7D6BDCD4E10B152FF93CDFBCF43">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0.6</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4280829580</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1.1</X><Y>0.3</Y><Z>0.3</Z></Vector3>
+						<string name="Name">Detail</string>
+					</Properties>
+				</Item>
+				<Item class="Script" referent="RBX4F09FF7D10404EB58E38435432745F49">
+					<Properties>
+						<ProtectedString name="Source"><![CDATA[-- Броня — товар магазина. Взял в руку, нажал — запас здоровья до гибели.
+		-- Вторая броня не надевается, пока действует первая.
+		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
+		
+		-- ============================ НАСТРОЙКИ ============================
+		local ARMOR = 50 -- сколько здоровья прибавить сверх обычного
+		-- ===================================================================
+		
+		local Players = game:GetService("Players")
+		local tool = script.Parent
+		
+		local function say(player, text)
+			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+			if notice then
+				notice:FireClient(player, text)
+			end
+		end
+		
+		tool.Activated:Connect(function()
+			local character = tool.Parent
+			local player = Players:GetPlayerFromCharacter(character)
+			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+			if not (player and humanoid and humanoid.Health > 0) then
+				return
+			end
+			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+			-- InRaid ставит модуль рейда, когда поле после входа снято.
+			if not player:GetAttribute("InRaid") then
+				say(player, "Работает только на вылазке")
+				return
+			end
+			if humanoid:GetAttribute("Armor") then
+				say(player, "Броня уже надета")
+				return
+			end
+			humanoid:SetAttribute("Armor", ARMOR)
+			humanoid.MaxHealth += ARMOR
+			humanoid.Health += ARMOR
+			tool:Destroy()
+		end)
+		]]></ProtectedString>
+						<bool name="Disabled">false</bool>
+						<token name="RunContext">1</token>
+						<string name="Name">Effect</string>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Tool" referent="RBXDD2C4B2364C841E8911CCAB6A8109272">
+				<Properties>
+					<string name="Name">Ускорение</string>
+					<string name="ToolTip">Нажми, чтобы использовать</string>
+					<bool name="CanBeDropped">false</bool>
+					<bool name="RequiresHandle">true</bool>
+					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABJQAUAAABPcmRlcgYAAAAAAAAIQAsAAABEZXNjcmlwdGlvbgInAAAA0JHQtdCzINCx0YvRgdGC0YDQtdC1INC00L4g0LPQuNCx0LXQu9C4</BinaryString>
+				</Properties>
+				<Item class="Part" referent="RBX7554AF3B3DF642B68711701912D96155">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4294625330</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
+						<string name="Name">Handle</string>
+					</Properties>
+					<Item class="Weld" referent="RBXAB170361C8FC4E4098BF54069E1CCCFB">
+						<Properties>
+							<string name="Name">Weld</string>
+							<Ref name="Part0">RBX7554AF3B3DF642B68711701912D96155</Ref>
+							<Ref name="Part1">RBXA964AA0A30E8423C8C7B571545F8D6AB</Ref>
+							<CoordinateFrame name="C0"><X>0</X><Y>0.7</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Part" referent="RBXA964AA0A30E8423C8C7B571545F8D6AB">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0.7</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4282137660</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>0.6</X><Y>0.4</Y><Z>0.6</Z></Vector3>
+						<string name="Name">Detail</string>
+					</Properties>
+				</Item>
+				<Item class="Script" referent="RBX49751264E6764077AAF20D6BE5331DE3">
+					<Properties>
+						<ProtectedString name="Source"><![CDATA[-- Ускорение — товар магазина. Взял в руку, нажал — бегаешь быстрее до гибели.
+		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
+		
+		-- ============================ НАСТРОЙКИ ============================
+		local SPEED = 24 -- скорость бега (обычная — 16)
+		-- ===================================================================
+		
+		local Players = game:GetService("Players")
+		local tool = script.Parent
+		
+		local function say(player, text)
+			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+			if notice then
+				notice:FireClient(player, text)
+			end
+		end
+		
+		tool.Activated:Connect(function()
+			local character = tool.Parent
+			local player = Players:GetPlayerFromCharacter(character)
+			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+			if not (player and humanoid and humanoid.Health > 0) then
+				return
+			end
+			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+			-- InRaid ставит модуль рейда, когда поле после входа снято.
+			if not player:GetAttribute("InRaid") then
+				say(player, "Работает только на вылазке")
+				return
+			end
+			if humanoid.WalkSpeed >= SPEED then
+				say(player, "Ускорение уже действует")
+				return
+			end
+			humanoid.WalkSpeed = SPEED
+			tool:Destroy()
+		end)
+		]]></ProtectedString>
+						<bool name="Disabled">false</bool>
+						<token name="RunContext">1</token>
+						<string name="Name">Effect</string>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Tool" referent="RBX668F572DBCE34C6580840D94C71D23F9">
+				<Properties>
+					<string name="Name">Большой рюкзак</string>
+					<string name="ToolTip">Нажми, чтобы использовать</string>
+					<bool name="CanBeDropped">false</bool>
+					<bool name="RequiresHandle">true</bool>
+					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABUQAUAAABPcmRlcgYAAAAAAAAQQAsAAABEZXNjcmlwdGlvbgIfAAAAKzMg0LzQtdGB0YLQsCDQtNC+INCz0LjQsdC10LvQuA==</BinaryString>
+				</Properties>
+				<Item class="Part" referent="RBX5B5FCC8D32874727BD6DB4392C201127">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4288047420</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
+						<string name="Name">Handle</string>
+					</Properties>
+					<Item class="Weld" referent="RBXD67BAAF892794BEEACAB7F570548946A">
+						<Properties>
+							<string name="Name">Weld</string>
+							<Ref name="Part0">RBX5B5FCC8D32874727BD6DB4392C201127</Ref>
+							<Ref name="Part1">RBX7938449E59C24B64AC10F206AA762097</Ref>
+							<CoordinateFrame name="C0"><X>0</X><Y>0.2</Y><Z>-0.6</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Part" referent="RBX7938449E59C24B64AC10F206AA762097">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<bool name="CanCollide">false</bool>
+						<bool name="Massless">true</bool>
+						<CoordinateFrame name="CFrame"><X>0</X><Y>0.2</Y><Z>-0.6</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+						<Color3uint8 name="Color3uint8">4285418280</Color3uint8>
+						<token name="Material">272</token>
+						<token name="TopSurface">0</token>
+						<token name="BottomSurface">0</token>
+						<token name="shape">1</token>
+						<Vector3 name="size"><X>1.05</X><Y>0.5</Y><Z>0.4</Z></Vector3>
+						<string name="Name">Detail</string>
+					</Properties>
+				</Item>
+				<Item class="Script" referent="RBXA7F244028CAB4D9095CD48E9BB5FC365">
+					<Properties>
+						<ProtectedString name="Source"><![CDATA[-- Большой рюкзак — товар магазина. Взял в руку, нажал — в рюкзаке больше
+		-- мест до гибели. Места прибавляет модуль лута по атрибуту игрока BonusSlots.
+		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
+		
+		-- ============================ НАСТРОЙКИ ============================
+		local EXTRA_SLOTS = 3 -- сколько мест добавить
+		-- ===================================================================
+		
+		local Players = game:GetService("Players")
+		local tool = script.Parent
+		
+		local function say(player, text)
+			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+			if notice then
+				notice:FireClient(player, text)
+			end
+		end
+		
+		tool.Activated:Connect(function()
+			local character = tool.Parent
+			local player = Players:GetPlayerFromCharacter(character)
+			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+			if not (player and humanoid and humanoid.Health > 0) then
+				return
+			end
+			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+			-- InRaid ставит модуль рейда, когда поле после входа снято.
+			if not player:GetAttribute("InRaid") then
+				say(player, "Работает только на вылазке")
+				return
+			end
+			if (player:GetAttribute("BonusSlots") or 0) > 0 then
+				say(player, "Большой рюкзак уже надет")
+				return
+			end
+			player:SetAttribute("BonusSlots", EXTRA_SLOTS)
+			tool:Destroy()
+		end)
+		]]></ProtectedString>
+						<bool name="Disabled">false</bool>
+						<token name="RunContext">1</token>
+						<string name="Name">Effect</string>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

@@ -2,26 +2,26 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX3E0C57948A4D455EB533360855F22EF2">
+	<Item class="Folder" referent="RBX59017D7C3CF34092998BD5D27005BFC7">
 		<Properties>
 			<string name="Name">LootSystem</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBXE6BDE387E4BD459BAD2FE16F57BE93EA">
+		<Item class="RemoteEvent" referent="RBX5A8EF7C662C247FD836DD987B70941F0">
 			<Properties>
 				<string name="Name">Update</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX32A0B7E0E0B14E7A9E97D97CEC28FA46">
+		<Item class="RemoteEvent" referent="RBX281038355DEA41C394E30362A18B842A">
 			<Properties>
 				<string name="Name">Drop</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX6FB8EED62AB146C6A4AF516188DE91CF">
+		<Item class="RemoteEvent" referent="RBXE6AA2356F39F49B99C3B8D72E02B2125">
 			<Properties>
 				<string name="Name">Collected</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX364930B88A804DF899CAE4AF6EF77EF5">
+		<Item class="Script" referent="RBX698FA74034274E4E989A1E1940E74B5B">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- LootScript — находки, рюкзак и счёт игрока.
 -- Модуль курса «Лут и рюкзак», уроки 33-35.
@@ -40,11 +40,20 @@
 -- превращается в предмет-Tool с атрибутом Value: его видно в нижней панели,
 -- его можно взять в руку, а продаётся он в зоне сдачи. Место в рюкзаке
 -- занимает и снаряжение из магазина: у таких предметов есть атрибут Slots.
--- Продаются и падают мешком только находки — предметы с атрибутом Value.
+-- Мешком при гибели падают только находки — предметы с атрибутом Value.
+--
+-- Оружие (Tool с атрибутом Weapon = true) места в рюкзаке не занимает, у
+-- игрока оно одно и всегда лежит в первой ячейке нижней панели.
 --
 -- Предмет из рюкзака можно выбросить (клавиша Q, предмет — в руке): он ложится
 -- на землю, место в рюкзаке освобождается, подобрать его может кто угодно.
--- Выбрасываются находки и покупки; стартовое оружие без Slots и Value — нет.
+-- Выбрасываются находки и покупки; оружие из StarterPack без Slots и Value —
+-- нет. Выброшенное на площадку скупщика продаётся (модуль «Зона сдачи»).
+--
+-- Монеты сохраняются между заходами в игру (SAVE_COINS), рюкзак — нет: вышел
+-- из игры с добычей — она пропала. Сохранение работает в опубликованной игре;
+-- в Studio — только если включить Game Settings → Security → Enable Studio
+-- Access to API Services.
 
 -- ============================ НАСТРОЙКИ ============================
 local TAG = "Loot" -- метка находки: ставится в Properties → Tags
@@ -58,6 +67,8 @@ local BAG_NAME = "Мешок" -- имя мешка: его видно в Explore
 local HIGHLIGHT_RANGE = 14 -- с какого расстояния находка подсвечивается, студы
 local DROP_SECONDS = 60 -- сколько выброшенный предмет лежит на земле
 local DROP_KEY = "Q" -- клавиша «выбросить предмет из руки»
+local SAVE_COINS = true -- true — монеты сохраняются между заходами в игру
+local SAVE_NAME = "Coins" -- имя хранилища монет (DataStore)
 -- ===================================================================
 
 local CollectionService = game:GetService("CollectionService")
@@ -185,6 +196,46 @@ local function lootOf(player)
 	return list
 end
 
+-- Оружие у игрока одно — в рюкзаке или в руке.
+local function weaponOf(player)
+	for _, holder in ipairs({ player:FindFirstChildOfClass("Backpack"), player.Character }) do
+		if holder then
+			for _, tool in ipairs(holder:GetChildren()) do
+				if tool:IsA("Tool") and tool:GetAttribute("Weapon") == true then
+					return tool
+				end
+			end
+		end
+	end
+	return nil
+end
+
+-- Оружие — в первую ячейку панели. Панель Roblox ставит новый предмет в
+-- первую свободную ячейку, поэтому остальные предметы на миг убираем из
+-- рюкзака и возвращаем после оружия.
+local function giveWeapon(player, tool)
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid:UnequipTools()
+	end
+	local others = {}
+	for _, other in ipairs(backpack:GetChildren()) do
+		if other:IsA("Tool") then
+			table.insert(others, other)
+			other.Parent = nil
+		end
+	end
+	tool.Parent = backpack
+	task.delay(0.1, function()
+		for _, other in ipairs(others) do
+			if other.Parent == nil then
+				other.Parent = backpack
+			end
+		end
+	end)
+end
+
 -- Занятые места — все предметы с атрибутом Slots или Value (находки и
 -- покупки), цена рюкзака — только находки.
 local function count(player)
@@ -234,14 +285,90 @@ local function refresh(player)
 	end
 end
 
+------------------------------------------------------------------ сохранение монет
+-- Монеты лежат в хранилище Roblox (DataStore) под номером игрока. Пока
+-- сохранённое число не прочитано, записывать нельзя: иначе неудачная
+-- загрузка затёрла бы монеты нулём.
+local store = nil
+if SAVE_COINS then
+	local ok, result = pcall(function()
+		return game:GetService("DataStoreService"):GetDataStore(SAVE_NAME)
+	end)
+	if ok then
+		store = result
+	else
+		warn("LootSystem: хранилище монет недоступно — " .. tostring(result))
+	end
+end
+
+local loaded = {} -- игрок → сохранённое число прочитано
+local saved = {} -- игрок → сколько монет записано последним
+
+local function loadCoins(player)
+	if not store then
+		return
+	end
+	local ok, value = pcall(function()
+		return store:GetAsync("player_" .. player.UserId)
+	end)
+	if not ok then
+		warn("LootSystem: не удалось прочитать монеты — " .. tostring(value))
+		return
+	end
+	local _, coins = statsOf(player)
+	coins.Value = tonumber(value) or coins.Value
+	saved[player] = coins.Value
+	loaded[player] = true
+	show(player)
+end
+
+local function saveCoins(player)
+	if not (store and loaded[player]) then
+		return
+	end
+	local _, coins = statsOf(player)
+	if saved[player] == coins.Value then
+		return
+	end
+	local value = coins.Value
+	local ok, err = pcall(function()
+		store:SetAsync("player_" .. player.UserId, value)
+	end)
+	if ok then
+		saved[player] = value
+	else
+		warn("LootSystem: не удалось сохранить монеты — " .. tostring(err))
+	end
+end
+
+-- Раз в минуту — на случай, если игра закроется без PlayerRemoving.
+task.spawn(function()
+	while true do
+		task.wait(60)
+		for _, player in ipairs(Players:GetPlayers()) do
+			task.spawn(saveCoins, player)
+		end
+	end
+end)
+
+game:BindToClose(function()
+	for _, player in ipairs(Players:GetPlayers()) do
+		saveCoins(player)
+	end
+end)
+
 local function setup(player)
 	statsOf(player)
 	task.defer(show, player)
+	task.spawn(loadCoins, player)
 end
 
 Players.PlayerAdded:Connect(setup)
 Players.PlayerRemoving:Connect(function(player)
+	saveCoins(player)
 	shown[player] = nil
+	loaded[player] = nil
+	saved[player] = nil
 end)
 for _, player in ipairs(Players:GetPlayers()) do
 	setup(player)
@@ -397,7 +524,19 @@ local function take(player, item)
 	local stored = item:FindFirstChild("Stored")
 	if stored and stored.Value then
 		local tool = stored.Value
-		tool.Parent = backpack
+		if tool:GetAttribute("Weapon") == true then
+			if weaponOf(player) then
+				local last = player:GetAttribute("LootFullSaid") or 0
+				if os.clock() - last > 3 then
+					player:SetAttribute("LootFullSaid", os.clock())
+					show(player, "Оружие уже есть")
+				end
+				return
+			end
+			giveWeapon(player, tool)
+		else
+			tool.Parent = backpack
+		end
 		fly(item, player, true)
 		show(player, "+" .. tool.Name)
 		return
@@ -469,20 +608,39 @@ dropEvent.OnServerEvent:Connect(function(player)
 		return
 	end
 	-- На землю ложится находка в натуральную величину, а не уменьшенная
-	-- рукоять. У покупок своей «большой» формы нет — кладём их рукоять.
+	-- рукоять. У покупок своей «большой» формы нет — кладём копию всех их
+	-- деталей как есть (в руке они стоят на своих местах), а оружие — на бок.
 	local part
 	if shapes[tool] then
 		part = shapes[tool]:Clone()
 	else
+		part = Instance.new("Model")
 		local handle = tool:FindFirstChild("Handle")
-		part = handle and handle:Clone() or Instance.new("Part")
-		for _, child in ipairs(part:GetChildren()) do
-			if not child:IsA("DataModelMesh") and not child:IsA("Decal") and not child:IsA("SurfaceAppearance") then
-				child:Destroy()
+		for _, d in ipairs(tool:GetDescendants()) do
+			if d:IsA("BasePart") then
+				local copy = d:Clone()
+				for _, child in ipairs(copy:GetDescendants()) do
+					if not (child:IsA("DataModelMesh") or child:IsA("Decal") or child:IsA("Texture") or child:IsA("SurfaceAppearance")) then
+						child:Destroy()
+					end
+				end
+				copy.Parent = part
+				if d == handle then
+					part.PrimaryPart = copy
+				end
 			end
 		end
-		if part.Size.Magnitude < 1.5 then
+		if not part:FindFirstChildWhichIsA("BasePart") then
+			part:Destroy()
+			part = Instance.new("Part")
 			part.Size = Vector3.new(1.2, 1.2, 1.2)
+		else
+			part:PivotTo(tool:GetAttribute("Weapon") == true and CFrame.Angles(0, 0, math.rad(90)) or CFrame.new())
+			-- Опора без поворота: рамку предмета ниже считаем по осям мира,
+			-- и поворот на бок не теряется при укладке на землю.
+			local turned = part:GetPivot()
+			part.PrimaryPart = nil
+			part.WorldPivot = CFrame.new(turned.Position)
 		end
 	end
 	part.Name = tool.Name
@@ -557,6 +715,7 @@ dropEvent.OnServerEvent:Connect(function(player)
 	part:SetAttribute("Value", tool:GetAttribute("Value"))
 	part:SetAttribute("Slots", tonumber(tool:GetAttribute("Slots")) or 1)
 	part:SetAttribute("DropperId", player.UserId)
+	part:SetAttribute("Owner", player.UserId) -- кому платит скупщик
 	local stored = Instance.new("ObjectValue")
 	stored.Name = "Stored"
 	stored.Value = tool
@@ -582,10 +741,23 @@ end)
 -- игрок упал, и мешок лежит BAG_SECONDS секунд. Подобрать его может любой,
 -- кто успел добежать, — в рюкзаке мешок займёт столько же мест.
 local function dropBag(position, value, slots)
+	-- Мешок ложится на землю под погибшим: луч вниз мимо персонажей и находок.
+	local skip = CollectionService:GetTagged(TAG)
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player.Character then
+			table.insert(skip, player.Character)
+		end
+	end
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = skip
+	local hit = workspace:Raycast(position + Vector3.new(0, 2, 0), Vector3.new(0, -30, 0), params)
+	local floor = hit and hit.Position or (position - Vector3.new(0, 3, 0))
+
 	local drop = Instance.new("Part")
 	drop.Name = BAG_NAME
 	drop.Size = Vector3.new(2, 2, 2)
-	drop.CFrame = CFrame.new(position + Vector3.new(0, 2, 0))
+	drop.CFrame = CFrame.new(floor + Vector3.new(0, 1, 0))
 	drop.Anchored = true
 	drop.CanCollide = false
 	drop.Material = Enum.Material.SmoothPlastic
@@ -653,7 +825,7 @@ end
 				<string name="Name">LootScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX8A4621E011264DE784013865010A5FA1">
+		<Item class="Script" referent="RBX2BD37C699E5B4294B1A2B5905D43F432">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- LootClient — полоска рюкзака на экране.
 -- Модуль курса «Лут и рюкзак», уроки 33-35.

@@ -1,0 +1,219 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXBC5683DB71124B879E2B741D21855D98">
+		<Properties>
+			<string name="Name">MiniMap</string>
+		</Properties>
+		<Item class="Script" referent="RBX90A255FFF1B34AFC9751E5EC39A6160A">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- MiniMapServer — готовит копию карты для миникарты (итоговая игра блока 9).
+--
+-- Миникарта рисует настоящую локацию: клиент кладёт её копию во
+-- ViewportFrame и смотрит на неё сверху. Саму карту клиент целиком не видит —
+-- при стриминге у него только то, что рядом, — поэтому копию собирает сервер
+-- и кладёт в ReplicatedStorage: оттуда она доезжает до игрока полностью.
+--
+-- Все настройки миникарты — здесь, в начале скрипта. Скрипт MiniMap в той же
+-- папке получает их вместе с копией карты.
+
+local SOURCE = "Map" -- имя модели карты в Workspace
+local SKIP = { "Finds" } -- папки карты, которых нет на миникарте (находки)
+local RADIUS = 300 -- радиус карты, студы
+local CENTER = Vector3.new(0, 0, 0) -- центр карты
+local BELOW = 15 -- на сколько студов ниже центра игрок уже не на карте (бункер)
+local VIEW = 120 -- сколько студов вокруг игрока видно на миникарте
+local SIZE = 200 -- диаметр миникарты на экране, пиксели
+
+local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local skip = {}
+for _, name in ipairs(SKIP) do
+	skip[name] = true
+end
+
+local source = workspace:WaitForChild(SOURCE)
+
+local old = ReplicatedStorage:FindFirstChild("MiniMapModel")
+if old then
+	old:Destroy()
+end
+
+local copy = Instance.new("Model")
+copy.Name = "MiniMapModel"
+for _, child in ipairs(source:GetChildren()) do
+	if not skip[child.Name] then
+		child:Clone().Parent = copy
+	end
+end
+
+-- Копия — только картинка: без меток (иначе её подхватят модули выходов и
+-- лута), без физики, надписей и скриптов.
+for _, d in ipairs(copy:GetDescendants()) do
+	for _, tag in ipairs(CollectionService:GetTags(d)) do
+		CollectionService:RemoveTag(d, tag)
+	end
+	if d:IsA("BasePart") then
+		d.Anchored = true
+		d.CanCollide = false
+		d.CanTouch = false
+		d.CanQuery = false
+	elseif d:IsA("LuaSourceContainer") or d:IsA("LayerCollector") or d:IsA("Light") then
+		d:Destroy()
+	end
+end
+
+-- Настройки едут к клиенту на самой копии: она приходит уже с ними.
+copy:SetAttribute("Radius", RADIUS)
+copy:SetAttribute("Center", CENTER)
+copy:SetAttribute("Below", BELOW)
+copy:SetAttribute("View", VIEW)
+copy:SetAttribute("Size", SIZE)
+
+copy.Parent = ReplicatedStorage
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">1</token>
+				<string name="Name">MiniMapServer</string>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX2BF26C1F42F940448712410C8E10915D">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- MiniMap — миникарта в правом верхнем углу (итоговая игра блока 9).
+--
+-- Показывает настоящую локацию: копию карты (её готовит MiniMapServer в
+-- ReplicatedStorage) во ViewportFrame, вид сверху вокруг игрока, север вверху.
+-- Поверх — стрелка игрока и значки выходов; выход дальше видимого круга
+-- прижимается к его краю. Вне карты (в бункере) миникарта прячется.
+--
+-- Настройки — в начале скрипта MiniMapServer, здесь их менять не нужно.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+
+-- Копия карты приезжает с сервера один раз, вместе с настройками.
+local model = ReplicatedStorage:WaitForChild("MiniMapModel")
+local RADIUS = model:GetAttribute("Radius") or 300
+local CENTER = model:GetAttribute("Center") or Vector3.zero
+local BELOW = model:GetAttribute("Below") or 15
+local VIEW = model:GetAttribute("View") or 120
+local SIZE = model:GetAttribute("Size") or 200
+local FOV = 20 -- узкий угол: вид сверху почти без перспективы
+local HEIGHT = VIEW / math.tan(math.rad(FOV / 2))
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "MiniMap"
+gui.ResetOnSpawn = false
+gui.Enabled = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("ViewportFrame")
+frame.AnchorPoint = Vector2.new(1, 0)
+frame.Position = UDim2.new(1, -16, 0, 70)
+frame.Size = UDim2.fromOffset(SIZE, SIZE)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+frame.Ambient = Color3.fromRGB(170, 170, 170)
+frame.LightColor = Color3.fromRGB(255, 255, 255)
+frame.LightDirection = Vector3.new(-0.4, -1, -0.3)
+frame.Parent = gui
+local round = Instance.new("UICorner")
+round.CornerRadius = UDim.new(0.5, 0)
+round.Parent = frame
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(230, 230, 235)
+stroke.Transparency = 0.3
+stroke.Parent = frame
+
+local camera = Instance.new("Camera")
+camera.FieldOfView = FOV
+camera.Parent = frame
+frame.CurrentCamera = camera
+model:Clone().Parent = frame
+
+-- Значки выходов: координаты публикует RaidServer в ReplicatedStorage.
+local exits = {}
+local function addExit(value)
+	if value:IsA("Vector3Value") then
+		local m = Instance.new("TextLabel")
+		m.AnchorPoint = Vector2.new(0.5, 0.5)
+		m.Size = UDim2.fromOffset(18, 18)
+		m.BackgroundColor3 = Color3.fromRGB(40, 170, 90)
+		m.TextColor3 = Color3.new(1, 1, 1)
+		m.Font = Enum.Font.GothamBold
+		m.TextSize = 12
+		m.Text = "В"
+		m.ZIndex = 5
+		m.Parent = frame
+		local r = Instance.new("UICorner")
+		r.CornerRadius = UDim.new(0.5, 0)
+		r.Parent = m
+		exits[value] = m
+	end
+end
+task.spawn(function()
+	local list = ReplicatedStorage:WaitForChild("RaidExits")
+	for _, v in ipairs(list:GetChildren()) do
+		addExit(v)
+	end
+	list.ChildAdded:Connect(addExit)
+end)
+
+-- Стрелка игрока — всегда в центре.
+local arrow = Instance.new("TextLabel")
+arrow.AnchorPoint = Vector2.new(0.5, 0.5)
+arrow.Position = UDim2.fromScale(0.5, 0.5)
+arrow.Size = UDim2.fromOffset(22, 22)
+arrow.BackgroundTransparency = 1
+arrow.Font = Enum.Font.GothamBold
+arrow.TextSize = 22
+arrow.TextColor3 = Color3.fromRGB(255, 220, 80)
+arrow.TextStrokeTransparency = 0.1
+arrow.Text = "▲"
+arrow.ZIndex = 6
+arrow.Parent = frame
+
+RunService.RenderStepped:Connect(function()
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		gui.Enabled = false
+		return
+	end
+	local p = root.Position
+	local d = p - CENTER
+	local inside = Vector3.new(d.X, 0, d.Z).Magnitude <= RADIUS and d.Y > -BELOW
+	gui.Enabled = inside
+	if not inside then
+		return
+	end
+
+	-- Камера над игроком, верх кадра — север (−Z).
+	camera.CFrame = CFrame.lookAt(Vector3.new(p.X, CENTER.Y + HEIGHT, p.Z), Vector3.new(p.X, CENTER.Y, p.Z), Vector3.new(0, 0, -1))
+
+	local look = workspace.CurrentCamera.CFrame.LookVector
+	arrow.Rotation = math.deg(math.atan2(look.X, -look.Z))
+
+	for value, m in pairs(exits) do
+		local off = value.Value - p
+		local x, y = off.X / (2 * VIEW), off.Z / (2 * VIEW)
+		local len = math.sqrt(x * x + y * y)
+		if len > 0.45 then
+			x, y = x / len * 0.45, y / len * 0.45
+		end
+		m.Position = UDim2.fromScale(0.5 + x, 0.5 + y)
+	end
+end)
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<token name="RunContext">2</token>
+				<string name="Name">MiniMap</string>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
