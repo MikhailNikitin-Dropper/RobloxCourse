@@ -96,23 +96,23 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="37-t-6">
 <h3 class="slide-title">Камера сверху <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Cam</b> — деталь, через которую смотрит игрок</li><li>Orientation −60, 0, 0 — взгляд вниз под углом</li><li>Вся карта в кадре — ворота врагов, дорога и база</li><li>Персонажа нет — игрок кликает мышью по клеткам</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь Cam над картой, Orientation −60, 0, 0.
-Сказать: через эту деталь смотрит игрок — передняя сторона детали смотрит вниз на карту.
+<ul class="content-item content-bullets"><li><b>Камера модуля</b> — висит над серединой карты и смотрит вниз</li><li>CAM_HEIGHT — высота: чем выше, тем больше карты в кадре</li><li>CAM_ANGLE — наклон: 90 — ровно сверху, 60 — под углом</li><li>Персонажа нет — игрок кликает мышью по клеткам</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: начало скрипта TDServer — CAM_HEIGHT = 80 и CAM_ANGLE = 60.
+Сказать: камеру ставит модуль — над серединой пути и клеток, а высоту и наклон дизайнер подбирает под свою карту.
 Сказать: персонажа в игре нет: камера неподвижна, игрок кликает мышью по клеткам.</aside>
 </div>
 <div class="slide" id="37-t-7">
 <h3 class="slide-title">Модуль TowerDefense <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Модуль — правила: заставка, волны, деньги и бой</li><li>Папка уровня — метка TDLevel, атрибуты StartMoney и BaseHealth</li><li>Waves — волны: внутри IntValue с именем врага и числом</li><li>Mobs — враги в ServerStorage</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка уровня с меткой TDLevel, внутри Waypoints, Start, Base, Placement, Waves и Cam; в Properties атрибуты StartMoney = 250 и BaseHealth = 100]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка уровня с меткой TDLevel и атрибутами StartMoney и BaseHealth; внутри Waypoints, Start, Base, Placement, Waves и Cam.
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка уровня с меткой TDLevel, внутри Waypoints, Start, Base, Placement и Waves; в Properties атрибуты StartMoney = 250 и BaseHealth = 100]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка уровня с меткой TDLevel и атрибутами StartMoney и BaseHealth; внутри Waypoints, Start, Base, Placement и Waves.
 Сказать: модуль приносит только правила: заставку, деньги, волны и бой. Карту, башни и врагов делает дизайнер.
 Сказать: волна — Configuration с номером, внутри IntValue: имя врага и сколько их выйдет.
 Сказать: модуль получают по ссылке от преподавателя, запасной путь — файл TowerDefense.rbxmx у преподавателя.</aside>
 </div>
 <div class="slide" id="37-t-8">
 <h3 class="slide-title">Частые ошибки карты <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Точки не по порядку — враг идёт наискосок по траве</li><li>Пропущен номер — враг остановится на полпути</li><li>Клетки далеко от дороги — башни не достают</li><li>Cam смотрит вбок — карты не видно</li><li>Нет метки TDLevel — «Играть» ничего не запускает</li></ul>
+<ul class="content-item content-bullets"><li>Точки не по порядку — враг идёт наискосок по траве</li><li>Пропущен номер — враг остановится на полпути</li><li>Клетки далеко от дороги — башни не достают</li><li>CAM_HEIGHT мала — край карты не влез в кадр</li><li>Нет метки TDLevel — «Играть» ничего не запускает</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: пять поломок, на которых чаще всего спотыкаются в первый день.
 Проверить у каждого: точки идут подряд, у папки уровня метка TDLevel.
 Сказать: враг, который идёт наискосок по траве, почти всегда значит ошибку в номерах точек.</aside>
@@ -124,9 +124,9 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Где на карте лучшее место для сильной башни?</p><ol class="content-item content-quiz-options"><li data-correct="true">У изгиба или петли пути ✓</li><li>На длинной прямой дороге</li><li>У самой базы за стеной</li></ol>
 <p class="content-item content-question">Как враг узнаёт, куда идти по карте?</p><ol class="content-item content-quiz-options"><li>Смотрит на цвет дороги</li><li data-correct="true">Идёт по номерам точек пути ✓</li><li>Ищет ближайшую к нему башню</li></ol>
-<p class="content-item content-question">Через что игрок видит карту в этой игре?</p><ol class="content-item content-quiz-options"><li>Глазами своего персонажа</li><li>Через камеру над головой</li><li data-correct="true">Через деталь Cam уровня ✓</li></ol>
+<p class="content-item content-question">Через что игрок видит карту в этой игре?</p><ol class="content-item content-quiz-options"><li>Глазами персонажа на карте</li><li>Через камеру за плечом</li><li data-correct="true">Через камеру над картой ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: на изгибе; по номерам точек; через деталь Cam.
+Ответы: на изгибе; по номерам точек; через камеру модуля над картой.
 Сказать: на практике строим свою карту и проверяем её первыми врагами.</aside>
 </div>
 </section>
@@ -164,28 +164,29 @@ body { font-family: Arial, sans-serif; }
 Сказать: атрибуты StartMoney и BaseHealth — у папки уровня, их подберём на уроке 39.</aside>
 </div>
 <div class="slide" id="37-p-4">
-<h3 class="slide-title">Шаг 4: камера сверху <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Деталь Cam в папке уровня, над краем карты</li><li>Transparency 1, CanCollide выключен, Anchored</li><li>Orientation: −60, 0, 0 — камера смотрит вниз на карту</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь Cam над картой, Orientation −60, 0, 0.
-Сказать: передняя сторона детали — то, куда смотрит игрок; при −60 она смотрит вниз под углом.
-Сказать: точное место камеры проверим на шаге 6 — в Test сразу видно, всё ли в кадре.</aside>
-</div>
-<div class="slide" id="37-p-5">
-<h3 class="slide-title">Шаг 5: серый враг <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 4: серый враг <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови Grey и положи в ServerStorage → папку Mobs</li><li>Атрибуты Grey: Health 60, Speed 10, Reward 10, Damage 10</li><li>В уровне — папка Waves → Configuration «1» → IntValue «Grey» = 5</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Avatar → Character → R15, риг Grey в ServerStorage → Mobs с атрибутами.
 Сказать: серый риг — враг для проверки, на уроке 39 его заменят свои враги.
 Показать в Studio: папка Waves → Configuration «1» → IntValue с именем Grey и значением 5.
 Сказать: имя IntValue должно совпадать с именем рига буква в букву.</aside>
 </div>
-<div class="slide" id="37-p-6">
-<h3 class="slide-title">Шаг 6: первый бой <span class="slide-duration">(3.5 мин)</span></h3>
+<div class="slide" id="37-p-5">
+<h3 class="slide-title">Шаг 5: первый бой <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Получи модуль TowerDefense — ссылку пришлёт преподаватель — и положи папку в Workspace</li><li>Test → Играть: камера сверху, серые идут по точкам</li><li>Дошли до базы — она теряет здоровье и разлетается</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox сверху: серые риги идут по дороге змейкой к каменной базе, над базой полоска «База 60 / 100», вверху панель «Волна 1 из 1»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: башен ещё нет, поэтому сегодня база проиграет — так и задумано.
 Проверить у каждого: заставка → Играть → камера сверху, серые идут по точкам и бьют базу.
-Сказать: враг идёт наискосок — проверь номера точек; карты не видно — поверни Cam.
+Сказать: враг идёт наискосок — проверь номера точек; карта не влезла в кадр — поправим на шаге 6.
 Сказать: модуль получают по ссылке от преподавателя, запасной путь — файл TowerDefense.rbxmx у преподавателя.</aside>
+</div>
+<div class="slide" id="37-p-6">
+<h3 class="slide-title">Шаг 6: камера под карту <span class="slide-duration">(3 мин)</span></h3>
+<ol class="content-item content-steps"><li>Открой скрипт TDServer: в начале — CAM_HEIGHT и CAM_ANGLE</li><li>Край карты не влез — подними CAM_HEIGHT, карта мелкая — опусти</li><li>CAM_ANGLE: 90 — ровно сверху, 60 — под углом</li><li>Test: в кадре ворота врагов, вся дорога и база</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: TowerDefense → TDServer, в начале строки CAM_HEIGHT и CAM_ANGLE.
+Сказать: камеру модуль ставит сам над серединой карты; большой карте нужна высота больше.
+Сказать: меняем одно число и сразу Test — так видно, что изменилось.
+Проверить у каждого: в кадре ворота врагов, вся дорога и база.</aside>
 </div>
 </section>
 <section class="block block-qa_practice">
@@ -193,10 +194,10 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="37-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Враг пошёл наискосок по траве. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Номера точек в Waypoints ✓</li><li>Цвет и материал дороги</li><li>Размер клеток у изгиба</li></ol>
-<p class="content-item content-question">Вместо карты на экране одно небо. Что поправить?</p><ol class="content-item content-quiz-options"><li>Атрибут StartMoney уровня</li><li data-correct="true">Orientation у детали Cam ✓</li><li>Номер волны в папке Waves</li></ol>
+<p class="content-item content-question">Край дороги не влез в кадр. Что поправить?</p><ol class="content-item content-quiz-options"><li>Атрибут StartMoney у уровня</li><li data-correct="true">CAM_HEIGHT в начале TDServer ✓</li><li>Номер волны в Waves</li></ol>
 <p class="content-item content-question">Нажал «Играть», а партия не начинается. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Серого рига в Workspace</li><li>Второго уровня в игре</li><li data-correct="true">Метки TDLevel у уровня ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: номера точек; Orientation у Cam; метка TDLevel.
+Ответы: номера точек; CAM_HEIGHT; метка TDLevel.
 Сказать: на следующем уроке появятся башни, и база перестанет падать.</aside>
 </div>
 </section>

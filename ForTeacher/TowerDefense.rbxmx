@@ -2,26 +2,26 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXDF4074CED1104E5AA6B23B3C9CEC31D4">
+	<Item class="Folder" referent="RBXA953A01E1B4A473BAB1D2C0B8913C638">
 		<Properties>
 			<string name="Name">TowerDefense</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX59B457B91EB5457F97C831EC46A494D0">
+		<Item class="RemoteEvent" referent="RBXAF00FB510EED44D28A695ABD9AD012D2">
 			<Properties>
 				<string name="Name">Action</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBXC75411C0733D44639B7403AB34665BBA">
+		<Item class="RemoteEvent" referent="RBX2737EEE5C7B54DFCAE261AABC255F239">
 			<Properties>
 				<string name="Name">Shot</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBXA5A6820096684E2193887510D545DDAC">
+		<Item class="RemoteEvent" referent="RBXC6A8785347284177874860F05074B0A2">
 			<Properties>
 				<string name="Name">Notice</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX4265084DCBD64F4EBF027D28D98A0A57">
+		<Item class="Script" referent="RBX3160BA0A4AA846AD8B297D262E374138">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDServer — модуль курса «Защита королевства» (уроки 37–40), сервер.
 --
@@ -37,7 +37,6 @@
 --                атрибут «имя врага = сколько» (имя латиницей, например
 --                Zombie = 5) или IntValue внутри волны с именем врага
 --                (можно по-русски). Атрибут Gap — секунды между врагами.
---   Cam        — деталь, смотрящая вниз: через неё игрок видит карту
 --   атрибуты папки уровня: StartMoney, BaseHealth
 --
 -- Башни — модели в ServerStorage.Towers, атрибуты Price, Damage, Range,
@@ -46,6 +45,8 @@
 -- анимаций), Decal Projectile (картинка снаряда), Sound ShotSound (звук).
 -- Враги — модели в ServerStorage.Mobs, атрибуты Health, Speed, Reward, Damage,
 -- по желанию WalkAnimationId (своя ходьба).
+-- Камеру над уровнем ставит модуль: над серединой пути и клеток, высота и
+-- наклон — настройки CAM_HEIGHT и CAM_ANGLE.
 -- Сцена заставки — папка Intro в Workspace с деталью Cam (по желанию).
 
 ------------------------------------------------------------------ настройки
@@ -56,6 +57,8 @@ local SPAWN_GAP = 1 -- секунды между врагами, если у в�
 local SELL_SHARE = 0.5 -- какую долю вложенного возвращает продажа
 local LEVEL_TAG = "TDLevel" -- метка папки уровня
 local SAVE_LEVELS = true -- помнить пройденные уровни между заходами
+local CAM_HEIGHT = 80 -- высота камеры над картой, студы: больше — карта мельче
+local CAM_ANGLE = 60 -- наклон камеры, градусы: 90 — ровно сверху, меньше — сбоку
 
 ------------------------------------------------------------------ логика
 local START_MONEY = 200 -- если у уровня нет StartMoney (логика, не настройка)
@@ -208,24 +211,78 @@ end
 ------------------------------------------------------------------ партия
 local game_ = nil -- текущая партия: один игрок — одна партия
 
--- Персонажа нет, поэтому мир игроку подгружается вокруг детали Cam: при
--- включённом стриминге без этого камера и клетки до игрока не доезжают.
-local function focus(player, level)
-	local cam
-	if level then
-		cam = level:FindFirstChild("Cam")
-	else
-		local intro = workspace:FindFirstChild("Intro")
-		cam = intro and intro:FindFirstChild("Cam")
-		if not cam then
-			local first = levels()[1]
-			cam = first and first:FindFirstChild("Cam")
+-- Камера уровня: середина пути, клеток и базы, сверху под углом CAM_ANGLE,
+-- смотрит на север (как передняя сторона детали). Клиент берёт её из
+-- атрибутов TDCam и TDCamCenter папки уровня (на заставке облетает середину).
+local function levelCamera(level)
+	local lo, hi
+	local function add(part)
+		local p = part.Position
+		lo = lo and lo:Min(p) or p
+		hi = hi and hi:Max(p) or p
+	end
+	for _, name in ipairs({ "Waypoints", "Placement", "Start", "Base" }) do
+		local obj = level:FindFirstChild(name)
+		if obj then
+			if obj:IsA("BasePart") then
+				add(obj)
+			end
+			for _, d in ipairs(obj:GetDescendants()) do
+				if d:IsA("BasePart") then
+					add(d)
+				end
+			end
 		end
 	end
-	if cam and cam:IsA("BasePart") then
-		player.ReplicationFocus = cam
+	if not lo then
+		return nil
+	end
+	local center = (lo + hi) / 2
+	local angle = math.rad(math.clamp(CAM_ANGLE, 10, 90))
+	local pos = center + Vector3.new(0, CAM_HEIGHT, CAM_HEIGHT / math.tan(angle))
+	return CFrame.lookAt(pos, center, Vector3.new(0, 0, -1)), center
+end
+
+local function placeCameras()
+	for _, level in ipairs(levels()) do
+		local cf, center = levelCamera(level)
+		level:SetAttribute("TDCam", cf)
+		level:SetAttribute("TDCamCenter", center)
+	end
+end
+
+-- Персонажа нет, поэтому мир игроку подгружается вокруг камеры: при
+-- включённом стриминге без этого карта и клетки до игрока не доезжают.
+local focusPart = Instance.new("Part")
+focusPart.Name = "TDFocus"
+focusPart.Anchored = true
+focusPart.CanCollide = false
+focusPart.CanQuery = false
+focusPart.CanTouch = false
+focusPart.Transparency = 1
+focusPart.Size = Vector3.new(1, 1, 1)
+focusPart.Parent = package
+
+local function focus(player, level)
+	local where
+	if not level then
+		local intro = workspace:FindFirstChild("Intro")
+		local cam = intro and intro:FindFirstChild("Cam")
+		if cam and cam:IsA("BasePart") then
+			where = cam.Position
+		else
+			level = levels()[1]
+		end
+	end
+	if level then
+		local cf = levelCamera(level)
+		where = cf and cf.Position
+	end
+	if where then
+		focusPart.Position = where
+		player.ReplicationFocus = focusPart
 		pcall(function()
-			player:RequestStreamAroundAsync(cam.Position)
+			player:RequestStreamAroundAsync(where)
 		end)
 	end
 end
@@ -952,6 +1009,7 @@ action.OnServerEvent:Connect(function(player, kind, a, b)
 end)
 
 local function join(player)
+	placeCameras()
 	loadProgress(player)
 	publishLevels(player)
 	focus(player, nil)
@@ -974,7 +1032,7 @@ end)
 				<string name="Name">TDServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXAA00D35A4D6248B4A4425FE38BB22950">
+		<Item class="Script" referent="RBXFB162EB435234B73BC465A5E5EEF2486">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDClient — модуль курса «Защита королевства» (уроки 37–40), экран игрока.
 --
@@ -1509,24 +1567,27 @@ RunService:BindToRenderStep("TDCamera", Enum.RenderPriority.Camera.Value + 1, fu
 	if phase == "title" or phase == nil then
 		local intro = workspace:FindFirstChild("Intro")
 		local cam = intro and intro:FindFirstChild("Cam")
-		if not cam then
+		local cf = cam and cam:IsA("BasePart") and cam.CFrame
+		local pivot = cf and cf.Position -- сцена: камера поворачивается на месте
+		if not cf then
 			local first = levelNames()[1]
 			for _, f in ipairs(CollectionService:GetTagged(LEVEL_TAG)) do
 				if f.Name == first then
-					cam = f:FindFirstChild("Cam")
+					cf = f:GetAttribute("TDCam")
+					pivot = f:GetAttribute("TDCamCenter") -- карта: облёт вокруг середины
 				end
 			end
 		end
-		if cam then
+		if typeof(cf) == "CFrame" and typeof(pivot) == "Vector3" then
 			orbit += dt * 0.15
-			local cf = cam.CFrame
-			camera.CFrame = CFrame.new(cf.Position) * CFrame.Angles(0, orbit, 0) * (cf - cf.Position)
+			local around = CFrame.new(pivot)
+			camera.CFrame = around * CFrame.Angles(0, orbit, 0) * around:ToObjectSpace(cf)
 		end
 	else
 		local level = currentLevel()
-		local cam = level and level:FindFirstChild("Cam")
-		if cam then
-			camera.CFrame = cam.CFrame
+		local cf = level and level:GetAttribute("TDCam")
+		if typeof(cf) == "CFrame" then
+			camera.CFrame = cf
 		end
 	end
 end)
