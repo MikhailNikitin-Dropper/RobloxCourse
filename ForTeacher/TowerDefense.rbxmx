@@ -2,26 +2,26 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXA953A01E1B4A473BAB1D2C0B8913C638">
+	<Item class="Folder" referent="RBXC0FE0B9CF21A4ED1B0D5ABD054EA631E">
 		<Properties>
 			<string name="Name">TowerDefense</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBXAF00FB510EED44D28A695ABD9AD012D2">
+		<Item class="RemoteEvent" referent="RBX62F56AEC8DAA40D78F1901AC524DAAF4">
 			<Properties>
 				<string name="Name">Action</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX2737EEE5C7B54DFCAE261AABC255F239">
+		<Item class="RemoteEvent" referent="RBXA16D522114D142A0855ECA77E4560755">
 			<Properties>
 				<string name="Name">Shot</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBXC6A8785347284177874860F05074B0A2">
+		<Item class="RemoteEvent" referent="RBX33AF440489BB4414BBDCB64636AB22FE">
 			<Properties>
 				<string name="Name">Notice</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX3160BA0A4AA846AD8B297D262E374138">
+		<Item class="Script" referent="RBX133CB7FF7A8E440986B38937B1EFCCEE">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDServer — модуль курса «Защита королевства» (уроки 37–40), сервер.
 --
@@ -94,6 +94,14 @@ local notice = remote("Notice") -- сервер → игрок: короткое
 
 -- Персонаж в игре с видом сверху не нужен.
 Players.CharacterAutoLoads = false
+
+-- Герои заставки — копии башен и врагов: имена над головами им не нужны.
+local intro = workspace:FindFirstChild("Intro")
+for _, d in ipairs(intro and intro:GetDescendants() or {}) do
+	if d:IsA("Humanoid") then
+		d.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	end
+end
 
 pcall(function()
 	PhysicsService:RegisterCollisionGroup(MOB_GROUP)
@@ -493,8 +501,15 @@ local function healthBar(mob, humanoid)
 end
 
 local function walkAnimation(mob, humanoid)
-	if mob:FindFirstChild("Animate") then
-		return -- у врага свой скрипт анимаций
+	-- Риг из Avatar → Character приходит со штатным Animate — это LocalScript,
+	-- а в Workspace он не выполняется: враг ехал бы по дороге без шагов.
+	-- Такой Animate убираем и играем ходьбу сами; свой серверный скрипт
+	-- анимаций (Script) оставляем — значит, враг ходит по-своему.
+	local animate = mob:FindFirstChild("Animate")
+	if animate and animate:IsA("LocalScript") then
+		animate:Destroy()
+	elseif animate then
+		return
 	end
 	-- Своя ходьба: атрибут WalkAnimationId (как у монстра урока 27) или
 	-- Animation с именем Walk внутри врага; иначе — ходьба Roblox.
@@ -1032,7 +1047,7 @@ end)
 				<string name="Name">TDServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXFB162EB435234B73BC465A5E5EEF2486">
+		<Item class="Script" referent="RBXC44EE7EF695042E9A318A664FC930F3A">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDClient — модуль курса «Защита королевства» (уроки 37–40), экран игрока.
 --
@@ -1560,6 +1575,7 @@ end)
 
 ------------------------------------------------------------------ камера и фазы
 local orbit = 0
+local SWAY = math.rad(20) -- заставка со сценой: качание на ±20° от направления Cam
 -- Камера ставится после стандартного модуля камеры, иначе он её перебьёт.
 RunService:BindToRenderStep("TDCamera", Enum.RenderPriority.Camera.Value + 1, function(dt)
 	camera.CameraType = Enum.CameraType.Scriptable
@@ -1568,7 +1584,8 @@ RunService:BindToRenderStep("TDCamera", Enum.RenderPriority.Camera.Value + 1, fu
 		local intro = workspace:FindFirstChild("Intro")
 		local cam = intro and intro:FindFirstChild("Cam")
 		local cf = cam and cam:IsA("BasePart") and cam.CFrame
-		local pivot = cf and cf.Position -- сцена: камера поворачивается на месте
+		local scene = cf ~= nil
+		local pivot = cf and cf.Position -- сцена: камера качается на месте
 		if not cf then
 			local first = levelNames()[1]
 			for _, f in ipairs(CollectionService:GetTagged(LEVEL_TAG)) do
@@ -1579,9 +1596,12 @@ RunService:BindToRenderStep("TDCamera", Enum.RenderPriority.Camera.Value + 1, fu
 			end
 		end
 		if typeof(cf) == "CFrame" and typeof(pivot) == "Vector3" then
-			orbit += dt * 0.15
+			orbit += dt
+			-- Сцену камера не теряет: качается влево-вправо, цикл ~18 с.
+			-- Карту без сцены облетает по кругу, ~42 с на оборот.
+			local yaw = scene and math.sin(orbit * 0.35) * SWAY or orbit * 0.15
 			local around = CFrame.new(pivot)
-			camera.CFrame = around * CFrame.Angles(0, orbit, 0) * around:ToObjectSpace(cf)
+			camera.CFrame = around * CFrame.Angles(0, yaw, 0) * around:ToObjectSpace(cf)
 		end
 	else
 		local level = currentLevel()

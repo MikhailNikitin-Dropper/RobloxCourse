@@ -101,7 +101,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="37-t-8">
 <h3 class="slide-title">Частые ошибки карты <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Точки не по порядку — враг идёт наискосок по траве</li><li>Пропущен номер — враг остановится на полпути</li><li>Клетки далеко от дороги — башни не достают</li><li>CAM_HEIGHT мала — край карты не влез в кадр</li><li>Нет метки TDLevel — «Играть» ничего не запускает</li></ul>
+<ul class="content-item content-bullets"><li>Точки не по порядку — враг идёт наискосок по траве</li><li>Пропущен номер — враг пропадёт на полпути и ударит базу</li><li>Клетки далеко от дороги — башни не достают</li><li>CAM_HEIGHT мала — край карты не влез в кадр</li><li>Нет метки TDLevel — «Играть» ничего не запускает</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Проверить у каждого: точки идут подряд, у папки уровня метка TDLevel.</aside>
 </div>
 </section>
@@ -152,10 +152,11 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="37-p-4">
 <h3 class="slide-title">Шаг 4: серый враг <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови Grey и положи в ServerStorage → папку Mobs</li><li>Атрибуты Grey: Health 60, Speed 10, Reward 10, Damage 10</li><li>В уровне — папка Waves → Configuration «1» → IntValue «Grey» = 5</li></ol>
+<ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови Grey и положи в ServerStorage → папку Mobs</li><li>Атрибуты Grey: Health 60, Speed 10, Reward 10, Damage 10</li><li>В уровне — папка Waves → Configuration «1» → IntValue «Grey» = 12</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Avatar → Character → R15, риг Grey в ServerStorage → Mobs с атрибутами.
-Показать в Studio: папка Waves → Configuration «1» → IntValue с именем Grey и значением 5.
-Сказать: имя IntValue должно совпадать с именем рига буква в букву.</aside>
+Показать в Studio: папка Waves → Configuration «1» → IntValue с именем Grey и значением 12.
+Сказать: имя IntValue должно совпадать с именем рига буква в букву.
+Сказать: 12 серых по 10 урона — это 120, больше здоровья базы: без башен база проиграет.</aside>
 </div>
 <div class="slide" id="37-p-5">
 <h3 class="slide-title">Шаг 5: первый бой <span class="slide-duration">(3.5 мин)</span></h3>
@@ -199,6 +200,8 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Оформи карту под тему королевства: время суток и Atmosphere в Lighting</li><li>Собери второй уровень — вторую папку с меткой TDLevel и другим путём</li><li>Test: на заставке «Играть» покажет меню из двух уровней</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: второй уровень — копия папки уровня с новой дорогой, точками и клетками; метка TDLevel у копии остаётся.
+Сказать: копию переименовать — имя папки станет названием в меню, уровни идут по алфавиту.
+Сказать: копию отодвинуть в сторону — выделить всё внутри папки и сдвинуть инструментом Move.
 Сказать: два уровня — и в игре сами появятся меню уровней и сохранение пройденных.</aside>
 </div>
 </section>
