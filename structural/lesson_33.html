@@ -48,10 +48,10 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="33-r-1">
 <h3 class="slide-title">Вспомним урок 32 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Куда клали папку модуля стендов, чтобы мост и лифт заработали?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью в Workspace</li><li data-correct="true">Внутрь модели, где лежат детали ✓</li><li>В любое место коридора</li></ol>
-<p class="content-item content-question">Где у модулей курса живут настройки, которые мы меняем?</p><ol class="content-item content-quiz-options"><li>В строках логики ниже настроек</li><li>В имени скрипта в Explorer</li><li data-correct="true">В начале файла, между рядами знаков «равно» ✓</li></ol>
-<p class="content-item content-question">Как проверяли комнату побега перед публикацией?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чужими руками: тестер проходит молча ✓</li><li>Своими руками по памяти автора</li><li>Чтением скрипта без запуска игры</li></ol>
+<p class="content-item content-question">Где в скриптах модулей лежат настройки, которые мы меняем?</p><ol class="content-item content-quiz-options"><li>В строках логики ниже настроек</li><li>В имени скрипта в Explorer</li><li data-correct="true">Между рядами знаков «равно» ✓</li></ol>
+<p class="content-item content-question">Что останавливает таймер побега в конце коридора?</p><ol class="content-item content-quiz-options"><li data-correct="true">Площадка выхода ExitPad ✓</li><li>Последняя открытая дверь</li><li>Кнопка на стене выхода</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: внутрь модели коридора; переменные в начале файла; чужими руками.
+Ответы: внутрь модели коридора; между рядами знаков «равно»; площадка выхода ExitPad.
 Сказать: сегодня работаем теми же приёмами, но игра будет считать деньги.</aside>
 </div>
 </section>
@@ -75,32 +75,26 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="33-t-3">
 <h3 class="slide-title">Рюкзак с дном <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Рюкзак — встроенный инвентарь Roblox: находка становится предметом в нижней панели</li><li><b>CAPACITY</b> — сколько мест в рюкзаке</li><li>Полный рюкзак — не берёт находку и говорит об этом на экране</li><li>Клавиша Q — выбрасывает предмет из руки и освобождает место</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: рюкзак — это обычный Backpack Roblox: подобранная находка лежит в нижней панели, её можно взять в руку.
-Сказать: лимит мест делает каждую находку решением, и это главный приём жанра.
-Сказать: место можно освободить — взять предмет в руку и нажать Q, он упадёт на землю.
+<aside class="speaker-notes">Заметка ведущего: Сказать: лимит мест делает каждую находку решением, и это главный приём жанра.
 Сказать: настройка CAPACITY лежит в начале скрипта модуля, её мы и подберём на практике.</aside>
 </div>
 <div class="slide" id="33-t-4">
 <h3 class="slide-title">Таблица игроков <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>leaderstats</b> — папка внутри игрока, её числа Roblox показывает списком</li><li>Имя пишется строчными буквами: Leaderstats таблицу не покажет</li><li>В нашей игре два числа: «В рюкзаке» и «Монеты»</li><li>Папку создаёт модуль: собирать её руками не нужно</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: таблица игроков со столбцами «Монеты» и «В рюкзаке», в ней два игрока — Player1 и Player2 с разными числами в рюкзаке]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка leaderstats внутри игрока, внутри неё два IntValue.
-Сказать: имя папки только строчными буквами, иначе таблицы не будет — это частая поломка.
-Сказать: папку создаёт модуль, ученику её собирать не нужно.</aside>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка leaderstats внутри игрока, внутри неё два IntValue.</aside>
 </div>
 <div class="slide" id="33-t-5">
 <h3 class="slide-title">Полоска рюкзака <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Полоска вверху экрана: «Рюкзак 4/6 · 100 монет»</li><li>Занятые места и сумма — то, чем игрок рискует прямо сейчас</li><li>Интерфейс рисует модуль: собирать <b>ScreenGui</b> не нужно</li><li>Сообщения модуля — тоже появляются здесь: «+30», «Рюкзак полон»</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вверху экрана тёмная полоска с надписью «Рюкзак 4/6 · 100 монет», под ней жёлтая надпись «+30»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: таблица показывает всех, а полоска — только тебя, и смотреть в неё быстрее.
-Сказать: полоску рисует сам модуль, как это делали билеты урока 24.
-Сказать: на полоске видно и занятые места, и сумму — именно то, чем игрок рискует.</aside>
+Сказать: полоску рисует сам модуль, как это делали билеты урока 24.</aside>
 </div>
 <div class="slide" id="33-t-6">
 <h3 class="slide-title">Цена — это дизайн <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Обычная находка — 10 монет, редкая — 30, легендарная — 80</li><li>Разница в разы: игрок сразу понимает, за чем стоит идти</li><li>Дорогое подальше — его кладут туда, куда идти дольше и страшнее</li><li>Одинаковые цены — делают карту однообразной: всё равно, куда идти</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: цена говорит игроку, что в игре ценно, поэтому её выбирает дизайнер, а не случай.
-Сказать: стартовые числа курса — 10, 30 и 80 монет: разница в разы, и дорогое видно сразу.
+<aside class="speaker-notes">Заметка ведущего: Сказать: стартовые числа курса — 10, 30 и 80 монет: разница в разы, и дорогое видно сразу.
 Сказать: на следующем уроке по этим числам вырастут зоны.</aside>
 </div>
 <div class="slide" id="33-t-7">
@@ -115,9 +109,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="33-t-8">
 <h3 class="slide-title">Частые ошибки первого дня <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Находка не поднимается — забыли тег на модели или не включили Anchored</li><li>Все находки стоят одинаково — не заполнили атрибут Value</li><li>Рюкзак не кончается — CAPACITY поставили слишком большим</li><li>Таблицы нет — папку назвали Leaderstats с большой буквы</li><li>Модель рассыпалась в руке — детали не сварены сваркой Weld</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: пять поломок, из-за которых кажется, что модуль не работает.
-Проверить у каждого: тег и Value стоят на модели, главная деталь закреплена, остальные приварены.
-Сказать: если таблицы нет — почти всегда дело в имени папки leaderstats.</aside>
+<aside class="speaker-notes">Заметка ведущего: Проверить у каждого: тег и Value стоят на модели, главная деталь закреплена, остальные приварены.
+Сказать: если таблицы нет — чаще всего дело в имени папки leaderstats.</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
@@ -125,7 +118,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="33-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">По какой метке модуль находит свои находки на карте?</p><ol class="content-item content-quiz-options"><li>По имени детали в окне Explorer</li><li>По цвету детали в панели свойств</li><li data-correct="true">По тегу детали из раздела Tags ✓</li></ol>
-<p class="content-item content-question">Что задаёт цену одной находки в монетах?</p><ol class="content-item content-quiz-options"><li data-correct="true">Атрибут Value у самой детали ✓</li><li>Настройка CAPACITY в скрипте</li><li>Размер детали в свойствах</li></ol>
+<p class="content-item content-question">Что задаёт цену одной находки в монетах?</p><ol class="content-item content-quiz-options"><li data-correct="true">Атрибут Value у самой детали ✓</li><li>Настройка CAPACITY в самом скрипте</li><li>Размер детали в её свойствах</li></ol>
 <p class="content-item content-question">Как должна называться папка, чтобы появилась таблица игроков?</p><ol class="content-item content-quiz-options"><li>Leaderstats — с большой буквы</li><li data-correct="true">leaderstats — строчными буквами ✓</li><li>LeaderStats — с двумя большими</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: тег; атрибут Value; строчными буквами.
@@ -154,16 +147,14 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="33-p-2">
 <h3 class="slide-title">Шаг 2: находки с ценой <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Собери 8–10 находок: в каждой 2–3 детали на сварке Weld, главной — Anchored</li><li>Каждой модели поставь тег Loot: Properties → Tags</li><li>Добавь модели атрибут Value: обычным 10, двум-трём — 30</li><li>Дорогие находки поставь подальше от старта</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: модель из двух деталей — выделить обе, Model → Weld, как декор монстра.
-Показать в Studio: главной детали — Anchored, её же назначить PrimaryPart модели; остальные не закрепляем, их держит сварка.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: детали находки → Model → Weld; главной — Anchored и PrimaryPart, остальные держит сварка.
 Показать в Studio: у модели Properties → Tags → Loot, Attributes → Value.
 Сказать: без сварки модель рассыплется в руке — у предмета в руке закрепление выключается.
-Проверить у каждого: тег написан ровно как в настройке модуля, без пробелов.
-Сказать: две-три находки сделайте дорогими — по ним потом будет видно, куда бегут игроки.</aside>
+Проверить у каждого: тег написан ровно как в настройке модуля, без пробелов.</aside>
 </div>
 <div class="slide" id="33-p-3">
 <h3 class="slide-title">Шаг 3: вставь модуль <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль «Лут и рюкзак» по ссылке и положи папку <b>LootSystem</b> в Workspace</li><li>Test → подойди к находке: она улетает к тебе, полоска растёт</li><li>Загляни в таблицу игроков: там появилось «В рюкзаке»</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль «Лут и рюкзак» по ссылке и положи папку <b>LootSystem</b> в Workspace</li><li>Test → подойди к находке: растёт ли полоска?</li><li>Загляни в таблицу игроков: там появилось «В рюкзаке»</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/124010105427135/LootSystem" target="_blank" rel="noopener">https://create.roblox.com/store/asset/124010105427135/LootSystem</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок рядом с кристаллом, обведённым жёлтым контуром, вверху экрана полоска «Рюкзак 1/6 · 10 монет», справа вверху таблица игроков]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка LootSystem в Workspace, внутри LootScript и LootClient.
@@ -176,24 +167,20 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: полоска «Рюкзак 6/6 · 80 монет» и жёлтая надпись «Рюкзак полон» под ней, внизу шесть предметов в панели]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: открыть LootScript и найти CAPACITY в начале файла.
 Сказать: правило — мест меньше, чем находок в поле, иначе выбор исчезает.
-Показать: находку в руку, Q — она ложится на землю, полоска показывает на одно место меньше.
 Сказать: свой выброшенный предмет поднимается, только если отойти и вернуться.
 Сделать: Test после каждой правки: скрипт читает числа при запуске игры.</aside>
 </div>
 <div class="slide" id="33-p-5">
 <h3 class="slide-title">Шаг 5: дальность подбора <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Найди в скрипте настройку <b>PICKUP_RANGE</b></li><li>Поставь своё число и перезапусти Test</li><li>Проверь на бегу: находка берётся, когда игрок рядом</li><li>Слишком большое число собирает поле само — верни поменьше</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Сказать: PICKUP_RANGE — с какого расстояния находка прыгает в рюкзак.
-Сказать: слишком большое число собирает всё поле на бегу, слишком маленькое заставляет топтаться.
-Сделать: Test — пройти мимо находки и проверить, подбирается ли она на ходу.</aside>
+<ol class="content-item content-steps"><li>Найди в скрипте настройку <b>PICKUP_RANGE</b></li><li>Поставь своё число и перезапусти Test</li><li>Проверь на бегу, что находка берётся, когда игрок рядом</li><li>Слишком большое число собирает поле само — верни поменьше</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сказать: слишком большое число собирает всё поле на бегу, слишком маленькое заставляет топтаться.</aside>
 </div>
 <div class="slide" id="33-p-6">
 <h3 class="slide-title">Шаг 6: два игрока <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → Clients and Servers: два окна-игрока на одном компьютере</li><li>Собери находки по очереди в каждом окне и сравни таблицу</li><li>Проверь: у каждого игрока свой рюкзак и свой счёт</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<ol class="content-item content-steps"><li>Test → Server &amp; Clients: два окна-игрока на одном компьютере</li><li>Собери находки по очереди в каждом окне и сравни таблицу</li><li>Проверь, что у каждого игрока свой рюкзак и свой счёт</li><li>Сохрани проект: File → Save to Roblox</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: два окна-игрока рядом, в каждом свой персонаж на поле находок, у каждого своя полоска рюкзака, в таблице оба игрока]</p>
-<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Clients and Servers, два игрока — Studio откроет два окна на одном компьютере.
+<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Server &amp; Clients, два игрока — Studio откроет два окна на одном компьютере.
 Сказать: переключаемся между окнами и играем за каждого по очереди.
-Сказать: у каждого свой рюкзак и своя строка в таблице — счёт личный.
 Сделать: File → Save to Roblox — проект понадобится на следующем уроке.</aside>
 </div>
 </section>
@@ -215,15 +202,12 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Основа лутера готова <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Мы собрали находки с ценой, рюкзак с дном и счёт в таблице игроков — это работа Systems Designer.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: зоны риска — чем глубже в карту, тем дороже находки</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня появились находки с ценой, рюкзак с дном и счёт, который видят все.
-Сказать: на следующем уроке поле станет картой из трёх зон: чем глубже, тем дороже находки.
-Сделать: File → Save to Roblox — проект нужен на всех уроках блока.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сделать: File → Save to Roblox — проект нужен на всех уроках блока.</aside>
 </div>
 <div class="slide" id="33-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Добавь в поле ещё 5 находок и поставь им свои цены</li><li>Подбери CAPACITY так, чтобы поле нельзя было унести за раз</li><li>Посчитай, сколько монет приносит один полный рюкзак</li><li>Запиши это число: на следующем уроке по нему сделаем зоны</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: дома добавить в поле ещё находки и поиграть с числами.
-Сказать: задание проверим одним вопросом — сколько монет приносит полный рюкзак.
+<aside class="speaker-notes">Заметка ведущего: Сказать: задание проверим одним вопросом — сколько монет приносит полный рюкзак.
 Сказать: числа пригодятся на следующем уроке, когда появятся зоны.</aside>
 </div>
 </section>

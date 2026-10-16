@@ -39,19 +39,18 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Карта, башни, враги и волны уже работают. Сегодня Tower Defense становится готовой игрой, а курс — портфолио из десяти игр.</p>
 <p class="content-item content-paragraph"><b>Game Director</b> (директор игры) отвечает за игру целиком: каким будет первое впечатление и что игрок запомнит.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: последний урок курса — финальная сборка и выпуск.
-Сказать: сначала доводим Tower Defense до готовой игры, потом каждый показывает свой путь — десять игр.
-Сказать: сегодня вы директора своих игр.</aside>
+Сказать: сначала доводим Tower Defense до готовой игры, потом каждый показывает свой путь — десять игр.</aside>
 </div>
 </section>
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 39 <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="40-r-1">
 <h3 class="slide-title">Вспомним урок 39 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как называют IntValue внутри волны?</p><ol class="content-item content-quiz-options"><li data-correct="true">Именем врага из Mobs ✓</li><li>Номером самой волны</li><li>Словом Gap</li></ol>
-<p class="content-item content-question">В какой волне выходит босс?</p><ol class="content-item content-quiz-options"><li>В каждой — по одному</li><li data-correct="true">В последней — финалом ✓</li><li>В первой — сразу</li></ol>
+<p class="content-item content-question">Что задаёт атрибут Gap у волны?</p><ol class="content-item content-quiz-options"><li data-correct="true">Паузу между врагами ✓</li><li>Число врагов в волне</li><li>Награду за всю волну</li></ol>
+<p class="content-item content-question">Какой победы ищут на плейтесте баланса?</p><ol class="content-item content-quiz-options"><li>Без единой потери здоровья базы</li><li data-correct="true">С запасом в одну-две башни ✓</li><li>На самой последней капле здоровья</li></ol>
 <p class="content-item content-question">Что убирают из монстра, чтобы он стал боссом?</p><ol class="content-item content-quiz-options"><li>Атрибут WalkAnimationId</li><li>Цвета BodyColors</li><li data-correct="true">Папку MonsterAI ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: имя врага; в последней; MonsterAI.
+Ответы: паузу между врагами; с запасом в одну-две башни; папку MonsterAI.
 Сказать: сегодня игру увидят другие — и баланс проверится ещё раз.</aside>
 </div>
 </section>
@@ -60,35 +59,31 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="40-t-1">
 <h3 class="slide-title">Что сегодня <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Правки — по чужому плейтесту из ДЗ</li><li>Заставка — сцена с героями и название игры</li><li>Звук, частицы и свет — игра звучит и выглядит по теме</li><li>Выпускной показ — свои десять игр, по две минуты на каждого</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — правки по плейтесту, заставка, звук и свет, выпускной показ.
-Сказать: опубликовать игру — домашнее задание: сегодня готовим её к этому.
+<aside class="speaker-notes">Заметка ведущего: Сказать: опубликовать игру — домашнее задание: сегодня готовим её к этому.
 Сказать: теория сегодня короткая — половина практики отдана выпускному показу, по две минуты на каждого.</aside>
 </div>
 <div class="slide" id="40-t-2">
 <h3 class="slide-title">Правки по плейтесту <span class="slide-duration">(1.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Проиграл рано — разминка слишком трудная</li><li>Не понял, куда ставить — клетки сделать заметнее</li><li>Однообразно в начале — первые волны короче</li><li>Не прошёл босса — запас денег к финалу</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: чужой игрок находит то, чего автор не видит.
-Сказать: где сосед проиграл — там главная правка.
+Сказать: где друг проиграл — там главная правка.
 Сказать: правим по одной и сразу проверяем — правило всего курса.</aside>
 </div>
 <div class="slide" id="40-t-3">
 <h3 class="slide-title">Заставка <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Intro</b> — папка сцены заставки в Workspace</li><li>Герои — свои башни и враги в позах</li><li>Cam — камера заставки, медленно облетает сцену</li><li>Название — GAME_TITLE в начале TDServer</li></ul>
+<ul class="content-item content-bullets"><li><b>Intro</b> — папка сцены заставки в Workspace</li><li>Герои — башни и враги игры в позах</li><li>Cam — камера заставки, медленно поворачивается на месте</li><li>Название — GAME_TITLE в начале TDServer</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: заставка — на каменном подиуме башни-персонажи и враги в позах, над ними крупное название игры, внизу зелёная кнопка «Играть»]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Intro в Workspace с деталью Cam и героями игры в позах.
-Сказать: камера заставки медленно облетает сцену, пока игрок не нажал «Играть».
-Сказать: название — GAME_TITLE в начале TDServer.</aside>
+Сказать: камера стоит в точке Cam и медленно поворачивается, пока игрок не нажал «Играть».</aside>
 </div>
 <div class="slide" id="40-t-4">
 <h3 class="slide-title">Звук, частицы и свет <span class="slide-duration">(1.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>ShotSound — свой звук у каждой башни, музыка тише выстрелов</li><li><b>ParticleEmitter</b> — дым или искры у ворот врагов</li><li>Lighting — время суток и атмосфера, как в уроках 5 и 25</li><li>Два уровня — разный свет и настроение</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: у каждой башни свой звук выстрела — это ShotSound с прошлого урока; музыка тише выстрелов.
-Сказать: у ворот врагов — частицы ParticleEmitter: дым или искры, как в уроке 5.
-Сказать: свет держит тему королевства, а у двух уровней он разный — так их легче отличать в меню.</aside>
+<ul class="content-item content-bullets"><li>ShotSound — свой звук у каждой башни, музыка тише выстрелов</li><li><b>ParticleEmitter</b> — дым или искры у ворот врагов</li><li>Lighting — время суток и Atmosphere</li><li>Два уровня — разный свет и настроение</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: свет держит тему королевства, а у двух уровней он разный — так их легче отличать в меню.</aside>
 </div>
 <div class="slide" id="40-t-5">
 <h3 class="slide-title">Страница игры <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Название — говорит про оборону и королевство</li><li>Описание — правило: защити базу за N волн</li><li>Иконка — кадр своей игры, обрезанный в квадрат</li><li>Сервер — Places → Access: Maximum Visitor Count = 1</li></ul>
+<ul class="content-item content-bullets"><li>Название — говорит про оборону и королевство</li><li>Описание — правило: защити базу за N волн</li><li>Иконка — кадр из игры, обрезанный в квадрат</li><li>Сервер — Places → Access: Maximum Visitor Count = 1</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Creator Hub: Creations → игра → Places → место → Access, в разделе Basic Settings поле Maximum Visitor Count, ниже Server Settings и кнопка Save Changes]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: публикация — домашнее задание, но страницу продумываем сейчас.
 Сказать: в описании одна фраза о правилах: защити базу за шесть волн.
@@ -99,7 +94,6 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Мой путь гейм-дизайнера <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Одна фраза — на каждую игру: что в ней главное</li><li>Роль — кем ты был в каждой игре</li><li>Любимые — 2–3 игры показать подробнее</li><li>Финал — что хочешь сделать дальше</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: на выпуске каждый показывает свой путь — десять игр курса.
-Сказать: про каждую игру одна фраза: что в ней главное и кем ты там был.
 Сказать: две-три любимые показываем подробнее — запуск или кадр.
 Сказать: курс закончен, а гейм-дизайн — нет: дальше свои игры и первые скрипты.</aside>
 </div>
@@ -108,11 +102,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="40-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">С чего начинать правки после чужого плейтеста?</p><ol class="content-item content-quiz-options"><li data-correct="true">С волны, где сосед проиграл ✓</li><li>С цвета башен на карте</li><li>С названия игры</li></ol>
-<p class="content-item content-question">Где собирают сцену заставки?</p><ol class="content-item content-quiz-options"><li>В ServerStorage → Mobs</li><li data-correct="true">В папке Intro в Workspace ✓</li><li>В папке Waves уровня</li></ol>
-<p class="content-item content-question">Что рассказать о каждой игре на выпуске?</p><ol class="content-item content-quiz-options"><li>Полный список всех деталей</li><li>Как долго её собирали</li><li data-correct="true">Одну фразу: что в ней главное ✓</li></ol>
+<p class="content-item content-question">С чего начинать правки после чужого плейтеста?</p><ol class="content-item content-quiz-options"><li data-correct="true">С волны, где друг проиграл ✓</li><li>С цвета башен на карте</li><li>С названия игры на заставке</li></ol>
+<p class="content-item content-question">Где собирают сцену заставки?</p><ol class="content-item content-quiz-options"><li>В ServerStorage → Mobs</li><li data-correct="true">В папке Intro ✓</li><li>В папке Waves уровня</li></ol>
+<p class="content-item content-question">Что рассказать о каждой игре на выпуске?</p><ol class="content-item content-quiz-options"><li>Полный список всех деталей</li><li>Как долго её собирали</li><li data-correct="true">Что в ней главное ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: где проиграл сосед; папка Intro; одна фраза.
+Ответы: с волны, где друг проиграл; в папке Intro; что в ней главное.
 Сказать: на практике полируем игру и готовимся к показу.</aside>
 </div>
 </section>
@@ -129,25 +123,23 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Финальная сборка <span class="block-duration">(30 мин)</span></h2>
 <div class="slide" id="40-p-1">
 <h3 class="slide-title">Шаг 1: правки по плейтесту <span class="slide-duration">(2.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой записи чужого плейтеста из ДЗ</li><li>Поправь одно число там, где сосед проиграл</li><li>Test: пройди игру до экрана «Победа!»</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Сказать: берём запись соседа из ДЗ: на какой волне он проиграл.
+<ol class="content-item content-steps"><li>Открой записи чужого плейтеста из ДЗ</li><li>Поправь одно число там, где друг проиграл</li><li>Test: пройди игру до экрана «Победа!»</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сказать: берём запись друга из ДЗ: на какой волне он проиграл.
 Сказать: одна правка — одна проверка.
 Проверить у каждого: игра проходится от «Играть» до «Победа!».</aside>
 </div>
 <div class="slide" id="40-p-2">
 <h3 class="slide-title">Шаг 2: сцена заставки <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>В Workspace — папка Intro: подиум и копии своих башен и врагов, у каждого HumanoidRootPart — Anchored</li><li>Деталь Cam в Intro — передней стороной на сцену</li><li>В начале TDServer поставь своё название в GAME_TITLE</li></ol>
+<ol class="content-item content-steps"><li>В Workspace — папка Intro: подиум, копии башен и врагов, HumanoidRootPart — Anchored</li><li>Деталь Cam в Intro — передней стороной на сцену</li><li>В начале TDServer впиши название игры в GAME_TITLE</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка Intro с деталью Cam и моделями героев, в окне скрипта TDServer выделена строка GAME_TITLE с названием игры]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Intro, копии башен и врагов, HumanoidRootPart — Anchored.
-Сказать: у героев в сцене HumanoidRootPart закреплён — иначе они упадут.
-Сказать: деталь Cam смотрит на сцену передней стороной; название — GAME_TITLE в начале TDServer.</aside>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Intro, копии башен и врагов, HumanoidRootPart — Anchored, иначе герои упадут.
+Сказать: Cam ставим перед подиумом: камера поворачивается на месте, герои в кадре в начале круга.</aside>
 </div>
 <div class="slide" id="40-p-3">
 <h3 class="slide-title">Шаг 3: звук и частицы <span class="slide-duration">(2 мин)</span></h3>
-<ol class="content-item content-steps"><li>У каждой башни — свой ShotSound</li><li>В Start — ParticleEmitter: ворота врагов дымят или искрят</li><li>Фоновая музыка — Sound с Looped, тише выстрелов</li></ol>
+<ol class="content-item content-steps"><li>У каждой башни — свой ShotSound</li><li>В Start — ParticleEmitter: ворота врагов дымят или искрят</li><li>Фоновая музыка — Sound в SoundService, Looped, тише выстрелов</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: ParticleEmitter внутри детали Start — дым или искры.
-Сказать: у каждой башни свой ShotSound, громкость 0.3.
-Сказать: фоновая музыка — Sound в SoundService, Looped, тише выстрелов.</aside>
+Сказать: у ShotSound громкость 0.3, у музыки — ещё тише.</aside>
 </div>
 <div class="slide" id="40-p-4">
 <h3 class="slide-title">Шаг 4: свет и проверка <span class="slide-duration">(2.5 мин)</span></h3>
@@ -158,7 +150,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="40-p-5">
 <h3 class="slide-title">Шаг 5: выпускной показ <span class="slide-duration">(18 мин)</span></h3>
-<ol class="content-item content-steps"><li>Покажи заставку своей Tower Defense</li><li>Назови свои десять игр — по фразе на каждую</li><li>Покажи 2–3 любимые и скажи, кем ты в них был</li></ol>
+<ol class="content-item content-steps"><li>Покажи заставку Tower Defense</li><li>Назови свои десять игр — по фразе на каждую</li><li>Покажи 2–3 любимые и скажи, кем ты в них был</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Сделать: каждый по очереди показывает экран — заставку своей игры и две-три любимые игры курса.
 Сказать: на человека две минуты: про каждую игру одна фраза и роль.
 Сказать: остальные слушают и задают один вопрос.</aside>
@@ -166,8 +158,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="40-p-6">
 <h3 class="slide-title">Шаг 6: портфолио <span class="slide-duration">(2 мин)</span></h3>
 <ol class="content-item content-steps"><li>Собери ссылки на свои игры в один список</li><li>Отметь любимую — с неё начнёшь показ друзьям</li><li>Сохрани список: это твоё портфолио</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Сказать: собираем ссылки на десять игр в один список.
-Сказать: опубликованные игры открываются по ссылке, остальные — файлами.
+<aside class="speaker-notes">Заметка ведущего: Сказать: опубликованные игры открываются по ссылке, остальные — файлами.
 Сказать: этот список — портфолио гейм-дизайнера.</aside>
 </div>
 </section>
@@ -177,10 +168,9 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Герои заставки падают на пол. Что забыли?</p><ol class="content-item content-quiz-options"><li data-correct="true">Закрепить HumanoidRootPart ✓</li><li>Поставить GAME_TITLE</li><li>Добавить ParticleEmitter</li></ol>
 <p class="content-item content-question">Через минуту игры звук утомляет. Что поправить?</p><ol class="content-item content-quiz-options"><li>Убрать звук совсем</li><li data-correct="true">Уменьшить громкость ✓</li><li>Добавить ещё звуков</li></ol>
-<p class="content-item content-question">С какой игры начинать показ друзьям?</p><ol class="content-item content-quiz-options"><li>С самой первой по порядку</li><li>С самой длинной</li><li data-correct="true">С любимой ✓</li></ol>
+<p class="content-item content-question">С какой игры начинать показ друзьям?</p><ol class="content-item content-quiz-options"><li>С самой первой</li><li>С самой длинной</li><li data-correct="true">С самой любимой ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: HumanoidRootPart; громкость; с любимой.
-Сказать: курс закончен — дальше свои игры.</aside>
+Ответы: HumanoidRootPart; громкость; с любимой.</aside>
 </div>
 </section>
 <section class="block block-closing">
@@ -195,8 +185,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="40-c-2">
 <h3 class="slide-title">ДЗ: публикация <span class="slide-duration">(1 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Опубликуй игру: File → Publish to Roblox и открой доступ на сайте</li><li>Страница: иконка, описание с правилом, сервер на одного игрока</li><li>Пришли ссылку преподавателю и позови друзей сыграть</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: дома опубликовать игру и прислать ссылку.
+<ul class="content-item content-bullets"><li>Опубликуй игру, заполнив опрос о возрастном ограничении</li><li>Страница: иконка, описание с правилом, сервер на одного игрока</li><li>Пришли ссылку преподавателю и позови друзей сыграть</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: при публикации — заполнить опрос о возрастном ограничении.
 Сказать: сервер на одного игрока — Places → Access, Maximum Visitor Count = 1, как на слайде «Страница игры».
 Сказать: пройденные уровни сохраняются только в опубликованной игре.</aside>
 </div>

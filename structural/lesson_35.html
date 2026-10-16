@@ -35,10 +35,10 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-welcome">
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="35-w-1">
-<h3 class="slide-title">Сегодня ты — дизайнер денег <span class="slide-duration">(1 мин)</span></h3>
+<h3 class="slide-title">Сегодня ты — Monetization Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Находки лежат по зонам, у каждого есть пистолет, но монет пока нет. Сегодня появится бункер: добыча станет деньгами, а гибель начнёт их отнимать.</p>
 <p class="content-item content-paragraph"><b>Monetization Designer</b> (дизайнер экономической петли) решает, где добыча превращается в деньги и на что игрок их тратит.</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: вчера карта стала опасной, но добычу пока некуда нести.
+<aside class="speaker-notes">Заметка ведущего: Сказать: на прошлом уроке карта стала опасной, но добычу пока некуда нести.
 Сказать: сегодня появится бункер — место, откуда выходят и куда возвращаются с добычей.
 Сказать: к концу урока игра пойдёт по кругу: вылазка, выход, продажа, покупка.</aside>
 </div>
@@ -47,11 +47,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 34 <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="35-r-1">
 <h3 class="slide-title">Вспомним урок 34 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Где в игре лежат самые дорогие находки?</p><ol class="content-item content-quiz-options"><li>У края карты, на виду</li><li data-correct="true">В глубине, в центре карты ✓</li><li>В случайном месте каждой зоны</li></ol>
-<p class="content-item content-question">Чем показывают, что находка редкая?</p><ol class="content-item content-quiz-options"><li>Размером детали на полу</li><li>Именем детали в Explorer</li><li data-correct="true">Материалом и формой находки ✓</li></ol>
+<p class="content-item content-question">Как растут цены находок от края карты к центру?</p><ol class="content-item content-quiz-options"><li>10, 11 и 12 — почти поровну</li><li data-correct="true">10, 30 и 80 — в разы ✓</li><li>80, 30 и 10 — к центру дешевле</li></ol>
+<p class="content-item content-question">Что задаёт настройка HIGHLIGHT_RANGE?</p><ol class="content-item content-quiz-options"><li>Цену находки в монетах</li><li>Время возвращения находки</li><li data-correct="true">Дальность контура вокруг находки ✓</li></ol>
 <p class="content-item content-question">Куда кладут стартовый пистолет, чтобы его получал каждый?</p><ol class="content-item content-quiz-options"><li data-correct="true">В StarterPack ✓</li><li>В ServerStorage</li><li>В Workspace</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: в глубине; материал и форма; в StarterPack.
+Ответы: 10, 30 и 80 — в разы; дальность контура вокруг находки; в StarterPack.
 Сказать: сегодня у зон появится смысл — добычу можно будет продать.</aside>
 </div>
 </section>
@@ -60,9 +60,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="35-t-1">
 <h3 class="slide-title">Что добавляем сегодня <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Бункер — безопасное место под картой: отсюда выходят и сюда возвращаются</li><li>Выходы — плиты на карте: постоял на плите — вернулся с добычей</li><li>Скупщик — в бункере добыча превращается в монеты</li><li>Магазин — монеты становятся снаряжением до гибели</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: план дня — бункер, выходы, скупщик, мешок при гибели и магазин.
-Сказать: старт у края карты уходит, вместо него — бункер под картой.
-Сказать: к концу урока игра пойдёт по кругу.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: старт у края карты уходит, вместо него — бункер под картой.</aside>
 </div>
 <div class="slide" id="35-t-2">
 <h3 class="slide-title">Бункер и гермодверь <span class="slide-duration">(2.5 мин)</span></h3>
@@ -99,7 +97,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="35-t-6">
 <h3 class="slide-title">Скупщик и защита <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Скупщик — площадка Pad с папкой ExtractZone: выбросил предмет на площадку — продал</li><li>Находка продаётся за свою цену Value, покупка из магазина — за половину цены</li><li>Защитное поле — пока игрок на площадке, оружие его не ранит</li><li>Бесплатный пистолет тоже продаётся — за 0, так освобождают ячейку оружия</li></ul>
+<ul class="content-item content-bullets"><li>Скупщик — площадка Pad с папкой ExtractZone: выбросил предмет на площадку — продал</li><li>Цена продажи — находка идёт за свою Value, покупка из магазина — за половину цены</li><li>Защитное поле — пока игрок на площадке, оружие его не ранит</li><li>Бесплатный пистолет тоже продаётся — за 0, так освобождают ячейку оружия</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: площадка Pad в бункере и папка ExtractZone внутри её модели.
 Сказать: продают выбросом — взял предмет в руку, встал на площадку, нажал Q.
 Сказать: за покупки скупщик платит долю цены — настройка SELL_SHARE, по умолчанию половина.
@@ -107,29 +105,23 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="35-t-7">
 <h3 class="slide-title">Магазин снаряжения <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Прилавок Counter с ProximityPrompt — подошёл, нажал E и открыл список</li><li>Товары — предметы в папке ShopItems в ServerStorage, цена — атрибут <b>Price</b></li><li>Что делает предмет — решает скрипт внутри него: аптечка лечит, броня даёт запас здоровья</li><li>Покупка действует до гибели и только на вылазке — в бункере аптечка не лечит</li></ul>
+<ul class="content-item content-bullets"><li>Прилавок Counter с ProximityPrompt — подошёл, нажал E и открыл список</li><li>Товары — предметы в папке ShopItems в ServerStorage, цена — атрибут <b>Price</b></li><li>Что делает предмет — решает скрипт внутри него: аптечка лечит, броня даёт запас здоровья</li><li>Срок покупки — до гибели и только на вылазке: в бункере аптечка не лечит</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: в бункере деревянный прилавок, открыто окно магазина с карточками товаров: пистолет бесплатно, аптечка, броня, ускорение — список листается]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: прилавок Counter и папка ShopKiosk в его модели.
 Показать в Studio: папка ShopItems в ServerStorage — аптечка, броня, ускорение, большой рюкзак; у каждого атрибут Price и скрипт Effect.
-Сказать: магазин сам собирает карточки из этой папки: новый предмет с ценой — новая карточка в окне, список листается.
-Сказать: строка под названием на карточке — атрибут Description.
-Сказать: покупка — копия предмета в рюкзаке, она занимает место; при полном рюкзаке магазин скажет «Рюкзак полон».
-Сказать: оружие места не занимает, но оно у игрока одно и всегда в первой ячейке — второй ствол не купить, пока первый не продан.
-Сказать: в бункере и под защитным полем снаряжение не действует — атрибут игрока InRaid ставит модуль рейда, когда поле снято.
+Сказать: магазин сам собирает карточки из папки, строка под названием — атрибут Description.
+Сказать: покупка занимает место в рюкзаке, а оружие лежит в первой ячейке — второй ствол не купить, пока первый не продан.
 Сказать: окно магазина закрывается само, когда игрок отходит от прилавка.</aside>
 </div>
 <div class="slide" id="35-t-8">
 <h3 class="slide-title">Цены и доход вылазки <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Вылазка на окраину — приносит около 60 монет: это мерка</li><li>Первая покупка — стоит примерно столько: аптечка 40, ускорение 50, броня 60</li><li>Снаряжение для глубины — дороже вылазки: рюкзак 80, бластер 120</li><li>Цены выше дохода — магазин не откроется никогда</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: цена — это время игры, поэтому её считают от дохода вылазки, замеренного на прошлом уроке.
-Сказать: первая покупка должна быть по карману после первой вылазки на окраину.
-Сказать: снаряжение для глубины дороже одной вылазки — за ним ходят дважды.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: цена — это время игры, поэтому её считают от дохода вылазки, замеренного на прошлом уроке.</aside>
 </div>
 <div class="slide" id="35-t-9">
 <h3 class="slide-title">Частые ошибки петли <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Выход у самого входа — вылазка без риска</li><li>Мешок лежит минуту — риск исчезает, всё всегда возвращается</li><li>Скупщик без защиты — у продажи дежурят охотники</li><li>Снаряжение навсегда — после трёх покупок монеты не нужны</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: круг ломается по краям — у выхода, у мешка, у скупщика и у прилавка.
-Проверить у каждого: выходы далеко от входов, у скупщика включено защитное поле.
+<ul class="content-item content-bullets"><li>Поставили выход у самого входа — вылазка без риска</li><li>Дали мешку целую минуту — риск исчезает, всё всегда возвращается</li><li>Оставили скупщика без защиты — у продажи дежурят охотники</li><li>Сделали снаряжение навсегда — после трёх покупок монеты не нужны</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Проверить у каждого: выходы далеко от входов, у скупщика включено защитное поле.
 Сказать: каждую поломку видно в Test двумя окнами.</aside>
 </div>
 </section>
@@ -138,7 +130,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="35-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Где добыча из рюкзака превращается в монеты?</p><ol class="content-item content-quiz-options"><li>В момент подбора находки</li><li>В магазине при покупке</li><li data-correct="true">У скупщика в бункере ✓</li></ol>
-<p class="content-item content-question">Что происходит с несданной добычей, если игрок погиб?</p><ol class="content-item content-quiz-options"><li data-correct="true">Падает мешком на месте гибели ✓</li><li>Исчезает сразу и бесследно</li><li>Переносится на счёт убийцы</li></ol>
+<p class="content-item content-question">Что происходит с несданной добычей, если игрок погиб?</p><ol class="content-item content-quiz-options"><li data-correct="true">Падает мешком на месте гибели ✓</li><li>Исчезает сразу и совсем бесследно</li><li>Переносится на счёт его убийцы</li></ol>
 <p class="content-item content-question">Почему купленное снаряжение пропадает при гибели?</p><ol class="content-item content-quiz-options"><li>Чтобы игра работала быстрее на слабых устройствах</li><li data-correct="true">Чтобы монеты были нужны после каждой вылазки ✓</li><li>Чтобы список товаров помещался в одно окно</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: у скупщика; падает мешком; чтобы монеты были нужны после каждой вылазки.
@@ -189,26 +181,23 @@ body { font-family: Arial, sans-serif; }
 <ol class="content-item content-steps"><li>Открой LootScript и включи DROP_ON_DEATH</li><li>Поставь BAG_SECONDS: сколько секунд лежит мешок</li><li>Test → набери находок, погибни через Reset Character и найди мешок</li><li>Добежать слишком легко — уменьши число секунд</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: на траве лежит жёлтый светящийся мешок, вверху надпись «Рюкзак упал мешком»]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: DROP_ON_DEATH = true и BAG_SECONDS в начале LootScript.
-Сказать: Reset Character — в меню по Esc: так проверяем гибель без второго игрока.
-Сказать: мешок лежит BAG_SECONDS секунд, потом исчезает.</aside>
+Сказать: Reset Character — в меню по Esc: так проверяем гибель без второго игрока.</aside>
 </div>
 <div class="slide" id="35-p-5">
 <h3 class="slide-title">Шаг 5: товары магазина <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Поставь прилавок Counter, получи модуль магазина по ссылке и положи папку <b>ShopKiosk</b> в модель прилавка</li><li>Перенеси ShopItems из модуля в ServerStorage, туда же — «Пистолет» из StarterPack с Price = 0 и Weapon = true</li><li>Собери бластер сильнее пистолета с Price и Weapon = true; Test → купи его, погибни — он пропал</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/70805450126535/ShopKiosk" target="_blank" rel="noopener">https://create.roblox.com/store/asset/70805450126535/ShopKiosk</a></p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка ShopItems в ServerStorage, у предмета Properties → Attributes → Price.
-Показать в Studio: скрипт Effect внутри аптечки — число HEAL в настройках, его можно менять.
-Показать в Studio: тулы пистолета и бластера в ShopItems — атрибуты Price и Weapon = true, скрипт им не нужен: стреляет система ArenaBlaster.
-Сказать: пистолет теперь берут в магазине бесплатно перед каждой вылазкой — оружие одно и лежит в первой ячейке.
-Сказать: магазинный бластер бьёт сильнее и чаще пистолета — ради этого его и копят, а пистолет для покупки продают скупщику.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: ShopItems в ServerStorage — у предмета атрибут Price, у аптечки в скрипте Effect число HEAL.
+Показать в Studio: у тулов пистолета и бластера — Price и Weapon = true, скрипт им не нужен: стреляет ArenaBlaster.
+Сказать: пистолет берут бесплатно перед каждой вылазкой, а сильный бластер копят — пистолет для покупки продают скупщику.
 Проверить у каждого: цены Price поставлены по замеру дохода — первая покупка по карману после одной вылазки.
 Сказать: модуль получают по ссылке со слайда, запасной путь — файл ShopKiosk.rbxmx у преподавателя.</aside>
 </div>
 <div class="slide" id="35-p-6">
 <h3 class="slide-title">Шаг 6: петля двумя окнами <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test → Clients and Servers: два окна-игрока на одном компьютере</li><li>Первым окном собери добычу, вторым догони и подстрели его</li><li>Проверь: мешок упал, у скупщика урона нет, купленное пропало</li><li>Сохрани проект: File → Save to Roblox</li></ol>
+<ol class="content-item content-steps"><li>Test → Server &amp; Clients: два окна-игрока на одном компьютере</li><li>Первым окном собери добычу, вторым догони и подстрели его</li><li>Проверь, что мешок упал, у скупщика урона нет, а купленное пропало</li><li>Сохрани проект: File → Save to Roblox</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: два окна-игрока рядом — в одном персонаж с бластером целится, в другом у ног персонажа лежит жёлтый мешок]</p>
-<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Clients and Servers, два игрока — Studio откроет два окна на одном компьютере.
+<aside class="speaker-notes">Заметка ведущего: Сделать: Test → Server &amp; Clients, два игрока — Studio откроет два окна на одном компьютере.
 Сказать: переключаемся между окнами: одним собираем, другим охотимся.
 Сделать: File → Save to Roblox.</aside>
 </div>
@@ -221,8 +210,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Мешок всегда успевают подобрать, и потеря не ощущается. Что менять?</p><ol class="content-item content-quiz-options"><li>Увеличить цену находок в зоне</li><li>Добавить ещё одного скупщика</li><li data-correct="true">Уменьшить число секунд у мешка ✓</li></ol>
 <p class="content-item content-question">Никто не дошёл до первой покупки за занятие. В чём дело?</p><ol class="content-item content-quiz-options"><li>Мешок живёт слишком мало секунд</li><li data-correct="true">Цены выше дохода одной вылазки ✓</li><li>Находки возвращаются слишком быстро</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: защита у площадки; меньше секунд у мешка; цены выше дохода.
-Сказать: на следующем уроке соберём игру целиком и опубликуем её.</aside>
+Ответы: защита у площадки; меньше секунд у мешка; цены выше дохода.</aside>
 </div>
 </section>
 <section class="block block-closing">
@@ -231,15 +219,13 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Петля замкнулась <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Мы собрали бункер с гермодверью, выходы, скупщика, мешок при гибели и магазин — игра пошла по кругу: вылазка, выход, продажа, покупка.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: ПРОЕКТ «Лутер» — собираем игру целиком и публикуем</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня игра замкнулась в круг.
-Сказать: на следующем уроке добавим камеру, кулак и миникарту, проверим баланс и опубликуем игру.
+<aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке добавим камеру, кулак и миникарту, проверим баланс и опубликуем игру.
 Сделать: File → Save to Roblox.</aside>
 </div>
 <div class="slide" id="35-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Сделай три вылазки подряд и запиши, сколько монет накопил</li><li>Подбери цену бластера так, чтобы на него копили две вылазки</li><li>Сделай свой товар: скопируй предмет в ShopItems, поменяй число в его скрипте и поставь цену</li><li>Сделай анимацию удара кулаком на риге R15, опубликуй её и запиши ID — он нужен кулаку на следующем уроке</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: дома проверить цены на живых вылазках и записать, что получилось.
-Сказать: анимацию удара делаем, как атаку монстра в уроке 27: Avatar → Rig Builder → R15, Animation Editor, замах и удар за 0,5–0,8 секунды, Looping выключен, Publish to Roblox.
+<aside class="speaker-notes">Заметка ведущего: Сказать: анимацию удара делаем, как атаку монстра: Rig Generator → R15, ClipEditor, замах и удар за 0,5–0,8 секунды, без Looping, Publish.
 Сказать: ID удара принести на следующий урок — без своей анимации кулак бьёт без замаха.
 Сказать: задание проверим вопросом — за сколько вылазок накопили на бластер.</aside>
 </div>

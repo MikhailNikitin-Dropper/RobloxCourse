@@ -35,7 +35,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-welcome">
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="29-w-1">
-<h3 class="slide-title">Редактор скриптов <span class="slide-duration">(1 мин)</span></h3>
+<h3 class="slide-title">Сегодня ты — Technical Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">До сих пор движение в наших играх задавали физика и готовые модули. Сегодня соберём лабораторию из трёх стендов, которые движутся по инструкции из скрипта: с неё начнётся наш большой проект — игра-побег.</p>
 <p class="content-item content-paragraph"><b>Technical Designer</b> (технический дизайнер) читает готовый скрипт и настраивает его под свою игру.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: сегодня впервые откроется окно с кодом — писать код не будем, будем менять в нём числа.
@@ -47,11 +47,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="29-r-1">
 <h3 class="slide-title">Вспомним ночной лабиринт <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Куда клали папку MonsterAI, чтобы монстр ожил?</p><ol class="content-item content-quiz-options"><li>Рядом с моделью монстра</li><li data-correct="true">Внутрь самой модели монстра ✓</li><li>В любое место лабиринта</li></ol>
-<p class="content-item content-question">Что нужно было сделать, чтобы портал выпустил игрока из лабиринта?</p><ol class="content-item content-quiz-options"><li data-correct="true">Собрать все три артефакта ✓</li><li>Нажать кнопку рядом с порталом</li><li>Дождаться конца общего отсчёта</li></ol>
+<p class="content-item content-question">Зачем у входа в лабиринт мы ставили светлый лагерь?</p><ol class="content-item content-quiz-options"><li>Чтобы монстр видел игрока издалека</li><li data-correct="true">Сюда игрок возвращается в безопасность ✓</li><li>Чтобы в лабиринте стало светлее</li></ol>
+<p class="content-item content-question">Игрок растерялся в лабиринте. Что это значит?</p><ol class="content-item content-quiz-options"><li data-correct="true">Мало ориентиров или света ✓</li><li>Игрок играл недостаточно внимательно</li><li>Монстр двигается слишком медленно</li></ol>
 <p class="content-item content-question">Что мы вписывали в атрибуты WalkAnimationId и AttackAnimationId?</p><ol class="content-item content-quiz-options"><li>Скорость и радиус обзора монстра</li><li>Имя модели самого монстра</li><li data-correct="true">Номера своих анимаций из урока ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: внутрь самой модели монстра; собрать все три артефакта; номера своих анимаций.
+Ответы: сюда игрок возвращается в безопасность; мало ориентиров или света; номера своих анимаций.
 Сказать: механику давал модуль, а внутри модуля — скрипт, который сегодня наконец откроем.</aside>
 </div>
 </section>
@@ -60,8 +60,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="29-t-1">
 <h3 class="slide-title">Скрипт двигает детали <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Script</b> (скрипт) — объект в Explorer с инструкцией для игры</li><li>Деталь сама ничего не делает: она лежит там, где её поставили</li><li>Что умеет скрипт — заставляет детали мигать, поднимать игрока и пропускать сквозь себя</li><li>Скрипт ведёт и всю игру: так работали монстр, портал и счёт артефактов</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: деталь сама ничего не делает, она лежит там, где её поставили.
-Спросить: что в прошлых играх работало само?
+<aside class="speaker-notes">Заметка ведущего: Спросить: что в прошлых играх работало само?
 Сказать: карусель и колесо крутил Motor — это связь деталей, а не скрипт; скриптами были монстр, портал и счёт артефактов.
 Сказать: сегодняшние стенды собираются в маленькую полосу — подняться на лифте, перейти по тающему мосту, дойти до маяка.</aside>
 </div>
@@ -69,16 +68,13 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Три стенда — три скрипта <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Папка ScriptLab — в ней три скрипта, у каждого свой стенд</li><li>Что делает каждый — BlinkScript то зажигает, то гасит маяк, LiftScript поднимает площадку, GhostScript открывает мост</li><li>Настройки лежат в самом верху файла — прокручивать до них не надо</li><li>Стенды независимы: один скрипт остановился — остальные работают</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer раскрыта модель Lab — внутри детали Blinker, Lift, Ghost и папка ScriptLab с тремя скриптами BlinkScript, LiftScript, GhostScript]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: модель Lab, внутри три детали и папка ScriptLab с тремя скриптами.
-Сказать: настройки нарочно собраны в самом верху файла, между двумя рядами знаков «равно», — прокручивать до них не нужно.
-Сказать: стенды независимы — выключенный лифт не мешает маяку мигать.</aside>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: модель Lab, внутри три детали и папка ScriptLab с тремя скриптами.</aside>
 </div>
 <div class="slide" id="29-t-3">
 <h3 class="slide-title">Настройки — переменные <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Переменная</b> — строка вида «имя = значение», скрипт читает её и работает по ней</li><li>Граница настроек — в модуле курса они отбиты сверху и снизу рядами знаков «равно»</li><li>Числа: EVERY — пауза между вспышками, HEIGHT — высота подъёма, SOLID — секунды моста</li><li>Имя детали — тоже настройка, оно стоит в кавычках</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открытое окно скрипта BlinkScript, в начале файла между рядами знаков равно видны переменные PART, EVERY, RANGE и BRIGHT с комментариями]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: открыть BlinkScript и показать пальцем — между рядами знаков «равно» настройки, ниже логика.
-Сказать: строка «имя = значение» и есть переменная, скрипт читает её и работает по ней.
 Сказать: правило курса — меняем настройки, логику не трогаем; имя детали в кавычках тоже настройка.</aside>
 </div>
 <div class="slide" id="29-t-4">
@@ -86,27 +82,24 @@ body { font-family: Arial, sans-serif; }
 <ul class="content-item content-bullets"><li><b>Комментарий</b> — строка, которая начинается с двух дефисов</li><li>Игра такие строки не читает: они написаны для разработчика</li><li>В модуле курса — ими подписана каждая настройка</li><li>Поставили два дефиса перед рабочей строкой — она выключилась</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: комментарии рядом с каждой настройкой — строки, которые игра не читает.
 Сказать: по ним понятно, какое число за что отвечает.
-Показать: два дефиса перед рабочей строкой выключают её.</aside>
+Показать в Studio: два дефиса перед рабочей строкой выключают её.</aside>
 </div>
 <div class="slide" id="29-t-5">
 <h3 class="slide-title">Новое число — новый Test <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Скрипт читает свои переменные один раз — при запуске игры</li><li>Поменяли число во время Test — стенд работает по-старому</li><li>Останови Test и запусти снова: новое число подхватится</li><li>Так устроены скрипты этого модуля: настройки они читают один раз при запуске</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: панель вкладки Test с кнопками Play и Stop, рядом открытое окно скрипта с изменённым числом в переменной]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: переменные скрипт читает один раз при запуске, поэтому правка подхватывается только при новом Test.
-Показать в Studio: при EVERY 0.8 маяк даёт 5 переключений за четыре секунды, при 0.2 после перезапуска — 18.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: при EVERY 0.8 маяк даёт 5 переключений за четыре секунды, при 0.2 после перезапуска — 18.
 Сказать: так ведёт себя любой готовый скрипт, не только наш.</aside>
 </div>
 <div class="slide" id="29-t-6">
 <h3 class="slide-title">Тихая и громкая ошибка <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Что можно менять — только то, что стоит между рядами знаков «равно»</li><li>Запятая вместо точки — ошибка тихая: число теряет дробную часть</li><li>Потерянная кавычка — ошибка громкая: скрипт не запустится совсем</li><li>Случайную правку отменяем: Edit → Undo</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: запятая вместо точки ошибки не даёт — число тихо теряет дробную часть и становится нулём, маяк мигает каждый кадр.
-Сказать: потерянная кавычка у имени детали — ошибка громкая, скрипт не запустится совсем.
-Сказать: правило для группы — странное поведение ищем в числах, замерший стенд в кавычках.
-Сказать: случайную правку возвращает Edit → Undo.</aside>
+Сказать: правило для группы — странное поведение ищем в числах, замерший стенд в кавычках.</aside>
 </div>
 <div class="slide" id="29-t-7">
 <h3 class="slide-title">Enabled выключает скрипт <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Галочка <b>Enabled</b> (включён) — есть у каждого скрипта в Properties</li><li>Снимаем галочку — скрипт не работает, возвращаем — работает снова</li><li>Выключили LiftScript: лифт замер, маяк мигает как раньше</li><li>Ничего не удаляется: это выключатель, а не удаление</li></ul>
+<ul class="content-item content-bullets"><li>Галочка <b>Enabled</b> (включён) — есть у каждого скрипта в Properties</li><li>Снимаем галочку — скрипт не работает, возвращаем — работает снова</li><li>Выключили LiftScript: лифт замер, маяк мигает как раньше</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer выделен скрипт LiftScript, в Properties подсвечена снятая галочка Enabled, в окне вьюпорта видна лаборатория со стендами]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: снять галочку Enabled у LiftScript и запустить Test — лифт замер, маяк мигает по-прежнему.
 Сказать: это выключатель, а не удаление; ничего не теряется.
@@ -114,10 +107,10 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="29-t-8">
 <h3 class="slide-title">Ошибки при правке скрипта <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Деталь названа не как в настройке — стенд не работает</li><li>Забыли вернуть галочку Enabled — после проверки скрипт так и не работает</li><li>Запятая вместо точки в дробном числе — число теряет дробную часть</li><li>Правку внесли, а Test не перезапустили — стенд работает по-старому</li></ul>
+<ul class="content-item content-bullets"><li>Назвали деталь не так, как в настройке, — стенд не работает</li><li>Забыли вернуть галочку Enabled — после проверки скрипт так и не работает</li><li>Поставили запятую вместо точки — число теряет дробную часть</li><li>Правку внесли, а Test не перезапустили — стенд работает по-старому</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: переименовать деталь Lift — лифт замер, остальные стенды работают.
 Сказать: Technical Designer настраивает готовую механику и ставит задачу программисту, а писать код — работа старших курсов.
-Сказать для сильной группы: чужой скрипт не всегда делает то, что обещает — курс находил в модели шасси код, открывавший автору доступ к игре.</aside>
+Если группа сильная: рассказать, что чужой скрипт делает не всегда то, что обещает, — в одной модели шасси нашёлся тайный доступ для автора.</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
@@ -129,7 +122,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Как проверить, какой скрипт отвечает за стенд, ничего не удаляя?</p><ol class="content-item content-quiz-options"><li>Удалить скрипт и посмотреть, что сломается</li><li data-correct="true">Снять галочку Enabled и запустить Test ✓</li><li>Переименовать скрипт и запустить Test</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: значения переменных после знака «равно»; стенд работает по-старому до перезапуска; снять галочку Enabled и запустить Test.
-Сказать: последний приём дети применят прямо на практике.</aside>
+Сказать: последний приём группа применит прямо на практике.</aside>
 </div>
 </section>
 <section class="block block-break">
@@ -154,19 +147,18 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="29-p-2">
 <h3 class="slide-title">Шаг 2: три стенда <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Blinker — шар на столбе за проёмом: будет мигать светом</li><li>Lift — площадка внизу у помоста: будет сама поднимать и опускать</li><li>Ghost — настил через проём: тает на глазах, а потом пропускает насквозь</li><li>Выдели детали и собери в модель, назови её Lab</li></ol>
+<ol class="content-item content-steps"><li>Поставь Blinker — шар на столбе за проёмом: он будет мигать светом</li><li>Поставь Lift — площадку внизу у помоста: она будет подниматься и опускаться</li><li>Положи Ghost — настил через проём: он будет таять и пропускать насквозь</li><li>Выдели детали и собери в модель, назови её Lab</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: светлая лаборатория — помост с проёмом посередине, внизу фиолетовая площадка лифта между направляющими, синий настил через проём и жёлтый шар-маяк на столбе за ним, вид сверху под углом]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Blinker — шар 3 студа на столбе 6 за проёмом, Lift — площадка 10 на 8 внизу у края помоста, Ghost — настил 10 на 12 ровно по проёму; всё в модель с именем Lab.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Blinker — шар 3 на столбе 6 за проёмом, Lift — площадка 10×8 у помоста, Ghost — настил 10×12 по проёму; всё в Lab.
 Проверить у каждого: имена деталей записаны без опечаток — они стоят в настройках скриптов.
 Сказать: все детали закрепить; маяк ставим за проёмом нарочно — до него нужно подняться и пройти мост.</aside>
 </div>
 <div class="slide" id="29-p-3">
 <h3 class="slide-title">Шаг 3: вставь модуль <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль по ссылке и перетащи папку ScriptLab внутрь модели Lab</li><li>Test → маяк мигает, лифт ездит, настил тает и пропускает насквозь</li><li>Поднимись на лифте и перейди мост, пока он держит</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль по ссылке и перетащи папку ScriptLab внутрь модели Lab</li><li>Test → работают ли все три стенда?</li><li>Поднимись на лифте и перейди мост, пока он держит</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/88598840625692/ScriptLab" target="_blank" rel="noopener">https://create.roblox.com/store/asset/88598840625692/ScriptLab</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок едет вверх на фиолетовой площадке лифта, за помостом видно синий настил над проёмом и горящий маяк]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: получить модуль по ссылке, вставить из Inventory и перетащить папку ScriptLab внутрь модели Lab.
-Сделать: Test — маяк мигает, лифт ездит, настил тает и пропускает насквозь.
 Проверить у каждого: папка лежит именно внутри модели.
 Сказать: с призрачного моста игрок падает вниз — это безопасно, наверх он возвращается тем же лифтом.</aside>
 </div>
@@ -180,7 +172,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: не понравилось — вернуть прежнее число или Edit → Undo.</aside>
 </div>
 <div class="slide" id="29-p-5">
-<h3 class="slide-title">Шаг 5: платформа и маяк <span class="slide-duration">(3.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 5: лифт и мост <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Открой LiftScript и поменяй HEIGHT и SECONDS</li><li>Открой GhostScript и поменяй SOLID, GHOST и TRANSITION — время таяния</li><li>После каждой правки перезапускай Test</li><li>Подбери числа так, чтобы успевать заехать наверх и пройти мост</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: LiftScript — HEIGHT и SECONDS, GhostScript — SOLID, GHOST и TRANSITION.
 Сказать: при помосте 12 студов HEIGHT ставим 11, иначе площадка не доедет до края; SECONDS от 2 до 6, SOLID от 2 до 6, GHOST от 1 до 4.
@@ -189,10 +181,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="29-p-6">
 <h3 class="slide-title">Шаг 6: выключатели и сохранение <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Сними галочку Enabled у LiftScript и запусти Test: лифт замер</li><li>Маяк и мост при этом работают как раньше</li><li>Верни галочку и проверь, что все три стенда снова живые</li><li>Сохрани проект: File → Save to Roblox — за лабораторией вырастут комнаты</li></ol>
+<ol class="content-item content-steps"><li>Сними галочку Enabled у LiftScript и запусти Test: лифт замер</li><li>Проверь, что маяк и мост при этом работают как раньше</li><li>Верни галочку и проверь, что все три стенда снова работают</li><li>Сохрани проект: File → Save to Roblox — за лабораторией вырастут комнаты</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: лаборатория после настройки — площадка лифта поднята к помосту, настил над проёмом прозрачный, маяк горит и освещает стену]</p>
-<aside class="speaker-notes">Заметка ведущего: Сделать: снять галочку Enabled у LiftScript и запустить Test — лифт замер, маяк и мост работают.
-Проверить у каждого: галочка вернулась и все три стенда снова живые.
+<aside class="speaker-notes">Заметка ведущего: Проверить у каждого: галочка вернулась и все три стенда снова работают.
 Сказать: незакрытый выключатель — самая частая поломка после этого занятия.
 Сделать: File → Save to Roblox.
 Сказать: кто закончил раньше — показать на экране, как два дефиса гасят одну строку, а не весь скрипт.</aside>
@@ -202,7 +193,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="29-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Маяк после правки замигал как сумасшедший. Что искать?</p><ol class="content-item content-quiz-options"><li>Потерянную кавычку у имени детали</li><li>Ошибку в логике ниже настроек</li><li data-correct="true">Запятую вместо точки в дробном числе ✓</li></ol>
+<p class="content-item content-question">Маяк после правки замигал без пауз. Что искать?</p><ol class="content-item content-quiz-options"><li>Потерянную кавычку у имени детали</li><li>Ошибку в логике ниже настроек</li><li data-correct="true">Запятую вместо точки в числе ✓</li></ol>
 <p class="content-item content-question">Деталь назвали Lift2, а в настройке скрипта осталось Lift. Что произойдёт?</p><ol class="content-item content-quiz-options"><li>Остановятся сразу все три стенда</li><li data-correct="true">Лифт не заработает, остальное работает ✓</li><li>Скрипт сам найдёт деталь по имени</li></ol>
 <p class="content-item content-question">Какие числа сделают мост непроходимым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Совсем маленький SOLID: мост тает рано ✓</li><li>Большой SOLID: мост слишком долго стоит плотным</li><li>Большой FADE: мост станет слишком прозрачным</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
@@ -216,8 +207,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Лаборатория скриптов готова <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Мы открыли редактор скриптов, разобрались в готовом скрипте и настроили его числами — это работа Technical Designer.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: за лабораторией вырастут комнаты побега с дверями</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: сегодня впервые открыли редактор скриптов и настроили готовую механику числами, не трогая логику.
-Сказать: на следующем уроке комнаты побега вырастают за дальней стеной этой лаборатории, и первой появится кнопка, открывающая дверь.
+<aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке комнаты побега вырастают за дальней стеной этой лаборатории, и первой появится кнопка, открывающая дверь.
 Сделать: File → Save to Roblox — лаборатория понадобится и дома, и на остальных уроках блока.</aside>
 </div>
 <div class="slide" id="29-c-2">

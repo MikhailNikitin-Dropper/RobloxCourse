@@ -38,8 +38,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Сегодня ты — Lighting Director <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Двадцать четыре урока свет украшал наши игры: подсвечивал дорожки, отмечал финиш, делал вечер в парке. Сегодня он становится главным инструментом — вместе с темнотой.</p>
 <p class="content-item content-paragraph"><b>Lighting Director</b> (режиссёр света) решает, что игрок увидит, а что от него скроет темнота.</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: двадцать четыре урока свет украшал игры, сегодня он становится главным инструментом вместе с темнотой.
-Сказать: к концу занятия одна и та же комната будет выглядеть двумя разными сценами, и разницу сделают только свойства Lighting.
+<aside class="speaker-notes">Заметка ведущего: Сказать: к концу занятия одна и та же комната будет выглядеть двумя разными сценами, и разницу сделают только свойства Lighting.
 Сказать: начинается новая игра курса — ночное приключение с лабиринтом.</aside>
 </div>
 </section>
@@ -47,11 +46,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="25-r-1">
 <h3 class="slide-title">Вспомним урок 24 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Сколько точек возрождения оставляем в готовой игре?</p><ol class="content-item content-quiz-options"><li>По одной у каждой зоны</li><li>По одной у каждого аттракциона</li><li data-correct="true">Одну — у входа в парк ✓</li></ol>
-<p class="content-item content-question">Билет уехал вместе с каруселью и оказался под землёй. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Билет лежал на подвижной части ✓</li><li>Тег билета написан с ошибкой</li><li>У билета не заполнена записка</li></ol>
+<p class="content-item content-question">Чем дорожка в парке показывает игроку главный путь?</p><ol class="content-item content-quiz-options"><li>Табличкой со стрелкой у входа</li><li>Звуком шагов на этой дорожке</li><li data-correct="true">Шириной дорожки и светом фонарей ✓</li></ol>
+<p class="content-item content-question">Где кладут билет за поездку на карусели?</p><ol class="content-item content-quiz-options"><li data-correct="true">На площадке рядом с каруселью ✓</li><li>Прямо на настиле самой карусели</li><li>На входе рядом с кассой</li></ol>
 <p class="content-item content-question">В каком порядке мы делали вечер в парке?</p><ol class="content-item content-quiz-options"><li>Сначала вечерний ClockTime, потом фонари</li><li data-correct="true">Сначала фонари, потом вечерний ClockTime ✓</li><li>Порядок не важен, результат один</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: одну точку возрождения у входа; билет лежал на подвижной части; сначала фонари, потом вечерний ClockTime.
+Ответы: шириной дорожки и светом фонарей; на площадке рядом с каруселью; сначала фонари, потом вечерний ClockTime.
 Сказать: порядок «сначала источники света, потом тёмное время суток» сегодня повторится, только вместо фонарей будут факелы.</aside>
 </div>
 </section>
@@ -66,7 +65,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-t-2">
 <h3 class="slide-title">ClockTime переводит часы <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ClockTime</b> (время суток) — число от 0 до 24: 14 — день, 0 — полночь</li><li><b>Brightness</b> (яркость) — сила света солнца и луны</li><li>Только ClockTime мало — ночью солнце уходит, но сцена остаётся серой, и игрок всё равно всё видит</li></ul>
+<ul class="content-item content-bullets"><li><b>ClockTime</b> (время суток) — число от 0 до 24: 14 — день, 0 — полночь</li><li><b>Brightness</b> (яркость) — сила света солнца и луны</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: каменная комната без потолка с проёмом в стене при дневном ClockTime 14 — видно все четыре угла и пол целиком]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выкрутить ClockTime с 14 на 0 и спросить, что изменилось.
 Ответы: солнце ушло, тени пропали, а видно по-прежнему всё.
@@ -74,12 +73,10 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-t-3">
 <h3 class="slide-title">Ambient и OutdoorAmbient <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Ambient</b> (фоновый свет) — подсветка мест, закрытых от неба</li><li><b>OutdoorAmbient</b> — та же подсветка там, где небо видно</li><li>Комната открыта небу — поэтому оба цвета делаем почти чёрными</li><li>Пока они светлые — темноты не будет ни при каком ClockTime</li><li><b>EnvironmentDiffuseScale</b> — сколько света отдаёт само небо: у комнаты без потолка это главный источник</li></ul>
+<ul class="content-item content-bullets"><li><b>Ambient</b> (фоновый свет) — подсветка мест, закрытых от неба</li><li><b>OutdoorAmbient</b> — та же подсветка там, где небо видно</li><li>Комната открыта небу — поэтому оба цвета делаем почти чёрными</li><li><b>EnvironmentDiffuseScale</b> — сколько света отдаёт само небо: у комнаты без потолка это главный источник</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: та же комната при ClockTime 0, но со светлыми Ambient и OutdoorAmbient — небо ночное, а стены и пол по-прежнему хорошо различимы]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: фоновый свет — подсветка, которая приходит ниоткуда, чтобы игра не превращалась в чёрный экран.
-Сказать: заводское значение OutdoorAmbient светло-серое, поэтому ночь и выглядит серой.
-Сказать: пока фоновый свет светлый, любой ClockTime бесполезен — на практике сначала он, потом время суток.
-Сказать: EnvironmentDiffuseScale — сколько света отдаёт само небо; у комнаты без потолка это главный источник.</aside>
+Сказать: заводское значение OutdoorAmbient светло-серое, поэтому ночь и выглядит серой.</aside>
 </div>
 <div class="slide" id="25-t-4">
 <h3 class="slide-title">Atmosphere и видимость <span class="slide-duration">(3 мин)</span></h3>
@@ -101,19 +98,16 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-t-6">
 <h3 class="slide-title">Свет ведёт игрока <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Свет как ориентир — в темноте игрок идёт туда, где светлее: другого у него нет</li><li>Одно яркое пятно — это направление, два одинаковых — это развилка</li><li>Тёмный тупик — читается как «сюда не надо» и экономит игроку время</li><li>Освещённый поворот — за ним можно спрятать и полезный предмет, и опасность</li></ul>
+<ul class="content-item content-bullets"><li>Свет как ориентир — в темноте игрок идёт туда, где светлее: другого у него нет</li><li>Тёмный тупик — читается как «сюда не надо» и экономит игроку время</li><li>Освещённый поворот — за ним можно спрятать и полезный предмет, и опасность</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: тёмный коридор, единственное освещённое пятно — дверной проём в дальнем конце, стены по бокам тонут в темноте]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: в темноте игрок идёт туда, где светлее, других ориентиров у него нет.
-Спросить: если в комнате два одинаково ярких пятна, куда пойдёт игрок?
+<aside class="speaker-notes">Заметка ведущего: Спросить: если в комнате два одинаково ярких пятна, куда пойдёт игрок?
 Ответы: наугад — и это ошибка разработчика.
 Сказать: приём тот же, что на уроках 11, 15 и 24, но в темноте он работает сильнее всего.</aside>
 </div>
 <div class="slide" id="25-t-7">
 <h3 class="slide-title">Почему от первого лица <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Обзор третьего лица шире: видно и персонажа, и то, что происходит вокруг него</li><li>Обзор от первого лица — угол зрения самого персонажа, около 70 градусов</li><li>Вне угла зрения — для игрока не существует ничего, пока он не повернётся</li><li>Меньше информации у игрока — больше тревоги: что позади, видно, только если обернуться</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: обзор третьего лица шире — камера за спиной показывает и персонажа, и то, что позади него.
-Сказать: от первого лица угол зрения около 70 градусов, и всё вне этого конуса для игрока не существует, пока он не повернётся.
-Сказать: в обычной игре это было бы неудобством, а в тёмной комнате — приём.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: в обычной игре это было бы неудобством, а в тёмной комнате — приём.</aside>
 </div>
 <div class="slide" id="25-t-8">
 <h3 class="slide-title">Страшно, но не жутко <span class="slide-duration">(1.5 мин)</span></h3>
@@ -124,9 +118,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-t-9">
 <h3 class="slide-title">Частые ошибки со светом <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Изменили только ClockTime — фоновый свет остался светлым, и ночи не получилось</li><li>Сделали абсолютную темноту — идти некуда, играть невозможно</li><li>Свет в незакреплённой детали — факел падает вместе со светом</li><li>Ждали тени от факела — а LightingStyle остался на Soft</li><li>Десяток ярких источников подряд — темнота исчезла вместе с приёмом</li></ul>
+<ul class="content-item content-bullets"><li>Изменили только ClockTime — фоновый свет остался светлым, и ночи не получилось</li><li>Сделали абсолютную темноту — идти некуда, играть невозможно</li><li>Поставили свет в незакреплённую деталь — факел падает вместе со светом</li><li>Ждали тени от факела — а LightingStyle остался на Soft</li><li>Поставили десяток ярких источников подряд — темнота исчезла вместе с приёмом</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: ClockTime 0 при светлом фоновом свете — ночи не получилось.
-Сказать: свет живёт внутри детали, и незакреплённая деталь уносит его с собой.
 Сказать: в сегодняшней комнате ярких точек ровно две, и это не случайность.</aside>
 </div>
 </section>
@@ -136,7 +129,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Поставили ночь, а в комнате всё видно. Что осталось нетронутым?</p><ol class="content-item content-quiz-options"><li>Range у факела</li><li>Свойство Density у Atmosphere</li><li data-correct="true">Ambient и OutdoorAmbient ✓</li></ol>
 <p class="content-item content-question">Факел горит, а тени от него нет. Что проверяем?</p><ol class="content-item content-quiz-options"><li>Цвет света у факела</li><li data-correct="true">Значение свойства LightingStyle ✓</li><li>Значение свойства Range</li></ol>
-<p class="content-item content-question">Почему абсолютная темнота в игре не работает?</p><ol class="content-item content-quiz-options"><li data-correct="true">Идти некуда: игроку нужен хотя бы один ориентир ✓</li><li>Roblox не пропустит такую игру на этапе публикации</li><li>Atmosphere перестаёт считать плотность воздуха в комнате</li></ol>
+<p class="content-item content-question">Почему абсолютная темнота в игре не работает?</p><ol class="content-item content-quiz-options"><li data-correct="true">Игроку нужен хотя бы один ориентир ✓</li><li>Roblox не пропустит её при публикации</li><li>Atmosphere перестаёт работать в темноте</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: Ambient и OutdoorAmbient; значение LightingStyle; идти некуда, игроку нужен хотя бы один ориентир.
 Спросить: какое место вы оставите тёмным нарочно и зачем? — это заготовка к лабиринту следующего занятия.</aside>
@@ -155,7 +148,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Собираем тёмную комнату <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="25-p-1">
 <h3 class="slide-title">Шаг 1: комната для опытов <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой новый пустой плейс Baseplate — с него начинается седьмая игра курса</li><li>Собери вокруг стартовой площадки пол и четыре закреплённые стены, потолок не нужен</li><li>В одной стене оставь проём — будущий выход</li><li>Test → при дневном ClockTime 14 в комнате видно все четыре угла</li></ol>
+<ol class="content-item content-steps"><li>Открой новый пустой плейс Baseplate — с него начинается седьмая игра курса</li><li>Собери вокруг стартовой площадки пол и четыре закреплённые стены, потолок не нужен</li><li>В одной стене оставь проём — будущий выход</li><li>Test → видно ли днём все четыре угла комнаты?</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: комната из пола и четырёх каменных стен с проёмом, вид сверху под углом, в центре стартовая площадка]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: пол и четыре закреплённые стены вокруг стартовой площадки, в одной стене проём; потолок не нужен.
 Сказать: ориентиры размеров — пол примерно 40 на 40 студов, стены 15, проём 6.
@@ -165,16 +158,15 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-p-2">
 <h3 class="slide-title">Шаг 2: гасим свет <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>В Lighting задай ClockTime 0 и убедись, что комната всё ещё просматривается</li><li>Затемни Ambient до 6, 6, 6, OutdoorAmbient до 4, 4, 4, Brightness до 0 и EnvironmentDiffuseScale до 0.15</li><li>Проверь LightingStyle: он должен стоять на Realistic</li><li>Test → встань в дальнем углу: противоположной стены уже не видно</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: сначала ClockTime 0 — комната всё ещё просматривается; затем Ambient 6, 6, 6, OutdoorAmbient 4, 4, 4, Brightness 0 и EnvironmentDiffuseScale 0.15.
+<ol class="content-item content-steps"><li>В Lighting задай ClockTime 0 и убедись, что комната всё ещё просматривается</li><li>Затемни Ambient до 6, 6, 6, OutdoorAmbient до 4, 4, 4, Brightness до 0 и EnvironmentDiffuseScale до 0.15</li><li>Проверь LightingStyle: он должен стоять на Realistic</li><li>Test → встань в дальнем углу: видно ли противоположную стену?</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: ClockTime 0 — комната ещё видна; затем Ambient и OutdoorAmbient почти чёрные, Brightness 0, EnvironmentDiffuseScale 0.15.
 Сказать: порядок важен — пусть каждый своими глазами увидит, что ночь сама по себе темноты не даёт.
 Сказать: EnvironmentDiffuseScale — доля света от самого неба; при заводской единице пол и стены видны даже при Brightness 0.
-Проверить у каждого: LightingStyle стоит на Realistic, иначе теней от факела не будет.
-Сделать: Test — встать в дальнем углу, противоположной стены быть не должно видно.</aside>
+Проверить у каждого: LightingStyle стоит на Realistic, иначе теней от факела не будет.</aside>
 </div>
 <div class="slide" id="25-p-3">
 <h3 class="slide-title">Шаг 3: дымка <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Найди внутри Lighting готовый объект Atmosphere и выдели его</li><li>Подними Density до 0.8</li><li>Задай Haze 0.7, Color 10, 10, 10 (тёмно-серый) и Offset 0.25</li><li>Test → выгляни в проём наружу: дальнего края площадки уже не видно</li></ol>
+<ol class="content-item content-steps"><li>Найди внутри Lighting готовый объект Atmosphere и выдели его</li><li>Подними Density до 0.8</li><li>Задай Haze 0.7, Color 10, 10, 10 (тёмно-серый) и Offset 0.25</li><li>Test → выгляни в проём: виден ли дальний край площадки?</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить готовый Atmosphere внутри Lighting, поднять Density до 0.8, Haze 0.7, Color 10, 10, 10, Offset 0.25.
 Сказать: Atmosphere не создают, а правят — он лежит в Lighting с самого начала.
 Сделать: проверять через проём наружу — внутри комнаты дымка почти не читается, она набирает силу с расстоянием.
@@ -182,10 +174,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="25-p-4">
 <h3 class="slide-title">Шаг 4: факел на стене <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>Поставь у стены закреплённую деталь-рукоять, внутрь неё добавь PointLight</li><li>Задай Color 255, 179, 73, Brightness 2, Range 18 и включи Shadows</li><li>В ту же деталь добавь Fire — на рукояти загорится пламя</li><li>Test → обойди факел кругом: на полу круг света, на стене тень</li></ol>
+<ol class="content-item content-steps"><li>Поставь у стены закреплённую деталь-рукоять, внутрь неё добавь PointLight</li><li>Задай Color 255, 179, 73, Brightness 2, Range 18 и включи Shadows</li><li>В ту же деталь добавь Fire — на рукояти загорится пламя</li><li>Test → обойди факел: есть ли на стене тень?</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица: горящие факелы на стене тёмной комнаты, тёплый круг света на полу под ними, дальние углы комнаты тонут в темноте]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: закреплённая деталь-рукоять у стены → «+» → PointLight (Color 255, 179, 73, Brightness 2, Range 18, Shadows включены) → «+» → Fire.
-Сделать: Test — обойти факел кругом: на полу круг света, на стене тень.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь-рукоять у стены → «+» → PointLight (255, 179, 73; Brightness 2; Range 18; Shadows) → «+» → Fire.
 Сказать: Shadows включается у самого PointLight, а не у детали.
 Если факел падает при запуске: деталь не закреплена.
 Если теней нет: LightingStyle остался на Soft.</aside>
@@ -195,17 +186,14 @@ body { font-family: Arial, sans-serif; }
 <ol class="content-item content-steps"><li>Открой StarterPack, добавь Tool и переименуй в Lantern</li><li>Собери три части: Handle (рукоять), Head (головка пошире) и Light (лампочка-шар на конце) — свари между собой</li><li>Внутрь Light, а не Handle, добавь SpotLight: Face Front, Angle 45, Range 16, Brightness 2, Color 255, 176, 0</li><li>Test → нажми 1: фонарь встал в руку и загорелся лучом; убери его — свет ушёл вместе с ним</li></ol>
 <p class="content-item content-image-prompt">[изображение: Галерея сборки фонаря, 3 кадра: Lantern в Workspace освещает коридор лабиринта лучом, в Properties видна SpotLight (Face Front); панель Tool Grip Visual Editor с настройкой хвата (Position, Orientation); наконец Lantern занимает своё место в StarterPack]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: в StarterPack добавить Tool и переименовать в Lantern; собрать Handle, Head и Light и сварить их.
-Показать: SpotLight внутрь Light, а не Handle — Face Front, Angle 45, Range 16, Brightness 2, Color 255, 176, 0.
-Сделать: Test — нажать 1: фонарь встал в руку и загорелся лучом; убрать его — свет ушёл вместе с ним.
 Сказать: инструмент живёт в StarterPack, Roblox сам кладёт копию в рюкзак каждому игроку.
 Сказать: в лабиринте следующего занятия это будет единственный надёжный свет.</aside>
 </div>
 <div class="slide" id="25-p-6">
 <h3 class="slide-title">Шаг 6: первое лицо <span class="slide-duration">(1 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой StarterPlayer, в Properties найди CameraMode</li><li>Поставь LockFirstPerson вместо Classic</li><li>Test → камера сразу на уровне глаз, вид со стороны исчез</li></ol>
+<ol class="content-item content-steps"><li>Открой StarterPlayer, в Properties найди CameraMode</li><li>Поставь LockFirstPerson вместо Classic</li><li>Test → встала ли камера на уровень глаз?</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен StarterPlayer, в Properties подсвечено свойство CameraMode со значением LockFirstPerson]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: StarterPlayer → Properties → CameraMode = LockFirstPerson.
-Сделать: Test — камера сразу на уровне глаз, вида со стороны больше нет.
 Сказать: свойство общее на всю игру, точечно одному персонажу его не выключить.</aside>
 </div>
 <div class="slide" id="25-p-7">
@@ -224,9 +212,9 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Факел освещает только пятно у самой стены. Что увеличиваем?</p><ol class="content-item content-quiz-options"><li>ClockTime у сервиса Lighting</li><li data-correct="true">Range у PointLight ✓</li><li>Свойство Density у Atmosphere</li></ol>
 <p class="content-item content-question">В комнате три одинаково ярких пятна. Чем это плохо?</p><ol class="content-item content-quiz-options"><li data-correct="true">Игрок не поймёт направление ✓</li><li>Игра станет ярче нужного</li><li>Тени станут заметно мягкими</li></ol>
-<p class="content-item content-question">Почему вместе с ClockTime меняют и Ambient?</p><ol class="content-item content-quiz-options"><li>Иначе SpotLight перестанет светить в комнате направленным конусом</li><li>Иначе комната закроется от неба и потеряет OutdoorAmbient</li><li data-correct="true">Иначе фоновый свет останется светлым и ночь не наступит ✓</li></ol>
+<p class="content-item content-question">Почему вместе с ClockTime меняют и Ambient?</p><ol class="content-item content-quiz-options"><li>Иначе SpotLight перестанет светить конусом</li><li>Иначе комната потеряет OutdoorAmbient</li><li data-correct="true">Иначе фоновый свет останется светлым ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: Range у PointLight; игрок не поймёт направление; иначе фоновый свет останется светлым и ночь не наступит.
+Ответы: Range у PointLight; игрок не поймёт направление; иначе фоновый свет останется светлым.
 Спросить: что страшнее — тёмный угол или движущаяся тень? — чаще называют тень, она читается как чужое присутствие.</aside>
 </div>
 </section>
@@ -237,7 +225,6 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Мы не добавили в комнату ни одной новой стены, а сцена стала другой: те же пять деталей днём выглядят пустой коробкой, а ночью — местом, куда страшновато заходить.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: лабиринт — тупики, петли, развилки и тусклые ориентиры, светить там придётся в основном фонарём</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: мы не построили сегодня почти ничего, а сцена изменилась полностью — значит, свет и правда инструмент.
-Сказать: на следующем уроке комната станет входом в лабиринт, и появится вторая сложность — не потеряться в темноте.
 Сделать: File → Save to Roblox — последнее действие занятия.</aside>
 </div>
 <div class="slide" id="25-c-2">

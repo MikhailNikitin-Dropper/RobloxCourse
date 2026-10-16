@@ -35,7 +35,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-welcome">
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="30-w-1">
-<h3 class="slide-title">Сегодня строим комнаты побега <span class="slide-duration">(1 мин)</span></h3>
+<h3 class="slide-title">Сегодня ты — Puzzle Designer <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Лаборатория с прошлого урока становится началом побега: сегодня за её дальней стеной вырастают комнаты, из которых надо выбраться.</p>
 <p class="content-item content-paragraph"><b>Puzzle Designer</b> (дизайнер загадок) придумывает, как игрок сам догадается, что делать, без подписей и инструкций.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: игра растёт из лаборатории прошлого урока — игрок стартует в ней, проходит полосу и выходит в комнаты за дальней стеной.
@@ -47,11 +47,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Повторение прошлого урока <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-r-1">
 <h3 class="slide-title">Вспомним урок 29 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Поменяли число в скрипте во время Test. Что сделать, чтобы стенд заработал по-новому?</p><ol class="content-item content-quiz-options"><li data-correct="true">Остановить Test и запустить снова ✓</li><li>Подождать, пока игра подхватит число</li><li>Сохранить весь проект заново</li></ol>
+<p class="content-item content-question">В настройке потеряли кавычку у имени детали. Что будет?</p><ol class="content-item content-quiz-options"><li data-correct="true">Скрипт не запустится совсем ✓</li><li>Стенд заработает чуть медленнее</li><li>Число потеряет дробную часть</li></ol>
 <p class="content-item content-question">Какую строку игра не читает?</p><ol class="content-item content-quiz-options"><li>Строку между рядами знаков «равно»</li><li data-correct="true">Строку, которая начинается с двух дефисов ✓</li><li>Строку с именем детали в кавычках</li></ol>
 <p class="content-item content-question">Что задаёт переменная POWER у батута из домашнего задания?</p><ol class="content-item content-quiz-options"><li>Паузу между подбросами</li><li>Имя детали-батута</li><li data-correct="true">Силу подброса вверх ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: остановить Test и запустить снова; строку с двух дефисов; силу подброса вверх.
+Ответы: скрипт не запустится совсем; строку с двух дефисов; силу подброса вверх.
 Сказать: у двери тоже есть скрипт с настройками, и правки в нём подхватываются только при новом запуске.</aside>
 </div>
 </section>
@@ -59,17 +59,15 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Кнопки, подсказки и двери <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="30-t-1">
 <h3 class="slide-title">Комната побега — игра из загадок <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Эскейп-рум</b> (комната побега) — игра, где выход открывается решёнными загадками</li><li>Игрок не читает инструкций: он смотрит на комнату и догадывается</li><li>Сегодня две загадки: найди кнопку и разгадай код</li><li>Уроки 31 и 32 — комната обрастёт ключами и таймером</li></ul>
+<ul class="content-item content-bullets"><li><b>Эскейп-рум</b> (комната побега) — игра, где выход открывается решёнными загадками</li><li>Игрок не читает инструкций: он смотрит на комнату и догадывается</li><li>Сегодня две загадки: найди кнопку и разгадай код</li><li>Следующие два урока — комната обрастёт ключами и таймером</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Спросить: играл ли кто-нибудь в квест-комнаты — в жизни или в Roblox?
-Сказать: игрок не читает инструкций, он смотрит на комнату и догадывается.
 Сказать: первая загадка простая — найти кнопку; вторая настоящая — код из трёх кнопок, порядок которого надо найти в комнате.</aside>
 </div>
 <div class="slide" id="30-t-2">
 <h3 class="slide-title">Подсказка ProximityPrompt <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ProximityPrompt</b> (подсказка рядом) — объект, который показывает кнопку действия вблизи</li><li>Игрок подошёл — подсказка появилась, отошёл — пропала</li><li>Ставится как любой объект: кнопка + у детали в Explorer</li><li>Сама подсказка ничего не открывает — это делает скрипт</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: игрок стоит у жёлтой светящейся кнопки на белой стене, над кнопкой подсказка с клавишей E и текстом «Открыть — Дверь в комнату B», рядом закрытая деревянная дверь]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: вставить ProximityPrompt в деталь, запустить Test и подойти — подсказка появляется сама, отошёл — пропала.
-Сказать: сама подсказка ничего не открывает, что случится после нажатия, решает скрипт.</aside>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: вставить ProximityPrompt в деталь, запустить Test и подойти — подсказка появляется сама, отошёл — пропала.</aside>
 </div>
 <div class="slide" id="30-t-3">
 <h3 class="slide-title">Четыре свойства подсказки <span class="slide-duration">(2.5 мин)</span></h3>
@@ -82,9 +80,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="30-t-4">
 <h3 class="slide-title">Подсказку не видно сквозь стену <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>RequiresLineOfSight — свойство включено сразу</li><li>Прямая видимость — подсказка видна, только если кнопку ничего не загораживает</li><li>Плюс для загадки: из соседней комнаты подсказку не видно</li><li>Ошибка: кнопку утопили в стену — подсказка пропала</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: RequiresLineOfSight включено сразу — подсказка видна, только если кнопку ничего не загораживает.
-Сказать: для загадки это плюс — из соседней комнаты кнопку не найти раньше времени.
-Сказать: обратная сторона — утопленная в стену кнопка теряет подсказку совсем; кнопка должна выступать.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: обратная сторона — утопленная в стену кнопка теряет подсказку совсем; кнопка должна выступать.</aside>
 </div>
 <div class="slide" id="30-t-5">
 <h3 class="slide-title">Модуль «Кнопка и дверь» <span class="slide-duration">(2.5 мин)</span></h3>
@@ -101,12 +97,11 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: открытое окно скрипта DoorScript, в начале файла между рядами знаков равно видны переменные DOOR, BUTTONS, OPEN_TIME и STAY_OPEN с комментариями]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: открыть DoorScript и показать блок настроек — всё как в лаборатории урока 29.
 Сказать: новое здесь список BUTTONS — имя в кавычках внутри фигурных скобок.
-Сказать: при OPEN_TIME 0.8 дверь поднимается за 0.8 секунды, при STAY_OPEN 4 стоит открытой около четырёх секунд.
-Сказать: как выглядит подсказка — Properties, как ведёт себя дверь — скрипт.</aside>
+Сказать: при OPEN_TIME 0.8 дверь поднимается за 0.8 секунды, при STAY_OPEN 4 стоит открытой около четырёх секунд.</aside>
 </div>
 <div class="slide" id="30-t-7">
 <h3 class="slide-title">Кодовая дверь <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; } — нажимать в том порядке, как имена стоят в списке, а не как кнопки висят на стене</li><li>Верная кнопка — загорается</li><li>Не та кнопка — всё гаснет, код набирают сначала</li><li>Имена в списке — пишем точно как в Explorer</li></ul>
+<ul class="content-item content-bullets"><li>BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; } — нажимать в том порядке, как имена стоят в списке, а не как кнопки висят на стене</li><li>Верная кнопка — загорается</li><li>Не та кнопка — всё гаснет, код набирают сначала</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сделать: разобрать на доске — Red горит, Blue горят две, Green дверь едет; после Red нажали Green — обе погасли.
 Сказать: имена в списке пишем точно как в Explorer, иначе скрипт кнопку не найдёт.
 Сказать: одно имя дважды в списке скрипт не примет.</aside>
@@ -116,7 +111,6 @@ body { font-family: Arial, sans-serif; }
 <ul class="content-item content-bullets"><li>Первая дверь — её кнопку видно сразу от точки возрождения</li><li>Кнопки кода — видны только сквозь открытую первую дверь</li><li>Порядок кода — его подсказывают лампы тех же цветов</li><li>Лампы за спиной — их видно из той же комнаты, но только если обернуться к проёму</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вид из второй комнаты назад на открытый дверной проём — над ним на стене тёмная панель с тремя светящимися лампами: красная, синяя, зелёная]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: улика — это то, что игрок находит сам: три лампы над проёмом со стороны второй комнаты.
-Сказать: кнопки на дальней стене, лампы за спиной — чтобы разгадать код, надо обернуться.
 Спросить: что будет, если повесить лампы прямо над кнопками?
 Ответы: код разгадается без улики, и загадка исчезнет.</aside>
 </div>
@@ -125,7 +119,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-qt-1">
 <h3 class="slide-title">Проверим себя <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">MaxActivationDistance = 6, игрок стоит в 8 студах от кнопки. Что он видит?</p><ol class="content-item content-quiz-options"><li>Подсказку, но нажать нельзя</li><li data-correct="true">Подсказки нет — нужно подойти ближе ✓</li><li>Подсказку с любого места комнаты</li></ol>
+<p class="content-item content-question">MaxActivationDistance = 6, игрок в 8 студах от кнопки. Что он видит?</p><ol class="content-item content-quiz-options"><li>Подсказку, но нажать нельзя</li><li data-correct="true">Подсказки нет — нужно подойти ближе ✓</li><li>Подсказку с любого места комнаты</li></ol>
 <p class="content-item content-question">Где меняют слово «Открыть» на подсказке?</p><ol class="content-item content-quiz-options"><li data-correct="true">В Properties подсказки: ActionText ✓</li><li>В настройках DoorScript</li><li>В имени детали Button</li></ol>
 <p class="content-item content-question">BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; }. Игрок нажал Red, потом Green. Что будет?</p><ol class="content-item content-quiz-options"><li>Дверь сразу откроется</li><li>Загорятся Red и Green</li><li data-correct="true">Всё погаснет, начинать заново ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
@@ -155,17 +149,16 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="30-p-2">
 <h3 class="slide-title">Шаг 2: модель двери <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Закрой проём деталью Door вплотную к стене и включи Anchored</li><li>Рядом на стене поставь яркую кнопку Button</li><li>Выдели Button, нажми + и добавь ProximityPrompt</li><li>Выдели Door и Button и собери в модель Door1</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь Door вплотную к стене со стороны кнопки, Anchored включён; рядом яркая кнопка Button с ProximityPrompt; обе детали в модель Door1.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Door вплотную к стене со стороны кнопки, Anchored; рядом кнопка Button с ProximityPrompt; обе в модель Door1.
 Сказать: дверь ставим перед стеной, а не внутрь проёма — уезжая вверх, она скользит по стене.
 Проверить у каждого: кнопка выступает из стены, имена Door и Button написаны точно.</aside>
 </div>
 <div class="slide" id="30-p-3">
 <h3 class="slide-title">Шаг 3: вставь модуль <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль по ссылке и перетащи папку ButtonDoor внутрь модели Door1</li><li>Test → подойди к кнопке: появится подсказка</li><li>Нажми E — дверь уедет вверх и через 4 секунды закроется</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль по ссылке и перетащи папку ButtonDoor внутрь модели Door1</li><li>Test → появилась ли у кнопки подсказка?</li><li>Нажми E — дверь уедет вверх и через 4 секунды закроется</li></ol>
 <p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/136050672371808/ButtonDoor" target="_blank" rel="noopener">https://create.roblox.com/store/asset/136050672371808/ButtonDoor</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: дверь в стене поднята вверх, за проёмом видна вторая комната, у жёлтой кнопки стоит игрок]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: получить модуль по ссылке и перетащить папку ButtonDoor внутрь модели Door1.
-Сделать: Test — подойти к кнопке, нажать E: дверь уезжает вверх и через четыре секунды закрывается.
 Проверить у каждого: папка лежит внутри модели.</aside>
 </div>
 <div class="slide" id="30-p-4">
@@ -179,7 +172,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Шаг 5: кодовая дверь <span class="slide-duration">(5 мин)</span></h3>
 <ol class="content-item content-steps"><li>В дальней стене второй комнаты сделай проём, дверь Door и три кнопки: Red, Blue, Green</li><li>В каждую кнопку добавь ProximityPrompt, всё собери в модель Door2</li><li>Вставь в Door2 папку ButtonDoor и впиши BUTTONS = { &quot;Red&quot;, &quot;Blue&quot;, &quot;Green&quot; }</li><li>Test → набери код, потом нажми не по порядку</li></ol>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: вторая комната сверху под углом — над проёмом средней стены три цветные лампы, в дальней стене дверь и три кнопки: синяя, зелёная, красная, за дверью зелёная площадка выхода]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: проём в дальней стене, дверь Door и три кнопки Red, Blue, Green с подсказками, всё в модель Door2; папка ButtonDoor внутрь и список BUTTONS из трёх имён.
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: проём, Door и кнопки Red, Blue, Green с подсказками в модели Door2; внутрь — ButtonDoor и список BUTTONS.
 Сказать: кнопки делаем матовыми — нажатая загорается Neon, и на матовом фоне это видно.
 Сказать: вешаем их не в том порядке, что в коде, и не вплотную друг к другу — иначе E срабатывает на соседней кнопке.
 Если скрипт не запустился: в списке потеряна кавычка или запятая, в Output будет красная строка.
@@ -188,9 +181,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="30-p-6">
 <h3 class="slide-title">Шаг 6: улика и выход <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Над первым проёмом со стороны второй комнаты поставь три лампы Neon</li><li>Лампы стоят слева направо в порядке кода: красная, синяя, зелёная</li><li>У Door2 поставь STAY_OPEN 0 — проход дальше останется открытым</li><li>Пройди комнату глазами новичка и сохрани проект: File → Save to Roblox</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: три лампы Neon над первым проёмом со стороны второй комнаты, слева направо в порядке кода; у Door2 поставить STAY_OPEN 0.
-Сделать: пройти всё глазами новичка — войти во вторую комнату, увидеть кнопки, обернуться и найти лампы.
-Сказать: STAY_OPEN 0 у второй двери оставляет выход открытым, первая дверь работает как раньше.
+<aside class="speaker-notes">Заметка ведущего: Сделать: пройти всё глазами новичка — войти во вторую комнату, увидеть кнопки, обернуться и найти лампы.
 Сказать: после правки остановить Test и запустить снова.
 Сделать: File → Save to Roblox.</aside>
 </div>
@@ -199,9 +190,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по практике <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="30-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Подсказка у кнопки не появляется, хотя игрок стоит рядом. Что проверить первым?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у двери</li><li data-correct="true">Не загораживает ли кнопку деталь ✓</li><li>Сохранён ли весь проект</li></ol>
+<p class="content-item content-question">Подсказка у кнопки не появляется, хотя игрок рядом. Что проверить?</p><ol class="content-item content-quiz-options"><li>Включён ли Anchored у двери</li><li data-correct="true">Не загораживает ли кнопку деталь ✓</li><li>Сохранён ли весь проект</li></ol>
 <p class="content-item content-question">Во второй двери поставили STAY_OPEN 0. Что стало с первой дверью?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ничего, у неё свой скрипт ✓</li><li>Она тоже перестала закрываться совсем</li><li>Она больше не открывается</li></ol>
-<p class="content-item content-question">Кнопки на стене повесили в том же порядке, что и лампы. Что сломалось в загадке?</p><ol class="content-item content-quiz-options"><li>Код перестал работать совсем</li><li>Лампы совсем погасли</li><li data-correct="true">Код разгадывается без улики ✓</li></ol>
+<p class="content-item content-question">Кнопки повесили в том же порядке, что и лампы. Что сломалось?</p><ol class="content-item content-quiz-options"><li>Код перестал работать совсем</li><li>Лампы совсем погасли</li><li data-correct="true">Код разгадывается без улики ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: не загораживает ли кнопку деталь; с первой дверью ничего, у неё свой скрипт; код разгадывается без улики.
 Сказать: улика нужна только там, где без неё код не угадать.</aside>
@@ -214,7 +205,6 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Мы собрали две комнаты: дверь на кнопке и кодовую дверь, код к которой спрятан в улике, — это работа Puzzle Designer.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: ключи и замки — дверь, которую откроет только предмет</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: подсказку настроили в Properties, дверь и код — в скрипте, а подсказку к коду спрятали в комнате, без надписей.
-Сказать: на следующем уроке появится дверь, которую не откроет кнопка, — только ключ.
 Сделать: File → Save to Roblox — комната понадобится на уроках 31 и 32.</aside>
 </div>
 <div class="slide" id="30-c-2">

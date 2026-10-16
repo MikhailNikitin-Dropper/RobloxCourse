@@ -39,7 +39,6 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Враги уже идут по карте к базе, но остановить их пока нечем. Сегодня у дороги встанут башни.</p>
 <p class="content-item content-paragraph"><b>Combat Designer</b> (дизайнер боя) решает, как башни бьют врагов: как далеко, как сильно и как часто.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: карта готова, враги идут — пора их останавливать.
-Сказать: сегодня каждый делает свою башню: вид, числа, анимации и улучшение.
 Сказать: к концу урока база перестанет падать.</aside>
 </div>
 </section>
@@ -47,11 +46,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 37 <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="38-r-1">
 <h3 class="slide-title">Вспомним урок 37 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Как враг выбирает дорогу по карте?</p><ol class="content-item content-quiz-options"><li data-correct="true">Идёт по номерам точек ✓</li><li>Идёт по самой короткой</li><li>Идёт за ближней башней</li></ol>
+<p class="content-item content-question">Что даёт обороне длинный извилистый путь?</p><ol class="content-item content-quiz-options"><li data-correct="true">Больше времени под огнём башен ✓</li><li>Больше денег за каждого врага</li><li>Быстрее проход каждой волны</li></ol>
 <p class="content-item content-question">Что лежит в папке Placement?</p><ol class="content-item content-quiz-options"><li>Точки поворота пути</li><li data-correct="true">Клетки для будущих башен ✓</li><li>Волны врагов по номерам</li></ol>
-<p class="content-item content-question">Край карты не влез в кадр. Что поменять?</p><ol class="content-item content-quiz-options"><li>Цвет дороги</li><li>Атрибут Speed врага</li><li data-correct="true">CAM_HEIGHT в TDServer ✓</li></ol>
+<p class="content-item content-question">Откуда модуль знает, сколько серых выйдет в волне?</p><ol class="content-item content-quiz-options"><li>Из числа ригов в Workspace</li><li>Из атрибута Health у врага</li><li data-correct="true">Из значения IntValue в волне ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: по номерам; клетки для башен; CAM_HEIGHT в TDServer.
+Ответы: больше времени под огнём; клетки для башен; из значения IntValue в волне.
 Сказать: сегодня на эти клетки встанут башни.</aside>
 </div>
 </section>
@@ -60,8 +59,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="38-t-1">
 <h3 class="slide-title">Башня — решение игрока <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Где — на какой клетке встанет башня</li><li>Какую — дальнюю, ближнюю или сильную</li><li>Когда улучшить — сейчас или поставить новую</li><li>Что продать — башню, которая стоит не там</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: в Tower Defense игрок не стреляет сам — он решает, где и какую башню поставить.
-Сказать: каждое решение стоит денег, поэтому ошибку можно исправить продажей.
+<aside class="speaker-notes">Заметка ведущего: Сказать: каждое решение стоит денег, поэтому ошибку можно исправить продажей.
 Спросить: какое решение в Tower Defense самое трудное?</aside>
 </div>
 <div class="slide" id="38-t-2">
@@ -69,15 +67,13 @@ body { font-family: Arial, sans-serif; }
 <ul class="content-item content-bullets"><li>Дальняя — бьёт далеко, но слабо</li><li>Ближняя — сильный удар у самой дороги</li><li>Тяжёлая — стреляет редко, но сносит танка</li><li>Разные роли — разные клетки на карте</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox сверху: у изгиба дороги три разные башни-персонажа — лучник с луком, рыцарь с мечом у самой дороги и пушкарь, вокруг одной голубой круг радиуса]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: башни отличаются ролью, а не только видом.
-Сказать: дальняя бьёт быстрых врагов издалека, ближняя — сильно у самой дороги, тяжёлая — медленно, но сносит танка.
-Сказать: разные роли просят разные клетки.</aside>
+Сказать: дальняя бьёт быстрых врагов издалека, ближняя — сильно у самой дороги, тяжёлая — медленно, но сносит танка.</aside>
 </div>
 <div class="slide" id="38-t-3">
 <h3 class="slide-title">Урон в секунду <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Урон в секунду — урон ÷ пауза</li><li>20 урона раз в 0.8 с — 25 в секунду</li><li>60 урона раз в 2 с — 30 в секунду</li><li>Сравнивай число и цену — что выгоднее за монету</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: башни сравнивают одним числом — уроном в секунду.
-Сказать: 20 урона раз в 0.8 секунды — это 25 в секунду; 60 урона раз в 2 секунды — 30 в секунду.
-Сказать: медленная башня может оказаться сильнее быстрой — проверяй делением.</aside>
+Сказать: 20 урона раз в 0.8 секунды — это 25 в секунду; 60 урона раз в 2 секунды — 30 в секунду.</aside>
 </div>
 <div class="slide" id="38-t-4">
 <h3 class="slide-title">Числа башни <span class="slide-duration">(3 мин)</span></h3>
@@ -88,33 +84,28 @@ body { font-family: Arial, sans-serif; }
 Сказать: числа — первые, на уроке 39 их подгоним под врагов.</aside>
 </div>
 <div class="slide" id="38-t-5">
-<h3 class="slide-title">Башня оживает <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Риг — Avatar → Character → R15, как монстр урока 27</li><li>Оружие и декор — Model → Weld</li><li>IdleAnimationId — анимация, пока башня ждёт</li><li>AttackAnimationId — анимация выстрела</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: башня — такой же риг, как монстр урока 27: Avatar → Character → R15, оружие и декор на сварке.
-Сказать: две анимации — стоит и бьёт; номера вписываются атрибутами IdleAnimationId и AttackAnimationId.
+<h3 class="slide-title">Башня из рига <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Риг — Avatar → Character → R15</li><li>Оружие и декор — Model → Weld</li><li>IdleAnimationId — анимация, пока башня ждёт</li><li>AttackAnimationId — анимация выстрела</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: две анимации — стоит и бьёт; номера вписываются атрибутами IdleAnimationId и AttackAnimationId.
 Сказать: анимация играет только у автора — публикуешь сам, как удар кулака.</aside>
 </div>
 <div class="slide" id="38-t-6">
 <h3 class="slide-title">Снаряд и звук <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Projectile</b> — Decal с картинкой снаряда</li><li><b>ShotSound</b> — Sound внутри башни</li><li>Без них — башня стреляет жёлтым шариком</li><li>Тихий звук — частые выстрелы не надоедают</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: без картинки башня стреляет жёлтым шариком — это работает, но выглядит одинаково у всех.
-Сказать: картинка снаряда — Decal с именем Projectile, звук — Sound с именем ShotSound внутри башни.
-Сказать: громкий звук на каждый выстрел быстро надоедает — Volume поменьше.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: громкий звук на каждый выстрел быстро надоедает — Volume поменьше.</aside>
 </div>
 <div class="slide" id="38-t-7">
 <h3 class="slide-title">Улучшение, продажа, цель <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Upgrade</b> — имя следующего уровня в Towers → Upgrades</li><li>UpgradePrice — цена улучшения</li><li>Продажа — возвращает половину вложенного</li><li>Цель — Первый, Ближний или Сильный</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Towers → Upgrades, атрибуты Upgrade и UpgradePrice у первой башни.
 Сказать: улучшение — отдельная модель: игрок видит, что башня стала сильнее.
-Сказать: продажа возвращает половину вложенного — это цена ошибки.
 Сказать: цель переключает игрок: Первый — кто ближе к базе, Ближний — кто ближе к башне, Сильный — у кого больше здоровья.</aside>
 </div>
 <div class="slide" id="38-t-8">
 <h3 class="slide-title">Частые ошибки башен <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Башня молчит — Range не достаёт до дороги</li><li>Враги не падают — урон в секунду слишком мал</li><li>Анимация не играет — номер чужой или с ошибкой</li><li>Нет кнопки улучшения — имя в Upgrade не совпадает</li><li>Башня не в меню — лежит не в ServerStorage → Towers</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: пять поломок первого боя.
-Проверить у каждого: имя в Upgrade совпадает с моделью в Upgrades буква в букву.
-Сказать: башня молчит — сначала круг радиуса: достаёт ли он до дороги.</aside>
+<ul class="content-item content-bullets"><li>Башня молчит — Range не достаёт до дороги</li><li>Враги не падают — урон в секунду слишком мал</li><li>Анимация не играет — номер чужой или с ошибкой</li><li>Улучшение не идёт — имя в Upgrade не совпадает</li><li>Башня не в меню — лежит не в ServerStorage → Towers</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Проверить у каждого: имя в Upgrade совпадает с моделью в Upgrades буква в букву.
+Сказать: при опечатке в Upgrade кнопка есть, но пишет «Это последний уровень».</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
@@ -123,7 +114,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Башня бьёт на 20 раз в 0.8 секунды. Какой урон в секунду?</p><ol class="content-item content-quiz-options"><li>16 урона в секунду</li><li>20 урона в секунду</li><li data-correct="true">25 урона в секунду ✓</li></ol>
 <p class="content-item content-question">Сколько возвращает продажа башни?</p><ol class="content-item content-quiz-options"><li data-correct="true">Половину вложенного ✓</li><li>Всю цену постройки</li><li>Ничего не возвращает</li></ol>
-<p class="content-item content-question">Что такое улучшение башни в нашем модуле?</p><ol class="content-item content-quiz-options"><li>Больше урона у той же модели</li><li data-correct="true">Новая модель из Upgrades ✓</li><li>Вторая башня на той же клетке</li></ol>
+<p class="content-item content-question">Что такое улучшение башни в нашем модуле?</p><ol class="content-item content-quiz-options"><li>Та же модель, больше урона</li><li data-correct="true">Новая модель из папки Upgrades ✓</li><li>Вторая башня на клетке</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: 25 в секунду; половина; модель в Upgrades.
 Сказать: на практике собираем свою башню и проверяем её в бою.</aside>
@@ -142,14 +133,14 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Строим башню <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="38-p-1">
 <h3 class="slide-title">Шаг 1: риг башни <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови по-своему — например, Лучник</li><li>Цвет — BodyColors, оружие и декор — Model → Weld</li><li>Создай в ServerStorage папку Towers и положи башню туда</li></ol>
+<ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови по роли — например, Лучник</li><li>Цвет — BodyColors, оружие и декор — Model → Weld</li><li>Создай в ServerStorage папку Towers и положи башню туда</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Avatar → Character → R15, переименовать Rig в имя башни.
-Сказать: цвет — через BodyColors, оружие и декор — Model → Weld, как рога монстра урока 27.
+Сказать: оружие и декор держит сварка, как рога монстра урока 27.
 Проверить у каждого: в ServerStorage есть папка Towers, башня лежит в ней.</aside>
 </div>
 <div class="slide" id="38-p-2">
 <h3 class="slide-title">Шаг 2: числа башни <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Атрибуты башни: Price 100, Damage 20, Range 16, Cooldown 0.8</li><li>Test → клик по клетке → карточка башни → она встаёт на клетку</li><li>Серые враги падают — круг радиуса достаёт до дороги</li></ol>
+<ol class="content-item content-steps"><li>Атрибуты башни: Price 100, Damage 20, Range 16, Cooldown 0.8</li><li>Test → клик по клетке → карточка башни → она встаёт на клетку</li><li>Проверь, что серые падают, а круг радиуса достаёт до дороги</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Properties → Attributes → «+» у башни.
 Сказать: первые числа — с образца слайда, дальше подгоняем в бою.
 Проверить у каждого: в Test в меню клетки есть карточка башни с ценой.</aside>
@@ -158,19 +149,18 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Шаг 3: анимации башни <span class="slide-duration">(4 мин)</span></h3>
 <ol class="content-item content-steps"><li>ClipEditor: Idle — покачивание на 1–2 секунды, Looping включён</li><li>Attack — замах и выстрел на 0.5 секунды, без Looping</li><li>Publish to Roblox → номера в атрибуты IdleAnimationId и AttackAnimationId</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: ClipEditor на риге башни, Looping у Idle, публикация.
-Сказать: Idle — лёгкое покачивание 1–2 секунды с Looping, Attack — замах 0.5 секунды без Looping.
 Сказать: номера анимаций — атрибутами IdleAnimationId и AttackAnimationId, как WalkAnimationId монстра.</aside>
 </div>
 <div class="slide" id="38-p-4">
 <h3 class="slide-title">Шаг 4: снаряд и звук <span class="slide-duration">(2.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Внутри башни — Decal с именем Projectile и картинкой снаряда</li><li>Sound с именем ShotSound — короткий звук выстрела, Volume 0.3</li><li>Test: летит своя картинка, слышен выстрел</li></ol>
+<ol class="content-item content-steps"><li>Внутри башни — Decal с именем Projectile и картинкой снаряда</li><li>Sound с именем ShotSound — короткий звук выстрела, Volume 0.3</li><li>Test: летит ли картинка снаряда, слышен ли выстрел?</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: + → Decal с именем Projectile, картинку снаряда выбрать в Properties.
 Показать в Studio: + → Sound с именем ShotSound, SoundId — звук, как в уроке 5, Volume 0.3.
 Сказать: без Decal башня стреляет жёлтым шариком — это не ошибка.</aside>
 </div>
 <div class="slide" id="38-p-5">
 <h3 class="slide-title">Шаг 5: улучшение <span class="slide-duration">(4 мин)</span></h3>
-<ol class="content-item content-steps"><li>В Towers — папка Upgrades: копия башни с новым видом и именем, например Стрелок</li><li>У первой башни атрибуты Upgrade = Стрелок и UpgradePrice = 120</li><li>У Стрелка свои Damage, Range и Cooldown — сильнее первой</li></ol>
+<ol class="content-item content-steps"><li>В Towers — папка Upgrades: копия башни с новым видом и именем, например Стрелок</li><li>У первой башни атрибуты Upgrade = Стрелок и UpgradePrice = 120</li><li>У Стрелка — Damage, Range и Cooldown сильнее, чем у первой башни</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox сверху: клик по башне открыл панель «Улучшить → Стрелок · 120», «Цель: Первый», «Продать», вокруг башни голубой круг радиуса]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: копия башни в Towers → Upgrades, новое имя и другой вид.
 Сказать: у первой башни Upgrade — имя улучшения буква в букву, UpgradePrice — цена.
@@ -188,11 +178,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="38-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Башня стоит у дороги, но не стреляет. Что проверить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Range — достаёт ли до дороги ✓</li><li>Цвет рига в BodyColors</li><li>Имя папки Upgrades</li></ol>
-<p class="content-item content-question">Башня стреляет, а анимация выстрела не играет. Почему?</p><ol class="content-item content-quiz-options"><li>Слишком большой Cooldown</li><li data-correct="true">Анимация чужая или номер с ошибкой ✓</li><li>Башня стоит не на клетке</li></ol>
-<p class="content-item content-question">На панели башни нет кнопки улучшения. В чём дело?</p><ol class="content-item content-quiz-options"><li>Мало денег у игрока</li><li>Башня стоит у изгиба</li><li data-correct="true">Имя в Upgrade не совпадает ✓</li></ol>
+<p class="content-item content-question">Башня стоит у дороги, но не стреляет. Что проверить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Радиус Range у башни ✓</li><li>Цвет рига в BodyColors</li><li>Имя папки Upgrades</li></ol>
+<p class="content-item content-question">Башня стреляет, а анимация выстрела не играет. Почему?</p><ol class="content-item content-quiz-options"><li>Слишком долгая пауза Cooldown</li><li data-correct="true">Чужая анимация или опечатка ✓</li><li>Башня стоит не на клетке</li></ol>
+<p class="content-item content-question">«Улучшить» пишет «Это последний уровень». Почему?</p><ol class="content-item content-quiz-options"><li>Мало денег у игрока</li><li>Башня стоит у изгиба</li><li data-correct="true">Опечатка в атрибуте Upgrade ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: Range; анимация чужая; имя в Upgrade.
+Ответы: радиус Range; чужая анимация или опечатка; опечатка в Upgrade.
 Сказать: на следующем уроке вместо серых выйдут свои враги — и башням станет труднее.</aside>
 </div>
 </section>
@@ -202,15 +192,13 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Башни стоят у дороги <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">Риг с оружием, числа, анимации, снаряд и улучшение превратились в башню, которая держит дорогу, — это работа Combat Designer.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: враги и волны, последняя — с боссом</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: у карты появилась оборона — своя башня с улучшением.
-Сказать: на следующем уроке выйдут свои враги, и баланс придётся подгонять.
+<aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке выйдут свои враги, и баланс придётся подгонять.
 Сделать: File → Save to Roblox.</aside>
 </div>
 <div class="slide" id="38-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Сделай ещё 1–2 башни с другой ролью: дальнюю, ближнюю или тяжёлую</li><li>Каждой — свои числа и своя цена</li><li>Посчитай урон в секунду всех башен и сравни с ценой</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: дома сделать ещё одну-две башни с другой ролью.
-Сказать: у каждой — своя цена: сильная башня дороже.
+<ul class="content-item content-bullets"><li>Сделай ещё 1–2 башни с другой ролью: дальнюю, ближнюю или тяжёлую</li><li>Каждой — числа и цена под её роль</li><li>Посчитай урон в секунду всех башен и сравни с ценой</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: сильная башня дороже — цена растёт вместе с уроном в секунду.
 Сказать: проверим вопросом — какая башня лучше всего держит изгиб.</aside>
 </div>
 </section>
