@@ -66,15 +66,15 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-t-2">
 <h3 class="slide-title">Находка: тег и цена <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Тег</b> (Tag) — метка детали или модели, по ней модуль находит свои предметы</li><li>Где ставят тег — в Properties → Tags, как у билетов и артефактов</li><li><b>Атрибут Value</b> — цена находки в монетах</li><li>Тег говорит «это находка», Value — «столько она стоит»</li></ul>
+<ul class="content-item content-bullets"><li><b>Тег</b> (Tag) — метка детали или модели, по ней модуль находит свои предметы</li><li>Где ставят тег — в Properties → Tags, как у билетов и артефактов</li><li><b>Атрибут Value</b> — цена находки в монетах</li><li>Тег и Value — первый отмечает находку, второй задаёт её цену</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделенная модель-ящик на поле, в Explorer папка Finds с моделями находок, в Properties раздел Tags с тегом Loot и раздел Attributes с числом Value = 10]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: модель-находку, Properties → Tags → добавить тег Loot; рядом Attributes → Value.
 Сказать: тег отвечает на вопрос «это находка?», атрибут Value — «сколько она стоит».
 Сказать: так же работали билеты урока 24 и артефакты урока 28 — новое здесь только цена.</aside>
 </div>
 <div class="slide" id="33-t-3">
-<h3 class="slide-title">Рюкзак с дном <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Рюкзак — встроенный инвентарь Roblox: находка становится предметом в нижней панели</li><li><b>CAPACITY</b> — сколько мест в рюкзаке</li><li>Полный рюкзак — не берёт находку и говорит об этом на экране</li><li>Клавиша Q — выбрасывает предмет из руки и освобождает место</li></ul>
+<h3 class="slide-title">Места в рюкзаке <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Рюкзак — встроенный инвентарь Roblox: находка становится предметом в нижней панели</li><li><b>CAPACITY</b> — сколько мест в рюкзаке</li><li>Полный рюкзак — находка не подбирается, на экране появляется надпись</li><li>Клавиша Q — выбрасывает предмет из руки и освобождает место</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: лимит мест делает каждую находку решением, и это главный приём жанра.
 Сказать: настройка CAPACITY лежит в начале скрипта модуля, её мы и подберём на практике.</aside>
 </div>
@@ -95,7 +95,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Цена — это дизайн <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Обычная находка — 10 монет, редкая — 30, легендарная — 80</li><li>Разница в разы: игрок сразу понимает, за чем стоит идти</li><li>Дорогое подальше — его кладут туда, куда идти дольше и страшнее</li><li>Одинаковые цены — делают карту однообразной: всё равно, куда идти</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: стартовые числа курса — 10, 30 и 80 монет: разница в разы, и дорогое видно сразу.
-Сказать: на следующем уроке по этим числам вырастут зоны.</aside>
+Сказать: на следующем уроке по этим числам построим зоны.</aside>
 </div>
 <div class="slide" id="33-t-7">
 <h3 class="slide-title">Модуль «Лут и рюкзак» <span class="slide-duration">(2.5 мин)</span></h3>
@@ -129,7 +129,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
 <div class="slide" id="33-b-1">
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
-<p class="content-item content-paragraph">Через 5 минут создаём новый проект — в нём вырастет лутер.</p>
+<p class="content-item content-paragraph">Через 5 минут создаём новый проект — в нём соберём лутер.</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
 Проверить после перерыва: у каждого создан новый пустой проект и под рукой ссылка на модуль лута.</aside>
 </div>
@@ -172,8 +172,8 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-p-5">
 <h3 class="slide-title">Шаг 5: дальность подбора <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Найди в скрипте настройку <b>PICKUP_RANGE</b></li><li>Поставь своё число и перезапусти Test</li><li>Проверь на бегу, что находка берётся, когда игрок рядом</li><li>Слишком большое число собирает поле само — верни поменьше</li></ol>
-<aside class="speaker-notes">Заметка ведущего: Сказать: слишком большое число собирает всё поле на бегу, слишком маленькое заставляет топтаться.</aside>
+<ol class="content-item content-steps"><li>Найди в скрипте настройку <b>PICKUP_RANGE</b></li><li>Поставь своё число и перезапусти Test</li><li>Проверь на бегу, что находка берётся, когда игрок рядом</li><li>При слишком большом числе поле собирается само — верни поменьше</li></ol>
+<aside class="speaker-notes">Заметка ведущего: Сказать: при слишком большом числе всё поле собирается на бегу, слишком маленькое заставляет топтаться.</aside>
 </div>
 <div class="slide" id="33-p-6">
 <h3 class="slide-title">Шаг 6: два игрока <span class="slide-duration">(3 мин)</span></h3>
@@ -193,14 +193,14 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-question">Двое собирают находки в одном мире. Чей счёт растёт?</p><ol class="content-item content-quiz-options"><li>Общий счёт на двоих в одной строке</li><li data-correct="true">У каждого свой счёт и свой рюкзак ✓</li><li>Счёт того, кто зашёл в игру первым</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: тег забыли; мест меньше, чем находок; у каждого свой счёт.
-Сказать: на следующем уроке поле разделится на зоны, и цена будет зависеть от расстояния.</aside>
+Сказать: на следующем уроке разделим поле на зоны, и цена будет зависеть от расстояния.</aside>
 </div>
 </section>
 <section class="block block-closing">
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="33-c-1">
 <h3 class="slide-title">Основа лутера готова <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Мы собрали находки с ценой, рюкзак с дном и счёт в таблице игроков — это работа Systems Designer.</p>
+<p class="content-item content-paragraph">Мы собрали находки с ценой, рюкзак, в который влезает не всё, и счёт в таблице игроков — это работа Systems Designer.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: зоны риска — чем глубже в карту, тем дороже находки</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сделать: File → Save to Roblox — проект нужен на всех уроках блока.</aside>
 </div>

@@ -72,7 +72,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="7-t-3">
 <h3 class="slide-title">ScreenGui: контейнер <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ScreenGui</b> — объект-контейнер: в нём живут все элементы интерфейса игрока</li><li>Создаём его в StarterGui — и он появится у каждого игрока при заходе в игру</li><li>Копия в PlayerGui — Studio сама копирует ScreenGui каждому игроку при старте</li><li>Внутри ScreenGui обычно лежит Frame — контейнер для остальных элементов окна</li></ul>
+<ul class="content-item content-bullets"><li><b>ScreenGui</b> — объект-контейнер: в нём находятся все элементы интерфейса игрока</li><li>Создаём его в StarterGui — и он появится у каждого игрока при заходе в игру</li><li>Копия в PlayerGui — Studio сама копирует ScreenGui каждому игроку при старте</li><li>Внутри ScreenGui обычно лежит Frame — контейнер для остальных элементов окна</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: StarterGui пуст: расширенный модуль своего интерфейса не приносит, внутрь только что вставлен новый ScreenGui «PropHunterGui» с Frame «MainFrame» внутри]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: «+» у StarterGui → ScreenGui, переименовать; внутрь «+» → Frame.
 Сказать: всё, что лежит в StarterGui, Studio копирует каждому игроку при заходе в игру.
@@ -109,7 +109,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="7-t-8">
 <h3 class="slide-title">ScrollingFrame: прокрутка <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>ScrollingFrame</b> — контейнер вроде Frame, но его можно пролистать колёсиком мыши: изначально показывает только часть содержимого</li><li>Много карточек — копий шаблона может стать больше, чем помещается в панель, поэтому они живут в ScrollingFrame, а не в обычном Frame</li><li>AutomaticCanvasSize и UIListLayout — вместе сами увеличивают область прокрутки под новые карточки</li><li>ScrollBarThickness — задаёт толщину полосы прокрутки в пикселях; 0 прячет её совсем, если прокрутка нужна без видимой полосы</li></ul>
+<ul class="content-item content-bullets"><li><b>ScrollingFrame</b> — контейнер вроде Frame, но его можно пролистать колёсиком мыши: изначально показывает только часть содержимого</li><li>Много карточек — копий шаблона может стать больше, чем помещается в панель, поэтому они находятся в ScrollingFrame, а не в обычном Frame</li><li>AutomaticCanvasSize и UIListLayout — вместе сами увеличивают область прокрутки под новые карточки</li><li>ScrollBarThickness — задаёт толщину полосы прокрутки в пикселях; 0 прячет её совсем, если прокрутка нужна без видимой полосы</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: включить AutomaticCanvasSize = Y у ScrollingFrame и добавить несколько карточек — область прокрутки растёт сама.
 Сказать: список сообщений в чате устроен так же — экран показывает последние, остальные открываются прокруткой.
 Сказать: ScrollBarThickness задаёт толщину полосы, ноль прячет её совсем.</aside>
