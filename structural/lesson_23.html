@@ -54,11 +54,11 @@ body { font-family: Arial, sans-serif; }
 </div>
 </section>
 <section class="block block-theory">
-<h2 class="block-title" style="color:#006600;">Верёвка, пружина и рельс <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#006600;">Верёвка, пружина и рельса <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="23-t-1">
 <h3 class="slide-title">Три новых способа крепления <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Шарнир прошлого урока держал ось — а три новых крепления сохраняют расстояние</li><li><b>RopeConstraint</b> (верёвка) — не даёт точкам разойтись дальше заданной длины</li><li><b>SpringConstraint</b> (пружина) — притягивает точки к своей длине покоя</li><li><b>PrismaticConstraint</b> (рельс) — разрешает скольжение только вдоль одной оси</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Спросить: где в жизни встречаются верёвка, пружина и рельс?
+<ul class="content-item content-bullets"><li>Шарнир прошлого урока сохранял ось — а три новых крепления сохраняют расстояние</li><li><b>RopeConstraint</b> (верёвка) — не даёт точкам разойтись дальше заданной длины</li><li><b>SpringConstraint</b> (пружина) — притягивает точки к заранее заданной длине</li><li><b>PrismaticConstraint</b> (рельса) — разрешает скольжение только вдоль одной оси</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Спросить: где в жизни встречаются верёвка, пружина и рельса?
 Ответы: подвесной мост, матрас или батут, лифт.</aside>
 </div>
 <div class="slide" id="23-t-2">
@@ -69,38 +69,32 @@ body { font-family: Arial, sans-serif; }
 Сказать: Thickness — толщина верёвки на экране, Visible — показывать её или нет.</aside>
 </div>
 <div class="slide" id="23-t-3">
-<h3 class="slide-title">Пружина и её длина <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>FreeLength</b> (длина покоя) — к этой длине пружина и притягивает точки</li><li><b>Stiffness</b> (жёсткость) — с какой силой пружина отвечает на сжатие</li><li><b>Damping</b> (гашение) — как быстро успокаиваются колебания</li><li><b>LimitsEnabled</b> с MinLength и MaxLength — минимальная и максимальная длина пружины</li></ul>
+<h3 class="slide-title">Пружина и её длина <span class="slide-duration">(3.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>FreeLength</b> (длина покоя) — к этой длине пружина стремится</li><li><b>Stiffness</b> (жёсткость) — с какой силой пружина отвечает на сжатие</li><li><b>Damping</b> (гашение) — как быстро успокаиваются колебания</li><li><b>LimitsEnabled</b> с MinLength и MaxLength — минимальная и максимальная длина пружины</li></ul>
 <p class="content-item content-image-prompt">[изображение: Панель Properties пружины в Studio: поля FreeLength, Stiffness, Damping и раздел с MinLength и MaxLength]</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: развернуть кадр на весь экран и назвать вслух все четыре поля.
 Сказать: MaxForce на уроке не трогаем, а Coils, Radius и Thickness задают только вид витков.</aside>
 </div>
-<div class="slide" id="23-t-4">
-<h3 class="slide-title">Пружина проседает под грузом <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Груз весом с игрока — продавливает пружинную площадку на 4.5 студа</li><li>Сам игрок — всего на 0.4: на опору он давит вдесятеро слабее</li></ul>
-<p class="content-item content-image-prompt">[изображение: Галерея из трёх кадров одной пружинной площадки: пустая площадка наверху; под ящиком она просела на восемь студов; игрок стоит на ней, и она просела едва заметно]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: персонажем управляет не чистая физика деталей, поэтому его вес доходит до пружины в одиннадцать раз слабее.
-Сказать: отсюда весь замысел практики — поднимает игрока не его вес, а пружина, с которой спихнули груз.</aside>
-</div>
 <div class="slide" id="23-t-6">
-<h3 class="slide-title">Рельс задаёт направление <span class="slide-duration">(4 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Рельс — разрешает скольжение вдоль оси и запрещает поворот</li><li>Пружины — держат расстояние, но не направление</li><li>Без рельса — площадку уводит вбок и сваливает с основания</li></ul>
-<p class="content-item content-image-prompt">[изображение: Галерея из двух кадров площадки на четырёх пружинах без рельса: до запуска она стоит ровно на основании; после запуска её увело вбок]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать: на кадрах та самая ошибка — площадка на четырёх пружинах без рельса уходит вбок после первого толчка.
-Сказать: ось рельса — первая ось точки крепления, как и у шарнира.</aside>
+<h3 class="slide-title">Рельса задаёт направление <span class="slide-duration">(4 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Рельса — разрешает скольжение вдоль оси и запрещает поворот</li><li>Пружины — держат расстояние, но не направление</li><li>Без рельсы — площадка уйдёт в сторону и не будет держаться над основанием</li></ul>
+<p class="content-item content-image-prompt">[изображение: Галерея из двух кадров площадки на четырёх пружинах без рельсы: до запуска она стоит ровно на основании; после запуска её увело вбок]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать: на кадрах та самая ошибка — площадка на четырёх пружинах без рельсы уходит в сторону после первого толчка.
+Сказать: ось рельсы — первая ось точки крепления, как и у шарнира.</aside>
 </div>
 <div class="slide" id="23-t-7">
-<h3 class="slide-title">Ход пружины считаем заранее <span class="slide-duration">(3.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Ход 8 студов — это подъём от настила моста до террасы, куда площадка и должна поднять</li><li>Вес ящика: масса 18.9 × 196.2 (Gravity в свойствах Workspace) — получается 3708</li><li>Жёсткость — вес делённый на ход: 3708 ÷ 8 = 464 на все пружины, по 116 на каждую</li></ul>
+<h3 class="slide-title">Ход пружины считаем заранее <span class="slide-duration">(5.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Игрок лёгкий — площадка под ним почти не проседает, поэтому жёсткость считают по весу ящика</li><li>Ход 8 студов — это расстояние от моста до террасы, куда площадка и должна поднять</li><li>Вес ящика: масса 18.9 × 196.2 (Gravity в свойствах Workspace) — получается 3708</li><li>Жёсткость — вес делённый на ход: 3708 ÷ 8 = 464 на все пружины, по 116 на каждую</li></ul>
 <p class="content-item content-image-prompt">[изображение: Галерея из двух кадров с подсветкой полей: свойства ящика — масса 18.9, из которой считается вес 3708; свойства пружины — Stiffness 116]</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: посчитать жёсткость вместе на экране.
 Показать в Studio: высота настила моста 8.0 и террасы 15.9 — разница и есть ход в 8 студов.
 Показать в Studio: свойство Gravity у Workspace равно 196.2 — на него умножается масса, когда считается вес.
-Сказать: замер подтверждает — ящик просаживает готовую площадку ровно на 8.01 студа.</aside>
+Сказать: замер подтверждает — ящик просаживает готовую площадку ровно на 8.01 студа.
+Сказать: вес персонажа доходит до пружины гораздо слабее веса детали — поэтому игрока поднимает пружина, с которой спихнули ящик.</aside>
 </div>
 <div class="slide" id="23-t-8">
 <h3 class="slide-title">Ошибки с верёвками <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Связали стык одной верёвкой — планка крутится вокруг неё</li><li>Развели верёвки маятника по перекладине — площадку разворачивает</li><li>Не задали пружинам MinLength — они сжимаются в ноль, и площадка ложится на основание</li><li>Забыли рельс по центру — площадка уезжает вбок</li></ul>
+<ul class="content-item content-bullets"><li>Связали стык одной верёвкой — планка крутится вокруг неё</li><li>Развели верёвки маятника по перекладине — площадку разворачивает</li><li>Не задали пружинам MinLength — они полностью сжимаются, и подвижная площадка лежит на основании</li><li>Не добавили рельсу по центру — площадка падает в сторону</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: все четыре ошибки найдены на сборке этой полосы и видны сразу после запуска.</aside>
 </div>
 </section>
@@ -108,8 +102,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Вопросы по теории <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="23-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что произойдёт с пружинной площадкой, если на неё встанет игрок?</p><ol class="content-item content-quiz-options"><li>Она просядет и подбросит его</li><li>Пружины сожмутся в ноль</li><li data-correct="true">Она просядет совсем чуть-чуть ✓</li></ol>
-<p class="content-item content-question">Зачем пружинной площадке рельс по центру?</p><ol class="content-item content-quiz-options"><li>Чтобы она поднималась заметно быстрее</li><li data-correct="true">Чтобы её не уводило вбок ✓</li><li>Чтобы пружины стали заметно жёстче</li></ol>
+<p class="content-item content-question">Что произойдёт с пружинной площадкой, если на неё встанет игрок?</p><ol class="content-item content-quiz-options"><li>Она просядет и подбросит его</li><li>Все пружины сожмутся полностью</li><li data-correct="true">Она просядет совсем чуть-чуть ✓</li></ol>
+<p class="content-item content-question">Зачем пружинной площадке рельса по центру?</p><ol class="content-item content-quiz-options"><li>Чтобы она поднималась заметно быстрее</li><li data-correct="true">Чтобы её не уводило вбок ✓</li><li>Чтобы пружины стали заметно жёстче</li></ol>
 <p class="content-item content-question">Чем пружина отличается от верёвки?</p><ol class="content-item content-quiz-options"><li data-correct="true">Тянет точки к длине покоя ✓</li><li>Запрещает точкам крепления вращаться</li><li>Держит детали намертво, как сварка</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: площадка просядет совсем чуть-чуть; чтобы её не уводило вбок; пружина тянет точки к длине покоя.
@@ -138,10 +132,10 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="23-p-2">
 <h3 class="slide-title">Шаг 2: пружинный подъёмник <span class="slide-duration">(5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Поставь закреплённое основание 12×1×12, над ним — свободную площадку 8×0.5×8</li><li>Model → Constraints → Spring: поставь четыре пружины по углам площадки</li><li>Задай каждой FreeLength 25, Stiffness 116, Damping 60, LimitsEnabled с MinLength 5</li><li>Model → Constraints → Prismatic: рельс по центру; добавь борта и ящик 3×3×3 наверх</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея сборки подъёмника, 6 кадров: основание и площадка; четыре пружины по углам; панель Properties пружины с FreeLength, Stiffness, Damping и MinLength; рельс по центру; ящик на площадке, она осела вровень с мостом; площадка наверху без ящика]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: основание, свободная площадка, четыре пружины по углам с числами со слайда, рельс по центру, борта и ящик.
-Сказать: порядок важен — сначала пружины, потом рельс, потом ящик, иначе площадка уедет вбок.
+<ol class="content-item content-steps"><li>Поставь закреплённое основание 12×1×12, над ним — свободную площадку 8×0.5×8</li><li>Model → Constraints → Spring: поставь четыре пружины по углам площадки</li><li>Задай каждой FreeLength 25, Stiffness 116, Damping 60, LimitsEnabled с MinLength 5</li><li>Model → Constraints → Prismatic: рельса по центру; добавь борта и ящик 3×3×3 наверх</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея сборки подъёмника, 6 кадров: основание и площадка; четыре пружины по углам; панель Properties пружины с FreeLength, Stiffness, Damping и MinLength; рельса по центру; ящик на площадке, она осела вровень с мостом; площадка наверху без ящика]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: основание, свободная площадка, четыре пружины по углам с числами со слайда, рельса по центру, борта и ящик.
+Сказать: порядок важен — сначала пружины, потом рельса, потом ящик, иначе площадка уйдёт в сторону.
 Сделать: поставить ящик и проверить — площадка должна сесть вровень с настилом моста.
 Если села ниже: увеличить FreeLength, если встала выше — уменьшить, шагом 2 студа.
 Сказать: бортики обязательны, с площадки без них игрок уезжает следом за ящиком.</aside>
@@ -177,9 +171,9 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вопросы по практике <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Площадка подъёмника легла на основание и больше не поднимается. Что забыли?</p><ol class="content-item content-quiz-options"><li>Закрепить саму площадку подъёмника</li><li>Увеличить свойство Damping</li><li data-correct="true">Включить LimitsEnabled и MinLength ✓</li></ol>
 <p class="content-item content-question">Ящик столкнули, а площадка не поднялась. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Не закреплена ли площадка ✓</li><li>Не слишком ли лёгкий ящик</li><li>Не короткие ли верёвки</li></ol>
-<p class="content-item content-question">Почему батут из пружин под игроком не работает?</p><ol class="content-item content-quiz-options"><li>Пружина не даёт точкам разойтись дальше длины</li><li data-correct="true">Игрок давит на опору вдесятеро слабее ящика ✓</li><li>Рельс запрещает пружине двигаться вдоль оси</li></ol>
+<p class="content-item content-question">На какой высоте ставят террасу у подъёмника?</p><ol class="content-item content-quiz-options"><li>Вровень с настилом моста</li><li data-correct="true">Где встаёт пустая площадка ✓</li><li>На высоте флага финиша</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: включить LimitsEnabled и MinLength; не закреплена ли площадка; игрок давит на опору вдесятеро слабее ящика.
+Ответы: включить LimitsEnabled и MinLength; не закреплена ли площадка; там, где встаёт пустая площадка.
 Спросить: какой участок на верёвках соберёшь дома?</aside>
 </div>
 </section>
@@ -187,9 +181,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="23-c-1">
 <h3 class="slide-title">Полоса препятствий собрана <span class="slide-duration">(2 мин)</span></h3>
-<p class="content-item content-paragraph">Сегодня мы собрали полосу препятствий на верёвках и пружинах: мост держится верёвками, подъёмник работает пружинами, а переправа качается на двух верёвках.</p>
+<p class="content-item content-paragraph">Сегодня мы собрали полосу препятствий на верёвках и пружинах: мост держится на верёвках, подъёмник работает с помощью пружин, а переправа качается на двух верёвках.</p>
 <ul class="content-item content-bullets"><li>Домашнее задание: добавь к полосе ещё один участок на верёвках — второй мост или второй маятник</li><li>Проверь его: полоса должна проходиться целиком</li><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: тропа, площадка аттракционов и полоса станут одним парком</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: игрок продавливает пружину вдесятеро слабее груза — поэтому подъёмник работает на ящике.
+<aside class="speaker-notes">Заметка ведущего: Сказать: игрок продавливает пружину гораздо слабее груза — поэтому подъёмник работает на ящике.
 Сказать: домашнее задание про верёвки нарочно: пружина без груза препятствием не станет.
 Сделать: File → Save to Roblox — последнее действие занятия.</aside>
 </div>

@@ -89,7 +89,7 @@ body { font-family: Arial, sans-serif; }
 <ul class="content-item content-bullets"><li>Полоска вверху экрана: «Рюкзак 4/6 · 100 монет»</li><li>Занятые места и сумма — то, чем игрок рискует прямо сейчас</li><li>Интерфейс рисует модуль: собирать <b>ScreenGui</b> не нужно</li><li>Сообщения модуля — тоже появляются здесь: «+30», «Рюкзак полон»</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: вверху экрана тёмная полоска с надписью «Рюкзак 4/6 · 100 монет», под ней жёлтая надпись «+30»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: таблица показывает всех, а полоска — только тебя, и смотреть в неё быстрее.
-Сказать: полоску рисует сам модуль, как это делали билеты урока 24.</aside>
+Сказать: полоску рисует сам модуль, как модуль билетов урока 24.</aside>
 </div>
 <div class="slide" id="33-t-6">
 <h3 class="slide-title">Цена — это дизайн <span class="slide-duration">(2.5 мин)</span></h3>
@@ -108,7 +108,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="33-t-8">
 <h3 class="slide-title">Частые ошибки первого дня <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Находка не поднимается — забыли тег на модели или не включили Anchored</li><li>Все находки стоят одинаково — не заполнили атрибут Value</li><li>Рюкзак не кончается — CAPACITY поставили слишком большим</li><li>Таблицы нет — папку назвали Leaderstats с большой буквы</li><li>Модель рассыпалась в руке — детали не сварены сваркой Weld</li></ul>
+<ul class="content-item content-bullets"><li>Находка не поднимается — забыли тег на модели или не включили Anchored</li><li>Все находки стоят одинаково — не заполнили атрибут Value</li><li>Рюкзак не кончается — CAPACITY поставили слишком большим</li><li>Таблицы нет — папку назвали Leaderstats с большой буквы</li><li>Модель рассыпалась в руке — детали не сварили через Weld</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Проверить у каждого: тег и Value стоят на модели, главная деталь закреплена, остальные приварены.
 Сказать: если таблицы нет — чаще всего дело в имени папки leaderstats.</aside>
 </div>
@@ -188,11 +188,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="33-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Деталь лежит в поле, но в рюкзак не попадает. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Стоит ли на детали тег Loot ✓</li><li>Совпадает ли цвет с другими находками</li><li>Сохранён ли проект в облако</li></ol>
-<p class="content-item content-question">Сколько мест в рюкзаке делает выбор игрока настоящим?</p><ol class="content-item content-quiz-options"><li>Ровно столько, сколько находок</li><li>Больше, чем находок в поле</li><li data-correct="true">Меньше, чем находок в поле ✓</li></ol>
-<p class="content-item content-question">Двое собирают находки в одном мире. Чей счёт растёт?</p><ol class="content-item content-quiz-options"><li>Общий счёт на двоих в одной строке</li><li data-correct="true">У каждого свой счёт и свой рюкзак ✓</li><li>Счёт того, кто зашёл в игру первым</li></ol>
+<p class="content-item content-question">Находки собираются сами, едва игрок выходит на поле. Что поправить?</p><ol class="content-item content-quiz-options"><li data-correct="true">Уменьшить число в PICKUP_RANGE ✓</li><li>Увеличить число в CAPACITY</li><li>Снять тег Loot с находок</li></ol>
+<p class="content-item content-question">Сколько мест должно быть в рюкзаке, чтобы игроку приходилось выбирать?</p><ol class="content-item content-quiz-options"><li>Ровно столько, сколько находок</li><li>Больше, чем находок в поле</li><li data-correct="true">Меньше, чем находок в поле ✓</li></ol>
+<p class="content-item content-question">Двое собирают находки в одной игре. Чей счёт растёт?</p><ol class="content-item content-quiz-options"><li>Общий счёт на двоих в одной строке</li><li data-correct="true">У каждого свой счёт и свой рюкзак ✓</li><li>Счёт того, кто зашёл в игру первым</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: тег забыли; мест меньше, чем находок; у каждого свой счёт.
+Ответы: уменьшить число в PICKUP_RANGE; мест меньше, чем находок; у каждого свой счёт.
 Сказать: на следующем уроке разделим поле на зоны, и цена будет зависеть от расстояния.</aside>
 </div>
 </section>

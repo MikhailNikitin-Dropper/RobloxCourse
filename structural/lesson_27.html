@@ -38,7 +38,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Сегодня ты — Character Animator <span class="slide-duration">(1 мин)</span></h3>
 <p class="content-item content-paragraph">У лабиринта наконец-то будет хозяин. Сегодня мы соберём его тело и научим его двигаться.</p>
 <p class="content-item content-paragraph"><b>Character Animator</b> (аниматор персонажа) собирает скелет персонажа и задаёт ему позы для ходьбы и атаки.</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: у лабиринта наконец появится хозяин — монстр со своим обликом и движениями.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: у лабиринта наконец появится хозяин — монстр с уникальным обликом и движениями.</aside>
 </div>
 </section>
 <section class="block block-review_previous">
@@ -47,7 +47,7 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вспомним урок 26 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Зачем в лабиринте нужна хотя бы одна петля?</p><ol class="content-item content-quiz-options"><li data-correct="true">Чтобы сломать правило правой стены ✓</li><li>Чтобы коридоры стыковались без щелей</li><li>Чтобы в лабиринте стало светлее</li></ol>
 <p class="content-item content-question">Что будет, если тупик не закрыть торцевой стенкой?</p><ol class="content-item content-quiz-options"><li>Игрок застрянет в этом тупике</li><li data-correct="true">Тупик будет выглядеть проходом ✓</li><li>Модули развалятся при запуске</li></ol>
-<p class="content-item content-question">Чем в лабиринте отмечают крупную развилку?</p><ol class="content-item content-quiz-options"><li>Приманкой, которая обещает игроку награду в тупике</li><li>Модулем стены, скопированным много раз по кругу</li><li data-correct="true">Факелом уникального цвета: свой цвет запоминается ✓</li></ol>
+<p class="content-item content-question">Чем в лабиринте отмечают крупную развилку?</p><ol class="content-item content-quiz-options"><li>Приманкой, которая обещает игроку награду в тупике</li><li>Модулем стены, скопированным много раз по кругу</li><li data-correct="true">Неярким факелом уникального цвета на развилке ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: чтобы сломать правило правой стены; тупик будет выглядеть проходом; факелом уникального цвета.
 Спросить: где в вашем лабиринте спрячется монстр?</aside>
@@ -57,7 +57,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Скелет, облик и первое движение <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="27-t-1">
 <h3 class="slide-title">Что делаем сегодня <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Скелет монстра — заготовка с готовыми суставами</li><li>Свой облик — размер, цвет и самодельные детали</li><li>Движения — ClipEditor: зацикленная ходьба и разовая атака</li><li>Публикация — у каждой анимации появляется свой ID-номер</li></ul>
+<ul class="content-item content-bullets"><li>Скелет монстра — заготовка с готовыми суставами</li><li>Облик монстра — размер, цвет и самодельные детали</li><li>Движения — ClipEditor: зацикленная ходьба и разовая атака</li><li>Публикация — у каждой анимации появляется ID-номер</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: путь занятия — от голого скелета до готовых движений с номером, по которому игра найдёт анимацию.
 Сказать: сегодня будет и облик, и две анимации, и публикация.</aside>
 </div>
@@ -73,8 +73,8 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Сказать: тот же принцип был у колеса обозрения и у машины, просто здесь суставов много и они складываются в тело.</aside>
 </div>
 <div class="slide" id="27-t-4">
-<h3 class="slide-title">Своя деталь на риге <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Размер и материал — любой части рига меняются в Properties без риска</li><li>Своя деталь — рог, шип или коготь: готовим её отдельно от рига</li><li>Скрепляем сваркой: выделяем свою деталь и часть рига, потом Model → Weld — касаться друг друга им необязательно</li><li>Деталей несколько — складываем в одну папку (<b>Decor</b>) внутри рига</li></ul>
+<h3 class="slide-title">Самодельная деталь на риге <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Размер и материал — любой части рига меняются в Properties без риска</li><li>Самодельная деталь — рог, шип или коготь: готовим её отдельно от рига</li><li>Скрепляем сваркой: выделяем деталь декора и часть рига, потом Model → Weld — касаться друг друга им необязательно</li><li>Деталей несколько — складываем в одну папку (<b>Decor</b>) внутри рига</li></ul>
 <p class="content-item content-image-prompt">[изображение: Explorer: папка Decor внутри рига с несколькими деталями декора, рядом выделены деталь-рог и часть рига перед нажатием Weld]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: декор — отдельная готовая деталь, а не переделка рига; свариваем её с частью рига, и сустав ничего не теряет.
 Сказать: касаться друг друга деталям не обязательно, а порядок выделения роли не играет.
@@ -121,7 +121,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
 <div class="slide" id="27-b-1">
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
-<p class="content-item content-paragraph">Через 5 минут открываем плейс лабиринта — сегодня в нём поселится хозяин.</p>
+<p class="content-item content-paragraph">Через 5 минут открываем плейс лабиринта — сегодня в нём появится монстр.</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
 Проверить после перерыва: открыт плейс лабиринта из урока 26 — сразу приступаем к сборке монстра.</aside>
 </div>
@@ -130,7 +130,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#cc0000;">Собираем и оживляем монстра <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="27-p-1">
 <h3 class="slide-title">Шаг 1: место для монстра <span class="slide-duration">(1.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой плейс лабиринта</li><li>Выбери развилку или комнату, где будет жить монстр — по итогам прошлого обсуждения</li><li>Запомни координаты места: сюда встанет риг</li></ol>
+<ol class="content-item content-steps"><li>Открой плейс лабиринта</li><li>Выбери развилку или комнату, где будет находиться монстр — по итогам прошлого обсуждения</li><li>Запомни координаты места: сюда встанет риг</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Сделать: открыть плейс лабиринта урока 26.
 Спросить: какая развилка или комната получит хозяина?
 Сказать: запомнить координаты выбранного места — сюда встанет риг.</aside>
@@ -143,7 +143,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: риг встаёт у камеры, а не в лабиринте, — переносим его сразу, мышью или через Position.</aside>
 </div>
 <div class="slide" id="27-p-3">
-<h3 class="slide-title">Шаг 3: свой облик <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Шаг 3: облик монстра <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Найди BodyColors у рига (или добавь: + → BodyColors) и задай цвета — HeadColor3, TorsoColor3, LeftArmColor3 и так далее</li><li>У отдельных частей поменяй Size или Material в Properties — по вкусу</li><li>Суставы не трогай — меняются только BodyColors и свойства самих частей</li></ol>
 <p class="content-item content-image-prompt">[изображение: Панель Properties объекта BodyColors: подсвечены поля HeadColor3, TorsoColor3, LeftArmColor3 с заданными цветами]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: BodyColors у рига (или «+» → BodyColors) — HeadColor3, TorsoColor3, LeftArmColor3 и остальные.
@@ -152,7 +152,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="27-p-4">
 <h3 class="slide-title">Шаг 4: рога или шипы <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Возьми или создай небольшую декоративную деталь (рог, шип, коготь) — форму и размер настрой в Properties</li><li>Помести её рядом с нужной частью рига — вплотную необязательно</li><li>Выдели свою деталь и нужную часть рига, потом Model → Weld — порядок выделения не важен</li><li>Готовишь не одну деталь, а несколько — сложи их в отдельную папку (например, <b>Decor</b>) внутри рига</li></ol>
+<ol class="content-item content-steps"><li>Возьми или создай небольшую декоративную деталь (рог, шип, коготь) — форму и размер настрой в Properties</li><li>Помести её рядом с нужной частью рига — вплотную необязательно</li><li>Выдели деталь декора и нужную часть рига, потом Model → Weld — порядок выделения не важен</li><li>Готовишь не одну деталь, а несколько — сложи их в отдельную папку (например, <b>Decor</b>) внутри рига</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить деталь-рог, затем с Ctrl — нужную часть рига, и нажать Weld на вкладке Model.
 Сказать: кто уверенно работает с Tabby с урока 6 — может одеть рига нарядом вместо рогов и шипов.</aside>
 </div>
@@ -190,7 +190,7 @@ body { font-family: Arial, sans-serif; }
 <p class="content-item content-paragraph">Сегодня мы собрали монстра лабиринта: облик, походку и атаку, а у каждой анимации есть номер.</p>
 <ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Домашнее задание: добавь монстру ещё декоративных деталей — шипы, клыки, когти (удобно сложить их в папку Decor)</li><li>Следующий урок: готовый модуль монстра проиграет записанные анимации по их номерам — соберём весь ночной лабиринт в игру</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке номера пригодятся модулю монстра, и ночной лабиринт соберётся в игру.
-Сделать: File → Save to Roblox — вместе с плейсом иначе потеряется и риг.</aside>
+Сделать: File → Save to Roblox — иначе вместе с плейсом потеряется и риг.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="https://create.roblox.com/docs/reference/engine/classes/BodyColors">BodyColors — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/store/asset/14025724075/Tabby-Outfit-Marketplace-Importer-Loader">Tabby — Outfit &amp; Marketplace Importer &amp; Loader — Creator Store</a></li><li><a href="https://create.roblox.com/docs/studio/rig-builder">Rig Generator — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/animation/editor.md">Animation Editor (в актуальной Studio UI — ClipEditor) — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/WeldConstraint">WeldConstraint — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/reference/engine/classes/Motor6D">Motor6D — Roblox Creator Hub</a></li><li><a href="https://devforum.roblox.com/t/how-do-i-have-the-animate-script-work-with-my-custom-monster-rig/1841516">How do I have the Animate script work with my custom monster rig? — DevForum</a></li></ul></section>
