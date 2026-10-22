@@ -158,6 +158,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="25-p-2">
 <h3 class="slide-title">Шаг 2: гасим свет <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>В Lighting задай ClockTime 0 и убедись, что комната всё ещё просматривается</li><li>Затемни Ambient до 6, 6, 6, OutdoorAmbient до 4, 4, 4, Brightness до 0 и EnvironmentDiffuseScale до 0.15</li><li>Проверь LightingStyle: он должен стоять на Realistic</li><li>Test → встань в дальнем углу: видно ли противоположную стену?</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен Lighting, в Properties подсвечены Ambient 6, 6, 6, Brightness 0, EnvironmentDiffuseScale 0.15, LightingStyle Realistic, OutdoorAmbient 4, 4, 4 и ClockTime 0; во вьюпорте — тёмная комната из дальнего угла]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: ClockTime 0 — комната ещё видна; затем Ambient и OutdoorAmbient почти чёрные, Brightness 0, EnvironmentDiffuseScale 0.15.
 Сказать: порядок важен — пусть каждый своими глазами увидит, что ночь сама по себе темноты не даёт.
 Сказать: EnvironmentDiffuseScale — доля света от самого неба; при заводской единице пол и стены видны даже при Brightness 0.
@@ -166,6 +167,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="25-p-3">
 <h3 class="slide-title">Шаг 3: дымка <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Найди внутри Lighting готовый объект Atmosphere и выдели его</li><li>Подними Density до 0.8</li><li>Задай Haze 0.7, Color 10, 10, 10 (тёмно-серый) и Offset 0.25</li><li>Test → выгляни в проём: виден ли дальний край площадки?</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: выделен Atmosphere внутри Lighting, в Properties подсвечены Density 0.8, Haze 0.7, Color 10, 10, 10 и Offset 0.25; во вьюпорте — вид из проёма комнаты в дымку]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить готовый Atmosphere внутри Lighting, поднять Density до 0.8, Haze 0.7, Color 10, 10, 10, Offset 0.25.
 Сказать: Atmosphere не создают, а правят — он лежит в Lighting с самого начала.
 Сделать: проверять через проём наружу — внутри комнаты дымка почти не читается, она густеет с расстоянием.
@@ -174,7 +176,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="25-p-4">
 <h3 class="slide-title">Шаг 4: факел на стене <span class="slide-duration">(4 мин)</span></h3>
 <ol class="content-item content-steps"><li>Поставь у стены закреплённую деталь-рукоять, внутрь неё добавь PointLight</li><li>Задай Color 255, 179, 73, Brightness 2, Range 18 и включи Shadows</li><li>В ту же деталь добавь Fire — на рукояти загорится пламя</li><li>Test → обойди факел: есть ли на стене тень?</li></ol>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox от первого лица: горящие факелы на стене тёмной комнаты, тёплый круг света на полу под ними, дальние углы комнаты тонут в темноте]</p>
+<p class="content-item content-image-prompt">[изображение: Галерея сборки факела, 4 кадра: 1) у стены выделена закреплённая деталь-рукоять, в Properties подсвечен Anchored; 2) внутри рукояти PointLight, в Properties подсвечены Color 255, 179, 73, Brightness 2, Range 18 и Shadows; 3) в рукоять добавлен Fire — на ней горит пламя; 4) кадр от первого лица: горящие факелы на стене тёмной комнаты, тёплый круг света на полу под ними, дальние углы комнаты тонут в темноте]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь-рукоять у стены → «+» → PointLight (255, 179, 73; Brightness 2; Range 18; Shadows) → «+» → Fire.
 Сказать: Shadows включается у самого PointLight, а не у детали.
 Если факел падает при запуске: деталь не закреплена.
