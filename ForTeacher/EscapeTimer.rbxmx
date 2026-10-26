@@ -2,85 +2,72 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXCDF8C44DE56049B0B39A9505E71D0148">
+	<Item class="Folder" referent="RBX48DFBE1FD6E54242B531D3474FFBBBAA">
 		<Properties>
 			<string name="Name">EscapeTimer</string>
 		</Properties>
-		<Item class="Script" referent="RBX6F184667CE614A5D9537A9B28228ADD5">
+		<Item class="Script" referent="RBX9A7D90D4130E4B3E85F5A4EAEA0637D4">
 			<Properties>
-				<ProtectedString name="Source"><![CDATA[-- EscapeTimerScript — настенный дисплей с обратным отсчётом.
+				<ProtectedString name="Source"><![CDATA[-- EscapeTimerScript — таймер побега в окне на экране игрока.
 -- Модуль курса «Таймер побега», урок 31.
 --
 -- КАК ЧИТАТЬ ЭТОТ ФАЙЛ. Между двумя рядами знаков «равно» ниже лежат
--- настройки: сколько секунд идёт отсчёт, что написано в конце и на какой грани
--- детали появятся цифры. Их можно менять. Всё, что ниже второго ряда, —
--- логика: её не трогаем.
+-- настройки: сколько секунд идёт отсчёт и что написано в конце. Их можно
+-- менять. Всё, что ниже второго ряда, — логика: её не трогаем.
 --
--- Папка модуля кладётся внутрь детали-дисплея. Скрипт сам рисует на её грани
--- дисплей с цифрами: отдельно собирать интерфейс не нужно.
+-- Окно таймера собирают сами: ScreenGui в StarterGui, внутри — надпись
+-- TextLabel с именем TimeLabel. Папку модуля кладут внутрь этого ScreenGui:
+-- цифры появятся в TimeLabel, а шрифт и цвет останутся те, что выбраны.
 --
 -- Время вышло — штраф: все игроки возвращаются на точку возрождения, двери
--- модулей «Кнопка и дверь» и «Ключ и замок» закрываются, ключи ложатся на
--- свои места, и отсчёт начинается заново. Встал на финиш — таймер замирает.
+-- модулей «Кнопка и дверь» и «Ключ и замок» закрываются, ключи и другие
+-- предметы-Tool, разложенные в комнатах, ложатся на свои места (и ключи-обманки
+-- тоже), и отсчёт начинается заново. Встал на финиш — таймер замирает.
 
 -- ============================ НАСТРОЙКИ ============================
 local SECONDS = 300 -- сколько секунд на побег: 300 — это 5 минут
-local TIME_UP_TEXT = "Время вышло" -- что написано на дисплее, когда время кончилось
-local FACE = "Front" -- грань детали с цифрами: Front, Back, Left, Right, Top, Bottom
+local TIME_UP_TEXT = "Время вышло" -- что написано в окне, когда время кончилось
 local WARN_SECONDS = 30 -- за сколько секунд до конца цифры краснеют; 0 — не краснеют
 local RESTART = true -- true — время вышло: все на старт и заново; false — без штрафа
 local RESTART_DELAY = 3 -- сколько секунд висит надпись, прежде чем всё начнётся заново
 local FINISH = "ExitPad" -- имя детали финиша: встал на неё — таймер останавливается
-local WIN_TEXT = "Побег удался" -- что написано на дисплее, когда игрок на финише
+local WIN_TEXT = "Побег удался" -- что написано в окне, когда игрок на финише
 -- ===================================================================
 
 local Players = game:GetService("Players")
+local ServerScriptService = game:GetService("ServerScriptService")
 
--- Папка модуля лежит внутри детали-дисплея.
-local board = script.Parent.Parent
-
-if not board:IsA("BasePart") then
-	warn("EscapeTimer: папку модуля кладут внутрь детали-дисплея, а не в модель")
+-- Окно копируется каждому игроку, а вместе с ним и этот скрипт. Отсчёт должен
+-- быть один на всю игру, поэтому его ведёт копия в ServerScriptService: копия
+-- в окне ставит её, если её ещё нет, и дальше ничего не делает.
+local CORE = "EscapeTimerCore"
+if script.Parent ~= ServerScriptService then
+	if not script:FindFirstAncestorOfClass("ScreenGui") then
+		warn("EscapeTimer: папку модуля кладут внутрь ScreenGui с надписью TimeLabel")
+		return
+	end
+	if not ServerScriptService:FindFirstChild(CORE) then
+		local core = script:Clone()
+		core.Name = CORE
+		core.Parent = ServerScriptService
+	end
 	return
 end
 
-board.Anchored = true
-
--- Дисплей: SurfaceGui на грани детали. LightInfluence 0 — цифры видно и в темноте.
-local gui = board:FindFirstChild("EscapeTimerGui")
-if not gui then
-	gui = Instance.new("SurfaceGui")
-	gui.Name = "EscapeTimerGui"
-	gui.Parent = board
+-- Окно у каждого игрока читает три атрибута Workspace: сколько осталось
+-- (EscapeSeconds), что написать (EscapeTimerText) и каким цветом
+-- (EscapeTimerMood: run, warn, lose, win). Их видно в Properties у Workspace.
+local function state(text, mood)
+	workspace:SetAttribute("EscapeTimerText", text)
+	workspace:SetAttribute("EscapeTimerMood", mood)
 end
-gui.Face = Enum.NormalId[FACE] or Enum.NormalId.Front
-gui.SizingMode = Enum.SurfaceGuiSizingMode.FixedSize
-gui.PixelsPerStud = 50
-gui.LightInfluence = 0
-gui.AlwaysOnTop = false
-
-local label = gui:FindFirstChild("Time")
-if not label then
-	label = Instance.new("TextLabel")
-	label.Name = "Time"
-	label.Parent = gui
-end
-label.Size = UDim2.fromScale(1, 1)
-label.BackgroundTransparency = 1
-label.Font = Enum.Font.GothamBold
-label.TextScaled = true
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
-label.Text = "--:--"
 
 local function show(seconds)
+	workspace:SetAttribute("EscapeSeconds", seconds)
 	local minutes = math.floor(seconds / 60)
 	local rest = seconds % 60
-	label.Text = string.format("%02d:%02d", minutes, rest)
-	if WARN_SECONDS > 0 and seconds <= WARN_SECONDS then
-		label.TextColor3 = Color3.fromRGB(255, 80, 70)
-	else
-		label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	end
+	local warning = WARN_SECONDS > 0 and seconds <= WARN_SECONDS
+	state(string.format("%02d:%02d", minutes, rest), warning and "warn" or "run")
 end
 
 -- Финиш: деталь с именем FINISH где угодно в Workspace. Нет такой детали —
@@ -92,20 +79,55 @@ if finish and finish:IsA("BasePart") then
 		local character = hit.Parent
 		if not escaped and character and Players:GetPlayerFromCharacter(character) then
 			escaped = true
-			label.Text = WIN_TEXT
-			label.TextColor3 = Color3.fromRGB(110, 230, 120)
+			state(WIN_TEXT, "win")
 		end
 	end)
 end
 
--- Отсчёт идёт с первой секунды игры. Атрибут Seconds виден в Properties: по
--- нему другие модули урока могут понять, сколько осталось.
+-- Предметы-Tool, которые лежат в комнатах на старте игры (ключи, ключи-обманки),
+-- запоминаем вместе с местом: после штрафа они возвращаются туда же. Свой ключ
+-- возвращает и модуль «Ключ и замок» — копий не будет: замок убирает все ключи
+-- со своим именем и кладёт один.
+local homes = {}
+for _, item in ipairs(workspace:GetDescendants()) do
+	if item:IsA("Tool") and not Players:GetPlayerFromCharacter(item.Parent) then
+		table.insert(homes, { name = item.Name, copy = item:Clone(), parent = item.Parent })
+	end
+end
+
+local function returnTools()
+	local names = {}
+	for _, home in ipairs(homes) do
+		names[home.name] = true
+	end
+	-- Убираем эти предметы отовсюду: из рук, из рюкзаков, с пола.
+	for _, player in ipairs(Players:GetPlayers()) do
+		for _, holder in ipairs({ player.Character, player:FindFirstChildOfClass("Backpack") }) do
+			for _, item in ipairs(holder and holder:GetChildren() or {}) do
+				if item:IsA("Tool") and names[item.Name] then
+					item:Destroy()
+				end
+			end
+		end
+	end
+	for _, item in ipairs(workspace:GetDescendants()) do
+		if item:IsA("Tool") and names[item.Name] then
+			item:Destroy()
+		end
+	end
+	for _, home in ipairs(homes) do
+		if home.parent and home.parent:IsDescendantOf(game) then
+			home.copy:Clone().Parent = home.parent
+		end
+	end
+end
+
+-- Отсчёт идёт с первой секунды игры.
 local total = math.max(0, math.floor(SECONDS))
 
 task.spawn(function()
 	while true do
 		local left = total
-		board:SetAttribute("Seconds", left)
 		show(left)
 		while left > 0 and not escaped do
 			task.wait(1)
@@ -113,18 +135,18 @@ task.spawn(function()
 				break
 			end
 			left -= 1
-			board:SetAttribute("Seconds", left)
 			show(left)
 		end
 		if escaped then
 			return
 		end
-		label.Text = TIME_UP_TEXT
-		label.TextColor3 = Color3.fromRGB(255, 80, 70)
+		state(TIME_UP_TEXT, "lose")
 		if not RESTART then
 			return
 		end
 		task.wait(RESTART_DELAY)
+		-- Предметы — на места до сигнала: замок после него оставит от своего ключа одну копию.
+		returnTools()
 		-- Сигнал остальным модулям побега: закрыть двери, вернуть ключи.
 		workspace:SetAttribute("EscapeRound", (workspace:GetAttribute("EscapeRound") or 0) + 1)
 		-- Новый персонаж появляется на точке возрождения с пустым рюкзаком.
@@ -137,6 +159,50 @@ end)
 				<bool name="Disabled">false</bool>
 				<token name="RunContext">1</token>
 				<string name="Name">EscapeTimerScript</string>
+			</Properties>
+		</Item>
+		<Item class="LocalScript" referent="RBXB598470FA2EC41BFBB1EF268B2E41AC7">
+			<Properties>
+				<ProtectedString name="Source"><![CDATA[-- TimerDisplay — время побега в окне игрока.
+-- Модуль курса «Таймер побега», урок 31.
+--
+-- Работает в копии окна у игрока: находит в своём ScreenGui надпись TextLabel
+-- с именем TimeLabel и пишет в неё то, что считает EscapeTimerScript. Своих
+-- настроек у этого скрипта нет — они в EscapeTimerScript.
+--
+-- Цвет надписи — тот, что выбран в Properties; в последние секунды и когда
+-- время вышло цифры красные, на финише — зелёные.
+
+local LABEL = "TimeLabel"
+
+local gui = script:FindFirstAncestorOfClass("ScreenGui")
+local label = gui and gui:FindFirstChild(LABEL, true)
+if not (label and label:IsA("TextLabel")) then
+	warn("EscapeTimer: в окне таймера нет надписи TextLabel с именем " .. LABEL)
+	return
+end
+
+local baseColor = label.TextColor3
+local MOOD_COLORS = {
+	warn = Color3.fromRGB(255, 80, 70),
+	lose = Color3.fromRGB(255, 80, 70),
+	win = Color3.fromRGB(110, 230, 120),
+}
+
+local function refresh()
+	local text = workspace:GetAttribute("EscapeTimerText")
+	if text then
+		label.Text = text
+	end
+	label.TextColor3 = MOOD_COLORS[workspace:GetAttribute("EscapeTimerMood")] or baseColor
+end
+
+workspace:GetAttributeChangedSignal("EscapeTimerText"):Connect(refresh)
+workspace:GetAttributeChangedSignal("EscapeTimerMood"):Connect(refresh)
+refresh()
+]]></ProtectedString>
+				<bool name="Disabled">false</bool>
+				<string name="Name">TimerDisplay</string>
 			</Properties>
 		</Item>
 	</Item>
