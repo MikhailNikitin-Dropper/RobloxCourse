@@ -58,7 +58,7 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-theory">
 <h2 class="block-title" style="color:#006600;">Проектируем кольцевую трассу <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="14-t-1">
-<h3 class="slide-title">Старт и финиш — одна линия <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Старт и финиш — одна линия <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Кольцевая трасса</b> — это замкнутая дорога: по ней можно проехать сколько угодно кругов подряд</li><li>Ширина полотна — на две машины: на узкой дороге машины не разъезжаются и упираются друг в друга</li><li>Полотно без щелей — дорога собирается из широких плоских Part, состыкованных вплотную</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать: готовую трассу сверху — так видно форму кольца целиком.</aside>
 </div>
@@ -85,7 +85,7 @@ body { font-family: Arial, sans-serif; }
 Если плагина не видно: Plugins → Manage Plugins, проверить, что он включён.</aside>
 </div>
 <div class="slide" id="14-t-5">
-<h3 class="slide-title">Шикана: связка поворотов <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Шикана: связка поворотов <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Шикана</b> — это связка двух поворотов подряд в разные стороны: левый сразу за правым</li><li>Она разбивает длинную прямую: гонщик сбрасывает скорость и разгоняется заново</li><li>Та же секция — шикана собирается из неё, как и повороты: ширина полотна не меняется, меняется только направление дуг</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: ширину полотна в связке не меняем — шикана только разбавляет длинную прямую поворотами.
 Сказать: как собрать шикану в Studio, разберём на шаге 3 практики.</aside>
@@ -96,15 +96,22 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Сказать: ограждения входят в модель-секцию и дублируются плагином вместе с полотном.</aside>
 </div>
 <div class="slide" id="14-t-7">
-<h3 class="slide-title">Terrain вокруг трассы <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Terrain вокруг трассы <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Мир вокруг дороги — холмы за поворотами, деревья вдоль прямых, озеро в центре кольца</li><li>Инструменты урока 2 — Sculpt формирует рельеф, Paint наносит материал, Draw добавляет землю</li><li>Природа — за ограждениями: на полотне дороги ничего расти не должно</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: холм за поворотом подсказывает его издалека, деревья у обочин дают ощущение скорости.</aside>
 </div>
 <div class="slide" id="14-t-8">
-<h3 class="slide-title">Старт и финишная арка <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Старт и финишная арка <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Стартовая решётка</b> — это широкий прямой участок с размеченными местами машин</li><li>Финишная линия — контрастная полоса поперёк дороги</li><li>Арка над финишем видна издалека — это маяк трассы, знакомый приём навигации</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот стартовой зоны гоночной трассы в Roblox Studio: широкая прямая с размеченными клетками стартовой решётки и ограждениями по краям, поперёк дороги чёрно-белая финишная полоса, над ней арка]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: арка финиша — тот же маяк, что на уроке 11: гонщик всегда знает, где завершается круг.</aside>
+</div>
+<div class="slide" id="14-t-9">
+<h3 class="slide-title">Ошибки при сборке трассы <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Залом на стыке секций — машину подбрасывает на ровной дороге</li><li>Выделили деталь, а не модель — плагин копирует только её</li><li>Крупный шаг угла — поворот слишком резкий, машину выносит</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: две секции с заломом на стыке — Test, машину подбрасывает; выровнять Orientation.
+Сказать: Archimedes копирует то, что выделено: в Explorer выделяем строку модели, иначе дуга выйдет без ограждений.
+Сказать: машину выносит из поворота — шаг угла мельче или секция длиннее, тогда радиус больше.</aside>
 </div>
 </section>
 <section class="block block-qa_theory">

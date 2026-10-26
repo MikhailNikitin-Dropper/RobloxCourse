@@ -71,7 +71,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: имя PropHunterGui не меняем — по нему модуль находит окно.</aside>
 </div>
 <div class="slide" id="7-t-3">
-<h3 class="slide-title">ScreenGui: контейнер <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">ScreenGui: контейнер <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>ScreenGui</b> — объект-контейнер: в нём находятся все элементы интерфейса игрока</li><li>Создаём его в StarterGui — и он появится у каждого игрока при заходе в игру</li><li>Копия в PlayerGui — Studio сама копирует ScreenGui каждому игроку при старте</li><li>Внутри ScreenGui обычно лежит Frame — контейнер для остальных элементов окна</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Explorer в Roblox Studio: StarterGui пуст: расширенный модуль своего интерфейса не приносит, внутрь только что вставлен новый ScreenGui «PropHunterGui» с Frame «MainFrame» внутри]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: «+» у StarterGui → ScreenGui, переименовать; внутрь «+» → Frame.
@@ -93,7 +93,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: рисовать иконки самим не нужно, их берут из библиотеки.</aside>
 </div>
 <div class="slide" id="7-t-6">
-<h3 class="slide-title">Иконка предмета через Decal <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Иконка предмета через Decal <span class="slide-duration">(2 мин)</span></h3>
 <ol class="content-item content-steps"><li>Выдели в Workspace предмет с тегом Prop Hunt</li><li>Вставь в него объект Decal (+ → Decal)</li><li>В Properties впиши ColorMapContent = rbxassetid:// нужной картинки из библиотеки</li><li>Готово: при запуске игры иконка в карточке журнала возьмётся с этого Decal сама</li></ol>
 <p class="content-item content-image-prompt">[изображение: Explorer и Properties рядом: внутри детали предмета вставлен Decal, в поле ColorMapContent стоит rbxassetid картинки; на предмете в мире видна эта же иконка-текстура]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: выделить предмет с тегом Prop Hunt → «+» → Decal → в Properties вписать ColorMapContent.
@@ -101,7 +101,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: Face у Decal для журнала не важен.</aside>
 </div>
 <div class="slide" id="7-t-7">
-<h3 class="slide-title">Один шаблон карточки <span class="slide-duration">(2.5 мин)</span></h3>
+<h3 class="slide-title">Один шаблон карточки <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Список сокровищ может пополняться на ходу — заранее не известно, сколько строк понадобится</li><li><b>Шаблон (ItemTemplate)</b> — одна оформленная карточка-образец, которую мы собираем один раз вручную</li><li>Копия на каждую находку — модуль делает копию шаблона и подставляет в неё имя, расстояние и иконку с Decal</li><li>Оформили шаблон один раз — одинаково аккуратными получаются все копии сразу</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: одна форма для печенья — сколько угодно печений, но с разной начинкой; так же работает шаблон карточки.
 Сказать: на каждый предмет модуль делает копию шаблона и подставляет имя, расстояние и иконку.
@@ -115,7 +115,7 @@ body { font-family: Arial, sans-serif; }
 Сказать: ScrollBarThickness задаёт толщину полосы, ноль прячет её совсем.</aside>
 </div>
 <div class="slide" id="7-t-9">
-<h3 class="slide-title">Красивая рамка окна <span class="slide-duration">(1.5 мин)</span></h3>
+<h3 class="slide-title">Красивая рамка окна <span class="slide-duration">(1 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>UICorner</b> скругляет углы рамки — просто вставляется внутрь Frame</li><li><b>UIStroke</b> — добавляет цветную обводку заданной толщины</li><li><b>UIGradient</b> — красит фон плавным переходом между двумя и более цветами</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: вставить UICorner в Frame — углы скруглились мгновенно; затем UIStroke и UIGradient.
 Сказать: это украшение, а не обязательный шаг — делаем по желанию.</aside>
@@ -127,6 +127,13 @@ body { font-family: Arial, sans-serif; }
 <aside class="speaker-notes">Заметка ведущего: Сказать: собирать будем ровно в этом порядке — от ScreenGui до карточки внутри ScrollingFrame.
 Сказать: WinFrame и InfoFrame ставятся парой рядом с MainFrame, внутри InfoFrame нужен TextLabel.
 Сказать: частая ошибка — перепутать вложенность или ошибиться в имени: тогда модуль объект не найдёт.</aside>
+</div>
+<div class="slide" id="7-t-11">
+<h3 class="slide-title">Ошибки при сборке журнала <span class="slide-duration">(2 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Опечатка в имени объекта — модуль его не найдёт, и список останется пустым</li><li>Нет окон победы и подсказки — список не заполнится</li><li>Нет Decal в предмете — в карточке вместо иконки значок-заглушка</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: опечатка в имени ScrollingFrame — Test, список пустой, в Output ошибка с этим именем; вернуть имя.
+Сказать: модуль заполняет список только после того, как найдёт окна победы и подсказки — WinFrame и InfoFrame.
+Сказать: иконку модуль берёт с Decal внутри предмета с тегом Prop Hunt; без Decal в карточке значок-заглушка.</aside>
 </div>
 </section>
 <section class="block block-qa_theory">
