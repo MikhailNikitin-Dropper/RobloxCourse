@@ -246,6 +246,11 @@ a:hover{color:var(--ek-violet-deep)}
 .practice-card .ph-card{box-shadow:0 3px 10px rgba(23,23,28,.07);margin-top:10px}
 .practice-cols{margin-top:0;align-items:center;font-size:inherit}
 .practice-cols .ph-card{margin-top:0}
+/* слайд из одной картинки: карточка по ширине кадра, потолок высоты 280 вместо 440 в колонке */
+.fig-only{display:flex;justify-content:center;margin-top:10px}
+.fig-only .ph-card{width:fit-content;max-width:100%;margin:0}
+.fig-only .ph-wrap{width:calc(var(--ph-maxw,700px) * 280 / 440);max-width:100%}
+.fig-only .ph{max-height:280px}
 
 /* навигация (слева, чтобы не перекрывать номер страницы шаблона) */
 .nav{position:fixed;left:22px;bottom:20px;display:flex;gap:10px;z-index:10}

@@ -2,21 +2,21 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXE0C502BA7C1E49B38D93874A5E87DD51">
+	<Item class="Folder" referent="RBX4948C5276A074D8895030A39F33C37AF">
 		<Properties>
 			<string name="Name">ShopKiosk</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX158A794020394C2AA913871D2A1FDF3A">
+		<Item class="RemoteEvent" referent="RBXC0E6D63D4A1E419F9071EF9E5A29D6D9">
 			<Properties>
 				<string name="Name">Open</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX58FA6CF3D108457CBF9BDDF144A79F1C">
+		<Item class="RemoteEvent" referent="RBX650AFC3B81E3438EAE98EB83AF9037ED">
 			<Properties>
 				<string name="Name">Buy</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXB8C77FBD0BD94EDC98F2E29617A89201">
+		<Item class="Script" referent="RBX6834F11DEA974ECC9A245C7502FE01F2">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ShopScript — магазин снаряжения.
 -- Модуль курса «Магазин снаряжения», урок 35.
@@ -30,8 +30,9 @@
 --
 -- ТОВАРЫ магазин берёт из папки ITEMS_FOLDER в ServerStorage. Товар — это
 -- предмет-Tool с атрибутом Price (цена в монетах). Что предмет делает, решает
--- скрипт внутри него: модуль приносит четыре примера (аптечка, броня,
--- ускорение, большой рюкзак), их можно менять и копировать. Оружие кладут
+-- скрипт внутри него: модуль приносит в папке ITEMS_FOLDER скрипты четырёх
+-- товаров (аптечка, броня, ускорение, большой рюкзак), а модель к каждому —
+-- Tool с деталью Handle — собирают сами и кладут скрипт внутрь. Оружие кладут
 -- туда же — тул бластера с атрибутами Price и Weapon = true, скрипт ему не
 -- нужен. Цена 0 — товар бесплатный (так выдаётся стартовый пистолет).
 -- Порядок в списке — атрибут Order (меньше — выше), без него — по цене.
@@ -271,6 +272,14 @@ buy.OnServerEvent:Connect(function(player, index)
 	end
 
 	local copy = item:Clone()
+	if not weapon then
+		-- Товар собран своими руками: Backspace его не выбрасывает — выбрасывают
+		-- клавишей модуля лута, на площадке скупщика это продажа.
+		copy.CanBeDropped = false
+		if copy.ToolTip == "" then
+			copy.ToolTip = "Нажми, чтобы использовать"
+		end
+	end
 	copy:SetAttribute("Order", nil)
 	copy:SetAttribute("Slots", slots)
 	if weapon then
@@ -287,7 +296,7 @@ end)
 				<string name="Name">ShopScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX89AF392B4C984953807AD9C7B351552A">
+		<Item class="Script" referent="RBX3CFBB6FAB9704414BF2FE823F18DEBDD">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ShopClient — окно магазина.
 -- Модуль курса «Магазин снаряжения», урок 35.
@@ -537,385 +546,225 @@ end)
 				<string name="Name">ShopClient</string>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX712877E323184EFEB39A191DD2117A08">
+		<Item class="Folder" referent="RBX71EEE5A5DFF34962B5E45C65685F3E36">
 			<Properties>
 				<string name="Name">ShopItems</string>
 			</Properties>
-			<Item class="Tool" referent="RBXEA909EDB0F20490C842ABCF6AEBFF804">
+			<Item class="Script" referent="RBX9B589AA2776C4BA493B104FF76D28046">
 				<Properties>
+					<ProtectedString name="Source"><![CDATA[-- Аптечка — товар магазина. Взял в руку, нажал — лечит и пропадает.
+	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+	-- (Properties → Attributes), строка на карточке магазина — атрибут
+	-- Description. В плейсе курса: Price = 40, Description = «Лечит до полного здоровья».
+	
+	-- ============================ НАСТРОЙКИ ============================
+	local HEAL = 100 -- сколько здоровья вернуть
+	-- ===================================================================
+	
+	local Players = game:GetService("Players")
+	local tool = script.Parent
+	
+	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+	if not tool:IsA("Tool") then
+		return
+	end
+	
+	local function say(player, text)
+		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+		if notice then
+			notice:FireClient(player, text)
+		end
+	end
+	
+	tool.Activated:Connect(function()
+		local character = tool.Parent
+		local player = Players:GetPlayerFromCharacter(character)
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if not (player and humanoid and humanoid.Health > 0) then
+			return
+		end
+		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+		-- InRaid ставит модуль рейда, когда поле после входа снято.
+		if not player:GetAttribute("InRaid") then
+			say(player, "Работает только на вылазке")
+			return
+		end
+		if humanoid.Health >= humanoid.MaxHealth then
+			say(player, "Здоровье и так полное")
+			return
+		end
+		humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
+		tool:Destroy()
+	end)
+	]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<token name="RunContext">1</token>
 					<string name="Name">Аптечка</string>
-					<string name="ToolTip">Нажми, чтобы использовать</string>
-					<bool name="CanBeDropped">false</bool>
-					<bool name="RequiresHandle">true</bool>
-					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABEQAUAAABPcmRlcgYAAAAAAADwPwsAAABEZXNjcmlwdGlvbgIvAAAA0JvQtdGH0LjRgiDQtNC+INC/0L7Qu9C90L7Qs9C+INC30LTQvtGA0L7QstGM0Y8=</BinaryString>
 				</Properties>
-				<Item class="Part" referent="RBX062FB9E9ADB941018E459C12CC609994">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4293609030</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
-						<string name="Name">Handle</string>
-					</Properties>
-					<Item class="Weld" referent="RBXF08F5AFEC0C24692B62BB955EC8E202A">
-						<Properties>
-							<string name="Name">Weld</string>
-							<Ref name="Part0">RBX062FB9E9ADB941018E459C12CC609994</Ref>
-							<Ref name="Part1">RBXA68FE5DD918A49DAA876F443849907CC</Ref>
-							<CoordinateFrame name="C0"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						</Properties>
-					</Item>
-				</Item>
-				<Item class="Part" referent="RBXA68FE5DD918A49DAA876F443849907CC">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4294309365</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>0.6</X><Y>0.2</Y><Z>1.05</Z></Vector3>
-						<string name="Name">Detail</string>
-					</Properties>
-				</Item>
-				<Item class="Script" referent="RBXA7596EC0B3ED4605AB46835A20BF5525">
-					<Properties>
-						<ProtectedString name="Source"><![CDATA[-- Аптечка — товар магазина. Взял в руку, нажал — лечит и пропадает.
-		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
-		
-		-- ============================ НАСТРОЙКИ ============================
-		local HEAL = 100 -- сколько здоровья вернуть
-		-- ===================================================================
-		
-		local Players = game:GetService("Players")
-		local tool = script.Parent
-		
-		local function say(player, text)
-			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-			if notice then
-				notice:FireClient(player, text)
-			end
-		end
-		
-		tool.Activated:Connect(function()
-			local character = tool.Parent
-			local player = Players:GetPlayerFromCharacter(character)
-			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-			if not (player and humanoid and humanoid.Health > 0) then
-				return
-			end
-			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-			-- InRaid ставит модуль рейда, когда поле после входа снято.
-			if not player:GetAttribute("InRaid") then
-				say(player, "Работает только на вылазке")
-				return
-			end
-			if humanoid.Health >= humanoid.MaxHealth then
-				say(player, "Здоровье и так полное")
-				return
-			end
-			humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
-			tool:Destroy()
-		end)
-		]]></ProtectedString>
-						<bool name="Disabled">false</bool>
-						<token name="RunContext">1</token>
-						<string name="Name">Effect</string>
-					</Properties>
-				</Item>
 			</Item>
-			<Item class="Tool" referent="RBXF00E302C41904E88B9325CF90199F8B3">
+			<Item class="Script" referent="RBX592E13FA394E4EF99F665070E632010F">
 				<Properties>
+					<ProtectedString name="Source"><![CDATA[-- Броня — товар магазина. Взял в руку, нажал — запас здоровья до гибели.
+	-- Вторая броня не надевается, пока действует первая.
+	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+	-- (Properties → Attributes), строка на карточке магазина — атрибут
+	-- Description. В плейсе курса: Price = 60, Description = «+50 здоровья до гибели».
+	
+	-- ============================ НАСТРОЙКИ ============================
+	local ARMOR = 50 -- сколько здоровья прибавить сверх обычного
+	-- ===================================================================
+	
+	local Players = game:GetService("Players")
+	local tool = script.Parent
+	
+	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+	if not tool:IsA("Tool") then
+		return
+	end
+	
+	local function say(player, text)
+		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+		if notice then
+			notice:FireClient(player, text)
+		end
+	end
+	
+	tool.Activated:Connect(function()
+		local character = tool.Parent
+		local player = Players:GetPlayerFromCharacter(character)
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if not (player and humanoid and humanoid.Health > 0) then
+			return
+		end
+		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+		-- InRaid ставит модуль рейда, когда поле после входа снято.
+		if not player:GetAttribute("InRaid") then
+			say(player, "Работает только на вылазке")
+			return
+		end
+		if humanoid:GetAttribute("Armor") then
+			say(player, "Броня уже надета")
+			return
+		end
+		humanoid:SetAttribute("Armor", ARMOR)
+		humanoid.MaxHealth += ARMOR
+		humanoid.Health += ARMOR
+		tool:Destroy()
+	end)
+	]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<token name="RunContext">1</token>
 					<string name="Name">Броня</string>
-					<string name="ToolTip">Нажми, чтобы использовать</string>
-					<bool name="CanBeDropped">false</bool>
-					<bool name="RequiresHandle">true</bool>
-					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABOQAUAAABPcmRlcgYAAAAAAAAAQAsAAABEZXNjcmlwdGlvbgImAAAAKzUwINC30LTQvtGA0L7QstGM0Y8g0LTQviDQs9C40LHQtdC70Lg=</BinaryString>
 				</Properties>
-				<Item class="Part" referent="RBX7B6E50A2770C4FF19AAAFAA381392C75">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4282811115</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
-						<string name="Name">Handle</string>
-					</Properties>
-					<Item class="Weld" referent="RBX22B71E49C3DA4C22A290234E9226420E">
-						<Properties>
-							<string name="Name">Weld</string>
-							<Ref name="Part0">RBX7B6E50A2770C4FF19AAAFAA381392C75</Ref>
-							<Ref name="Part1">RBX2DB7E7D6BDCD4E10B152FF93CDFBCF43</Ref>
-							<CoordinateFrame name="C0"><X>0</X><Y>0.6</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						</Properties>
-					</Item>
-				</Item>
-				<Item class="Part" referent="RBX2DB7E7D6BDCD4E10B152FF93CDFBCF43">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0.6</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4280829580</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1.1</X><Y>0.3</Y><Z>0.3</Z></Vector3>
-						<string name="Name">Detail</string>
-					</Properties>
-				</Item>
-				<Item class="Script" referent="RBX4F09FF7D10404EB58E38435432745F49">
-					<Properties>
-						<ProtectedString name="Source"><![CDATA[-- Броня — товар магазина. Взял в руку, нажал — запас здоровья до гибели.
-		-- Вторая броня не надевается, пока действует первая.
-		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
-		
-		-- ============================ НАСТРОЙКИ ============================
-		local ARMOR = 50 -- сколько здоровья прибавить сверх обычного
-		-- ===================================================================
-		
-		local Players = game:GetService("Players")
-		local tool = script.Parent
-		
-		local function say(player, text)
-			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-			if notice then
-				notice:FireClient(player, text)
-			end
-		end
-		
-		tool.Activated:Connect(function()
-			local character = tool.Parent
-			local player = Players:GetPlayerFromCharacter(character)
-			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-			if not (player and humanoid and humanoid.Health > 0) then
-				return
-			end
-			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-			-- InRaid ставит модуль рейда, когда поле после входа снято.
-			if not player:GetAttribute("InRaid") then
-				say(player, "Работает только на вылазке")
-				return
-			end
-			if humanoid:GetAttribute("Armor") then
-				say(player, "Броня уже надета")
-				return
-			end
-			humanoid:SetAttribute("Armor", ARMOR)
-			humanoid.MaxHealth += ARMOR
-			humanoid.Health += ARMOR
-			tool:Destroy()
-		end)
-		]]></ProtectedString>
-						<bool name="Disabled">false</bool>
-						<token name="RunContext">1</token>
-						<string name="Name">Effect</string>
-					</Properties>
-				</Item>
 			</Item>
-			<Item class="Tool" referent="RBXDD2C4B2364C841E8911CCAB6A8109272">
+			<Item class="Script" referent="RBXC7C011F785EF4A02B25CA7809F5ED0D1">
 				<Properties>
+					<ProtectedString name="Source"><![CDATA[-- Ускорение — товар магазина. Взял в руку, нажал — бегаешь быстрее до гибели.
+	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+	-- (Properties → Attributes), строка на карточке магазина — атрибут
+	-- Description. В плейсе курса: Price = 50, Description = «Бег быстрее до гибели».
+	
+	-- ============================ НАСТРОЙКИ ============================
+	local SPEED = 24 -- скорость бега (обычная — 16)
+	-- ===================================================================
+	
+	local Players = game:GetService("Players")
+	local tool = script.Parent
+	
+	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+	if not tool:IsA("Tool") then
+		return
+	end
+	
+	local function say(player, text)
+		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+		if notice then
+			notice:FireClient(player, text)
+		end
+	end
+	
+	tool.Activated:Connect(function()
+		local character = tool.Parent
+		local player = Players:GetPlayerFromCharacter(character)
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if not (player and humanoid and humanoid.Health > 0) then
+			return
+		end
+		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+		-- InRaid ставит модуль рейда, когда поле после входа снято.
+		if not player:GetAttribute("InRaid") then
+			say(player, "Работает только на вылазке")
+			return
+		end
+		if humanoid.WalkSpeed >= SPEED then
+			say(player, "Ускорение уже действует")
+			return
+		end
+		humanoid.WalkSpeed = SPEED
+		tool:Destroy()
+	end)
+	]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<token name="RunContext">1</token>
 					<string name="Name">Ускорение</string>
-					<string name="ToolTip">Нажми, чтобы использовать</string>
-					<bool name="CanBeDropped">false</bool>
-					<bool name="RequiresHandle">true</bool>
-					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABJQAUAAABPcmRlcgYAAAAAAAAIQAsAAABEZXNjcmlwdGlvbgInAAAA0JHQtdCzINCx0YvRgdGC0YDQtdC1INC00L4g0LPQuNCx0LXQu9C4</BinaryString>
 				</Properties>
-				<Item class="Part" referent="RBX7554AF3B3DF642B68711701912D96155">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4294625330</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
-						<string name="Name">Handle</string>
-					</Properties>
-					<Item class="Weld" referent="RBXAB170361C8FC4E4098BF54069E1CCCFB">
-						<Properties>
-							<string name="Name">Weld</string>
-							<Ref name="Part0">RBX7554AF3B3DF642B68711701912D96155</Ref>
-							<Ref name="Part1">RBXA964AA0A30E8423C8C7B571545F8D6AB</Ref>
-							<CoordinateFrame name="C0"><X>0</X><Y>0.7</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						</Properties>
-					</Item>
-				</Item>
-				<Item class="Part" referent="RBXA964AA0A30E8423C8C7B571545F8D6AB">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0.7</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4282137660</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>0.6</X><Y>0.4</Y><Z>0.6</Z></Vector3>
-						<string name="Name">Detail</string>
-					</Properties>
-				</Item>
-				<Item class="Script" referent="RBX49751264E6764077AAF20D6BE5331DE3">
-					<Properties>
-						<ProtectedString name="Source"><![CDATA[-- Ускорение — товар магазина. Взял в руку, нажал — бегаешь быстрее до гибели.
-		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
-		
-		-- ============================ НАСТРОЙКИ ============================
-		local SPEED = 24 -- скорость бега (обычная — 16)
-		-- ===================================================================
-		
-		local Players = game:GetService("Players")
-		local tool = script.Parent
-		
-		local function say(player, text)
-			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-			if notice then
-				notice:FireClient(player, text)
-			end
-		end
-		
-		tool.Activated:Connect(function()
-			local character = tool.Parent
-			local player = Players:GetPlayerFromCharacter(character)
-			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-			if not (player and humanoid and humanoid.Health > 0) then
-				return
-			end
-			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-			-- InRaid ставит модуль рейда, когда поле после входа снято.
-			if not player:GetAttribute("InRaid") then
-				say(player, "Работает только на вылазке")
-				return
-			end
-			if humanoid.WalkSpeed >= SPEED then
-				say(player, "Ускорение уже действует")
-				return
-			end
-			humanoid.WalkSpeed = SPEED
-			tool:Destroy()
-		end)
-		]]></ProtectedString>
-						<bool name="Disabled">false</bool>
-						<token name="RunContext">1</token>
-						<string name="Name">Effect</string>
-					</Properties>
-				</Item>
 			</Item>
-			<Item class="Tool" referent="RBX668F572DBCE34C6580840D94C71D23F9">
+			<Item class="Script" referent="RBX72594A769AAA42D59835B6039A588431">
 				<Properties>
-					<string name="Name">Большой рюкзак</string>
-					<string name="ToolTip">Нажми, чтобы использовать</string>
-					<bool name="CanBeDropped">false</bool>
-					<bool name="RequiresHandle">true</bool>
-					<BinaryString name="AttributesSerialize">AwAAAAUAAABQcmljZQYAAAAAAABUQAUAAABPcmRlcgYAAAAAAAAQQAsAAABEZXNjcmlwdGlvbgIfAAAAKzMg0LzQtdGB0YLQsCDQtNC+INCz0LjQsdC10LvQuA==</BinaryString>
-				</Properties>
-				<Item class="Part" referent="RBX5B5FCC8D32874727BD6DB4392C201127">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4288047420</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1</X><Y>1</Y><Z>1</Z></Vector3>
-						<string name="Name">Handle</string>
-					</Properties>
-					<Item class="Weld" referent="RBXD67BAAF892794BEEACAB7F570548946A">
-						<Properties>
-							<string name="Name">Weld</string>
-							<Ref name="Part0">RBX5B5FCC8D32874727BD6DB4392C201127</Ref>
-							<Ref name="Part1">RBX7938449E59C24B64AC10F206AA762097</Ref>
-							<CoordinateFrame name="C0"><X>0</X><Y>0.2</Y><Z>-0.6</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-							<CoordinateFrame name="C1"><X>0</X><Y>0</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						</Properties>
-					</Item>
-				</Item>
-				<Item class="Part" referent="RBX7938449E59C24B64AC10F206AA762097">
-					<Properties>
-						<bool name="Anchored">false</bool>
-						<bool name="CanCollide">false</bool>
-						<bool name="Massless">true</bool>
-						<CoordinateFrame name="CFrame"><X>0</X><Y>0.2</Y><Z>-0.6</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
-						<Color3uint8 name="Color3uint8">4285418280</Color3uint8>
-						<token name="Material">272</token>
-						<token name="TopSurface">0</token>
-						<token name="BottomSurface">0</token>
-						<token name="shape">1</token>
-						<Vector3 name="size"><X>1.05</X><Y>0.5</Y><Z>0.4</Z></Vector3>
-						<string name="Name">Detail</string>
-					</Properties>
-				</Item>
-				<Item class="Script" referent="RBXA7F244028CAB4D9095CD48E9BB5FC365">
-					<Properties>
-						<ProtectedString name="Source"><![CDATA[-- Большой рюкзак — товар магазина. Взял в руку, нажал — в рюкзаке больше
-		-- мест до гибели. Места прибавляет модуль лута по атрибуту игрока BonusSlots.
-		-- Цена — атрибут Price у самого предмета (Properties → Attributes).
-		
-		-- ============================ НАСТРОЙКИ ============================
-		local EXTRA_SLOTS = 3 -- сколько мест добавить
-		-- ===================================================================
-		
-		local Players = game:GetService("Players")
-		local tool = script.Parent
-		
-		local function say(player, text)
-			local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-			if notice then
-				notice:FireClient(player, text)
-			end
+					<ProtectedString name="Source"><![CDATA[-- Большой рюкзак — товар магазина. Взял в руку, нажал — в рюкзаке больше
+	-- мест до гибели. Места прибавляет модуль лута по атрибуту игрока BonusSlots.
+	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+	-- (Properties → Attributes), строка на карточке магазина — атрибут
+	-- Description. В плейсе курса: Price = 80, Description = «+3 места до гибели».
+	
+	-- ============================ НАСТРОЙКИ ============================
+	local EXTRA_SLOTS = 3 -- сколько мест добавить
+	-- ===================================================================
+	
+	local Players = game:GetService("Players")
+	local tool = script.Parent
+	
+	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+	if not tool:IsA("Tool") then
+		return
+	end
+	
+	local function say(player, text)
+		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+		if notice then
+			notice:FireClient(player, text)
 		end
-		
-		tool.Activated:Connect(function()
-			local character = tool.Parent
-			local player = Players:GetPlayerFromCharacter(character)
-			local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-			if not (player and humanoid and humanoid.Health > 0) then
-				return
-			end
-			-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-			-- InRaid ставит модуль рейда, когда поле после входа снято.
-			if not player:GetAttribute("InRaid") then
-				say(player, "Работает только на вылазке")
-				return
-			end
-			if (player:GetAttribute("BonusSlots") or 0) > 0 then
-				say(player, "Большой рюкзак уже надет")
-				return
-			end
-			player:SetAttribute("BonusSlots", EXTRA_SLOTS)
-			tool:Destroy()
-		end)
-		]]></ProtectedString>
-						<bool name="Disabled">false</bool>
-						<token name="RunContext">1</token>
-						<string name="Name">Effect</string>
-					</Properties>
-				</Item>
+	end
+	
+	tool.Activated:Connect(function()
+		local character = tool.Parent
+		local player = Players:GetPlayerFromCharacter(character)
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if not (player and humanoid and humanoid.Health > 0) then
+			return
+		end
+		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+		-- InRaid ставит модуль рейда, когда поле после входа снято.
+		if not player:GetAttribute("InRaid") then
+			say(player, "Работает только на вылазке")
+			return
+		end
+		if (player:GetAttribute("BonusSlots") or 0) > 0 then
+			say(player, "Большой рюкзак уже надет")
+			return
+		end
+		player:SetAttribute("BonusSlots", EXTRA_SLOTS)
+		tool:Destroy()
+	end)
+	]]></ProtectedString>
+					<bool name="Disabled">false</bool>
+					<token name="RunContext">1</token>
+					<string name="Name">Большой рюкзак</string>
+				</Properties>
 			</Item>
 		</Item>
 	</Item>

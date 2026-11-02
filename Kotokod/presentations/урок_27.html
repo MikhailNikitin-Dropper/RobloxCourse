@@ -70,6 +70,11 @@ html,body{height:100%;background:#15161f;overflow:hidden}
 .two-col{display:flex;gap:70px;align-items:flex-start;flex:1 1 auto;min-height:0;font-size:36px;line-height:1.5}
 .col-text{flex:1 1 52%;min-width:0}
 .col-fig{flex:1 1 48%;min-width:0}
+/* слайд из одной картинки: кадр по центру, потолок высоты 500 вместо 660 в колонке */
+.fig-only{display:flex;justify-content:center;flex:1 1 auto;min-height:0}
+.fig-only .ph-figure{width:fit-content;max-width:100%}
+.fig-only .ph-wrap{width:calc(var(--ph-maxw,900px) * 500 / 660);max-width:100%}
+.fig-only .ph{max-height:500px}
 .para{margin:0 0 .74em}
 .link-card{background:#fff;border:4px solid #4F59F9;border-radius:18px;padding:.5em .8em;margin:0 0 .74em;overflow-wrap:break-word;word-break:break-all}
 .link-card a{display:block;margin-top:.3em}

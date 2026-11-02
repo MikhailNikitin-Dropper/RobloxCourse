@@ -70,6 +70,12 @@ a{color:var(--blue);font-weight:600;text-underline-offset:.15em}
 /* подложка не обрезается колонкой и лежит поверх области шапки слайда */
 .two-col--fig .col-fig{flex:1 1 auto;position:relative;isolation:isolate;padding:24px 0 0 24px;overflow:visible;z-index:1}
 .two-col--fig .col-text{flex:0 0 40%}
+/* слайд из одной картинки: потолок высоты 640 вместо 560 — ширина рамки растёт так же */
+.fig-only{display:flex;justify-content:center}
+.fig-only .col-fig{flex:1 1 auto}
+.fig-only .ph-figure{margin-left:auto;margin-right:auto}
+.fig-only .ph-wrap{max-width:calc(var(--ph-maxw,100%) * 640 / 560)}
+.fig-only .ph{max-height:640px}
 .two-col--fig .ph-figure{position:relative}
 .two-col--fig .ph-figure::before{content:"";position:absolute;inset:0;border-radius:30px;z-index:-1;
   background:color-mix(in srgb,var(--blue) 20%,#fff);transform:translate(-16px,-12px) rotate(-1.5deg)}
