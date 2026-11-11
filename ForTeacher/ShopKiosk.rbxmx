@@ -2,21 +2,21 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX4948C5276A074D8895030A39F33C37AF">
+	<Item class="Folder" referent="RBXF8351F458EAF4DB0869709308AA3C23F">
 		<Properties>
 			<string name="Name">ShopKiosk</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBXC0E6D63D4A1E419F9071EF9E5A29D6D9">
+		<Item class="RemoteEvent" referent="RBX46EE9E4FD56A4840B8CF5177BBD4DE06">
 			<Properties>
 				<string name="Name">Open</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX650AFC3B81E3438EAE98EB83AF9037ED">
+		<Item class="RemoteEvent" referent="RBX38DD0A1527134651BD9DA8049209F91C">
 			<Properties>
 				<string name="Name">Buy</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX6834F11DEA974ECC9A245C7502FE01F2">
+		<Item class="Script" referent="RBX2FD5259B8F5B4443B06C0A458F2EE006">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ShopScript — магазин снаряжения.
 -- Модуль курса «Магазин снаряжения», урок 35.
@@ -296,7 +296,7 @@ end)
 				<string name="Name">ShopScript</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX3CFBB6FAB9704414BF2FE823F18DEBDD">
+		<Item class="Script" referent="RBX006EBB1D3BB4428B9E34135CEF6CA40F">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- ShopClient — окно магазина.
 -- Модуль курса «Магазин снаряжения», урок 35.
@@ -546,221 +546,221 @@ end)
 				<string name="Name">ShopClient</string>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX71EEE5A5DFF34962B5E45C65685F3E36">
+		<Item class="Folder" referent="RBXC1D05BB99A5D48BA81618AA954083D44">
 			<Properties>
 				<string name="Name">ShopItems</string>
 			</Properties>
-			<Item class="Script" referent="RBX9B589AA2776C4BA493B104FF76D28046">
+			<Item class="Script" referent="RBX8E55D10D52EE499AAA040FFF10FEF42E">
 				<Properties>
 					<ProtectedString name="Source"><![CDATA[-- Аптечка — товар магазина. Взял в руку, нажал — лечит и пропадает.
-	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
-	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
-	-- (Properties → Attributes), строка на карточке магазина — атрибут
-	-- Description. В плейсе курса: Price = 40, Description = «Лечит до полного здоровья».
-	
-	-- ============================ НАСТРОЙКИ ============================
-	local HEAL = 100 -- сколько здоровья вернуть
-	-- ===================================================================
-	
-	local Players = game:GetService("Players")
-	local tool = script.Parent
-	
-	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
-	if not tool:IsA("Tool") then
+-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+-- (Properties → Attributes), строка на карточке магазина — атрибут
+-- Description. В плейсе курса: Price = 40, Description = «Лечит до полного здоровья».
+
+-- ============================ НАСТРОЙКИ ============================
+local HEAL = 100 -- сколько здоровья вернуть
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local tool = script.Parent
+
+-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+if not tool:IsA("Tool") then
+	return
+end
+
+local function say(player, text)
+	local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+	if notice then
+		notice:FireClient(player, text)
+	end
+end
+
+tool.Activated:Connect(function()
+	local character = tool.Parent
+	local player = Players:GetPlayerFromCharacter(character)
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not (player and humanoid and humanoid.Health > 0) then
 		return
 	end
-	
-	local function say(player, text)
-		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-		if notice then
-			notice:FireClient(player, text)
-		end
+	-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+	-- InRaid ставит модуль рейда, когда поле после входа снято.
+	if not player:GetAttribute("InRaid") then
+		say(player, "Работает только на вылазке")
+		return
 	end
-	
-	tool.Activated:Connect(function()
-		local character = tool.Parent
-		local player = Players:GetPlayerFromCharacter(character)
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if not (player and humanoid and humanoid.Health > 0) then
-			return
-		end
-		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-		-- InRaid ставит модуль рейда, когда поле после входа снято.
-		if not player:GetAttribute("InRaid") then
-			say(player, "Работает только на вылазке")
-			return
-		end
-		if humanoid.Health >= humanoid.MaxHealth then
-			say(player, "Здоровье и так полное")
-			return
-		end
-		humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
-		tool:Destroy()
-	end)
-	]]></ProtectedString>
+	if humanoid.Health >= humanoid.MaxHealth then
+		say(player, "Здоровье и так полное")
+		return
+	end
+	humanoid.Health = math.min(humanoid.MaxHealth, humanoid.Health + HEAL)
+	tool:Destroy()
+end)
+]]></ProtectedString>
 					<bool name="Disabled">false</bool>
 					<token name="RunContext">1</token>
 					<string name="Name">Аптечка</string>
 				</Properties>
 			</Item>
-			<Item class="Script" referent="RBX592E13FA394E4EF99F665070E632010F">
+			<Item class="Script" referent="RBXE9C5DCFC01D74D5FB2FD02B13CFE1078">
 				<Properties>
 					<ProtectedString name="Source"><![CDATA[-- Броня — товар магазина. Взял в руку, нажал — запас здоровья до гибели.
-	-- Вторая броня не надевается, пока действует первая.
-	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
-	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
-	-- (Properties → Attributes), строка на карточке магазина — атрибут
-	-- Description. В плейсе курса: Price = 60, Description = «+50 здоровья до гибели».
-	
-	-- ============================ НАСТРОЙКИ ============================
-	local ARMOR = 50 -- сколько здоровья прибавить сверх обычного
-	-- ===================================================================
-	
-	local Players = game:GetService("Players")
-	local tool = script.Parent
-	
-	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
-	if not tool:IsA("Tool") then
+-- Вторая броня не надевается, пока действует первая.
+-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+-- (Properties → Attributes), строка на карточке магазина — атрибут
+-- Description. В плейсе курса: Price = 60, Description = «+50 здоровья до гибели».
+
+-- ============================ НАСТРОЙКИ ============================
+local ARMOR = 50 -- сколько здоровья прибавить сверх обычного
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local tool = script.Parent
+
+-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+if not tool:IsA("Tool") then
+	return
+end
+
+local function say(player, text)
+	local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+	if notice then
+		notice:FireClient(player, text)
+	end
+end
+
+tool.Activated:Connect(function()
+	local character = tool.Parent
+	local player = Players:GetPlayerFromCharacter(character)
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not (player and humanoid and humanoid.Health > 0) then
 		return
 	end
-	
-	local function say(player, text)
-		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-		if notice then
-			notice:FireClient(player, text)
-		end
+	-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+	-- InRaid ставит модуль рейда, когда поле после входа снято.
+	if not player:GetAttribute("InRaid") then
+		say(player, "Работает только на вылазке")
+		return
 	end
-	
-	tool.Activated:Connect(function()
-		local character = tool.Parent
-		local player = Players:GetPlayerFromCharacter(character)
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if not (player and humanoid and humanoid.Health > 0) then
-			return
-		end
-		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-		-- InRaid ставит модуль рейда, когда поле после входа снято.
-		if not player:GetAttribute("InRaid") then
-			say(player, "Работает только на вылазке")
-			return
-		end
-		if humanoid:GetAttribute("Armor") then
-			say(player, "Броня уже надета")
-			return
-		end
-		humanoid:SetAttribute("Armor", ARMOR)
-		humanoid.MaxHealth += ARMOR
-		humanoid.Health += ARMOR
-		tool:Destroy()
-	end)
-	]]></ProtectedString>
+	if humanoid:GetAttribute("Armor") then
+		say(player, "Броня уже надета")
+		return
+	end
+	humanoid:SetAttribute("Armor", ARMOR)
+	humanoid.MaxHealth += ARMOR
+	humanoid.Health += ARMOR
+	tool:Destroy()
+end)
+]]></ProtectedString>
 					<bool name="Disabled">false</bool>
 					<token name="RunContext">1</token>
 					<string name="Name">Броня</string>
 				</Properties>
 			</Item>
-			<Item class="Script" referent="RBXC7C011F785EF4A02B25CA7809F5ED0D1">
+			<Item class="Script" referent="RBX7E9D66B228794FB39DB8AA57FFE852E8">
 				<Properties>
 					<ProtectedString name="Source"><![CDATA[-- Ускорение — товар магазина. Взял в руку, нажал — бегаешь быстрее до гибели.
-	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
-	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
-	-- (Properties → Attributes), строка на карточке магазина — атрибут
-	-- Description. В плейсе курса: Price = 50, Description = «Бег быстрее до гибели».
-	
-	-- ============================ НАСТРОЙКИ ============================
-	local SPEED = 24 -- скорость бега (обычная — 16)
-	-- ===================================================================
-	
-	local Players = game:GetService("Players")
-	local tool = script.Parent
-	
-	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
-	if not tool:IsA("Tool") then
+-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+-- (Properties → Attributes), строка на карточке магазина — атрибут
+-- Description. В плейсе курса: Price = 50, Description = «Бег быстрее до гибели».
+
+-- ============================ НАСТРОЙКИ ============================
+local SPEED = 24 -- скорость бега (обычная — 16)
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local tool = script.Parent
+
+-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+if not tool:IsA("Tool") then
+	return
+end
+
+local function say(player, text)
+	local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+	if notice then
+		notice:FireClient(player, text)
+	end
+end
+
+tool.Activated:Connect(function()
+	local character = tool.Parent
+	local player = Players:GetPlayerFromCharacter(character)
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not (player and humanoid and humanoid.Health > 0) then
 		return
 	end
-	
-	local function say(player, text)
-		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-		if notice then
-			notice:FireClient(player, text)
-		end
+	-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+	-- InRaid ставит модуль рейда, когда поле после входа снято.
+	if not player:GetAttribute("InRaid") then
+		say(player, "Работает только на вылазке")
+		return
 	end
-	
-	tool.Activated:Connect(function()
-		local character = tool.Parent
-		local player = Players:GetPlayerFromCharacter(character)
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if not (player and humanoid and humanoid.Health > 0) then
-			return
-		end
-		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-		-- InRaid ставит модуль рейда, когда поле после входа снято.
-		if not player:GetAttribute("InRaid") then
-			say(player, "Работает только на вылазке")
-			return
-		end
-		if humanoid.WalkSpeed >= SPEED then
-			say(player, "Ускорение уже действует")
-			return
-		end
-		humanoid.WalkSpeed = SPEED
-		tool:Destroy()
-	end)
-	]]></ProtectedString>
+	if humanoid.WalkSpeed >= SPEED then
+		say(player, "Ускорение уже действует")
+		return
+	end
+	humanoid.WalkSpeed = SPEED
+	tool:Destroy()
+end)
+]]></ProtectedString>
 					<bool name="Disabled">false</bool>
 					<token name="RunContext">1</token>
 					<string name="Name">Ускорение</string>
 				</Properties>
 			</Item>
-			<Item class="Script" referent="RBX72594A769AAA42D59835B6039A588431">
+			<Item class="Script" referent="RBX4654F968513E47B7AD0F1D67332E65E1">
 				<Properties>
 					<ProtectedString name="Source"><![CDATA[-- Большой рюкзак — товар магазина. Взял в руку, нажал — в рюкзаке больше
-	-- мест до гибели. Места прибавляет модуль лута по атрибуту игрока BonusSlots.
-	-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
-	-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
-	-- (Properties → Attributes), строка на карточке магазина — атрибут
-	-- Description. В плейсе курса: Price = 80, Description = «+3 места до гибели».
-	
-	-- ============================ НАСТРОЙКИ ============================
-	local EXTRA_SLOTS = 3 -- сколько мест добавить
-	-- ===================================================================
-	
-	local Players = game:GetService("Players")
-	local tool = script.Parent
-	
-	-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
-	if not tool:IsA("Tool") then
+-- мест до гибели. Места прибавляет модуль лута по атрибуту игрока BonusSlots.
+-- Скрипт кладут внутрь Tool-товара, который собирают сами: деталь Handle
+-- и любая модель вокруг неё. Цена — атрибут Price у этого Tool
+-- (Properties → Attributes), строка на карточке магазина — атрибут
+-- Description. В плейсе курса: Price = 80, Description = «+3 места до гибели».
+
+-- ============================ НАСТРОЙКИ ============================
+local EXTRA_SLOTS = 3 -- сколько мест добавить
+-- ===================================================================
+
+local Players = game:GetService("Players")
+local tool = script.Parent
+
+-- Пока скрипт лежит в папке ShopItems, а не внутри Tool, он ничего не делает.
+if not tool:IsA("Tool") then
+	return
+end
+
+local function say(player, text)
+	local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
+	if notice then
+		notice:FireClient(player, text)
+	end
+end
+
+tool.Activated:Connect(function()
+	local character = tool.Parent
+	local player = Players:GetPlayerFromCharacter(character)
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not (player and humanoid and humanoid.Health > 0) then
 		return
 	end
-	
-	local function say(player, text)
-		local notice = game:GetService("ReplicatedStorage"):FindFirstChild("ShopNotice")
-		if notice then
-			notice:FireClient(player, text)
-		end
+	-- В бункере и под защитным полем предметы не действуют: атрибут игрока
+	-- InRaid ставит модуль рейда, когда поле после входа снято.
+	if not player:GetAttribute("InRaid") then
+		say(player, "Работает только на вылазке")
+		return
 	end
-	
-	tool.Activated:Connect(function()
-		local character = tool.Parent
-		local player = Players:GetPlayerFromCharacter(character)
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if not (player and humanoid and humanoid.Health > 0) then
-			return
-		end
-		-- В бункере и под защитным полем предметы не действуют: атрибут игрока
-		-- InRaid ставит модуль рейда, когда поле после входа снято.
-		if not player:GetAttribute("InRaid") then
-			say(player, "Работает только на вылазке")
-			return
-		end
-		if (player:GetAttribute("BonusSlots") or 0) > 0 then
-			say(player, "Большой рюкзак уже надет")
-			return
-		end
-		player:SetAttribute("BonusSlots", EXTRA_SLOTS)
-		tool:Destroy()
-	end)
-	]]></ProtectedString>
+	if (player:GetAttribute("BonusSlots") or 0) > 0 then
+		say(player, "Большой рюкзак уже надет")
+		return
+	end
+	player:SetAttribute("BonusSlots", EXTRA_SLOTS)
+	tool:Destroy()
+end)
+]]></ProtectedString>
 					<bool name="Disabled">false</bool>
 					<token name="RunContext">1</token>
 					<string name="Name">Большой рюкзак</string>

@@ -2,26 +2,26 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXC0FE0B9CF21A4ED1B0D5ABD054EA631E">
+	<Item class="Folder" referent="RBXE25EB189BA1C4D6199931AA81DC21B89">
 		<Properties>
 			<string name="Name">TowerDefense</string>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX62F56AEC8DAA40D78F1901AC524DAAF4">
+		<Item class="RemoteEvent" referent="RBX08997596F1334735883459AEC7C10C61">
 			<Properties>
 				<string name="Name">Action</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBXA16D522114D142A0855ECA77E4560755">
+		<Item class="RemoteEvent" referent="RBXC4A7FD133D9C4A2DB5488ADE4486D50B">
 			<Properties>
 				<string name="Name">Shot</string>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX33AF440489BB4414BBDCB64636AB22FE">
+		<Item class="RemoteEvent" referent="RBXAADB7236497641B2B2388AFBAE4A630E">
 			<Properties>
 				<string name="Name">Notice</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBX133CB7FF7A8E440986B38937B1EFCCEE">
+		<Item class="Script" referent="RBX85E8155F726B4BF488022F8AFCA904E3">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDServer — модуль курса «Защита королевства» (уроки 37–40), сервер.
 --
@@ -40,9 +40,21 @@
 --   атрибуты папки уровня: StartMoney, BaseHealth
 --
 -- Башни — модели в ServerStorage.Towers, атрибуты Price, Damage, Range,
--- Cooldown, Upgrade (имя следующего уровня в Towers/Upgrades), UpgradePrice.
+-- Cooldown, Melee, Splash; Upgrade и UpgradePrice — имя и цена улучшения.
+-- Улучшения лежат в Towers по уровням: папка Upgrades1 — модели 2 уровня,
+-- Upgrades2 — 3 уровня и так далее. Upgrade башни 1 уровня — имя модели в
+-- Upgrades1, у той свой Upgrade — имя в Upgrades2. Нет папки следующего
+-- уровня или модели с таким именем — уровень максимальный.
 -- По желанию: атрибуты IdleAnimationId и AttackAnimationId (номера своих
--- анимаций), Decal Projectile (картинка снаряда), Sound ShotSound (звук).
+-- анимаций), модель Projectile (снаряд из деталей на сварке, например стрела
+-- в руке лучника остриём туда, куда смотрит башня), Sound ShotSound (звук).
+-- Снаряд летит оттуда, где лежит Projectile, урон засчитывается в момент
+-- прилёта; без Projectile башня стреляет жёлтым шариком.
+-- Башня бьёт первого врага на пути в своём радиусе.
+-- Как башня бьёт: Projectile — одного врага снарядом (стрела, магический шар);
+-- атрибут Melee (галочка) — вплотную, без снаряда, урон сразу (воин); атрибут
+-- Splash (радиус, студы) — снаряд летит дугой, урон Damage получает каждый враг
+-- в этом радиусе от точки попадания (пушка).
 -- Враги — модели в ServerStorage.Mobs, атрибуты Health, Speed, Reward, Damage,
 -- по желанию WalkAnimationId (своя ходьба).
 -- Камеру над уровнем ставит модуль: над серединой пути и клеток, высота и
@@ -55,6 +67,7 @@ local WAVE_PAUSE = 8 -- пауза перед волной, секунды
 local WAVE_BONUS = 50 -- деньги за пройденную волну
 local SPAWN_GAP = 1 -- секунды между врагами, если у волны нет Gap
 local SELL_SHARE = 0.5 -- какую долю вложенного возвращает продажа
+local SHOT_SPEED = 60 -- скорость снаряда, студы в секунду
 local LEVEL_TAG = "TDLevel" -- метка папки уровня
 local SAVE_LEVELS = true -- помнить пройденные уровни между заходами
 local CAM_HEIGHT = 80 -- высота камеры над картой, студы: больше — карта мельче
@@ -66,7 +79,6 @@ local BASE_HEALTH = 100 -- если у уровня нет BaseHealth (логи�
 local MOB_GROUP = "TDMobs"
 local WALK_R15 = "rbxassetid://507777826" -- ходьба Roblox: играет в любой игре
 local WALK_R6 = "rbxassetid://180426354"
-local MODES = { "Первый", "Ближний", "Сильный" }
 
 local Players = game:GetService("Players")
 local ServerStorage = game:GetService("ServerStorage")
@@ -89,7 +101,7 @@ local function remote(name)
 	return e
 end
 local action = remote("Action") -- игрок → сервер: играть, поставить, улучшить…
-local shot = remote("Shot") -- сервер → игрок: выстрел башни (картинка-снаряд)
+local shot = remote("Shot") -- сервер → игрок: выстрел башни (снаряд и время полёта)
 local notice = remote("Notice") -- сервер → игрок: короткое сообщение
 
 -- Персонаж в игре с видом сверху не нужен.
@@ -145,7 +157,7 @@ local function publishCatalog()
 	local src = towersFolder()
 	if src then
 		for _, model in ipairs(src:GetDescendants()) do
-			if model:IsA("Model") and model.Parent and (model.Parent == src or model.Parent.Name == "Upgrades") then
+			if model:IsA("Model") and model.Parent and (model.Parent == src or model.Parent.Name:match("^Upgrades%d+$")) then
 				local copy = model:Clone()
 				for _, d in ipairs(copy:GetDescendants()) do
 					if d:IsA("LuaSourceContainer") or d:IsA("Sound") then
@@ -547,6 +559,9 @@ local function spawnMob(g, name)
 		mob:Destroy()
 		return
 	end
+	-- Враг на поле — ровно как образец в Mobs. Риг, увеличенный инструментом Scale, Humanoid в
+	-- Workspace масштабирует заново, и приваренный к нему декор (шлем, оружие) вырастает ещё раз.
+	humanoid.AutomaticScalingEnabled = false
 	local health = tonumber(template:GetAttribute("Health")) or humanoid.MaxHealth
 	humanoid.MaxHealth = health
 	humanoid.Health = health
@@ -617,7 +632,7 @@ local function spawnMob(g, name)
 	end)
 end
 
--- Насколько враг продвинулся по пути: для режима цели «Первый».
+-- Насколько враг продвинулся по пути: башня бьёт первого.
 local function progress(g, info)
 	local points = g.points
 	local nextPoint = points[info.index]
@@ -626,20 +641,39 @@ local function progress(g, info)
 end
 
 ------------------------------------------------------------------ башни
-local function towerTemplate(name)
+-- Модель улучшения для башни уровня level: имя — атрибут Upgrade, папка —
+-- Towers/Upgrades<level>. Нет папки или модели — уровень максимальный.
+local function upgradeTemplate(model, level)
 	local folder = towersFolder()
-	if not folder then
+	local up = folder and folder:FindFirstChild("Upgrades" .. level)
+	local name = model:GetAttribute("Upgrade")
+	if not up or not name or name == "" then
 		return nil
 	end
-	local t = folder:FindFirstChild(name)
+	local t = up:FindFirstChild(name)
 	if t and t:IsA("Model") then
 		return t
 	end
-	local up = folder:FindFirstChild("Upgrades")
-	t = up and up:FindFirstChild(name)
-	if t and t:IsA("Model") then
-		return t
+	warn(("TowerDefense: в Towers/%s нет модели «%s» (атрибут Upgrade башни %s)"):format(up.Name, tostring(name), model.Name))
+end
+
+-- Имя следующего улучшения — атрибутом TDNext: по нему панель башни решает,
+-- показать кнопку «Улучшить» или «Максимальный уровень».
+local function markNext(model, level)
+	local t = upgradeTemplate(model, level)
+	model:SetAttribute("TDNext", t and t.Name or nil)
+end
+
+-- Где ноги рига: низ стоп (R15) или ног (R6).
+local function feetY(model)
+	local y = math.huge
+	for _, n in ipairs({ "LeftFoot", "RightFoot", "Left Leg", "Right Leg" }) do
+		local p = model:FindFirstChild(n)
+		if p and p:IsA("BasePart") then
+			y = math.min(y, p.Position.Y - p.Size.Y / 2)
+		end
 	end
+	return y < math.huge and y or nil
 end
 
 -- Анимация башни: атрибут IdleAnimationId / AttackAnimationId или Animation
@@ -672,11 +706,18 @@ local function buildTower(g, template, tile, facing)
 	local top = tile.Position + Vector3.new(0, tile.Size.Y / 2 + size.Y / 2, 0)
 	local look = facing or (top + Vector3.new(0, 0, -1))
 	model:PivotTo(CFrame.lookAt(top, Vector3.new(look.X, top.Y, look.Z)))
-	-- Пивот модели может быть не в центре — ставим по рамке.
+	-- Пивот модели может быть не в центре — ставим по рамке. Риг — по центру
+	-- клетки самим телом (HumanoidRootPart) и ногами на клетку: оружие и щит
+	-- рамку сдвигают, а стоять башня должна посередине.
 	local box = model:GetBoundingBox()
 	model:PivotTo(model:GetPivot() + (top - box.Position))
 	local humanoid = model:FindFirstChildOfClass("Humanoid")
 	local root = model:FindFirstChild("HumanoidRootPart")
+	local feet = humanoid and root and feetY(model)
+	if feet then
+		local floor = tile.Position.Y + tile.Size.Y / 2
+		model:PivotTo(model:GetPivot() + Vector3.new(tile.Position.X - root.Position.X, floor - feet, tile.Position.Z - root.Position.Z))
+	end
 	for _, d in ipairs(model:GetDescendants()) do
 		if d:IsA("BasePart") then
 			d.Anchored = not (humanoid and root) or d == root
@@ -686,11 +727,23 @@ local function buildTower(g, template, tile, facing)
 		end
 	end
 	if humanoid then
+		-- Как у врагов: увеличенная башня с декором не вырастает на клетке ещё раз.
+		humanoid.AutomaticScalingEnabled = false
 		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 		humanoid.HealthDisplayDistance = 0
 	end
 	CollectionService:AddTag(model, "TDTower")
 	model.Parent = g.towersFolder
+	-- Деталь снаряда, не приваренная к башне, упала бы сквозь карту — закрепляем
+	-- её на месте: стрела останется у башни и будет поворачиваться вместе с ней.
+	local projectile = model:FindFirstChild("Projectile", true)
+	if projectile and humanoid and root then
+		for _, d in ipairs(projectile:IsA("BasePart") and { projectile } or projectile:GetDescendants()) do
+			if d:IsA("BasePart") and d:GetRootPart() ~= root then
+				d.Anchored = true
+			end
+		end
+	end
 	playAnimation(model, "Idle", true)
 	return model
 end
@@ -699,8 +752,9 @@ local function placeTower(g, tile, name)
 	if g.towerOn[tile] then
 		return say(g.player, "Клетка занята")
 	end
-	local template = towerTemplate(name)
-	if not template or template.Parent ~= towersFolder() then
+	local folder = towersFolder()
+	local template = folder and folder:FindFirstChild(name)
+	if not (template and template:IsA("Model")) then
 		return
 	end
 	local price = tonumber(template:GetAttribute("Price")) or 0
@@ -709,18 +763,16 @@ local function placeTower(g, tile, name)
 	end
 	g.money -= price
 	local model = buildTower(g, template, tile)
-	local info = { model = model, tile = tile, spent = price, mode = MODES[1], nextShot = 0 }
-	model:SetAttribute("TDMode", info.mode)
+	local info = { model = model, tile = tile, spent = price, level = 1, nextShot = 0 }
+	markNext(model, info.level)
 	g.towers[model] = info
 	g.towerOn[tile] = model
-	tile:SetAttribute("TDTransparency", tile:GetAttribute("TDTransparency") or tile.Transparency)
-	tile.Transparency = 1
+	-- Клетка остаётся видна под башней, но клик по ней проходит к башне.
 	tile.CanQuery = false
 	setHud(g.player)
 end
 
 local function freeTile(tile)
-	tile.Transparency = tile:GetAttribute("TDTransparency") or 0
 	tile.CanQuery = true
 end
 
@@ -729,10 +781,9 @@ local function upgradeTower(g, model)
 	if not info then
 		return
 	end
-	local nextName = model:GetAttribute("Upgrade")
-	local template = nextName and nextName ~= "" and towerTemplate(nextName)
+	local template = upgradeTemplate(model, info.level)
 	if not template then
-		return say(g.player, "Это последний уровень")
+		return say(g.player, "Максимальный уровень")
 	end
 	local price = tonumber(model:GetAttribute("UpgradePrice")) or 0
 	if g.money < price then
@@ -745,7 +796,8 @@ local function upgradeTower(g, model)
 	model:Destroy()
 	info.model = newModel
 	info.spent += price
-	newModel:SetAttribute("TDMode", info.mode)
+	info.level += 1
+	markNext(newModel, info.level)
 	g.towers[newModel] = info
 	g.towerOn[info.tile] = newModel
 	setHud(g.player)
@@ -768,18 +820,12 @@ end
 local function findTarget(g, info, origin, range)
 	local best, bestScore = nil, -math.huge
 	for _, m in pairs(g.alive) do
-		if m.alive and m.humanoid.Health > 0 then
+		-- Врага, которого добьют уже летящие снаряды, не выбираем.
+		if m.alive and m.humanoid.Health - (m.pending or 0) > 0 then
 			local flat = Vector3.new(m.root.Position.X - origin.X, 0, m.root.Position.Z - origin.Z)
 			local d = flat.Magnitude
 			if d <= range then
-				local score
-				if info.mode == "Ближний" then
-					score = -d
-				elseif info.mode == "Сильный" then
-					score = m.humanoid.Health
-				else
-					score = progress(g, m)
-				end
+				local score = progress(g, m)
 				if score > bestScore then
 					best, bestScore = m, score
 				end
@@ -787,6 +833,18 @@ local function findTarget(g, info, origin, range)
 		end
 	end
 	return best
+end
+
+-- Откуда вылетает снаряд: модель Projectile в башне или середина башни.
+local function shotOrigin(model)
+	local p = model:FindFirstChild("Projectile", true)
+	if p and p:IsA("BasePart") then
+		return p.Position
+	end
+	if p and p:IsA("Model") and p:FindFirstChildWhichIsA("BasePart", true) then
+		return (p:GetBoundingBox()).Position
+	end
+	return model:GetPivot().Position
 end
 
 local function towerTick(g)
@@ -807,8 +865,38 @@ local function towerTick(g)
 				if sound and sound:IsA("Sound") then
 					sound:Play()
 				end
-				shot:FireAllClients(model, target.model)
-				target.humanoid:TakeDamage(tonumber(model:GetAttribute("Damage")) or 10)
+				local damage = tonumber(model:GetAttribute("Damage")) or 10
+				if model:GetAttribute("Melee") == true then
+					-- Удар вплотную (воин): снаряда нет, урон сразу.
+					shot:FireAllClients(model, target.model, 0)
+					target.humanoid:TakeDamage(damage)
+				else
+					-- Снаряд летит от Projectile (или от башни) со скоростью SHOT_SPEED;
+					-- клиент рисует полёт, урон сервер засчитывает в момент прилёта.
+					-- Splash (пушка): в точке попадания урон получают все враги в радиусе.
+					local splash = tonumber(model:GetAttribute("Splash")) or 0
+					local from = shotOrigin(model)
+					local t = (target.root.Position - from).Magnitude / SHOT_SPEED
+					target.pending = (target.pending or 0) + damage
+					shot:FireAllClients(model, target.model, t)
+					task.delay(t, function()
+						target.pending -= damage
+						if game_ ~= g or g.over then
+							return
+						end
+						if splash > 0 then
+							local center = target.root.Position
+							for _, m in pairs(g.alive) do
+								local flat = Vector3.new(m.root.Position.X - center.X, 0, m.root.Position.Z - center.Z)
+								if m.alive and m.humanoid.Health > 0 and flat.Magnitude <= splash then
+									m.humanoid:TakeDamage(damage)
+								end
+							end
+						elseif target.alive and target.humanoid.Health > 0 then
+							target.humanoid:TakeDamage(damage)
+						end
+					end)
+				end
 			end
 		end
 	end
@@ -1013,13 +1101,6 @@ action.OnServerEvent:Connect(function(player, kind, a, b)
 		if typeof(a) == "Instance" then
 			sellTower(g, a)
 		end
-	elseif kind == "Mode" then
-		local info = typeof(a) == "Instance" and g.towers[a]
-		if info then
-			local i = table.find(MODES, info.mode) or 1
-			info.mode = MODES[i % #MODES + 1]
-			a:SetAttribute("TDMode", info.mode)
-		end
 	end
 end)
 
@@ -1047,7 +1128,7 @@ end)
 				<string name="Name">TDServer</string>
 			</Properties>
 		</Item>
-		<Item class="Script" referent="RBXC44EE7EF695042E9A318A664FC930F3A">
+		<Item class="Script" referent="RBX3EC691F8C82A4B90B1616F6C9EC9D76F">
 			<Properties>
 				<ProtectedString name="Source"><![CDATA[-- TDClient — модуль курса «Защита королевства» (уроки 37–40), экран игрока.
 --
@@ -1061,7 +1142,6 @@ local CollectionService = game:GetService("CollectionService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local Debris = game:GetService("Debris")
 local GuiService = game:GetService("GuiService")
 
 local player = Players.LocalPlayer
@@ -1416,10 +1496,13 @@ local function showRange(tower)
 	end
 	local range = tower:GetAttribute("Range") or 15
 	local box, size = tower:GetBoundingBox()
+	-- Круг — вокруг тела рига (оружие сдвигает рамку модели), у ног.
+	local root = tower:FindFirstChild("HumanoidRootPart")
+	local center = root and root.Position or box.Position
 	local ring = Instance.new("Part")
 	ring.Shape = Enum.PartType.Cylinder
 	ring.Size = Vector3.new(0.2, range * 2, range * 2)
-	ring.CFrame = CFrame.new(box.Position.X, box.Position.Y - size.Y / 2 + 0.15, box.Position.Z) * CFrame.Angles(0, 0, math.rad(90))
+	ring.CFrame = CFrame.new(center.X, box.Position.Y - size.Y / 2 + 0.15, center.Z) * CFrame.Angles(0, 0, math.rad(90))
 	ring.Anchored = true
 	ring.CanCollide = false
 	ring.CanQuery = false
@@ -1436,16 +1519,26 @@ local function openTowerPanel(tower, screenPos)
 	clearPopup()
 	selectedTower = tower
 	popupLayout.FillDirection = Enum.FillDirection.Vertical
+	local height = 16 - 8
 	local function row(text, size)
 		local l = label(popup, text, size or 16)
 		l.Size = UDim2.new(1, 0, 0, 24)
 		l.TextXAlignment = Enum.TextXAlignment.Left
+		height += 24 + 8
 		return l
 	end
 	row(tower.Name, 20).TextColor3 = GOLD
 	row(("Урон %s · радиус %s · пауза %s с"):format(
 		tower:GetAttribute("Damage") or "?", tower:GetAttribute("Range") or "?", tower:GetAttribute("Cooldown") or "?"))
-	local nextName = tower:GetAttribute("Upgrade")
+	local splash = tonumber(tower:GetAttribute("Splash")) or 0
+	if tower:GetAttribute("Melee") == true then
+		row("Ближний бой: бьёт вплотную")
+	elseif splash > 0 then
+		row(("Взрыв: урон всем в радиусе %s"):format(splash))
+	end
+	-- Следующее улучшение сервер пишет атрибутом TDNext: есть модель в папке
+	-- Upgrades следующего уровня — кнопка «Улучшить», нет — «Максимальный уровень».
+	local nextName = tower:GetAttribute("TDNext")
 	local money = player:GetAttribute("TDMoney") or 0
 	if nextName and nextName ~= "" then
 		local price = tower:GetAttribute("UpgradePrice") or 0
@@ -1456,23 +1549,20 @@ local function openTowerPanel(tower, screenPos)
 			closeMenus()
 		end)
 	else
-		row("Последний уровень")
+		-- Улучшать некуда: на месте кнопки «Улучшить» — серая надпись.
+		local up = button(popup, "Максимальный уровень", GREY)
+		up.Size = UDim2.new(1, 0, 0, 40)
+		up.AutoButtonColor = false
 	end
-	local mode = button(popup, "Цель: " .. (tower:GetAttribute("TDMode") or "Первый"), Color3.fromRGB(70, 100, 160))
-	mode.Size = UDim2.new(1, 0, 0, 40)
-	mode.MouseButton1Click:Connect(function()
-		action:FireServer("Mode", tower)
-	end)
-	tower:GetAttributeChangedSignal("TDMode"):Connect(function()
-		mode.Text = "Цель: " .. (tower:GetAttribute("TDMode") or "Первый")
-	end)
+	height += 40 + 8
 	local sell = button(popup, "Продать", Color3.fromRGB(170, 70, 60))
 	sell.Size = UDim2.new(1, 0, 0, 40)
 	sell.MouseButton1Click:Connect(function()
 		action:FireServer("Sell", tower)
 		closeMenus()
 	end)
-	placeNear(popup, screenPos, Vector2.new(300, 16 + 24 * 2 + 8 * 4 + 40 * 3 + 8))
+	height += 40 + 8
+	placeNear(popup, screenPos, Vector2.new(300, height))
 	popup.Visible = true
 	showRange(tower)
 end
@@ -1535,42 +1625,209 @@ player:GetAttributeChangedSignal("TDMoney"):Connect(function()
 end)
 
 ------------------------------------------------------------------ снаряды
-shot.OnClientEvent:Connect(function(tower, target)
+-- Снаряд — модель Projectile в башне (стрела лучника, шар мага, ядро пушки).
+-- Её копия летит оттуда, где лежит снаряд, к врагу остриём вперёд за время t: его
+-- считает сервер и в момент прилёта засчитывает урон. Где у снаряда «вперёд», видно
+-- по башне в каталоге: он смотрит туда же, куда башня. Без Projectile — шарик.
+-- Башня с атрибутом Melee бьёт вплотную — без снаряда, урон сразу. Башня с атрибутом
+-- Splash (радиус) стреляет дугой, и в точке попадания урон получают все враги в круге.
+local hidden = {} -- снаряд в руке башни → сколько его копий сейчас в полёте
+
+-- Вспышка попадания: враг на миг светлеет.
+local function flash(model)
+	if not (model and model.Parent) then
+		return
+	end
+	local h = Instance.new("Highlight")
+	h.FillColor = Color3.new(1, 1, 1)
+	h.FillTransparency = 0.35
+	h.OutlineTransparency = 1
+	h.DepthMode = Enum.HighlightDepthMode.Occluded
+	h.Parent = model
+	task.delay(0.12, function()
+		h:Destroy()
+	end)
+end
+
+-- Взрыв ядра: огненный шар и круг радиуса Splash на земле — видно, кого задело.
+local function blast(pos, radius)
+	local function part(shape, size, cf)
+		local p = Instance.new("Part")
+		p.Shape = shape
+		p.Anchored = true
+		p.CanCollide = false
+		p.CanQuery = false
+		p.CanTouch = false
+		p.Material = Enum.Material.Neon
+		p.Color = Color3.fromRGB(255, 150, 60)
+		p.Transparency = 0.25
+		p.Size = size
+		p.CFrame = cf
+		p.Parent = camera
+		return p
+	end
+	local ground = pos - Vector3.new(0, 2.6, 0)
+	local ring = part(Enum.PartType.Cylinder, Vector3.new(0.2, 1, 1), CFrame.new(ground) * CFrame.Angles(0, 0, math.rad(90)))
+	local ball = part(Enum.PartType.Ball, Vector3.new(1, 1, 1), CFrame.new(pos))
+	local info = TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	TweenService:Create(ring, info, { Size = Vector3.new(0.2, radius * 2, radius * 2), Transparency = 1 }):Play()
+	TweenService:Create(ball, info, { Size = Vector3.new(4, 4, 4), Transparency = 1 }):Play()
+	task.delay(0.45, function()
+		ring:Destroy()
+		ball:Destroy()
+	end)
+end
+
+local function partsOf(obj)
+	local list = obj:IsA("BasePart") and { obj } or {}
+	for _, d in ipairs(obj:GetDescendants()) do
+		if d:IsA("BasePart") then
+			table.insert(list, d)
+		end
+	end
+	return list
+end
+
+-- Опорная деталь снаряда — PrimaryPart или самая крупная (у стрелы — древко).
+local function mainPart(obj)
+	if obj:IsA("BasePart") then
+		return obj
+	end
+	if obj:IsA("Model") and obj.PrimaryPart then
+		return obj.PrimaryPart
+	end
+	local best, volume
+	for _, p in ipairs(partsOf(obj)) do
+		local v = p.Size.X * p.Size.Y * p.Size.Z
+		if not volume or v > volume then
+			best, volume = p, v
+		end
+	end
+	return best
+end
+
+-- Пока копия летит, стрела в руке спрятана: лучник выпустил именно её.
+local function holdHidden(live, on)
+	local n = (hidden[live] or 0) + (on and 1 or -1)
+	hidden[live] = n > 0 and n or nil
+	for _, p in ipairs(partsOf(live)) do
+		p.LocalTransparencyModifier = n > 0 and 1 or 0
+	end
+end
+
+-- Копия снаряда для полёта, стрела в руке и поворот стрелы относительно башни.
+local function flyingCopy(tower)
+	local live = tower:FindFirstChild("Projectile", true)
+	if not (live and (live:IsA("Model") or live:IsA("BasePart")) and mainPart(live)) then
+		return nil
+	end
+	local source = catalog:FindFirstChild(tower.Name)
+	local template = source and source:FindFirstChild("Projectile", true)
+	if not (template and template.ClassName == live.ClassName and mainPart(template)) then
+		source, template = tower, live
+	end
+	local rel = source:GetPivot():ToObjectSpace(mainPart(template).CFrame)
+	local copy = template:Clone()
+	for _, d in ipairs(copy:GetDescendants()) do
+		if d:IsA("JointInstance") or d:IsA("WeldConstraint") or d:IsA("Constraint")
+			or d:IsA("LuaSourceContainer") then
+			d:Destroy()
+		end
+	end
+	for _, p in ipairs(partsOf(copy)) do
+		p.Anchored = true
+		p.CanCollide = false
+		p.CanQuery = false
+		p.CanTouch = false
+		p.LocalTransparencyModifier = 0
+	end
+	return copy, live, rel - rel.Position
+end
+
+shot.OnClientEvent:Connect(function(tower, target, t)
 	if not (tower and target and tower.Parent and target.Parent) then
 		return
 	end
 	local root = target:FindFirstChild("HumanoidRootPart") or target.PrimaryPart
-	local head = tower:FindFirstChild("Head") or tower.PrimaryPart
-	if not (root and head) then
+	if not root then
 		return
 	end
-	local from, to = head.Position, root.Position
-	local p = Instance.new("Part")
-	p.Anchored = true
-	p.CanCollide = false
-	p.CanQuery = false
-	p.CanTouch = false
-	p.Size = Vector3.new(0.6, 0.6, 0.6)
-	p.CFrame = CFrame.lookAt(from, to)
-	local decal = tower:FindFirstChild("Projectile", true)
-	if decal and decal:IsA("Decal") then
-		p.Transparency = 1
-		local bb = Instance.new("BillboardGui")
-		bb.Size = UDim2.fromScale(3, 3)
-		bb.Parent = p
-		local img = Instance.new("ImageLabel")
-		img.Size = UDim2.fromScale(1, 1)
-		img.BackgroundTransparency = 1
-		img.Image = decal.Texture
-		img.Parent = bb
-	else
-		p.Shape = Enum.PartType.Ball
-		p.Material = Enum.Material.Neon
-		p.Color = GOLD
+	-- Удар вплотную: снаряда нет, урон уже засчитан — только вспышка на враге.
+	if tower:GetAttribute("Melee") == true then
+		flash(target)
+		return
 	end
-	p.Parent = camera
-	TweenService:Create(p, TweenInfo.new(0.25, Enum.EasingStyle.Linear), { CFrame = CFrame.lookAt(to, to + (to - from).Unit) }):Play()
-	Debris:AddItem(p, 0.3)
+	local splash = tonumber(tower:GetAttribute("Splash")) or 0
+	t = math.max(tonumber(t) or 0.25, 0.05)
+	local copy, live, turn = flyingCopy(tower)
+	local from
+	if copy then
+		from = mainPart(live).Position
+		holdHidden(live, true)
+	else
+		local head = tower:FindFirstChild("Head") or tower.PrimaryPart
+		if not head then
+			return
+		end
+		from = head.Position
+		copy = Instance.new("Part")
+		copy.Anchored = true
+		copy.CanCollide = false
+		copy.CanQuery = false
+		copy.CanTouch = false
+		copy.Size = Vector3.new(0.6, 0.6, 0.6)
+		copy.Shape = Enum.PartType.Ball
+		copy.Material = Enum.Material.Neon
+		copy.Color = GOLD
+		turn = CFrame.identity
+	end
+	-- Детали копии двигаются вместе с опорной: их положение относительно неё.
+	local main = mainPart(copy)
+	local parts, offsets = partsOf(copy), {}
+	for i, p in ipairs(parts) do
+		offsets[i] = main.CFrame:ToObjectSpace(p.CFrame)
+	end
+	local aim = root.Position
+	-- Ядро пушки (Splash) летит дугой, остальные снаряды — прямо в цель.
+	local lift = splash > 0 and math.clamp((aim - from).Magnitude * 0.35, 2, 12) or 0
+	local function at(a)
+		return from:Lerp(aim, a) + Vector3.new(0, lift * 4 * a * (1 - a), 0)
+	end
+	local last = main.CFrame
+	local function place(a)
+		local pos = at(a)
+		local ahead = at(math.min(a + 0.05, 1))
+		if (ahead - pos).Magnitude > 0.05 then
+			last = CFrame.lookAt(pos, ahead) * turn
+		else
+			last = last - last.Position + pos
+		end
+		for i, p in ipairs(parts) do
+			p.CFrame = last * offsets[i]
+		end
+	end
+	place(0)
+	copy.Parent = camera
+	local started = os.clock()
+	local conn
+	conn = RunService.RenderStepped:Connect(function()
+		if root.Parent then
+			aim = root.Position
+		end
+		local a = math.min((os.clock() - started) / t, 1)
+		place(a)
+		if a >= 1 then
+			conn:Disconnect()
+			copy:Destroy()
+			if live then
+				holdHidden(live, false)
+			end
+			if splash > 0 then
+				blast(aim, splash)
+			end
+			flash(target)
+		end
+	end)
 end)
 
 ------------------------------------------------------------------ камера и фазы

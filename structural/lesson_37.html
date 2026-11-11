@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>Урок 37. Карта обороны</title>
+<title>Урок 37. Tower Defense</title>
 <style>
 body { font-family: Arial, sans-serif; }
 .lesson-title { font-size: 28px; font-weight: 700; color: #000000; }
@@ -28,7 +28,7 @@ body { font-family: Arial, sans-serif; }
 <body>
 <article class="lesson" data-lesson-number="37">
 <header class="lesson-header">
-<h1 class="lesson-title">Урок 37. Карта обороны</h1>
+<h1 class="lesson-title">Урок 37. Tower Defense</h1>
 <p class="lesson-role">Роль гейм-дизайнера: TD Level Designer</p>
 <p class="lesson-total">Общая длительность: 60 мин</p>
 </header>
@@ -36,46 +36,43 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="37-w-1">
 <h3 class="slide-title">Сегодня ты — TD Level Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">В портфолио уже несколько игр. Финальный проект курса — Tower Defense: враги идут по дороге к базе, а игрок ставит у дороги башни.</p>
-<p class="content-item content-paragraph"><b>TD Level Designer</b> (дизайнер карты обороны) решает, по какой дороге идут враги и где игрок сможет их остановить.</p>
+<p class="content-item content-paragraph">В портфолио уже несколько игр. Финальный проект курса — Tower Defense: враги идут по дороге к базе, а игрок ставит башни вдоль дороги.</p>
+<p class="content-item content-paragraph"><b>TD Level Designer</b> (дизайнер карты) решает, по какому маршруту ходят враги и как игрок сможет их остановить.</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: начинаем последний проект курса — Tower Defense, защиту королевства.
-Сказать: в модуле только правила — карту, башни и врагов делаете вы сами.</aside>
+Сказать: в модуле только правила — карту, башни и врагов делаем сами.</aside>
 </div>
 </section>
 <section class="block block-review_previous">
 <h2 class="block-title" style="color:#cc6600;">Вспоминаем урок 36 <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="37-r-1">
 <h3 class="slide-title">Вспомним урок 36 <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Когда бьёт кулак в лутере?</p><ol class="content-item content-quiz-options"><li data-correct="true">Только с пустыми руками ✓</li><li>Только с пистолетом в руке</li><li>Только в бункере у скупщика</li></ol>
-<p class="content-item content-question">Где игрок узнаёт правило «погиб — потерял рюкзак»?</p><ol class="content-item content-quiz-options"><li>В подсказке после гибели</li><li data-correct="true">В описании страницы игры ✓</li><li>В подсказке у плиты выхода</li></ol>
-<p class="content-item content-question">Почему ID анимации удара у каждого свой?</p><ol class="content-item content-quiz-options"><li>Чужой номер слишком длинный</li><li data-correct="true">Чужая анимация не загрузится ✓</li><li>Studio запрещает одинаковые номера</li></ol>
+<p class="content-item content-question">Когда можно ударить кулаком в лутере?</p><ol class="content-item content-quiz-options"><li data-correct="true">Только с пустыми руками ✓</li><li>Только с пистолетом в руке</li><li>Только в бункере у скупщика</li></ol>
+<p class="content-item content-question">Как игрок узнаёт правило «погиб — потерял рюкзак»?</p><ol class="content-item content-quiz-options"><li>Из подсказки после гибели</li><li data-correct="true">Из описания на странице игры ✓</li><li>Из подсказки у выхода</li></ol>
+<p class="content-item content-question">Почему ID анимации удара у каждого свой?</p><ol class="content-item content-quiz-options"><li>Номер меняется при каждом запуске</li><li data-correct="true">Чужая анимация не загрузится ✓</li><li>Studio запрещает одинаковые номера</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: с пустыми руками; в описании страницы игры; чужая анимация не загрузится.
+Ответы: с пустыми руками; из описания на странице игры; чужая анимация не загрузится.
 Сказать: последнее правило понадобится и в новой игре — для анимаций башен.</aside>
 </div>
 </section>
 <section class="block block-theory">
-<h2 class="block-title" style="color:#006600;">Карта обороны <span class="block-duration">(20 мин)</span></h2>
+<h2 class="block-title" style="color:#006600;">Проектируем игровую карту <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="37-t-1">
-<h3 class="slide-title">Что такое Tower Defense <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Путь — враги идут по дороге к базе</li><li>Башни — стоят у дороги и стреляют сами</li><li>Волны — враги выходят группами, каждая сильнее</li><li>Деньги — за врагов, на них строят новые башни</li></ul>
+<h3 class="slide-title">Что такое Tower Defense <span class="slide-duration">(3.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Путь — враги идут по дороге к базе</li><li>Башни — стоят у дороги и стреляют сами</li><li>Волны — враги выходят группами, каждая сильнее</li><li>Деньги — за побеждённых врагов, на них ставят новые башни</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox сверху: дорога змейкой через зелёное поле, по ней идут серые враги, у дороги стоят башни, в конце пути каменная база с полоской здоровья]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: Tower Defense — оборона: враги идут сами, игрок решает, где их встретить.
-Спросить: кто играл в Tower Defense — что там было главным?</aside>
-</div>
-<div class="slide" id="37-t-2">
-<h3 class="slide-title">Четыре урока — одна игра <span class="slide-duration">(2 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Сегодня — карта: путь, база, клетки и камера</li><li>Второй урок — башни: риг, числа и улучшение</li><li>Третий урок — враги и волны: разминка, рост и босс</li><li>Четвёртый урок — полировка: заставка, звук, свет и выпускной показ</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: в конце блока игра уходит в портфолио десятой.</aside>
+<aside class="speaker-notes">Заметка ведущего: Сказать: Tower Defense — оборона: враги идут сами, игрок решает, где расставить башни для защиты.
+Спросить: кто играл в Tower Defense — что там было главным?
+Сказать: финальный проект собирается за четыре урока, и после каждого в игру уже можно играть.
+Сказать: сегодня — карта, дальше — башни, затем враги и волны с боссом, в конце — полировка и выпускной показ; игра пополнит портфолио.</aside>
 </div>
 <div class="slide" id="37-t-3">
-<h3 class="slide-title">Путь — это время <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Длина пути — сколько секунд враг под огнём</li><li>Изгиб — одна башня достаёт два отрезка</li><li>Петля — лучшее место для сильной башни</li><li>Прямая дорога — враги проходят её слишком быстро</li></ul>
+<h3 class="slide-title">Длина и изгибы пути <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Длина пути — сколько секунд враг под огнём</li><li>Изгиб — одна башня достаёт врагов на двух дорогах</li><li>Петля — лучшее место для сильной башни</li><li>Прямая дорога — враги проходят её слишком быстро</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: прямую дорогу враги пробегают быстро, и защищаться почти негде.</aside>
 </div>
 <div class="slide" id="37-t-4">
 <h3 class="slide-title">Точки пути <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Waypoints</b> — папка точек пути с именами 1, 2, 3</li><li>Номер — порядок: враг идёт от точки к точке</li><li>Start — деталь, где появляются враги</li><li>Base — база в конце пути: дошедший враг отнимает здоровье</li></ul>
+<ul class="content-item content-bullets"><li><b>Waypoints</b> — папка точек пути с именами 1, 2, 3</li><li>Номер — порядок: враг идёт от точки к точке</li><li>Start — деталь, где появляются враги</li><li>Base — база в конце пути: каждый дошедший враг отнимает у неё здоровье</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка уровня с папкой Waypoints и деталями 1–7, во вьюпорте полупрозрачные красные кубики на поворотах дороги]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка Waypoints с точками 1, 2, 3 на поворотах дороги, деталь Start и база Base.
 Сказать: враг идёт от точки к точке по номерам — имена должны идти подряд, без пропусков.
@@ -83,25 +80,26 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="37-t-5">
 <h3 class="slide-title">Клетки для башен <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Placement</b> — папка клеток для башен</li><li>Одна клетка — одна башня</li><li>У изгибов — гуще, у входа — для первой башни</li><li>Далеко от дороги — башня не достанет врагов</li></ul>
+<ul class="content-item content-bullets"><li><b>Placement</b> — папка клеток для башен</li><li>Одна клетка — одна башня</li><li>У изгибов — клеток больше, у входа — пара для первых башен</li><li>Слишком далеко от дороги — башня не достанет врагов</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: башню ставят не куда угодно, а на клетку — так дизайнер карты решает, где будет бой.</aside>
 </div>
 <div class="slide" id="37-t-6">
-<h3 class="slide-title">Камера сверху <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>Камера модуля</b> — висит над серединой карты и смотрит вниз</li><li>CAM_HEIGHT — высота: чем выше, тем больше карты в кадре</li><li>CAM_ANGLE — наклон: 90 — ровно сверху, 60 — под углом</li><li>Персонажа нет — игрок кликает мышью по клеткам</li></ul>
+<h3 class="slide-title">Камера сверху <span class="slide-duration">(3.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li><b>Камера модуля</b> — висит над серединой карты и смотрит вниз</li><li>CAM_HEIGHT — высота: чем выше камера, тем больше карты попадает в кадр</li><li>CAM_ANGLE — наклон: 90 — ровно сверху, 60 — под углом</li><li>Персонажа нет — игрок управляет игрой нажатиями мышью по клеткам</li></ul>
+<p class="content-item content-image-prompt">[изображение: Галерея кадров игры Roblox сверху, 2 кадра: 1) CAM_HEIGHT мала — замок и ворота не помещаются в кадр; 2) камера подобрана под карту — ворота, дорога и база видны целиком]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: начало скрипта TDServer — CAM_HEIGHT = 80 и CAM_ANGLE = 60.
-Сказать: камеру ставит модуль — над серединой пути и клеток, а высоту и наклон дизайнер подбирает под свою карту.</aside>
+Сказать: камеру ставит модуль — над серединой пути и клеток, а высоту и наклон дизайнер подбирает под карту.</aside>
 </div>
 <div class="slide" id="37-t-7">
 <h3 class="slide-title">Модуль TowerDefense <span class="slide-duration">(3 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Модуль — правила: заставка, волны, деньги и бой</li><li>Папка уровня — метка TDLevel, атрибуты StartMoney и BaseHealth</li><li>Waves — волны: внутри IntValue с именем врага и числом</li><li>Mobs — враги в ServerStorage</li></ul>
+<ul class="content-item content-bullets"><li>Модуль задаёт правила: заставка, волны, деньги и бой</li><li>Папка уровня — метка TDLevel, атрибуты StartMoney и BaseHealth</li><li>Waves (волны): внутри IntValue с именем врага и числом</li><li>Mobs — враги в ServerStorage</li></ul>
 <p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer папка уровня с меткой TDLevel, внутри Waypoints, Start, Base, Placement и Waves; в Properties атрибуты StartMoney = 250 и BaseHealth = 100]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: папка уровня с меткой TDLevel и атрибутами StartMoney и BaseHealth; внутри Waypoints, Start, Base, Placement и Waves.
 Сказать: волна — Configuration с номером, внутри IntValue: имя врага и сколько их выйдет.</aside>
 </div>
 <div class="slide" id="37-t-8">
 <h3 class="slide-title">Частые ошибки карты <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Точки не по порядку — враг идёт наискосок по траве</li><li>Пропущен номер — враг пропадёт на полпути и ударит базу</li><li>Клетки далеко от дороги — башни не достают</li><li>CAM_HEIGHT мала — край карты не влез в кадр</li><li>Нет метки TDLevel — «Играть» ничего не запускает</li></ul>
+<ul class="content-item content-bullets"><li>Перепутали номера точек — враг идёт не по дороге, а через поле</li><li>Пропустили номер точки — враг телепортируется на полпути и ударяет базу</li><li>Поставили клетки далеко от дороги — башни не достают врагов</li><li>Не подняли CAM_HEIGHT под большую карту — край не помещается в кадр</li><li>Не поставили метку TDLevel — «Играть» ничего не запускает</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Проверить у каждого: точки идут подряд, у папки уровня метка TDLevel.</aside>
 </div>
 </section>
@@ -109,7 +107,7 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="37-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Где на карте лучшее место для сильной башни?</p><ol class="content-item content-quiz-options"><li data-correct="true">У изгиба или петли пути ✓</li><li>На длинной прямой дороге</li><li>У самой базы за стеной</li></ol>
+<p class="content-item content-question">Где на карте лучшее место для сильной башни?</p><ol class="content-item content-quiz-options"><li data-correct="true">У изгиба или петли пути ✓</li><li>На длинной прямой дороге</li><li>У самой базы</li></ol>
 <p class="content-item content-question">Как враг узнаёт, куда идти по карте?</p><ol class="content-item content-quiz-options"><li>Смотрит на цвет дороги</li><li data-correct="true">Идёт по номерам точек пути ✓</li><li>Ищет ближайшую к нему башню</li></ol>
 <p class="content-item content-question">Через что игрок видит карту в этой игре?</p><ol class="content-item content-quiz-options"><li>Глазами персонажа на карте</li><li>Через камеру за плечом</li><li data-correct="true">Через камеру над картой ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
@@ -121,9 +119,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#888888;">Перерыв 5 минут <span class="block-duration">(5 мин)</span></h2>
 <div class="slide" id="37-b-1">
 <h3 class="slide-title">Перерыв 5 минут <span class="slide-duration">(5 мин)</span></h3>
-<p class="content-item content-paragraph">Через 5 минут строим свою карту обороны: дорогу, путь, базу и клетки.</p>
+<p class="content-item content-paragraph">Через 5 минут создаём новый проект и строим в нём карту: дорогу, путь, базу и клетки.</p>
 <aside class="speaker-notes">Заметка ведущего: Сделать: запустить таймер на 5 минут.
-Проверить после перерыва: у каждого открыт Studio и под рукой ссылка на модуль TowerDefense.</aside>
+Проверить после перерыва: у каждого открыт Studio.</aside>
 </div>
 </section>
 <section class="block block-practice">
@@ -131,6 +129,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="37-p-1">
 <h3 class="slide-title">Шаг 1: уровень и дорога <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Новый проект: File → New → Baseplate</li><li>В Workspace — папка с названием карты и меткой TDLevel: Properties → Tags</li><li>Внутри — земля и дорога змейкой с 3–5 поворотами</li></ol>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: на зелёной земле только дорога змейкой с пятью поворотами; в Explorer папка уровня с Ground и Road, в Properties метка TDLevel]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: File → New → Baseplate, папка в Workspace с названием карты, Properties → Tags → TDLevel.
 Сказать: тема — королевство: замок у базы, дорога через поле или лес.
 Сказать: дорога — змейка с 3–5 поворотами, по ширине чуть шире двух клеток.</aside>
@@ -138,7 +137,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="37-p-2">
 <h3 class="slide-title">Шаг 2: путь врагов <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Деталь Start — в начале дороги</li><li>Папка Waypoints: точки 1, 2, 3… на каждом повороте, последняя — у базы</li><li>Точкам — Anchored, CanCollide выключен, Transparency 0.5</li></ol>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: вид сверху на дорогу змейкой, на каждом повороте полупрозрачный кубик с номером в Explorer, в начале дороги красная плита Start]</p>
+<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 3 кадра: 1) дорога и красная плита Start в её начале; 2) папка Waypoints — полупрозрачные кубики 1–6 на поворотах; 3) настройки точки пути: Anchored, CanCollide выключен, Transparency 0.5]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: деталь Start в начале дороги, папка Waypoints и точки 1, 2, 3 на поворотах.
 Сказать: CanCollide выключен, чтобы враги не спотыкались о точки.
 Проверить у каждого: номера идут подряд, последняя точка — у базы.</aside>
@@ -146,30 +145,33 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="37-p-3">
 <h3 class="slide-title">Шаг 3: база и клетки <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Base — деталь или модель в конце пути</li><li>Папка Placement: 6–10 клеток 5×5 студов у изгибов и у входа</li><li>Папке уровня — атрибуты StartMoney = 250 и BaseHealth = 100</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 3 кадра: 1) замок Base в конце пути; 2) папка Placement — подсвечены 8 клеток у изгибов и у входа; 3) атрибуты папки уровня StartMoney = 250 и BaseHealth = 100]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: база Base в конце пути, папка Placement с клетками 5×5 студов у изгибов.
-Сказать: у изгибов клеток больше, у входа — пара клеток для первой башни.
+Сказать: у изгибов клеток больше, у входа — пара клеток для первых башен.
 Сказать: атрибуты StartMoney и BaseHealth — у папки уровня, их подберём на уроке 39.</aside>
 </div>
 <div class="slide" id="37-p-4">
 <h3 class="slide-title">Шаг 4: серый враг <span class="slide-duration">(3.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови Grey и положи в ServerStorage → папку Mobs</li><li>Атрибуты Grey: Health 60, Speed 10, Reward 10, Damage 10</li><li>В уровне — папка Waves → Configuration «1» → IntValue «Grey» = 12</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 4 кадра: 1) Avatar → Character — создаём риг R15; 2) риг Grey в ServerStorage → Mobs с атрибутами Health, Speed, Reward, Damage; 3) папка Waves в уровне; 4) внутри Configuration «1» — IntValue Grey = 12]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Avatar → Character → R15, риг Grey в ServerStorage → Mobs с атрибутами.
 Показать в Studio: папка Waves → Configuration «1» → IntValue с именем Grey и значением 12.
 Сказать: имя IntValue должно совпадать с именем рига буква в букву.
-Сказать: 12 серых по 10 урона — это 120, больше здоровья базы: без башен база проиграет.</aside>
+Сказать: 12 серых по 10 урона — это 120, больше здоровья базы: без башен игрок проиграет.</aside>
 </div>
 <div class="slide" id="37-p-5">
 <h3 class="slide-title">Шаг 5: первый бой <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Получи модуль TowerDefense — ссылку пришлёт преподаватель — и положи папку в Workspace</li><li>Test → Играть: камера сверху, серые идут по точкам</li><li>Дошли до базы — она теряет здоровье и разлетается</li></ol>
+<ol class="content-item content-steps"><li>Получи модуль TowerDefense по ссылке и положи папку в Workspace</li><li>Test → «Играть»: видна ли карта сверху и идут ли серые по точкам?</li><li>Проверь, что враги отнимают у базы здоровье и она разлетается</li></ol>
+<p class="content-item content-paragraph">Ссылка на модуль: <a href="https://create.roblox.com/store/asset/127843370421694/TowerDefense" target="_blank" rel="noopener">https://create.roblox.com/store/asset/127843370421694/TowerDefense</a></p>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox сверху: серые риги идут по дороге змейкой к каменной базе, над базой полоска «База 60 / 100», вверху панель «Волна 1 из 1»]</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: башен ещё нет, поэтому сегодня база проиграет — так и задумано.
+<aside class="speaker-notes">Заметка ведущего: Сказать: башен ещё нет, поэтому сегодня игрок проиграет — так и задумано.
 Проверить у каждого: заставка → Играть → камера сверху, серые идут по точкам и бьют базу.
-Сказать: враг идёт наискосок — проверь номера точек; карта не влезла в кадр — поправим на шаге 6.
+Сказать: враг идёт не по дороге, а через поле — проверь номера точек; карта не помещается в кадр — поправим на шаге 6.
 Если ссылка не открывается: прислать файл TowerDefense.rbxmx — правой кнопкой по Workspace → Insert from File.</aside>
 </div>
 <div class="slide" id="37-p-6">
 <h3 class="slide-title">Шаг 6: камера под карту <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Открой скрипт TDServer: в начале — CAM_HEIGHT и CAM_ANGLE</li><li>Край не влез — подними CAM_HEIGHT, карта мелкая — опусти; CAM_ANGLE 90 — ровно сверху</li><li>Test: видны ли в кадре ворота врагов, вся дорога и база?</li></ol>
+<ol class="content-item content-steps"><li>Открой скрипт TDServer: в начале — CAM_HEIGHT и CAM_ANGLE</li><li>Карта не помещается в кадр — подними CAM_HEIGHT, кажется слишком маленькой — опусти; CAM_ANGLE 90 — ровно сверху</li><li>Test: видны ли в кадре ворота врагов, вся дорога и база?</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: TowerDefense → TDServer, в начале строки CAM_HEIGHT и CAM_ANGLE.
 Сказать: камеру модуль ставит сам над серединой карты; большой карте нужна высота больше.
 Сказать: меняем одно число и сразу Test — так видно, что изменилось.
@@ -180,9 +182,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="37-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Враг пошёл наискосок по траве. Что проверить первым?</p><ol class="content-item content-quiz-options"><li data-correct="true">Номера точек в Waypoints ✓</li><li>Цвет и материал дороги</li><li>Размер клеток у изгиба</li></ol>
-<p class="content-item content-question">Край дороги не влез в кадр. Что поправить?</p><ol class="content-item content-quiz-options"><li>Атрибут StartMoney у уровня</li><li data-correct="true">CAM_HEIGHT в начале TDServer ✓</li><li>Номер волны в Waves</li></ol>
-<p class="content-item content-question">Нажал «Играть», а партия не начинается. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Серого рига в Workspace</li><li>Второго уровня в игре</li><li data-correct="true">Метки TDLevel у уровня ✓</li></ol>
+<p class="content-item content-question">Враг пошёл через карту, а не по дороге. Где ошибка?</p><ol class="content-item content-quiz-options"><li data-correct="true">В номерах точек Waypoints ✓</li><li>В цвете и материале дороги</li><li>В размере клеток у изгиба</li></ol>
+<p class="content-item content-question">Край дороги не помещается в кадр. Что поправить?</p><ol class="content-item content-quiz-options"><li>Атрибут StartMoney у уровня</li><li data-correct="true">CAM_HEIGHT в начале TDServer ✓</li><li>Номер волны в Waves</li></ol>
+<p class="content-item content-question">Нажал «Играть», а игра не начинается. Чего не хватает?</p><ol class="content-item content-quiz-options"><li>Серого рига в Workspace</li><li>Второго уровня в игре</li><li data-correct="true">Метки TDLevel у уровня ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
 Ответы: номера точек; CAM_HEIGHT; метка TDLevel.</aside>
 </div>
@@ -190,15 +192,15 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-closing">
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="37-c-1">
-<h3 class="slide-title">Карта обороны готова <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Мы собрали из дороги, пути по точкам, базы, клеток и камеры сверху карту, по которой уже идут враги — это работа TD Level Designer.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: башни — риг, числа и улучшение</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке добавим башни, и база начнёт выигрывать.
+<h3 class="slide-title">Карта Tower Defense готова <span class="slide-duration">(1 мин)</span></h3>
+<p class="content-item content-paragraph">Мы собрали карту: дорогу, путь по точкам, базу, клетки и камеру сверху — и запустили по ней первую волну врагов. Это работа TD Level Designer.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: башни — риг, анимации и настройка баланса</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: на следующем уроке добавим башни, и игрок начнёт выигрывать.
 Сделать: File → Save to Roblox — проект нужен на всех уроках блока.</aside>
 </div>
 <div class="slide" id="37-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Оформи карту под тему королевства: время суток и Atmosphere в Lighting</li><li>Собери второй уровень — вторую папку с меткой TDLevel и другим путём</li><li>Test: на заставке «Играть» покажет меню из двух уровней</li></ul>
+<ul class="content-item content-bullets"><li>Оформи карту под тему королевства: время суток и Atmosphere в Lighting</li><li>Собери второй уровень — вторую папку с меткой TDLevel, дорогой и базой</li><li>Test → «Играть»: появилось ли меню из двух уровней?</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: второй уровень — копия папки уровня с новой дорогой, точками и клетками; метка TDLevel у копии остаётся.
 Сказать: копию переименовать — имя папки станет названием в меню, уровни идут по алфавиту.
 Сказать: копию отодвинуть в сторону — выделить всё внутри папки и сдвинуть инструментом Move.
