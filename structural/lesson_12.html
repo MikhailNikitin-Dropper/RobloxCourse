@@ -96,8 +96,8 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="12-t-5">
 <h3 class="slide-title">Музыка в SoundService <span class="slide-duration">(2 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Sound (звук)</b> — это объект с треком; вне детали он звучит одинаково по всей игре</li><li>Место фоновой музыки — <b>SoundService</b>: + → Sound</li><li><b>Playing</b> — музыка играет с запуска игры, <b>Looped</b> — повторяется по кругу, <b>Volume</b> — громкость</li><li>В режиме редактирования музыку не слышно — проверяем через Test</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer объект Sound внутри SoundService, в Properties видны включённые свойства Playing и Looped и свойство SoundId]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: «+» в SoundService → Sound, задать SoundId трека из Toolbox, включить Playing и Looped, запустить Test.
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer объект Sound внутри SoundService, в Properties видны включённые свойства Playing и Looped и свойство AudioContent (так Studio теперь показывает SoundId)]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: «+» в SoundService → Sound, в AudioContent — трек из Toolbox, включить Playing и Looped, запустить Test.
 Сказать: в режиме редактирования музыку не слышно, проверяем только через Test.
 Сказать: трек подбираем под самую мрачную зону — тогда он не спорит с болотами.</aside>
 </div>
@@ -178,7 +178,7 @@ body { font-family: Arial, sans-serif; }
 <ol class="content-item content-steps"><li>В SoundService: + → Sound, выбери трек в Toolbox под свою тему</li><li>Включи Playing и Looped, подбери Volume так, чтобы музыка не заглушала игру</li><li>Test → музыка звучит с первой секунды и играет по кругу</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: «+» в SoundService → Sound, трек из Toolbox, Playing и Looped включены, Volume подобран.
 Сделать: Test — музыка звучит с первой секунды и играет по кругу.
-Если звука нет: проверить Playing и SoundId.</aside>
+Если звука нет: проверить Playing и AudioContent.</aside>
 </div>
 <div class="slide" id="12-p-4">
 <h3 class="slide-title">Шаг 4: праздничный финиш <span class="slide-duration">(3 мин)</span></h3>

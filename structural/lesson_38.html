@@ -83,7 +83,7 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="38-t-4">
 <h3 class="slide-title">Параметры башни <span class="slide-duration">(3 мин)</span></h3>
 <ul class="content-item content-bullets"><li><b>Price</b> и <b>Damage</b> — цена постройки и урон одного удара</li><li><b>Range</b> и <b>Cooldown</b> — радиус в студах и пауза между ударами</li><li><b>Melee</b> — галочка: удар вплотную, без снаряда</li><li><b>Splash</b> — радиус взрыва в студах, 0 — без взрыва</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer башня-риг в ServerStorage → Towers, в Properties раздел Attributes с Price = 100, Damage = 20, Range = 16, Cooldown = 0.8, Melee выключен, Splash = 0]</p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Explorer башня-риг в ServerStorage → Towers, в Properties раздел Attributes с Price = 100, Damage = 20, Range = 24, Cooldown = 0.8, Melee выключен, Splash = 0]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: башня в ServerStorage → Towers, в Properties атрибуты Price, Damage, Range, Cooldown, Melee и Splash.
 Сказать: Melee и Splash нужны воину и пушке из домашнего задания; у лучника Melee выключен, Splash = 0.
 Сказать: радиус меряется в студах от башни; круг радиуса игрок увидит, когда кликнет по башне.
@@ -153,9 +153,9 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="38-p-2">
 <h3 class="slide-title">Шаг 2: параметры башни <span class="slide-duration">(3 мин)</span></h3>
 <ol class="content-item content-steps"><li>Добавь башне атрибуты Price, Damage, Range, Cooldown, Melee и Splash</li><li>Test → клик по клетке → карточка башни → она встаёт на клетку</li><li>Проверь, что враги получают урон и падают, а круг радиуса достаёт до дороги</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — шесть атрибутов башни: Price 100, Damage 20, Range 16, Cooldown 0.8, Melee выключен, Splash 0; 2) кадр игры — клик по клетке открыл меню с карточкой башни; 3) кадр игры — башня встала на клетку]</p>
+<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — шесть атрибутов башни: Price 100, Damage 20, Range 24, Cooldown 0.8, Melee выключен, Splash 0; 2) кадр игры — клик по клетке открыл меню с карточкой башни; 3) кадр игры — башня встала на клетку]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Properties → Attributes → «+» у башни; Melee — тип boolean (галочка), остальные — number.
-Сказать: числа ученик прикидывает сам; ориентир для лучника — Price 100, Damage 20, Range 16, Cooldown 0.8, Melee выключен, Splash 0.
+Сказать: числа ученик прикидывает сам; ориентир для лучника — Price 100, Damage 20, Range 24, Cooldown 0.8, Melee выключен, Splash 0.
 Сказать: с такими числами урона хватает на серых, а круг с клетки у изгиба достаёт до дороги.
 Проверить у каждого: в Test в меню клетки есть карточка башни с ценой.</aside>
 </div>
@@ -172,10 +172,10 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="38-p-4">
 <h3 class="slide-title">Шаг 4: снаряд и звук <span class="slide-duration">(2.5 мин)</span></h3>
 <ol class="content-item content-steps"><li>Стрела из деталей в руке у рига: Model с именем Projectile, остриём вперёд, все детали сварены между собой</li><li>Sound с именем ShotSound — прямо в модели башни, Volume 0.3</li><li>Test: летит ли стрела остриём в цель, слышен ли выстрел?</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 2 кадра: 1) стрела Projectile — модель из древка, наконечника и оперения на сварке в правой руке башни, в Explorer детали стрелы; 2) Sound ShotSound в модели башни, в Properties SoundId и Volume 0.3]</p>
+<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 2 кадра: 1) стрела Projectile — модель из древка, наконечника и оперения на сварке в правой руке башни, в Explorer детали стрелы; 2) Sound ShotSound в модели башни, в Properties AudioContent (так Studio теперь показывает SoundId) и Volume 0.3]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: башню — из Towers в Workspace; у правой руки стрела из Part: древко Cylinder и наконечник.
 Показать в Studio: детали — Ctrl+G в Model с именем Projectile, Model → Weld к руке; башню — обратно в Towers.
-Показать в Studio: + у модели башни → Sound с именем ShotSound, SoundId — звук, как в уроке 5, Volume 0.3.
+Показать в Studio: + у модели башни → Sound с именем ShotSound, AudioContent — звук, как в уроке 5, Volume 0.3.
 Сказать: звук в детали тише с расстоянием, а камера висит высоко — из модели выстрел слышно всегда.
 Сказать: стрелу кладём остриём туда, куда смотрит башня; без Projectile летит жёлтый шарик — это не ошибка.</aside>
 </div>

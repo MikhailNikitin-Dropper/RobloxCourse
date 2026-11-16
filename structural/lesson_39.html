@@ -36,9 +36,9 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Приветствие <span class="block-duration">(1 мин)</span></h2>
 <div class="slide" id="39-w-1">
 <h3 class="slide-title">Сегодня ты — Balance Designer <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Башни уже стоят у дороги, и серым врагам с ними не справиться. Сегодня добавим на карту новых врагов и босса.</p>
+<p class="content-item content-paragraph">Башни уже стоят у дороги, и серые враги выглядят скучно на их фоне. Сегодня добавим в игру новых врагов и босса.</p>
 <p class="content-item content-paragraph"><b>Balance Designer</b> (дизайнер баланса) подбирает числа так, чтобы игра была трудной, но проходимой.</p>
-<aside class="speaker-notes">Заметка ведущего: Сказать: башни есть, но серые враги им больше не соперники.
+<aside class="speaker-notes">Заметка ведущего: Сказать: серые враги все на одно лицо — сегодня у каждого появится свой вид.
 Сказать: главный инструмент дня — плейтест.</aside>
 </div>
 </section>
@@ -48,9 +48,9 @@ body { font-family: Arial, sans-serif; }
 <h3 class="slide-title">Вспомним урок 38 <span class="slide-duration">(4 мин)</span></h3>
 <p class="content-item content-question">Как считают урон башни в секунду?</p><ol class="content-item content-quiz-options"><li data-correct="true">Урон делят на паузу ✓</li><li>Урон умножают на радиус</li><li>Цену делят на урон</li></ol>
 <p class="content-item content-question">Чем стреляет башня без модели Projectile?</p><ol class="content-item content-quiz-options"><li data-correct="true">Жёлтым шариком модуля ✓</li><li>Ничем — башня не стреляет</li><li>Серой стрелой Roblox</li></ol>
-<p class="content-item content-question">Кого бьёт башня с целью «Первый»?</p><ol class="content-item content-quiz-options"><li>Врага ближе всех к башне</li><li>Врага с самым большим здоровьем</li><li data-correct="true">Врага ближе всех к базе ✓</li></ol>
+<p class="content-item content-question">Сколько денег вернёт продажа улучшенной башни?</p><ol class="content-item content-quiz-options"><li>Всё, что за неё заплатили</li><li>Половину цены самой башни</li><li data-correct="true">Половину цены башни и улучшений ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: урон ÷ пауза; жёлтым шариком; ближе всех к базе.
+Ответы: урон ÷ пауза; жёлтым шариком; половину цены башни и улучшений.
 Сказать: сегодня проверим эти числа на новых врагах.</aside>
 </div>
 </section>
@@ -58,8 +58,8 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#006600;">Враги и волны <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="39-t-1">
 <h3 class="slide-title">Типы врагов <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Обычный — проверяет, есть ли оборона вообще</li><li>Быстрый — проверяет дальние башни</li><li>Танк (медленный и крепкий) — проверяет урон в секунду</li><li>Босс — проверяет всё сразу в конце</li></ul>
-<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: из ворот выходят четыре врага — обычный Grey (60), Бегун (40), Танк (400) и Босс (1500), над каждым полоска здоровья]</p>
+<ul class="content-item content-bullets"><li>Обычный — проверяет, есть ли оборона вообще</li><li>Быстрый — проверяет башни с большим радиусом атаки</li><li>Танк (медленный и крепкий) — проверяет урон в секунду</li><li>Босс — проверяет всё сразу в конце</li></ul>
+<p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: из ворот выходят четыре врага — Обычный (60), Бегун (40), Танк (400) и Босс (1500), над каждым полоска здоровья]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: враги отличаются не цветом, а тем, что проверяют в обороне.
 Спросить: какой враг сломает оборону из одних ближних башен?</aside>
 </div>
@@ -72,9 +72,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="39-t-3">
 <h3 class="slide-title">Волна <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Волна — Configuration с номером: 1, 2, 3</li><li>Внутри — IntValue: имя врага и сколько их</li><li><b>Gap</b> — пауза между врагами, секунды</li><li>Перед волной — отсчёт, после — бонус 50</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Waves раскрыта волна «3» — внутри IntValue Grey и Бегун, в Properties атрибут Gap = 0.6]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Waves → Configuration «3», внутри IntValue «Бегун» = 4 и «Grey» = 4, атрибут Gap = 0.6.</aside>
+<ul class="content-item content-bullets"><li>Волна — Configuration с номером: 1, 2, 3</li><li>Внутри — IntValue: имя врага и сколько их</li><li><b>Gap</b> — пауза между появлением врагов, секунды</li><li>Перед волной — отсчёт, после — награда за прохождение волны</li></ul>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: в Waves раскрыта волна «3» — внутри IntValue Обычный и Бегун, в Properties атрибут Gap = 0.6]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Waves → Configuration «3», внутри IntValue «Бегун» = 4 и «Обычный» = 4, атрибут Gap = 0.6.</aside>
 </div>
 <div class="slide" id="39-t-4">
 <h3 class="slide-title">Кривая сложности <span class="slide-duration">(2.5 мин)</span></h3>
@@ -84,7 +84,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="39-t-5">
 <h3 class="slide-title">Деньги игрока <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li><b>StartMoney</b> — на первую башню сразу</li><li>Reward — за каждого врага</li><li>Бонус — 50 за каждую пройденную волну</li><li>Вторая башня — после 1–2 волн</li></ul>
+<ul class="content-item content-bullets"><li><b>StartMoney</b> — на создание первоначальной обороны</li><li>Reward — за каждого врага</li><li>Бонус — за каждую пройденную волну</li><li>Темп покупок — прохождение 1–2 волн позволяет купить новую башню</li></ul>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: Лучник и Маг у входа отбили волну — надпись «Волна 1 отбита: +50», в верхней панели «Деньги: 160»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: деньги игрока складываются из трёх источников: стартовые, награды и бонус за волну.
 Сказать: награда за врага больше цены башни — игра станет лёгкой уже к третьей волне.</aside>
@@ -92,19 +92,19 @@ body { font-family: Arial, sans-serif; }
 <div class="slide" id="39-t-6">
 <h3 class="slide-title">Босс <span class="slide-duration">(2.5 мин)</span></h3>
 <ul class="content-item content-bullets"><li>Новый риг — Avatar → Character → R15</li><li>Scale 2 — вдвое крупнее обычного врага</li><li>Свой цвет и декор — например, шлем с рогами</li><li>Числа — больше всех здоровья и награды</li></ul>
-<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: на поле Grey, Танк и Босс — босс вдвое больше Grey, тёмно-красный, в шлеме с рогами; у выделенного босса в Properties Scale = 2]</p>
+<p class="content-item content-image-prompt">[изображение: Скриншот Roblox Studio: на поле Обычный, Танк и Босс — босс вдвое больше Обычного, тёмно-красный, в шлеме с рогами; у выделенного босса в Properties Scale = 2]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: босс — такой же риг, как остальные враги: крупнее, со своим декором и самыми большими числами.
 Сказать: ходьбу босса включает модуль, как всем врагам, — отдельная анимация не нужна.</aside>
 </div>
 <div class="slide" id="39-t-7">
-<h3 class="slide-title">Плейтест баланса <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Таблица — «волна → что должно случиться»</li><li>Запись — где стало трудно, сколько было денег</li><li>Одна правка — одна проверка</li><li>Цель — победа с запасом в одну-две башни</li></ul>
+<h3 class="slide-title">Проверка баланса игры <span class="slide-duration">(2.5 мин)</span></h3>
+<ul class="content-item content-bullets"><li>Таблица — «волна → что должно случиться»</li><li>Запись — где стало трудно, сколько было денег</li><li>Одна правка — одна проверка</li><li>Цель — победа с запасом в одну башню, а не только при идеальной расстановке</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: баланс подбирают игрой, а не расчётом — как в лутере.
-Сказать: запас в одну-две башни — середина: без запаса нечестно, с большим запасом однообразно.</aside>
+Сказать: запас в одну башню — середина: без запаса побеждает только идеальная расстановка, с большим запасом однообразно.</aside>
 </div>
 <div class="slide" id="39-t-8">
 <h3 class="slide-title">Частые ошибки волн <span class="slide-duration">(2.5 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Ошиблись в имени в волне — враг не выходит</li><li>Сделали все волны одинаковыми — игра однообразная</li><li>Поставили босса в первую волну — у игрока ещё нет башен</li><li>Дали награду больше цены башни — игра слишком лёгкая</li><li>Сделали босса быстрым — он проскакивает мимо башен</li></ul>
+<ul class="content-item content-bullets"><li>Ошиблись в имени в волне — враг не выходит</li><li>Сделали все волны одинаковыми — игра однообразная</li><li>Поставили босса в первую волну — игру пройти невозможно</li><li>Дали слишком большую награду — игра слишком лёгкая</li><li>Сделали босса быстрым и живучим — он стал непобедимым</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Проверить у каждого: имена IntValue в волнах совпадают с врагами в Mobs.
 Сказать: враг не выходит — модуль пишет предупреждение в Output с именем, которого не нашёл.</aside>
 </div>
@@ -113,11 +113,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Проверяем теорию <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="39-qt-1">
 <h3 class="slide-title">Вопросы по теории <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Что проверяет быстрый враг?</p><ol class="content-item content-quiz-options"><li data-correct="true">Дальние башни обороны ✓</li><li>Здоровье самой базы</li><li>Стартовые деньги игрока</li></ol>
-<p class="content-item content-question">В какой волне выходит босс?</p><ol class="content-item content-quiz-options"><li>В первой — сразу</li><li data-correct="true">В последней — финалом ✓</li><li>В каждой — по одному</li></ol>
-<p class="content-item content-question">Как называют IntValue внутри волны?</p><ol class="content-item content-quiz-options"><li>Номером этой волны</li><li>Названием атрибута Gap</li><li data-correct="true">Именем врага ✓</li></ol>
+<p class="content-item content-question">Что проверяет быстрый враг?</p><ol class="content-item content-quiz-options"><li data-correct="true">Башни с большим радиусом атаки ✓</li><li>Здоровье базы игрока</li><li>Количество денег игрока на старте</li></ol>
+<p class="content-item content-question">На какой волне выходит босс?</p><ol class="content-item content-quiz-options"><li>На первой — сразу</li><li data-correct="true">На последней — финалом ✓</li><li>На каждой — по одному</li></ol>
+<p class="content-item content-question">Как называют IntValue внутри волны?</p><ol class="content-item content-quiz-options"><li>Номером этой волны</li><li>Названием атрибута</li><li data-correct="true">Именем врага ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: дальние башни; в последней; имя врага.
+Ответы: башни с большим радиусом атаки; на последней; имя врага.
 Сказать: на практике собираем новых врагов и подгоняем числа.</aside>
 </div>
 </section>
@@ -133,42 +133,43 @@ body { font-family: Arial, sans-serif; }
 <section class="block block-practice">
 <h2 class="block-title" style="color:#cc0000;">Враги и баланс <span class="block-duration">(20 мин)</span></h2>
 <div class="slide" id="39-p-1">
-<h3 class="slide-title">Шаг 1: Grey и Бегун <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Копия Grey в Mobs — назови Бегун</li><li>Обоим — свой цвет BodyColors и декор на сварке Model → Weld</li><li>Атрибуты: Health 40, Speed 18, Reward 8, Damage 10</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 3 кадра: 1) Бегун — копия Grey в Mobs, оба пока серые; 2) оба покрашены через BodyColors, у Grey шлем и ремень, у Бегуна повязка и пояс на сварке; 3) у Бегуна атрибуты Health 40, Speed 18, Reward 8, Damage 10]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: копия Grey в Mobs, новое имя; обоим — BodyColors и декор на сварке.
-Сказать: Бегуна копируем, пока Grey серый, — иначе копия унаследует его шлем и ремень.
-Сказать: имя Grey оставляем, хоть он уже не серый: по этому имени его зовут волны.
+<h3 class="slide-title">Шаг 1: Обычный и Бегун <span class="slide-duration">(3.5 мин)</span></h3>
+<ol class="content-item content-steps"><li>Grey в Mobs — назови Обычный, а его копию Бегун</li><li>Обоим — свой цвет BodyColors и декор на сварке Model → Weld</li><li>Атрибуты: Health 40, Speed 18, Reward 8, Damage 10</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея скриншотов Roblox Studio, 3 кадра: 1) в Mobs Обычный (бывший Grey) и его копия Бегун, оба пока серые; 2) оба покрашены через BodyColors, у Обычного шлем и ремень, у Бегуна повязка и пояс на сварке; 3) у Бегуна атрибуты Health 40, Speed 18, Reward 8, Damage 10]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: Grey в Mobs переименовать в Обычный, его копию — в Бегун; обоим — BodyColors и декор на сварке.
+Сказать: Бегуна копируем, пока Обычный серый, — иначе копия унаследует его шлем и ремень.
+Показать в Studio: в Waves → «1» IntValue Grey тоже переименовать в Обычный — волна зовёт врага по имени.
 Сказать: быстрый — тоньше и ярче, чтобы игрок узнавал его сверху.
-Сказать: имя врага — по-русски можно: в волне он будет IntValue.</aside>
+Сказать: Grey уже не серый — называем его Обычный; имя по-русски можно, в волне оно станет именем IntValue.</aside>
 </div>
 <div class="slide" id="39-p-2">
 <h3 class="slide-title">Шаг 2: танк <span class="slide-duration">(3 мин)</span></h3>
-<ol class="content-item content-steps"><li>Ещё одна копия — Танк: крупнее и темнее</li><li>Атрибуты: Health 400, Speed 6, Reward 40, Damage 30</li><li>Test: поставь его в волну и посмотри, хватает ли урона</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — Танк крупнее и темнее рядом с Grey; 2) его атрибуты Health 400, Speed 6, Reward 40, Damage 30; 3) кадр игры — Танк идёт под стрелами Лучника]</p>
-<aside class="speaker-notes">Заметка ведущего: Показать в Studio: копию — на поле, инструмент Scale — увеличить риг, затем обратно в Mobs.
-Сказать: Танк — копия нарядного Grey; на поле шлем и ремень растут вместе с ним, а число Scale прямо в Mobs раздует их на копиях ещё раз.
+<ol class="content-item content-steps"><li>Ещё одна копия — Танк: цвет темнее, Scale 1.5 — в полтора раза крупнее</li><li>Атрибуты: Health 400, Speed 6, Reward 40, Damage 30</li><li>Test: поставь его в волну и посмотри, хватает ли урона</li></ol>
+<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — Танк крупнее и темнее рядом с Обычным; 2) его атрибуты Health 400, Speed 6, Reward 40, Damage 30; 3) кадр игры — Танк идёт под стрелами Лучника]</p>
+<aside class="speaker-notes">Заметка ведущего: Показать в Studio: копию — на поле, инструмент Scale — увеличить риг до Scale 1.5 в Properties, затем обратно в Mobs.
+Сказать: Танк — копия Обычного; на поле шлем и ремень растут вместе с ним, а число Scale прямо в Mobs раздует их на копиях ещё раз.
+Сказать: Scale — во сколько раз риг больше исходного: у Танка 1.5, у босса будет 2.
 Сказать: танк крупный и тёмный — сверху его видно сразу.
 Сказать: награда у танка больше — за него стоит потратиться.</aside>
 </div>
 <div class="slide" id="39-p-3">
 <h3 class="slide-title">Шаг 3: босс <span class="slide-duration">(4 мин)</span></h3>
 <ol class="content-item content-steps"><li>Avatar → Character → R15, риг назови Босс</li><li>Scale 2, свой цвет BodyColors и декор на сварке</li><li>Босса — в Mobs, атрибуты: Health 1500, Speed 4, Reward 300, Damage 100</li></ol>
-<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — новый риг из Avatar → Character назван Босс и стоит на поле рядом с Grey; 2) босс в Mobs вдвое крупнее, тёмно-красный, в шлеме с рогами, в Properties числа Health 1500, Speed 4, Reward 300, Damage 100; 3) кадр игры — босс с полоской здоровья идёт по дороге мимо башен]</p>
+<p class="content-item content-image-prompt">[изображение: Галерея, 3 кадра: 1) скриншот Roblox Studio — новый риг из Avatar → Character назван Босс и стоит на поле рядом с Обычным; 2) босс в Mobs вдвое крупнее, тёмно-красный, в шлеме с рогами, в Properties числа Health 1500, Speed 4, Reward 300, Damage 100; 3) кадр игры — босс с полоской здоровья идёт по дороге мимо башен]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Avatar → Character → R15 — риг встаёт на поле, переименовать Rig в Босс.
 Показать в Studio: инструмент Scale — вдвое больше; у Humanoid босса снять галочку AutomaticScalingEnabled, затем перетащить босса в Mobs.
 Сказать: без этой галочки декор на копии босса вырастет ещё вдвое — копия понадобится на заставке урока 40.</aside>
 </div>
 <div class="slide" id="39-p-4">
 <h3 class="slide-title">Шаг 4: волны <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>6 волн в Waves: 1–2 — обычные, 3 — бегуны, 4 — танк</li><li>5 — смесь всех, 6 — босс с охраной</li><li>У плотных волн атрибут Gap = 0.6</li></ol>
+<ol class="content-item content-steps"><li>6 волн в Waves: 1–2 — обычные, 3 — бегуны, 4 — танк</li><li>5 — смесь всех, 6 — босс с охраной</li><li>У волн с большим количеством врагов атрибут Gap = 0.6</li></ol>
 <p class="content-item content-image-prompt">[изображение: Галерея, 2 кадра: 1) скриншот Roblox Studio — в Waves шесть волн, раскрыта волна 6: Босс, Бегун и Танк; 2) кадр игры — волна 6: босс с охраной выходит из ворот, у входа Лучник и Маг]</p>
 <aside class="speaker-notes">Заметка ведущего: Показать в Studio: Waves → Configuration 1–6, внутри IntValue с именами врагов.
-Сказать: Gap 0.6 у плотных волн — враги идут кучей.</aside>
+Сказать: Gap 0.6 у волн с большим количеством врагов — враги идут кучей.</aside>
 </div>
 <div class="slide" id="39-p-5">
 <h3 class="slide-title">Шаг 5: деньги <span class="slide-duration">(2.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>StartMoney уровня — на первую башню сразу</li><li>Цены башен — вторая после 1–2 волн</li><li>Награды Reward — чтобы улучшение появилось к середине игры</li></ol>
+<ol class="content-item content-steps"><li>StartMoney уровня — на создание первоначальной обороны</li><li>Цена новой башни — примерно 1–2 волны</li><li>Награды Reward — чтобы улучшить башни можно было к середине игры</li></ol>
 <p class="content-item content-image-prompt">[изображение: Галерея, 2 кадра: 1) скриншот Roblox Studio — у папки уровня атрибут StartMoney = 150; 2) кадр игры — Лучник поставлен сразу после «Играть», в верхней панели «Деньги: 50»]</p>
 <aside class="speaker-notes">Заметка ведущего: Сказать: StartMoney — ровно на первую башню и немного сверху.
 Сказать: если вторая башня появляется только к четвёртой волне — подними награды или снизь цены.
@@ -176,9 +177,9 @@ body { font-family: Arial, sans-serif; }
 </div>
 <div class="slide" id="39-p-6">
 <h3 class="slide-title">Шаг 6: плейтест <span class="slide-duration">(3.5 мин)</span></h3>
-<ol class="content-item content-steps"><li>Test: пройди все волны и запиши, где стало трудно</li><li>Поправь одно число и пройди снова</li><li>Цель — победа с запасом в одну-две башни</li></ol>
+<ol class="content-item content-steps"><li>Test: пройди все волны и запиши, где было слишком легко или непроходимо</li><li>Поправь одно число и пройди снова</li><li>Цель — победа с запасом в одну башню, а не только при идеальной расстановке</li></ol>
 <p class="content-item content-image-prompt">[изображение: Кадр игры Roblox: все шесть волн пройдены — экран «Победа!»]</p>
-<aside class="speaker-notes">Заметка ведущего: Сделать: пройти игру целиком, записать волну, где стало трудно.
+<aside class="speaker-notes">Заметка ведущего: Сделать: пройти игру целиком, записать волны, где было слишком легко или непроходимо.
 Сказать: одна правка — одна проверка, как в лутере.</aside>
 </div>
 </section>
@@ -186,11 +187,11 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#990099;">Обсуждаем практику <span class="block-duration">(4 мин)</span></h2>
 <div class="slide" id="39-qp-1">
 <h3 class="slide-title">Разберём, что получилось <span class="slide-duration">(4 мин)</span></h3>
-<p class="content-item content-question">Враг из волны так и не вышел. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ошибка в имени IntValue ✓</li><li>Не тот цвет BodyColors</li><li>Мало клеток на карте</li></ol>
-<p class="content-item content-question">Босс вышел в игре ростом с обычного врага. Почему?</p><ol class="content-item content-quiz-options"><li>Мало здоровья в Health</li><li data-correct="true">Увеличили не тот риг ✓</li><li>Босс в другой волне</li></ol>
-<p class="content-item content-question">К третьей волне игрок ставит башни на все клетки. Что поправить?</p><ol class="content-item content-quiz-options"><li>Добавить клеток на карте</li><li>Поднять здоровье базы</li><li data-correct="true">Уменьшить награды за врагов ✓</li></ol>
+<p class="content-item content-question">Враг из волны так и не вышел. Почему?</p><ol class="content-item content-quiz-options"><li data-correct="true">Ошибка в имени IntValue ✓</li><li>Не задан атрибут Reward</li><li>Слишком маленькая скорость Speed</li></ol>
+<p class="content-item content-question">Босс вышел в игре ростом с обычного врага. Почему?</p><ol class="content-item content-quiz-options"><li>Мало здоровья в Health</li><li data-correct="true">Не изменили параметр Scale ✓</li><li>Босс не в последней волне</li></ol>
+<p class="content-item content-question">К третьей волне игрок расставил башни на все клетки. Что поправить?</p><ol class="content-item content-quiz-options"><li>Добавить клеток на карте</li><li>Поднять здоровье базы</li><li data-correct="true">Уменьшить награды за врагов ✓</li></ol>
 <aside class="speaker-notes">Заметка ведущего: Спросить: три вопроса со слайда.
-Ответы: ошибка в имени IntValue; увеличили не тот риг; уменьшить награды.
+Ответы: ошибка в имени IntValue; не изменили Scale; уменьшить награды.
 Сказать: на последнем уроке игру отполируем и покажем.</aside>
 </div>
 </section>
@@ -198,17 +199,17 @@ body { font-family: Arial, sans-serif; }
 <h2 class="block-title" style="color:#0033cc;">Прощание, ДЗ, анонс <span class="block-duration">(2 мин)</span></h2>
 <div class="slide" id="39-c-1">
 <h3 class="slide-title">Волны собраны <span class="slide-duration">(1 мин)</span></h3>
-<p class="content-item content-paragraph">Из новых врагов, босса и шести волн мы собрали игру, которую трудно, но можно пройти, — это работа Balance Designer.</p>
-<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: финал курса — полировка и выпускной показ</li></ul>
-<aside class="speaker-notes">Заметка ведущего: Сказать: на последнем уроке — полировка, заставка и выпускной показ.
+<p class="content-item content-paragraph">Добавив новых врагов, босса и шесть волн, мы создали игру с продуманным уровнем сложности, которую непросто, но возможно пройти. Это результат работы Balance Designer.</p>
+<ul class="content-item content-bullets"><li>Сохрани проект в конце занятия: File → Save to Roblox</li><li>Следующий урок: финал курса — полировка проекта и презентация</li></ul>
+<aside class="speaker-notes">Заметка ведущего: Сказать: на последнем уроке — полировка проекта, заставка и презентация.
 Сделать: File → Save to Roblox.</aside>
 </div>
 <div class="slide" id="39-c-2">
 <h3 class="slide-title">Домашнее задание <span class="slide-duration">(1 мин)</span></h3>
-<ul class="content-item content-bullets"><li>Сделай ещё 1–2 врага: каждый проверяет одну из башен</li><li>Отправь игру другу файлом: File → Download a Copy</li><li>Запиши, на какой волне он проиграл и что сказал</li></ul>
+<ul class="content-item content-bullets"><li>Сделай ещё 1–2 врага: каждый проверяет одну из башен</li><li>Например, маленький враг, у которого очень мало здоровья, но их выходит много</li><li>Отправь игру другу файлом: File → Download a Copy</li><li>Запиши, на какой волне он проиграл и что сказал</li></ul>
 <aside class="speaker-notes">Заметка ведущего: Сказать: файл из Download a Copy друг открывает в Studio и играет кнопкой Test.
 Сказать: у друга анимации башен не работают — они твои, на баланс это не влияет.
-Сказать: смысл — записать, на какой волне проиграл чужой игрок, и не подсказывать ему.</aside>
+Сказать: смысл — записать, на какой волне проиграл другой игрок, и не подсказывать ему.</aside>
 </div>
 </section>
 <section class="sources"><h2 class="block-title">Источники</h2><ul class="source-list"><li><a href="tools/l37_td/TDServer.server.luau">Модуль курса TowerDefense — исходник</a></li><li><a href="https://www.youtube.com/playlist?list=PLtMUa6NlF10fEF1WOeDtuGcIn0RdUNL7c">GnomeCode — Tower Defense Tutorial #1–22</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Humanoid.md">Humanoid — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/Configuration.md">Configuration — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/reference/engine/classes/IntValue.md">IntValue — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/production/game-design/onboarding.md">Onboarding — Roblox Creator Hub</a></li><li><a href="https://create.roblox.com/docs/en-us/studio/testing-modes.md">Testing modes — Roblox Creator Hub</a></li></ul></section>
